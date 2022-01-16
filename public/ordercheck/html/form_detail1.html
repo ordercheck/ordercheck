@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="">
+  <meta property="og:type" content="website">
+  <meta name="naver-site-verification" content="">
+  <meta property="og:image" content="">
+  <meta http-equiv="Cache-Control" content="No-Cache">
+  <meta http-equiv="Pragma" content="No-Cache">
+  <meta name="language" content="ko">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+
+  <title>상담 신청 폼</title>
+
+  <!-- css, js 연결 -->
+  <link rel="stylesheet" href="../resource/css/vendor/nice-select.css">
+  <link rel="stylesheet" type="text/css" href="../resource/css/vendor/daterangepicker.css" />
+  <link rel="stylesheet" href="../resource/css/layout.css">
+  <link rel="stylesheet" href="../resource/css/contents.css">
+
+</head>
+
+<body>
+  <div id="wrap">
+    <section id="content" class="content-section type02">
+
+      <!-- header -->
+      <div class="header-wrap">
+        <header id="header" class="header">
+          <div class="title">
+            <button type="button" class="btn-txt-prev"><span>신청폼 리스트 돌아가기</span></button>
+          </div>
+          <ul class="menu">
+            <li>
+              <div class="searchbox">
+                <i class='ico search'></i>
+                <input type="text" placeholder="검색하세요">
+              </div>
+            </li>
+            <li>
+              <div class="dropdown-wrap">
+                <button type="button" class="btn-drop">
+                  <div class="profile-details">
+                    <img src="../resource/images/profile.jpg" class="img" alt="profileImg">
+                    <span class="name">홍길동님</span>
+                    <i class="arrow down"></i>
+                  </div>
+
+                </button>
+                <div class="dropdown-box">
+                  <ul>
+                    <li><a href="#" class="btn-drop-menu">내 프로필</a></li>
+                    <li><a href="#" class="btn-drop-menu">회사 정보</a></li>
+                    <li><a href="#" class="btn-drop-menu">알림 설정</a></li>
+                    <li><a href="#" class="btn-drop-menu">로그아웃</a></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            <li><button type="button" class="btn-menu" data-info="mail"><i class="ico mail"></i></button></li>
+            <li><button type="button" class="btn-menu" data-info="alarm"><i class="ico alarm"></i></button></li>
+          </ul>
+        </header>
+        <!-- /header -->
+        <aside id="side_right_menu" class="side-menu">
+          <div class="gnb-box right mail">
+              <ul class="clear">
+                  <li><a href="#">메뉴1</a></li>
+                  <li><a href="#">메뉴2</a></li>
+                  <li><a href="#">메뉴3</a></li>
+              </ul>
+              <button type="button" class="btn-side-close close-box"><span class="txt">닫기</span></button>
+          </div>
+          </aside>
+        <aside id="side_right_menu" class="side-menu">
+          <div class="gnb-box right alarm">
+              <ul class="clear">
+                  <li><a href="#">메뉴21</a></li>
+                  <li><a href="#">메뉴22</a></li>
+                  <li><a href="#">메뉴23</a></li>
+              </ul>
+              <button type="button" class="btn-side-close close-box"><span class="txt">닫기</span></button>
+          </div>
+        </aside>
+      </div>
+
+
+      <header class="tbl-top band">
+        <div class="inp">
+          <input type="text" value="제목 없는 신청폼" placeholder="제목 없는 신청폼"class="inp-title">
+        </div>
+        <div class="band-center tc">
+          <div class="tab-wrap">
+            <ul class="tabs">
+              <li class="on"><a href="../html/form_detail1.html" class="tab-btn">편집하기</a></li>
+              <li><a href="../html/form_share.html" class="tab-btn active">공유하기</a></li>
+              <li><a href="../html/form_setting.html" class="tab-btn">설정</a></li>
+            </ul>
+            <span class="slider" data-left="0"></span>
+          </div>
+        </div>
+        <div class="row-list">
+
+          <button type="button" class="btn-m btn-white-line open-layer" data-info="layer-type-preview"><span>미리보기</span></button>
+          <button type="submit" class="btn-m btn-white open-confirm"><span>게시하기</span></button>
+        </div>
+      </header>
+      <div class="cnt-box-wrap">
+        <div class="form-list-wrap">
+          <!-- side form left -->
+          <aside class="side-form left">
+            <div class="cnt-top">
+              <h2 class="top-form-title">Page 1 title</h2>
+              <div class="dropdown-wrap type03">
+                <button type="button" class="btn-drop btn-plus"><span class="txt hide">메뉴 선택</span></button>
+                <div class="dropdown-box">
+                  <h2 class="drop-title">질문 유형 선택</h2>
+                  <ul>
+                    <li><a href="#" class="btn-drop-menu choice">선택형</a></li>
+                    <li><a href="#" class="btn-drop-menu chat">단답형</a></li>
+                    <li><a href="#" class="btn-drop-menu tel">연락처</a></li>
+                    <li><a href="#" class="btn-drop-menu location">주소</a></li>
+                    <li><a href="#" class="btn-drop-menu calendar">날짜</a></li>
+                    <li><a href="#" class="btn-drop-menu email">이메일</a></li>
+                    <li><a href="#" class="btn-drop-menu file">파일</a></li>
+                    <li><a href="#" class="btn-drop-menu agree">동의</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="page-info" >
+              <ul id="sortable">
+                <li>
+                  <button type="button" class="list-cnt"><span><i class="ico chat3"></i><var>성함</var></span></button>
+                  <button type="button" class="btn-close"><span class="txt">삭제</span></button>
+                </li>
+                <li>
+                  <button type="button" class="list-cnt"><span><i class="ico call"></i><var>연락처</var></span></button>
+                  <button type="button" class="btn-close"><span class="txt">삭제</span></button>
+                </li>
+                <li>
+                  <button type="button" class="list-cnt"><span><i class="ico location"></i><var>시공지 주소</var></span></button>
+                  <button type="button" class="btn-close"><span class="txt">삭제</span></button>
+                </li>
+                <li>
+                  <button type="button" class="list-cnt on"><span><i class="ico location"></i><var>시공지 주소</var></span></button>
+                  <button type="button" class="btn-close"><span class="txt">삭제</span></button>
+                </li>
+              </ul>
+            </div>
+            <div class="btm">
+              <button type="button" class="slider-drop">
+                <span class="txt">추천 질문 목록</span>
+              </button>
+              <div class="slider-drop-box">
+                <p class="tx-gray sm">질문을 희망하는 위치에 옮겨주세요</p>
+                <ul id="draggable">
+                  <li>
+                    <button type="button" class="list-cnt" data-value="list1"><span><i class="ico chat3"></i><var>시공지 유형</var></span></button>
+                  </li>
+                  <li>
+                    <button type="button" class="list-cnt" data-value="list2"><span><i class="ico call"></i><var>시공지 평형</var></span></button>
+                  </li>
+                  <li>
+                    <button type="button" class="list-cnt" data-value="list3"><span><i class="ico location"></i><var>엘리베이터 유무</var></span></button>
+                  </li>
+                  <li>
+                    <button type="button" class="list-cnt on" data-value="list4"><span><i class="ico location"></i><var>시공 희망일</var></span></button>
+                  </li>
+                  <li>
+                    <button type="button" class="list-cnt" data-value="list5"><span><i class="ico chat3"></i><var>입주 예정일</var></span></button>
+                  </li>
+                  <li>
+                    <button type="button" class="list-cnt" data-value="list6"><span><i class="ico call"></i><var>예산</var></span></button>
+                  </li>
+                  <li>
+                    <button type="button" class="list-cnt" data-value="list7"><span><i class="ico location"></i><var>이메일</var></span></button>
+                  </li>
+                  <li>
+                    <button type="button" class="list-cnt on" data-value="list8"><span><i class="ico location"></i><var>시공지 주소</var></span></button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+          </aside>
+          <!-- //side form left -->
+          <!-- side form right -->
+          <aside class="side-form right">
+            <div class="cnt-top">
+              <h2 class="top-form-title">질문 상세</h2>
+            </div>
+            <div class="cnt-top">
+              <h2 class="top-form-title">질문 유형</h2>
+              <div class="dropdown-wrap type02">
+                <button type="button" class="btn-drop choice"><span class="txt">선택형</span></button>
+                <div class="dropdown-box">
+                  <ul>
+                    <li><a href="#" class="btn-drop-menu choice">선택형</a></li>
+                    <li><a href="#" class="btn-drop-menu chat">단답형</a></li>
+                    <li><a href="#" class="btn-drop-menu tel">연락처</a></li>
+                    <li><a href="#" class="btn-drop-menu location">주소</a></li>
+                    <li><a href="#" class="btn-drop-menu calendar">날짜</a></li>
+                    <li><a href="#" class="btn-drop-menu email">이메일</a></li>
+                    <li><a href="#" class="btn-drop-menu file">파일</a></li>
+                    <li><a href="#" class="btn-drop-menu agree">동의</a></li>
+                  </ul>
+                </div>
+              </div>
+
+              <h2 class="top-form-title">질문 유형</h2>
+              <ul class="both-side-box">
+                <li>
+                  <span class="head">필수 선택</span>
+                  <span class="switch no-txt">
+                    <input type="checkbox" id="question01" checked="">
+                    <label for="question01" class="slider round"></label>
+                  </span>
+                </li>
+                <li>
+                  <span class="head">복수 선택</span>
+                  <span class="switch no-txt">
+                    <input type="checkbox" id="question02" checked="">
+                    <label for="question02" class="slider round"></label>
+                  </span>
+                </li>
+                <li>
+                  <span class="head">그리드형</span>
+                  <span class="switch no-txt">
+                    <input type="checkbox" id="question03" checked="">
+                    <label for="question03" class="slider round"></label>
+                  </span>
+                </li>
+              </ul>
+
+              <h2 class="top-form-title">디자인</h2>
+              <span class="head">1줄 개수</span>
+              <div class="inp-select">
+                <select name="areaType" style="width:100%;">
+                  <option value="1">1줄</option>
+                  <option value="2">2줄</option>
+                  <option value="3">3줄</option>
+                </select>
+            </div>
+
+          </aside>
+          <section class="form-list-box">
+            <div class="slider-area">
+              <div class="form-temp-box">
+                <ul class="form-temp-list">
+                  <li>
+                    <article class="template input">
+                      <div class="inbox">
+                        <ul class="info">
+                          <li>
+                            <div class="inp">
+                              <input type="text" name="" id="" value="시공 선택(1/5)" readonly>
+                            </div>
+                            <div class="inp">
+                              <input type="text" name="" id="" value="희망하시는 시공을 모두 선택해주세요." readonly>
+                            </div>
+                          </li>
+                          <li class="temp-box">
+                            <p class="filter-title tx-imp">시공 선택</p>
+                            <p class="sub-txt tx-gray">복수 선택 가능</p>
+                            <ul class="btn-group-wrap type03">
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">창호</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">주방</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">욕실</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">도어</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">필름</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">도배</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">마루</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">장판</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">철거</span></button></li>
+                            </ul>
+                          </li>
+                        </ul>
+                        <div class="dropdown-wrap type03 scroll">
+                          <button type="button" class="btn-drop btn-plus"><span class="txt hide">메뉴 선택</span></button>
+                          <div class="dropdown-box">
+                            <h2 class="drop-title">질문 유형 선택</h2>
+                            <ul>
+                              <li><a href="#" class="btn-drop-menu choice">선택형</a></li>
+                              <li><a href="#" class="btn-drop-menu chat">단답형</a></li>
+                              <li><a href="#" class="btn-drop-menu tel">연락처</a></li>
+                              <li><a href="#" class="btn-drop-menu location">주소</a></li>
+                              <li><a href="#" class="btn-drop-menu calendar">날짜</a></li>
+                              <li><a href="#" class="btn-drop-menu email">이메일</a></li>
+                              <li><a href="#" class="btn-drop-menu file">파일</a></li>
+                              <li><a href="#" class="btn-drop-menu agree">동의</a></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <button type="button" class="btn-close"><span class="txt hide">삭제</span></button>
+                                            <p class="badge-ordercheck"><span class="txt hide">오더체크 이용중</span></p>
+
+                    </article>
+                    <p class="page"></p>
+                  </li>
+                  <li>
+                    <article class="template input">
+                      <div class="inbox">
+                        <ul class="info">
+                          <li>
+                            <div class="inp">
+                              <input type="text" name="" id="" value="시공 선택(2/5)" readonly>
+                            </div>
+                            <div class="inp">
+                              <input type="text" name="" id=""  value="입력해주신 정보는 도면과 평수를 확인하고 견적을 안내드리는데 이용됩니다."  readonly>
+                            </div>
+                          </li>
+                          <li class="temp-box">
+                            <p class="filter-title tx-imp">시공지 주소</p>
+                            <div class="inp">
+                              <input type="text" name="" id="" placeholder="지번, 도로명, 건물명으로 검색" >
+                            </div>
+                            <div class="inp">
+                              <input type="text" name="" id="" placeholder="상세주소 입력">
+                            </div>
+                          </li>
+                          <li class="temp-box">
+                            <p class="filter-title tx-imp">시공 선택</p>
+                            <ul class="btn-group-wrap type02">
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">아파트</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">단독주택/빌라</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">오피스텔/주상복합</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">상가</span></button></li>
+                            </ul>
+                          </li>
+                          <li class="temp-box">
+                            <p class="filter-title tx-imp">시공 평형</p>
+                            <div class="inp">
+                              <input type="text" name="" id="" placeholder="">
+                              <span class="unit">평</span>
+                            </div>
+                          </li>
+                          <li class="temp-box">
+                            <p class="filter-title tx-imp">엘레베이터 유무</p>
+                            <ul class="btn-group-wrap type02">
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">엘레베이터 있음</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">엘레베이터 없음</span></button></li>
+                            </ul>
+                          </li>
+                        </ul>
+                        <div class="dropdown-wrap type03 scroll">
+                          <button type="button" class="btn-drop btn-plus"><span class="txt hide">메뉴 선택</span></button>
+                          <div class="dropdown-box">
+                            <h2 class="drop-title">질문 유형 선택</h2>
+                            <ul>
+                              <li><a href="#" class="btn-drop-menu choice">선택형</a></li>
+                              <li><a href="#" class="btn-drop-menu chat">단답형</a></li>
+                              <li><a href="#" class="btn-drop-menu tel">연락처</a></li>
+                              <li><a href="#" class="btn-drop-menu location">주소</a></li>
+                              <li><a href="#" class="btn-drop-menu calendar">날짜</a></li>
+                              <li><a href="#" class="btn-drop-menu email">이메일</a></li>
+                              <li><a href="#" class="btn-drop-menu file">파일</a></li>
+                              <li><a href="#" class="btn-drop-menu agree">동의</a></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <button type="button" class="btn-close"><span class="txt hide">삭제</span></button>
+                      <p class="badge-ordercheck"><span class="txt hide">오더체크 이용중</span></p>
+                    </article>
+                    <p class="page"></p>
+                  </li>
+                  <li>
+                    <article class="template input">
+                      <div class="inbox">
+                        <ul class="info">
+                          <li>
+                            <div class="inp">
+                              <input type="text" name="" id="" value="시공 일정 (3/5)" readonly>
+                            </div>
+                            <div class="inp">
+                              <input type="text" name="" id="" value="시공을 희망하시는 날짜를 선택해주세요."  readonly>
+                            </div>
+                          </li>
+                          <li class="temp-box">
+                            <p class="filter-title tx-imp">시공 희망일</p>
+                            <div class="inp inp-cal">
+                              <input type="text" name="date_build" id="" value="2021.10.30" >
+                            </div>
+                          </li>
+                          <li class="temp-box">
+                            <p class="filter-title tx-imp">입주 예정일</p>
+                            <div class="inp inp-cal">
+                              <input type="text" name="date_moving" id="" value="2021.10.30" >
+                            </div>
+                          </li>
+                        </ul>
+                        <div class="dropdown-wrap type03 scroll">
+                          <button type="button" class="btn-drop btn-plus"><span class="txt hide">메뉴 선택</span></button>
+                          <div class="dropdown-box">
+                            <h2 class="drop-title">질문 유형 선택</h2>
+                            <ul>
+                              <li><a href="#" class="btn-drop-menu choice">선택형</a></li>
+                              <li><a href="#" class="btn-drop-menu chat">단답형</a></li>
+                              <li><a href="#" class="btn-drop-menu tel">연락처</a></li>
+                              <li><a href="#" class="btn-drop-menu location">주소</a></li>
+                              <li><a href="#" class="btn-drop-menu calendar">날짜</a></li>
+                              <li><a href="#" class="btn-drop-menu email">이메일</a></li>
+                              <li><a href="#" class="btn-drop-menu file">파일</a></li>
+                              <li><a href="#" class="btn-drop-menu agree">동의</a></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <button type="button" class="btn-close"><span class="txt hide">삭제</span></button>
+                      <p class="badge-ordercheck"><span class="txt hide">오더체크 이용중</span></p>
+                    </article>
+                    <p class="page"></p>
+                  </li>
+                  <li>
+                    <article class="template input">
+                      <div class="inbox">
+                        <ul class="info">
+                          <li>
+                            <div class="inp">
+                              <input type="text" name="" id="" value="인테리어 예산 (4/5)" readonly>
+                            </div>
+                            <div class="inp">
+                              <input type="text" name="" id="" value="선택하신 예산은 공사규모와 방향을 결정하는 중요한 요소입니다." readonly>
+                            </div>
+                          </li>
+                          <li class="temp-box">
+                            <p class="filter-title tx-imp">인테리어 예산</p>
+                            <ul class="btn-group-wrap type03">
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">1,000 만원</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">2,000 만원</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">3,000 만원</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">4,000 만원</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">5,000 만원</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">6,000 만원</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">7,000 만원</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">8,000 만원</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">9,000 만원</span></button></li>
+                              <li><button type="button" class="btn-m btn-gray-line"><span class="txt">1억원 이상</span></button></li>
+                            </ul>
+                          </li>
+                        </ul>
+                        <div class="dropdown-wrap type03 scroll">
+                          <button type="button" class="btn-drop btn-plus"><span class="txt hide">메뉴 선택</span></button>
+                          <div class="dropdown-box">
+                            <h2 class="drop-title">질문 유형 선택</h2>
+                            <ul>
+                              <li><a href="#" class="btn-drop-menu choice">선택형</a></li>
+                              <li><a href="#" class="btn-drop-menu chat">단답형</a></li>
+                              <li><a href="#" class="btn-drop-menu tel">연락처</a></li>
+                              <li><a href="#" class="btn-drop-menu location">주소</a></li>
+                              <li><a href="#" class="btn-drop-menu calendar">날짜</a></li>
+                              <li><a href="#" class="btn-drop-menu email">이메일</a></li>
+                              <li><a href="#" class="btn-drop-menu file">파일</a></li>
+                              <li><a href="#" class="btn-drop-menu agree">동의</a></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <button type="button" class="btn-close"><span class="txt hide">삭제</span></button>
+                      <p class="badge-ordercheck"><span class="txt hide">오더체크 이용중</span></p>
+                    </article>
+                    <p class="page"></p>
+                  </li>
+                  <li>
+                    <article class="template input">
+                      <div class="inbox">
+                        <ul class="info">
+                          <li>
+                            <div class="inp">
+                              <input type="text" name="" id="" value="신청인 정보 (5/5)" readonly>
+                            </div>
+                            <div class="inp">
+                              <input type="text" name="" id="" value="신청인 정보를 입력해주세요."  readonly>
+                            </div>
+                          </li>
+                          <li class="temp-box">
+                            <p class="filter-title tx-imp">성함</p>
+                            <div class="inp">
+                              <input type="text" name="" id="" placeholder="성함" >
+                            </div>
+                          </li>
+                          <li class="temp-box">
+                            <p class="filter-title tx-imp">연락처</p>
+                            <div class="inp">
+                              <input type="text" name="" id="" placeholder="010-1234-5678 (‘-’ 없이 숫자 입력)" >
+                            </div>
+                          </li>
+                          <li class="temp-box">
+                            <span class="checkbox">
+                              <input type="checkbox" name="agree_chk" id="agree01" class="check" required="">
+                              <label for="agree01"><span class="box round"></span>개인정보 수집 및 이용 동의</label>
+                              <button type="button" class="btn-link"><span>보기</span></button>
+                            </span>
+                          </li>
+                        </ul>
+                        <div class="dropdown-wrap type03 scroll">
+                          <button type="button" class="btn-drop btn-plus"><span class="txt hide">메뉴 선택</span></button>
+                          <div class="dropdown-box">
+                            <h2 class="drop-title">질문 유형 선택</h2>
+                            <ul>
+                              <li><a href="#" class="btn-drop-menu choice">선택형</a></li>
+                              <li><a href="#" class="btn-drop-menu chat">단답형</a></li>
+                              <li><a href="#" class="btn-drop-menu tel">연락처</a></li>
+                              <li><a href="#" class="btn-drop-menu location">주소</a></li>
+                              <li><a href="#" class="btn-drop-menu calendar">날짜</a></li>
+                              <li><a href="#" class="btn-drop-menu email">이메일</a></li>
+                              <li><a href="#" class="btn-drop-menu file">파일</a></li>
+                              <li><a href="#" class="btn-drop-menu agree">동의</a></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <button type="button" class="btn-close"><span class="txt hide">삭제</span></button>
+                      <p class="badge-ordercheck"><span class="txt hide">오더체크 이용중</span></p>
+                    </article>
+                    <p class="page"></p>
+                  </li>
+
+
+                  <li>
+                    <button type="button" class="template new"><span class="hide">새로운 템플릿</span></button>
+                    <p class="page"></p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <footer class="cnt-bottom">
+              <button type="button" class="btn-form-arrow" title="사이드오픈" data-direction="left">
+                <span class="hide">사이드 메뉴 열기</span>
+              </button>
+
+              <div>
+                <img src="../resource/images/common/ico_switch-txt.png" alt="오더체크 이용중 체크"/>
+                <span class="switch">
+                  <input type="checkbox" id="ordercheck" checked="">
+                  <label for="ordercheck" class="slider round"></label>
+                </span>
+              </div>
+
+              <button type="button" class="btn-form-arrow" title="사이드오픈" data-direction="right">
+                 <span class="hide">사이드 메뉴 열기</span>
+              </button>
+
+            </footer>
+          </section>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+  <!-- 미리보기 -->
+  <div class="layer-pop confirm" id="layer-type-preview">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">미리보기</h2>
+      </div>
+      <div class="layer-mid">
+        <div class="btn-group-wrap">
+          <span><button type="button" class="btn-l btn-line-gray btn-type-onepage"><span class="txt">원페이지형</span></button></span>
+          <span><button type="button" class="btn-l btn-line-gray btn-type-slide"><span class="txt">슬라이드형</span></button></span>
+        </div>
+
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-bk"><span>확인</span></button>
+        </div>
+      </div>
+      <button type="button" class="btn-close layer-close"><span class="txt">팝업 닫기</span></button>
+    </div>
+  </div>
+
+  <!-- script -->
+  <script src="../resource/js/vendor/jquery-2.1.3.min.js"></script>
+  <script src="../resource/js/vendor/jquery-ui-1.13.0.js"></script><!-- 임시!! 파일로 교체하기 -->
+  <script src="../resource/js/vendor/jquery.nice-select.min.js"></script>
+  <!-- date range -->
+  <script type="text/javascript" src="../resource/js/vendor/moment.min.js"></script>
+  <script type="text/javascript" src="../resource/js/vendor/daterangepicker.js"></script>
+
+  <script src="../resource/js/layerpop.js"></script><!-- 레이어팝업 -->
+  <script src="../resource/js/common.js" ></script>
+  <script>
+    //공통 페이지용 함수
+    pageInit ()
+    //우측 탭
+    window.onload = function(){
+      tabFunc (".tab-wrap",true)
+    }
+    //레이어
+    layerFunc (".open-layer")
+    clickAddClassFunc("#layer-type-preview .btn-group-wrap .btn-l","#layer-type-preview .btn-group-wrap .btn-l","on",null, true)
+
+    templateFunc()
+    templateSideFunc()
+
+    // 레이어 팝업 - 한개만
+    $('.inp-select select').niceSelect();
+
+    //alert
+    var alertBtn = document.querySelector('.open-confirm');
+    var confirmCallback = function(){
+        console.log('컨펌용 콜백');
+    }
+    alertBtn.addEventListener('click', function(){
+      layerConfirm(confirmCallback, '', '게시하시겠습니까?', '취소', '확인');
+    });
+
+    // date picker
+    $('input[name="date_build"]').daterangepicker({
+      locale: {                    // 시작일시와 종료일시 구분자
+      "format": 'YYYY.MM.DD',     // 일시 노출 포맷
+      "applyLabel": "확인",       // 확인 버튼 텍스트
+      "cancelLabel": "초기화",    // 취소 버튼 텍스트
+      "daysOfWeek": ["일", "월", "화", "수", "목", "금", "토"],
+      "monthNames": ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+      },
+      opens: 'center',
+      timePicker: false,
+      singleDatePicker: true,
+      buttonClasses: "btn",
+      applyButtonClasses: "btn-bk",
+      cancelButtonClasses:"btn-bk-line btn-reset hide",
+      isCustomDate : function(tdDate) {//2021-12-16
+        var thisDate = tdDate._d
+        var today = new Date()
+        var thisYear =thisDate.getFullYear()
+        var thisMonth = thisDate.getMonth() + 1
+        var thisDay = thisDate.getDate()
+        var nowYear = today.getFullYear()
+        var nowMonth = today.getMonth() + 1
+        var nowDay = today.getDate()
+
+        if(thisYear == nowYear && thisMonth == nowMonth ) {
+          if($(".available").text() == nowDay) {
+            $(this).classList.add("today")
+          }
+        }
+
+      }
+    }, function(start, end, label) {
+      //선택 후 액션
+      console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    });
+    // date picker
+    $('input[name="date_moving"]').daterangepicker({
+      locale: {                    // 시작일시와 종료일시 구분자
+      "format": 'YYYY.MM.DD',     // 일시 노출 포맷
+      "applyLabel": "확인",       // 확인 버튼 텍스트
+      "cancelLabel": "초기화",    // 취소 버튼 텍스트
+      "daysOfWeek": ["일", "월", "화", "수", "목", "금", "토"],
+      "monthNames": ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+      },
+      opens: 'center',
+      timePicker: false,
+      singleDatePicker: true,
+      buttonClasses: "btn",
+      applyButtonClasses: "btn-bk",
+      cancelButtonClasses:"btn-bk-line btn-reset hide",
+      isCustomDate : function(tdDate) {//2021-12-16
+        var thisDate = tdDate._d
+        var today = new Date()
+        var thisYear =thisDate.getFullYear()
+        var thisMonth = thisDate.getMonth() + 1
+        var thisDay = thisDate.getDate()
+        var nowYear = today.getFullYear()
+        var nowMonth = today.getMonth() + 1
+        var nowDay = today.getDate()
+
+        if(thisYear == nowYear && thisMonth == nowMonth ) {
+          if($(".available").text() == nowDay) {
+            $(this).classList.add("today")
+          }
+        }
+
+      }
+    }, function(start, end, label) {
+      //선택 후 액션
+      console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    });
+    $('input[name="date_build"],input[name="date_moving"]').on('apply.daterangepicker', function(ev, picker) {//2021-12-20
+      $(this).addClass("selected")
+    });
+  </script>
+</body>
+</html>

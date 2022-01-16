@@ -1,0 +1,1047 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="">
+  <meta property="og:type" content="website">
+  <meta name="naver-site-verification" content="">
+  <meta property="og:image" content="">
+  <meta http-equiv="Cache-Control" content="No-Cache">
+  <meta http-equiv="Pragma" content="No-Cache">
+  <meta name="language" content="ko">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+
+  <title>고객 관리 상세 메인</title>
+
+  <!-- css, js 연결 -->
+  <link rel="stylesheet" href="../resource/css/vendor/nice-select.css">
+  <link rel="stylesheet" href="../resource/css/layout.css">
+  <link rel="stylesheet" href="../resource/css/contents.css">
+
+
+</head>
+
+<body>
+  <div id="wrap">
+    <nav class="sidebar">
+      <div class="logo-details">
+        <button type="button" class="btn-side-open"><img src="../resource/images/common/ico_logo-mark.png" alt="오더체크"></button>
+        <h1 class="logo_name"><img src="../resource/images/common/ico_logo-name.png" alt="오더체크"/></h1>
+      </div>
+
+      <ul class="nav-list">
+        <li>
+          <a href="#">
+            <i class='ico home'></i>
+            <span class="links_name">홈</span>
+          </a>
+        </li>
+        <li class="on">
+          <a href="customManage_list.html">
+            <i class="ico user"></i>
+            <span class="links_name">고객 관리</span>
+          </a>
+        </li>
+        <li>
+          <a href="file_storage.html">
+            <i class='ico file'></i>
+            <span class="links_name">파일 보관함</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class='ico chat'></i>
+            <span class="links_name">채팅</span>
+          </a>
+        </li>
+        <li>
+          <a href="form_list.html">
+            <i class='ico form'></i>
+            <span class="links_name">상담 신청폼</span>
+          </a>
+        </li>
+       </ul>
+        <ul class="btm">
+          <li>
+            <a href="#">
+              <i class='ico help'></i>
+              <span class="links_name">자주 묻는 질문</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class='ico setting'></i>
+              <span class="links_name">설정</span>
+            </a>
+          </li>
+        </ul>
+    </nav>
+    <section id="content" class="content-section">
+      <!-- #include file="include_header.html" -->
+      <!-- header -->
+      <div class="header-wrap">
+        <header id="header" class="header">
+          <h2 class="title">고객 관리</h2>
+          <ul class="menu">
+            <li>
+              <div class="searchbox">
+                <i class='ico search'></i>
+                <input type="text" placeholder="검색해보세요.">
+              </div>
+            </li>
+            <li>
+              <div class="dropdown-wrap">
+                <button type="button" class="btn-drop">
+                  <div class="profile-details">
+                    <img src="../resource/images/profile.jpg" class="img" alt="profileImg">
+                    <span class="name">홍길동님</span>
+                    <i class="arrow down"></i>
+                  </div>
+
+                </button>
+                <div class="dropdown-box">
+                  <ul>
+                    <li><a href="#" class="btn-drop-menu">내 프로필</a></li>
+                    <li><a href="#" class="btn-drop-menu">회사 정보</a></li>
+                    <li><a href="#" class="btn-drop-menu">알림 설정</a></li>
+                    <li><a href="#" class="btn-drop-menu">로그아웃</a></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            <li><button type="button" class="btn-menu" data-info="mail"><i class="ico mail"></i></button></li>
+            <li><button type="button" class="btn-menu" data-info="alarm"><i class="ico alarm"></i></button></li>
+          </ul>
+        </header>
+        <!-- /header -->
+        <aside id="side_right_menu" class="side-menu">
+          <div class="gnb-box right mail">
+              <ul class="clear">
+                  <li><a href="#">메뉴1</a></li>
+                  <li><a href="#">메뉴2</a></li>
+                  <li><a href="#">메뉴3</a></li>
+              </ul>
+              <button type="button" class="btn-side-close close-box"><span class="txt">닫기</span></button>
+          </div>
+          </aside>
+        <aside id="side_right_menu" class="side-menu">
+          <div class="gnb-box right alarm">
+              <ul class="clear">
+                  <li><a href="#">메뉴21</a></li>
+                  <li><a href="#">메뉴22</a></li>
+                  <li><a href="#">메뉴23</a></li>
+              </ul>
+              <button type="button" class="btn-side-close close-box"><span class="txt">닫기</span></button>
+          </div>
+          </aside>
+      </div>
+
+      <!-- location -->
+      <ul class="location-wrap">
+        <li><a href="dahboard.html" target="_blank"><img src="../resource/images/nav/ico_home-bk.png" alt=""/></a></li>
+        <li><a href="customManage_list.html">고객관리</a></li>
+        <li>고객명</li>
+      </ul>
+      <!-- //location -->
+
+      <div class="cnt-box-wrap">
+        <div class="cnt-box">
+          <div class="tbl-top">
+            <h3 class="title">고객상세</h3>
+            <div class="row-list">
+
+              <button type="button" class="btn btn-bk-line open-layer" data-info="layer-customer-share"><span><i class="ico sharing"></i>고객 정보 공유</span></button>
+              <button type="button" class="btn btn-bk-line"><span><i class="ico chat2"></i>메세지 보내기</span></button>
+              <button type="button" class="btn btn-bk-line"><span><i class="ico folder"></i>파일 관리</span></button>
+              <button type="button" class="btn btn-bk open-confirm"><span>저장하기</span></button>
+              <!-- <button type="button" class="btn btn-bk open-layer" data-info="layer-revise"><span>저장하기</span></button> --><!-- 수정 레이어용 -->
+            </div>
+          </div>
+
+          <!-- cnt-inner -->
+          <div class="cnt-inner">
+            <div class="left">
+              <div class="filter-box">
+                <p class="filter-title">고객명</p>
+                <div class="inp">
+                  <input type="text" name="" id="" placeholder="고객명" value="">
+                </div>
+              </div>
+
+              <div class="filter-box">
+                <p class="filter-title">연락처</p>
+                <div class="inp">
+                  <input type="tel" name="" id="" placeholder="연락처" value="">
+                </div>
+              </div>
+
+              <div class="filter-box">
+                <p class="filter-title">주소</p>
+                <div class="inp-line">
+                  <span class="inp">
+                    <input type="text" name="" >
+                  </span>
+                  <button type="submit" class="btn btn-light-blue"><span>주소 검색</span></button>
+                </div>
+                <div class="inp">
+                  <input type="text" name="" placeholder="상세주소">
+                </div>
+              </div>
+
+              <div class="filter-box">
+                <p class="filter-title">평형</p>
+                <div class="inp-row">
+
+                  <div class="inp">
+                    <input type="text" name="" id="" class="cal" value="000">
+                    <span class="unit">평</span>
+                  </div>
+                  <!-- select -->
+                  <div class="inp-select">
+                  <select name="areaType" style="width:100%;">
+                    <option value="000">공급</option>
+                    <option value="001">전용</option>
+                  </select>
+                </div>
+
+                </div>
+              </div>
+
+              <div class="filter-box">
+                <p class="filter-title">담당자</p>
+                <div class="inp-line">
+                  <span class="inp">
+                    <input type="text" name="" placeholder="담당자 없음">
+                  </span>
+                  <button type="submit" class="btn btn-light-blue open-layer" data-info="layer-manager-assign"><span>담당자 배정</span></button>
+                </div>
+              </div>
+
+              <div class="filter-box">
+                <p class="filter-title">상담 상태</p>
+                <div class="tab-radio-box row-list color">
+                  <span class="tab">
+                    <input type="radio" name="consult" id="consult1">
+                    <label for="consult1">상담신청</label>
+                  </span>
+                  <span class="tab">
+                    <input type="radio" name="consult" id="consult2" checked>
+                    <label for="consult2">상담 중</label>
+                  </span>
+                  <span class="tab">
+                    <input type="radio" name="consult" id="consult3">
+                    <label for="consult3">상담 완료</label>
+                  </span>
+                  <span class="tab">
+                    <input type="radio" name="consult" id="consult4">
+                    <label for="consult4">거절</label>
+                  </span>
+                  <span class="tab">
+                    <input type="radio" name="consult" id="consult5">
+                    <label for="consult5">이슈</label>
+                  </span>
+                </div>
+
+              </div>
+
+              <div class="filter-box">
+                <p class="filter-title">계약 가능성</p>
+                <div class="tab-radio-box row-list">
+                  <span class="tab">
+                    <input type="checkbox" name="contact" id="contact1">
+                    <label for="contact1"><span>없음</span></label>
+                  </span>
+                  <span class="tab">
+                    <input type="checkbox" name="contact" id="contact2" checked>
+                    <label for="contact2"><span>50% 미만</span></label>
+                  </span>
+                  <span class="tab">
+                    <input type="checkbox" name="contact" id="contact3">
+                    <label for="contact3"><span>50% 이상</span></label>
+                  </span>
+                  <span class="tab">
+                    <input type="checkbox" name="contact" id="contact4">
+                    <label for="contact4"><span>계약 완료</span></label>
+                  </span>
+                </div>
+
+              </div>
+
+              <div class="filter-box">
+                <p class="filter-title">최초 접수일</p>
+                <div class="inp">
+                  <input type="text" name="" id="" placeholder="최초 접수일" value="2021.10.30" disabled>
+                </div>
+              </div>
+
+              <div class="tr">
+                <button type="button" class="btn-link open-layer" data-info="layer-custom-delete"><span>고객 삭제</span></button>
+              </div>
+            </div>
+            <div class="right line">
+              <!-- tabs -->
+              <div class="tab-wrap">
+                <ul class="tabs">
+                  <li class="on"><button type="button" class="tab-btn active" data-tab="tab1">타임라인</button></li>
+                  <li><button type="button" class="tab-btn" data-tab="tab2">견적 내역</button></li>
+                  <li><button type="button" class="tab-btn" data-tab="tab3">고객 연동하기 <var class="tx-org">2</var></button></li>
+                </ul>
+                <span class="slider" data-left="0"></span>
+              </div>
+              <!-- //tabs -->
+              <section class="tab-content">
+                <div class="content active" id="tab1">
+                    <h2 class="filter-title">진행 타임라인</h2>
+                    <div class="accordion">
+                        <!-- accordion box -->
+                      <div class="accordion-box active">
+                        <button type="button" class="accordion-title"><span class="badge apply">상담신청</span><span class="date">2021.10.21</span></button>
+                        <div class="accordion-cnt">
+                          <div class="inner">
+                            <dl>
+                              <dt class="head">시공 선택</dt>
+                              <dd>
+                                <ul class="info-list">
+                                  <li><i class="ico chat3"></i><var>주방, 역실, 필름, 도배, 철거</var></li>
+                                </ul>
+                              </dd>
+                              <dt class="head">시공지 정보</dt>
+                              <dd>
+                                <ul class="info-list">
+                                  <li><i class="ico location"></i><strong>시공지 주소:</strong><var>서울시 성북구 길음동 아파트 101 </var></li>
+                                  <li><i class="ico call"></i><strong>시공지 평형:</strong><var>32평</var></li>
+                                  <li><i class="ico chat3"></i><strong>엘레베이터 유무:</strong><var>있음</var></li>
+                                </ul>
+                              </dd>
+                              <dt class="head">시공 일정</dt>
+                              <dd>
+                                <ul class="info-list">
+                                  <li><i class="ico cal"></i><strong>시공 희망일:</strong><var>2021.12.30</var></li>
+                                  <li><i class="ico folder2"></i><strong>입주 예정일:</strong><var>2021.12.30</var></li>
+                                </ul>
+                              </dd>
+                              <dt class="head">인테리어 예산</dt>
+                              <dd>
+                                <ul class="info-list">
+                                  <li><i class="ico chat3"></i><var>7,000만 원</var></li>
+                                </ul>
+                              </dd>
+                              <dt class="head">신청인 정보</dt>
+                              <dd>
+                                <ul class="info-list">
+                                  <li><i class="ico folder2"></i><strong>성함:</strong><var>홍길동</var></li>
+                                  <li><i class="ico folder2"></i><strong>연락처:</strong><var>010-1234-6789</var></li>
+                                </ul>
+                              </dd>
+                            </dl>
+                          </div>
+
+                        </div><!-- //accordion-ncnt-->
+                      </div>
+                      <!-- //accordion box -->
+                      <!-- accordion box -->
+                      <div class="accordion-box">
+                        <button type="button" class="accordion-title"><span class="badge complete">상담 완료</span><span class="date">2021.10.21</span></button>
+                        <div class="accordion-cnt">
+                          <div class="inner">
+                            <div class="inp">
+                              <input type="text" name="" id="" placeholder="내용을 입력해주세요" style="width:100%"/>
+                            </div>
+                          </div>
+                        </div><!-- //accordion-ncnt-->
+                      </div>
+                      <!-- //accordion box -->
+                      <!-- accordion box -->
+
+                      <div class="accordion-box">
+                        <button type="button" class="accordion-title"><span class="badge refuse">거절</span><span class="date">2021.10.21</span></button>
+                        <div class="accordion-cnt">
+                          <div class="inner">
+                            <div class="inp">
+                              <input type="text" name="" id="" placeholder="내용을 입력해주세요" style="width:100%"/>
+                            </div>
+                          </div>
+                        </div><!-- //accordion-ncnt-->
+                      </div>
+                    </div>
+                    <!-- //accordion box -->
+                    <!-- data empty box -->
+                    <div class="data-empty-box bg" style="display:none">
+                      <p class="txt">아직 연동된 고객이 없어요!</p>
+                    </div>
+                    <!-- //data empty box -->
+
+                </div>
+                <div class="content" id="tab2">
+                    <div class="tbl-top">
+                      <!-- select -->
+                      <div class="inp-select">
+                        <select name="ui_select" style="width:100%;">
+                          <option value="list">리스트형</option>
+                          <option value="card" selected>카드형</option>
+                        </select>
+                        <!-- select -->
+                      </div>
+                      <button type="button" class="btn btn-bk-line open-layer" data-info="layer-estimate-upload"><span>견적 업로드</span></button>
+                    </div>
+                    <!-- 리스트 -->
+                    <div class="tbl-type1" style="display:none">
+                      <table>
+                        <caption>고객 리스트 정보</caption>
+                        <colgroup>
+                          <col style="width:73px">
+                          <col style="width:77px">
+                          <col style="width:119px">
+                          <col style="width:196px">
+                          <col style="width:143px">
+                          <col style="width:174px">
+                          <col style="width:79px">
+                          <col style="width:130px">
+                        </colgroup>
+                        <thead>
+                          <tr>
+                            <th scope="col">대표</th>
+                            <th scope="col">차수</th>
+                            <th scope="col">업로드 일시</th>
+                            <th scope="col">제목</th>
+                            <th scope="col">파일</th>
+                            <th scope="col">견적 금액</th>
+                            <th scope="col" colspan="2">공유 일시</th>
+
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>
+                              <span class="checkbox">
+                                <input type="checkbox" name="estimate" id="estimate04" class="check">
+                                <label for="estimate04"><span class="box"></span><span class="hide">견적 4</span></label>
+                              </span>
+                            </td>
+                            <td>4</td>
+                            <td>2021.10.31</td>
+                            <td>도배, 마루, 견적서</td>
+                            <td><a href="sampletext.pdf" class="btn-link down" target="_blank" download>sampletext.pdf</a></td>
+                            <td>1억 2,342 만 원</td>
+                            <td>-</td>
+                            <td>
+                              <button type="button" class="btn-round send open-layer" data-info="layer-estimate-share"><span>보내기</span></button>
+                              <button type="button" class="btn-round edit open-layer" data-info="layer-estimate-edit""><span>글쓰기</span></button>
+                              <button type="button" class="btn-round delete open-layer" data-info="layer-estimate-delete"><span>지우기</span></button>
+                            </td>
+                          </tr>
+                          <tr class="del">
+                            <td>
+                              <span class="checkbox">
+                                <input type="checkbox" name="estimate" id="estimate03" class="check">
+                                <label for="estimate03"><span class="box"></span><span class="hide">견적 3</span></label>
+                              </span>
+                            </td>
+                            <td>3</td>
+                            <td>2021.10.31</td>
+                            <td>창호 견적서</td>
+                            <td><a href="sampletext1230.pdf" class="btn-link down" target="_blank" download>sampletext1230.pdf</a></td>
+                            <td>1억 2,342 만 원</td>
+                            <td>-</td>
+                            <td>
+                              <button type="button" class="btn-round send open-layer" data-info="layer-estimate-share" disabled><span>보내기</span></button>
+                              <button type="button" class="btn-round edit open-layer" data-info="layer-estimate-edit" disabled><span>글쓰기</span></button>
+                              <button type="button" class="btn-round delete open-layer" data-info="layer-estimate-delete" disabled><span>지우기</span></button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <span class="checkbox">
+                                <input type="checkbox" name="estimate" id="estimate02" class="check">
+                                <label for="estimate02"><span class="box"></span><span class="hide">견적 2</span></label>
+                              </span>
+                            </td>
+                            <td>2</td>
+                            <td>2021.10.31</td>
+                            <td>도배, 마루, 견적서</td>
+                            <td><a href="sampletext.pdf" class="btn-link down" target="_blank" download>sampletext.pdf</a></td>
+                            <td>1억 2,342 만 원</td>
+                            <td>2021.10.31</td>
+                            <td>
+                              <button type="button" class="btn-round send open-layer" data-info="layer-estimate-share"><span>보내기</span></button>
+                              <button type="button" class="btn-round edit open-layer" data-info="layer-estimate-edit""><span>글쓰기</span></button>
+                              <button type="button" class="btn-round delete open-layer" data-info="layer-estimate-delete"><span>지우기</span></button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <span class="checkbox">
+                                <input type="checkbox" name="estimate" id="estimate01" class="check">
+                                <label for="estimate01"><span class="box"></span><span class="hide">견적 1</span></label>
+                              </span>
+                            </td>
+                            <td>1</td>
+                            <td>2021.10.31</td>
+                            <td>도배, 마루, 견적서</td>
+                            <td><a href="sampletext.pdf" class="btn-link down" target="_blank" download>sampletext.pdf</a></td>
+                            <td>1억 2,342 만 원</td>
+                            <td>-</td>
+                            <td>
+                              <button type="button" class="btn-round send open-layer" data-info="layer-estimate-share"><span>보내기</span></button>
+                              <button type="button" class="btn-round edit open-layer" data-info="layer-estimate-edit""><span>글쓰기</span></button>
+                              <button type="button" class="btn-round delete open-layer" data-info="layer-estimate-delete"><span>지우기</span></button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <!-- 카드형 -->
+                    <ul class="list-linkbox card">
+                      <li>
+                        <div class="tbl-top">
+                          <div class="top-title">
+                            <span class="badge position blue">대표</span><var class="name">n차 견적서 </var>
+                          </div>
+                          <div class="group">
+                            <button type="button" class="btn-round edit open-layer" data-info="layer-estimate-edit"><span>글쓰기</span></button>
+                            <button type="button" class="btn-round delete open-layer" data-info="layer-estimate-delete"><span>지우기</span></button>
+                          </div>
+                        </div>
+                        <p class="txt">도배, 마루 견적서</p>
+                        <ul class="info-list">
+                          <li><span class="head">파일</span><span class="desc"><a href="sampletext.pdf" class="btn-link" target="_blank" download>sampletext.pdf</a> <a href="sampletext.pdf" class="btn-down" target="_blank" download>다운로드</a></span></li>
+                          <li><span class="head">견적금액</span><span class="desc">1억 3,429 만 원</span></li>
+                          <li><span class="head">업로드 일시</span><span class="desc">2021.10.21</span></li>
+                          <li><span class="head">공유 일시</span><span class="desc">2021.10.21</span></li>
+                          <li><span class="head">확인 유무</span><strong class="desc tx-darkblue">확인</strong></li>
+                        </ul>
+                        <button type="button" class="btn btn-gray"><span>공유완료</span></button><!-- 2021-11-20 -->
+
+                      </li>
+                      <li>
+                        <div class="tbl-top">
+                          <div class="top-title">
+                            <span class="badge position gray">대표</span><var class="name">n차 견적서</var>
+                          </div>
+                          <div class="group">
+                            <button type="button" class="btn-round edit open-layer" data-info="layer-estimate-edit"><span>글쓰기</span></button>
+                            <button type="button" class="btn-round delete open-layer" data-info="layer-estimate-delete"><span>지우기</span></button>
+                          </div>
+                        </div>
+                        <p class="txt">도배, 마루 견적서</p>
+                        <ul class="info-list">
+                          <li><span class="head">파일</span><span class="desc"><a href="sampletext.pdf" class="btn-link" target="_blank" download>sampletext.pdf</a> <a href="sampletext.pdf" class="btn-down" target="_blank" download>다운로드</a></span></li>
+                          <li><span class="head">견적금액</span><span class="desc">1억 3,429 만 원</span></li>
+                          <li><span class="head">업로드 일시</span><span class="desc">2021.10.21</span></li>
+                          <li><span class="head">공유 일시</span><span class="desc">-</span></li>
+                          <li><span class="head">확인 유무</span><strong class="desc tx-darkblue">미확인</strong></li>
+                        </ul>
+                        <button type="submit" class="btn btn-light-blue open-layer" data-info="layer-estimate-share"><span><i class="ico send"></i>공유하기</span></button>
+
+                      </li>
+                      <li>
+                        <div class="tbl-top">
+                          <div class="top-title">
+                            <span class="badge position gray">대표</span><var class="name">n차 견적서</var>
+                          </div>
+                          <div class="group">
+                            <button type="button" class="btn-round edit open-layer" data-info="layer-estimate-edit"><span>글쓰기</span></button>
+                            <button type="button" class="btn-round delete open-layer" data-info="layer-estimate-delete"><span>지우기</span></button>
+                          </div>
+                        </div>
+                        <p class="txt">도배, 마루 견적서</p>
+                        <ul class="info-list">
+                          <li><span class="head">파일</span><span class="desc"><a href="sampletext.pdf" class="btn-link" target="_blank" download>sampletext.pdf</a> <a href="sampletext.pdf" class="btn-down" target="_blank" download>다운로드</a></span></li>
+                          <li><span class="head">견적금액</span><span class="desc">1억 3,429 만 원</span></li>
+                          <li><span class="head">업로드 일시</span><span class="desc">2021.10.21</span></li>
+                          <li><span class="head">공유 일시</span><span class="desc">2021.10.21</span></li>
+                          <li><span class="head">확인 유무</span><strong class="desc tx-darkblue">미확인</strong></li>
+                        </ul>
+                        <button type="submit" class="btn btn-gray"><span>공유완료</span></button>
+
+                      </li>
+                    </ul>
+                </div>
+                <div class="content" id="tab3">
+                  <div class="checkbox">
+                    <input type="checkbox" name="interlink" id="interlink_all" class="check">
+                    <label for="interlink_all"><span class="box"></span><span>전체 연동하기</span></label>
+                  </div>
+
+                  <!-- 링크 -->
+                  <ul class="list-linkbox link">
+                    <li>
+                      <a href="#">
+                        <div class="checkbox">
+                          <input type="checkbox" name="interlink" id="interlink01" class="check">
+                          <label for="interlink01"><span class="box"></span><span><span class="badge position on">대표</span><var class="name">홍길동</var><var class="date">21.10.31</var></span></label>
+                        </div>
+                        <ul class="info-list">
+                          <li><span class="head">번호</span><span class="desc">010.1234.5678</span></li>
+                          <li><span class="head">주소</span><span class="desc">서울특별시 성복구 길음동1232-13 현미건물 3층</span></li>
+                        </ul>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <div class="checkbox">
+                          <input type="checkbox" name="interlink" id="interlink02" class="check">
+                          <label for="interlink02"><span class="box"></span><span><span class="badge position">대표</span><var class="name">홍길동</var><var class="date">21.10.31</var></span></label>
+                        </div>
+                        <ul class="info-list">
+                          <li><span class="head">번호</span><span class="desc">010.1234.5678</span></li>
+                          <li><span class="head">주소</span><span class="desc">서울특별시 성복구 길음동1232-13 현미건물 3층</span></li>
+                        </ul>
+                      </a>
+                    </li>
+                  </ul>
+
+                  <div class="btn-group btm">
+                    <button type="button" class="btn-l btn-bk open-layer" data-info="layer-info-total"><span>연동하기</span></button>
+                  </div>
+                </div>
+              </section>
+
+
+
+            </div>
+          </div>
+          <!-- //cnt-inner -->
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+
+  <div class="layer-pop" id="layer-manager-assign">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">담당자 배정</h2>
+      </div>
+      <div class="layer-mid">
+        <div class="search-top">
+          <strong class="txt">팀원<var class="tx-org">12</var></strong>
+          <span class="tx-gray">(열람 가능한 팀원들만 노출됩니다.)</span>
+        </div>
+        <div class="inp-line">
+          <span class="inp">
+            <input type="text" name="" placeholder="팀원명을 검색하세요.">
+          </span>
+          <button type="submit" class="btn btn-light-blue"><span>검색</span></button>
+        </div>
+        <div class="manager-box">
+          <div class="inbox">
+            <ul>
+              <li>
+                <span class="checkbox">
+                  <input type="checkbox" name="manager_select" id="manager01" class="check">
+                  <label for="manager01"><span class="box"></span><img src="../resource/images/thumnail/img_person2.png" alt="" /><strong>나</strong><span class="txt">홍길동</span></label>
+                </span>
+              </li>
+              <li>
+                <span class="checkbox">
+                  <input type="checkbox" name="manager_select" id="manager02" class="check">
+                  <label for="manager02"><span class="box"></span><img src="../resource/images/thumnail/img_person3.png" alt="" /><span class="txt">김수안</span></label>
+                </span>
+              </li>
+              <li>
+                <span class="checkbox">
+                  <input type="checkbox" name="manager_select" id="manager03" class="check">
+                  <label for="manager03"><span class="box"></span><img src="../resource/images/thumnail/img_person4.png" alt="" /><span class="txt">김수안무</span></label>
+                </span>
+              </li>
+              <li>
+                <span class="checkbox">
+                  <input type="checkbox" name="manager_select" id="manager04" class="check">
+                  <label for="manager04"><span class="box"></span><img src="../resource/images/thumnail/img_person4.png" alt="" /><span class="txt">김수안무</span></label>
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="layer-btn tr">
+          <button type="button" class="btn-l btn-bk-line btn-reset"><span><i class="ico refresh"></i> 초기화</span></button>
+          <button type="button" class="btn-l btn-bk"><span>확인</span></button>
+        </div>
+        <button type="button" class="btn-close layer-close"><span class="txt">닫기</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="layer-pop" id="layer-estimate-upload">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">견적 업로드</h2>
+      </div>
+      <div class="layer-mid">
+        <div class="filter-wrap">
+          <div class="filter-box">
+            <p class="filter-title">파일</p>
+            <div class="inp-line">
+              <span class="inp filebox">
+                <input type="text" class="upload-name" value="" placeholder="첨부파일" readonly>
+                <input type="file" name="" id="file1" placeholder="파일 검색">
+                <button type="button" class="pos btn-remove"><span class="txt hide">내용삭제</span></button>
+              </span>
+              <label for="file1" class="btn btn-light-blue"><span>첨부하기</span></label>
+            </div>
+            <span class="tx-warn tx-org">견적 파일은 1개까지 첨부할 수 있습니다.</span>
+          </div>
+
+          <div class="filter-box">
+            <p class="filter-title">견적 제목</p>
+            <span class="inp">
+              <input type="text" name="" placeholder="시공명_견적서">
+            </span>
+          </div>
+
+          <div class="filter-box">
+            <p class="filter-title">주소 <span class="tx-gray">주소가 맞지 않는 경우 고객이 일치하는지 확인해주세요!</span></p>
+            <div class="inp-line">
+              <span class="inp">
+                <input type="text" name="" value="서울시 강남구 도산대로 145 (인무빌딩)" readonly>
+              </span>
+              <button type="submit" class="btn btn-light-blue" disabled><span>주소 검색</span></button>
+            </div>
+            <div class="inp">
+              <input type="text" name="" placeholder="상세주소" value="1310호" readonly>
+            </div>
+            <span class="tx-warn tx-org">견적 주소는 고객 주소로 변경이 불가합니다.</span>
+          </div>
+
+          <div class="filter-box">
+            <p class="filter-title">견적 금액</p>
+            <span class="inp">
+              <input type="text" name="e_price" placeholder="0" value="123450000">
+              <span class="unit">원</span>
+            </span>
+            <div class="tx-warn">고객 견적서에 <span class="tx-org">x억 x,xxx,x만원</span>으로 표출됩니다.</div>
+          </div>
+
+        </div><!-- filter wrap-->
+
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-gray layer-close"><span>취소</span></button>
+          <button type="button" class="btn btn-bk layer-close confirm"><span>확인</span></button>
+        </div>
+        <button type="button" class="btn-close layer-close"><span class="txt">닫기</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 내용 수정 레이어 -->
+  <div class="layer-pop confirm" id="layer-revise">
+    <div class="layer-cnt">
+      <div class="layer-mid">
+        <p class="confirm-msg">내용을 수정하시겠습니까?</p>
+        <div class="revise-box">
+          <label for="textarea1" class="filter-title">메모</label>
+          <textarea name="" id="textarea1" class="textarea"></textarea>
+        </div>
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-gray layer-close"><span>취소</span></button>
+          <button type="button" class="btn btn-bk layer-close btn-ok"><span>확인</span></button>
+        </div>
+      </div>
+      <button type="button" class="btn-close layer-close"><span class="txt">팝업 닫기</span></button>
+    </div>
+  </div>
+
+  <!-- 고객 삭제 레이어 -->
+  <div class="layer-pop confirm" id="layer-custom-delete">
+    <div class="layer-cnt">
+      <div class="layer-mid">
+        <p class="confirm-msg">고객 정보를 삭제하시겠습니까?<br>삭제 이후 고객 정보 열람 및 견적 확인이 불가합니다.</p>
+
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-gray layer-close"><span>취소</span></button>
+          <button type="button" class="btn btn-bk layer-close btn-ok"><span>확인</span></button>
+        </div>
+      </div>
+      <button type="button" class="btn-close layer-close"><span class="txt">팝업 닫기</span></button>
+    </div>
+  </div>
+
+  <!-- 견적 삭제 레이어 -->
+  <div class="layer-pop confirm" id="layer-estimate-delete">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">견적 삭제하기</h2>
+      </div>
+      <div class="layer-mid">
+        <div class="msg-box">
+          <p class="msg">n차 견적서를 삭제합니다.</p>
+          <a href="sampletext.pdf" class="btn-link" target="_blank" download>sampletext.pdf</a>
+        </div>
+
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-gray layer-close"><span>취소</span></button>
+          <button type="button" class="btn btn-bk layer-close btn-ok"><span>확인</span></button>
+        </div>
+      </div>
+      <button type="button" class="btn-close layer-close"><span class="txt">팝업 닫기</span></button>
+    </div>
+  </div>
+
+  <!-- 견적 삭제 불가 레이어 -->
+  <div class="layer-pop confirm" id="layer-estimate-warning">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">견적 삭제하기</h2>
+      </div>
+      <div class="layer-mid">
+        <p class="confirm-msg">공유가 완료된 견적서는 삭제가 불가합니다. </p>
+
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-gray layer-close"><span>취소</span></button>
+          <button type="button" class="btn btn-bk layer-close btn-ok"><span>확인</span></button>
+        </div>
+      </div>
+      <button type="button" class="btn-close layer-close"><span class="txt">팝업 닫기</span></button>
+    </div>
+  </div>
+
+
+  <!-- 견적 공유 레이어 -->
+  <div class="layer-pop confirm" id="layer-estimate-share">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">견적 공유하기</h2>
+      </div>
+      <div class="layer-mid">
+        <div class="msg-box">
+          <p class="msg">n차 견적서를 고객에 공유합니다.</p>
+          <a href="sampletext.pdf" class="btn-link" target="_blank" download>sampletext.pdf</a>
+
+          <div class="checkbox">
+            <input type="checkbox" name="showagain" id="showagain" class="check">
+            <label for="showagain"><span class="box"></span><span>다시 보지않기</span></label>
+          </div>
+          <span class="tx-gray sm">견적서 공유시 고객 마이페이지에 견적 정보가 공유되며, 공유 이후에는 견적서 수정 및 삭제가 불가합니다.</span>
+
+        </div>
+
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-gray layer-close"><span>취소</span></button>
+          <button type="button" class="btn btn-bk layer-close btn-ok"><span>확인</span></button>
+        </div>
+      </div>
+      <button type="button" class="btn-close layer-close"><span class="txt">팝업 닫기</span></button>
+    </div>
+  </div>
+
+  <!-- 견적 수정 레이어 -->
+  <div class="layer-pop" id="layer-estimate-edit">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">견적 수정</h2>
+      </div>
+      <div class="layer-mid">
+        <div class="filter-wrap">
+          <div class="filter-box">
+            <p class="filter-title">파일</p>
+            <div class="inp-line">
+              <span class="inp filebox">
+                <input type="text" class="upload-name" value="" placeholder="첨부파일" readonly>
+                <input type="file" name="" id="file2" placeholder="파일 검색">
+                <button type="button" class="pos btn-remove"><span class="txt hide">내용삭제</span></button>
+              </span>
+              <label for="file2" class="btn btn-light-blue"><span>첨부하기</span></label>
+            </div>
+            <span class="tx-warn tx-org">견적 파일은 1개까지 첨부할 수 있습니다.</span>
+          </div>
+
+          <div class="filter-box">
+            <h3 class="title">견적 정보</h3>
+            <p class="filter-title">견적 제목</p>
+            <span class="inp">
+              <input type="text" name="" placeholder="시공명_견적서" value="도배, 마루, 견적서">
+            </span>
+          </div>
+
+          <div class="filter-box">
+            <p class="filter-title">주소 <span class="tx-gray">주소가 맞지 않는 경우 고객이 일치하는지 확인해주세요!</span></p>
+            <div class="inp-line">
+              <span class="inp">
+                <input type="text" name="" value="서울시 강남구 도산대로 145 (인무빌딩)" readonly>
+              </span>
+              <button type="submit" class="btn btn-light-blue" disabled><span>주소 검색</span></button>
+            </div>
+            <div class="inp">
+              <input type="text" name="" placeholder="상세주소" value="1310호" readonly>
+            </div>
+            <span class="tx-warn tx-org">견적 주소는 고객 주소로 변경이 불가합니다.</span>
+          </div>
+
+          <div class="filter-box">
+            <p class="filter-title">견적 금액</p>
+            <span class="inp">
+              <input type="text" name="e_price" placeholder="0" value="123450000">
+              <span class="unit">원</span>
+            </span>
+            <div class="tx-warn">고객 견적서에 <span class="tx-org">x억 x,xxx,x만원</span>으로 표출됩니다.</div>
+          </div>
+
+        </div><!-- filter wrap-->
+
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-gray layer-close"><span>취소</span></button>
+          <button type="button" class="btn btn-bk layer-close confirm"><span>수정</span></button>
+        </div>
+        <button type="button" class="btn-close layer-close"><span class="txt">닫기</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 고객 연동 레이어 -->
+  <div class="layer-pop confirm" id="layer-info-total">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">고객 연동</h2>
+      </div>
+      <div class="layer-mid">
+        <div class="msg-box">
+          <p class="msg">총 <span class="tx-org">3</span>개의 고객 상담 정보를 통합하시겠습니까?<br>
+            <span class="tx-gray sm">대표 견적을 기준으로 통합됩니다.</span></p>
+
+
+          <ul class="list-linkbox link">
+            <li>
+              <span class="badge position blue">대표</span><var class="name">홍길동</var><var class="date">21.10.31</var></span>
+              <ul class="info-list">
+                <li><span class="head">번호</span><span class="desc">010.1234.5678</span></li>
+                <li><span class="head">주소</span><span class="desc">서울특별시 성복구 길음동1232-13 현미건물 3층</span></li>
+              </ul>
+            </li>
+          </ul>
+          <span class="tx-darkgray">*데이터 통합과정에서 데이터 손실이 발생할 수 있습니다.</span>
+
+        </div>
+
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-gray layer-close"><span>취소</span></button>
+          <button type="button" class="btn btn-bk layer-close btn-ok"><span>확인</span></button>
+        </div>
+      </div>
+      <button type="button" class="btn-close layer-close"><span class="txt">팝업 닫기</span></button>
+    </div>
+  </div>
+
+  <!-- 견적 공유 레이어 -->
+  <div class="layer-pop confirm" id="layer-customer-share">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">고객 정보 공유<span class="tx-gray sm">공유할 고객 정보를 선택해주세요</span></h2>
+
+      </div>
+      <div class="layer-mid">
+        <div class="filter-wrap">
+          <div class="filter-box">
+
+            <div class="checkbox">
+              <input type="checkbox" name="customer_info" id="customer_name" class="check" >
+              <label for="customer_name"><span class="box"></span><span class="filter-title">고객명</span></label>
+            </div>
+            <div class="inp">
+              <input type="text" name="" id="" placeholder="고객명" value="홍길동" readonly>
+            </div>
+          </div>
+
+          <div class="filter-box">
+            <div class="checkbox">
+              <input type="checkbox" name="customer_info" id="customer_phone" class="check">
+              <label for="customer_phone"><span class="box"></span><span class="filter-title">연락처</span></label>
+            </div>
+            <div class="inp">
+              <input type="tel" name="" id="" placeholder="연락처" value="010-1234-5678">
+            </div>
+          </div>
+
+          <div class="filter-box">
+            <div class="checkbox">
+              <input type="checkbox" name="customer_info" id="customer_address" class="check">
+              <label for="customer_address"><span class="box"></span><span class="filter-title">주소</span></label>
+            </div>
+
+            <div class="inp-line">
+              <span class="inp">
+                <input type="text" name="" value="서울특별시 동작구 구원로45">
+              </span>
+              <button type="submit" class="btn btn-light-blue" disabled><span>주소 검색</span></button>
+            </div>
+            <div class="inp">
+              <input type="text" name="" placeholder="상세주소" value="우우건물 103-1034">
+            </div>
+          </div>
+
+          <div class="filter-box">
+            <div class="checkbox">
+              <input type="checkbox" name="customer_info" id="customer_area" class="check">
+              <label for="customer_area"><span class="box"></span><span class="filter-title">평형</span></label>
+            </div>
+            <div class="inp-row">
+
+             <div class="inp">
+               <input type="text" name="" id="" class="cal" value="1,000">
+               <span class="unit">평</span>
+             </div>
+             <!-- select -->
+             <div class="inp-select">
+              <select name="areaType" style="width:100%;">
+                <option value="000">공급</option>
+                <option value="001">전용</option>
+              </select>
+            </div>
+
+            </div>
+          </div>
+
+        </div><!-- filter wrap-->
+
+
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-gray layer-close"><span>취소</span></button>
+          <button type="button" class="btn btn-bk layer-close btn-ok"><span>공유</span></button>
+        </div>
+      </div>
+      <button type="button" class="btn-close layer-close"><span class="txt">팝업 닫기</span></button>
+    </div>
+  </div>
+
+  <!-- 고객삭제 레이어 -->
+
+  <!-- script -->
+  <script src="../resource/js/vendor/jquery-2.1.3.min.js"></script>
+  <script src="../resource/js/vendor/jquery.nice-select.min.js"></script>
+  <script src="../resource/js/layerpop.js"></script><!-- 레이어팝업 -->
+  <script src="../resource/js/common.js" ></script>
+  <script>
+    //관리페이지용 공통 함수
+    pageInit ()
+    //우측 탭
+    tabFunc (".tab-wrap")
+    //레이어
+    layerFunc (".open-layer")
+    //아코디언 기능
+    accordionFunc (".accordion-title")
+    //input button 활성화 - file 포함 시
+    inpFileActiveFunc ("#layer-estimate-upload .layer-cnt",".confirm")
+    inpFileActiveFunc ("#layer-estimate-edit .layer-cnt",".confirm")
+    //체크 기능
+    agreeChkFunc(".manager-box","manager_all")
+    agreeChkFunc ("#tab3", "interlink_all")
+    //select box = jquery plugin
+    $('.inp-select select').niceSelect();
+    autoCommasFunc("e_price")
+    inputPageSelect ("ui_select",".tbl-type1",".list-linkbox.card")
+
+    //alert
+    var alertBtn = document.querySelector('.open-confirm');
+    var confirmCallback = function(){
+        console.log('컨펌용 콜백');
+    }
+    alertBtn.addEventListener('click', function(){
+      layerConfirm(confirmCallback, '', '내용을 수정하시겠습니까?', '취소', '확인');
+    });
+  </script>
+</body>
+</html>

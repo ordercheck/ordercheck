@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="">
+  <meta property="og:type" content="website">
+  <meta name="naver-site-verification" content="">
+  <meta property="og:image" content="">
+  <meta http-equiv="Cache-Control" content="No-Cache">
+  <meta http-equiv="Pragma" content="No-Cache">
+  <meta name="language" content="ko">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+
+  <title>회원가입 : 회사 생성</title>
+
+  <!-- css, js 연결 -->
+  <link rel="stylesheet" href="../resource/css/layout.css">
+  <link rel="stylesheet" href="../resource/css/contents.css">
+
+</head>
+
+<body>
+  <!-- skip -->
+  <div id="skip">
+    <a href="#content">컨텐츠 바로가기</a>
+  </div>
+  <!-- //skip -->
+
+  <div id="wrap">
+    <section id="content" class="subpage">
+      <header class="header">
+        <img src="../resource/images/common/logo_color.png" alt="오더체크"/>
+      </header>
+      <div class="center-box">
+        <div class="login-wrap">
+          <div class="login-top">
+            <h2 class="title">회사 생성</h2>
+          </div>
+          <div class="form-area">
+            <label for="user_company" class="inp-title">회사 이름</label>
+            <div class="inp">
+              <input type="text" id="user_company" placeholder="회사 이름">
+            </div>
+            <p class="warning-txt02">10자 이내로 입력해주세요.</p>
+
+            <label for="user_companyUrl" class="inp-title">회사 URL</label>
+            <div class="inp-line url">
+              <span class="inp">
+                <input type="text" id="user_companyUrl" placeholder="URL주소를 입력">
+              </span>
+              <span class="url-address">.ordercheck.io</span>
+            </div>
+            <p class="warning-txt02">영문, 숫자 혼합 3-50자로 입력해주세요</p>
+            <p class="warning-txt02">해당 회사 도메인은 이미 사용되었습니다.</p>
+
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn-l btn-bk confirm"><span>14일 무료 체험 시작</span></button>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- script -->
+  <script src="../resource/js/vendor/jquery-2.1.3.min.js"></script>
+  <script src="../resource/js/layerpop.js"></script><!-- 레이어팝업 -->
+  <script src="../resource/js/common.js"></script>
+  <script>
+    //우측 탭
+    //tabFunc (".tab-wrap")
+    //레이어
+    layerFunc (".open-layer")
+    inpActiveFunc (".login-wrap",".confirm") //인풋 들의 value 값이 타이핑 되면 버튼 활성화
+
+  </script>
+</body>
+
+</html>

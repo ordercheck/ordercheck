@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <%- include('../common/authHead.ejs') %>
+</head>
+
+<body>
+  <!-- skip -->
+  <div id="skip">
+    <a href="#content">컨텐츠 바로가기</a>
+  </div>
+  <!-- //skip -->
+  <input type="hidden" id="HOST" value="<%= locals.HOST%>"/>
+  <div id="wrap">
+    <section id="content" class="subpage">
+      <header class="header">
+    <%- include('../common/logo.ejs') %>
+      </header>
+      <div class="center-box">
+        <div class="login-wrap">
+          <div class="empty-box complete">
+            <p class="sub-title"><strong class="tx-blue">회원가입</strong>에 문제가 발생했습니다!</p>
+          </div>
+
+          <div class="btn-group">
+            <a href="/login" class="btn-l btn-bk"><span>로그인 하기</span></a>
+            <a href="/join/select-account" class="btn-l btn-bk-line"><span>회원가입 다시시도</span></a>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- script -->
+  <%- include('../common/joinScript.ejs') %>
+</body>
+
+</html>

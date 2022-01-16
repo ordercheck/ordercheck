@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="">
+  <meta property="og:type" content="website">
+  <meta name="naver-site-verification" content="">
+  <meta property="og:image" content="">
+  <meta http-equiv="Cache-Control" content="No-Cache">
+  <meta http-equiv="Pragma" content="No-Cache">
+  <meta name="language" content="ko">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+
+  <title>파일 보관함</title>
+
+  <!-- css, js 연결 -->
+  <link rel="stylesheet" href="../resource/css/vendor/nice-select.css">
+  <link rel="stylesheet" href="../resource/css/layout.css">
+  <link rel="stylesheet" href="../resource/css/contents.css">
+
+
+</head>
+
+<body>
+  <div id="wrap">
+    <nav class="sidebar">
+      <div class="logo-details">
+        <button type="button" class="btn-side-open"><img src="../resource/images/common/ico_logo-mark.png" alt="오더체크"></button>
+        <h1 class="logo_name"><img src="../resource/images/common/ico_logo-name.png" alt="오더체크"/></h1>
+      </div>
+
+      <ul class="nav-list">
+        <li>
+          <a href="#">
+            <i class='ico home'></i>
+            <span class="links_name">홈</span>
+          </a>
+        </li>
+        <li>
+          <a href="customManage_list.html">
+            <i class="ico user"></i>
+            <span class="links_name">고객 관리</span>
+          </a>
+        </li>
+        <li class="on">
+          <a href="file_storage.html">
+            <i class='ico file'></i>
+            <span class="links_name">파일 보관함</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class='ico chat'></i>
+            <span class="links_name">채팅</span>
+          </a>
+        </li>
+        <li>
+          <a href="form_list.html">
+            <i class='ico form'></i>
+            <span class="links_name">상담 신청폼</span>
+          </a>
+        </li>
+       </ul>
+        <ul class="btm">
+          <li>
+            <a href="#">
+              <i class='ico help'></i>
+              <span class="links_name">자주 묻는 질문</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class='ico setting'></i>
+              <span class="links_name">설정</span>
+            </a>
+          </li>
+        </ul>
+    </nav>
+    <section id="content" class="content-section">
+      <!-- #include file="include_header.html" -->
+      <!-- header -->
+      <div class="header-wrap">
+        <header id="header" class="header">
+          <h2 class="title">파일보관함</h2>
+          <ul class="menu">
+            <li>
+              <div class="searchbox">
+                <i class='ico search'></i>
+                <input type="text" placeholder="검색해보세요.">
+              </div>
+            </li>
+            <li>
+              <div class="dropdown-wrap">
+                <button type="button" class="btn-drop">
+                  <div class="profile-details">
+                    <img src="../resource/images/profile.jpg" class="img" alt="profileImg">
+                    <span class="name">홍길동님</span>
+                    <i class="arrow down"></i>
+                  </div>
+
+                </button>
+                <div class="dropdown-box">
+                  <ul>
+                    <li><a href="#" class="btn-drop-menu">내 프로필</a></li>
+                    <li><a href="#" class="btn-drop-menu">회사 정보</a></li>
+                    <li><a href="#" class="btn-drop-menu">알림 설정</a></li>
+                    <li><a href="#" class="btn-drop-menu">로그아웃</a></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            <li><button type="button" class="btn-menu" data-info="mail"><i class="ico mail"></i></button></li>
+            <li><button type="button" class="btn-menu" data-info="alarm"><i class="ico alarm"></i></button></li>
+          </ul>
+        </header>
+        <!-- /header -->
+        <aside id="side_right_menu" class="side-menu">
+          <div class="gnb-box right mail">
+              <ul class="clear">
+                  <li><a href="#">메뉴1</a></li>
+                  <li><a href="#">메뉴2</a></li>
+                  <li><a href="#">메뉴3</a></li>
+              </ul>
+              <button type="button" class="btn-side-close close-box"><span class="txt">닫기</span></button>
+          </div>
+          </aside>
+        <aside id="side_right_menu" class="side-menu">
+          <div class="gnb-box right alarm">
+              <ul class="clear">
+                  <li><a href="#">메뉴21</a></li>
+                  <li><a href="#">메뉴22</a></li>
+                  <li><a href="#">메뉴23</a></li>
+              </ul>
+              <button type="button" class="btn-side-close close-box"><span class="txt">닫기</span></button>
+          </div>
+          </aside>
+      </div>
+
+      <!-- location -->
+      <ul class="location-wrap">
+        <li><a href="dahboard.html" target="_blank"><img src="../resource/images/nav/ico_home-bk.png" alt=""/></a></li>
+        <li><a href="file_storage.html">파일보관함</a></li>
+      </ul>
+      <!-- //location -->
+
+      <div class="cnt-box-wrap filePage">
+          <!-- cnt-inner -->
+          <div class="cnt-inner">
+
+            <div class="line">
+              <div class="background-box">
+                <div class="searchbox type02">
+                  <i class="ico search"></i>
+                  <input type="text" placeholder="고객명, 연락처, 폴더/파일명으로 검색">
+                  <button type="button" class="btn-close"><span class="hide">삭제</span></button>
+                </div>
+                <strong class="txt"><var class="tx-org">15</var>개의 검색결과입니다.</strong>
+
+              </div>
+              <div class="table-wrap file">
+                <div class="tbl-type1">
+                  <table>
+                    <caption>고객 리스트 정보</caption>
+                    <colgroup>
+                      <col style="width:31%">
+                      <col style="width:61%">
+                      <col style="width:8%">
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">이름</th>
+                        <th scope="col">경로</th>
+                        <th scope="col">업로드일</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><i class="ico storage"></i><var class="tx-bold">홍길동 010.1234.5678</var></td>
+                        <td>-</td>
+                        <td>2021.10.31</td>
+                      </tr>
+                      <tr>
+                        <td><i class="ico ppt"></i><var class="tx-bold">인테리어 제안서.ppt</var></td>
+                        <td>심청이</td>
+                        <td>2021.10.31</td>
+                      </tr>
+                      <tr>
+                        <td><i class="ico docx"></i><var class="tx-bold">김수안무. docx</var></td>
+                        <td>바이지은 &gt; 홍길동 &gt; 실측사진 &gt; 주방</td>
+                        <td>2021.10.31</td>
+                      </tr>
+                      <tr>
+                        <td><i class="ico excel"></i><var class="tx-bold">김수안무거북이와.xlsx</var></td>
+                        <td>심청이</td>
+                        <td>2021.10.31</td>
+                      </tr>
+                      <tr>
+                        <td><i class="ico pdf"></i><var class="tx-bold">김수안무.pdf</var></td>
+                        <td>바이지은 &gt; 홍길동 &gt; 실측사진 &gt; 주방</td>
+                        <td>2021.10.31</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <!-- //cnt-inner -->
+      </div>
+    </section>
+
+  </div>
+
+
+  <!-- script -->
+  <script src="../resource/js/vendor/jquery-2.1.3.min.js"></script>
+  <script src="../resource/js/vendor/jquery.nice-select.min.js"></script>
+  <script src="../resource/js/layerpop.js"></script><!-- 레이어팝업 -->
+  <script src="../resource/js/common.js" ></script>
+  <script>
+    pageInit ()
+    //select box = jquery plugin
+    $('.inp-select select').niceSelect();
+    dropMenuOpen(".profile-head .profile .btn-thum-edit",".profile-head .profile .dropdown-box",".profile-head .profile .btn-drop-menu")
+    inputRemoveFunc()
+
+    function inputRemoveFunc () {
+      document.querySelector(".search")
+    }
+  </script>
+</body>
+</html>

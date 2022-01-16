@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="">
+  <meta property="og:type" content="website">
+  <meta name="naver-site-verification" content="">
+  <meta property="og:image" content="">
+  <meta http-equiv="Cache-Control" content="No-Cache">
+  <meta http-equiv="Pragma" content="No-Cache">
+  <meta name="language" content="ko">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+
+  <title>내 프로필</title>
+
+  <!-- css, js 연결 -->
+  <link rel="stylesheet" href="../resource/css/vendor/nice-select.css">
+  <link rel="stylesheet" href="../resource/css/layout.css">
+  <link rel="stylesheet" href="../resource/css/contents.css">
+
+
+</head>
+
+<body>
+  <div id="wrap">
+    <nav class="sidebar">
+      <div class="logo-details">
+        <button type="button" class="btn-side-open"><img src="../resource/images/common/ico_logo-mark.png" alt="오더체크"></button>
+        <h1 class="logo_name"><img src="../resource/images/common/ico_logo-name.png" alt="오더체크"/></h1>
+      </div>
+
+      <ul class="nav-list">
+        <li>
+          <a href="#">
+            <i class='ico home'></i>
+            <span class="links_name">홈</span>
+          </a>
+        </li>
+        <li class="on">
+          <a href="customManage_list.html">
+            <i class="ico user"></i>
+            <span class="links_name">고객 관리</span>
+          </a>
+        </li>
+        <li>
+          <a href="file_storage.html">
+            <i class='ico file'></i>
+            <span class="links_name">파일 보관함</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class='ico chat'></i>
+            <span class="links_name">채팅</span>
+          </a>
+        </li>
+        <li>
+          <a href="form_list.html">
+            <i class='ico form'></i>
+            <span class="links_name">상담 신청폼</span>
+          </a>
+        </li>
+       </ul>
+        <ul class="btm">
+          <li>
+            <a href="#">
+              <i class='ico help'></i>
+              <span class="links_name">자주 묻는 질문</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class='ico setting'></i>
+              <span class="links_name">설정</span>
+            </a>
+          </li>
+        </ul>
+    </nav>
+    <section id="content" class="content-section type04">
+      <!-- #include file="include_header.html" -->
+      <!-- header -->
+      <div class="header-wrap">
+        <header id="header" class="header">
+          <h2 class="title">프로필 설정</h2>
+          <ul class="menu">
+            <li>
+              <div class="searchbox">
+                <i class='ico search'></i>
+                <input type="text" placeholder="검색해보세요.">
+              </div>
+            </li>
+            <li>
+              <div class="dropdown-wrap">
+                <button type="button" class="btn-drop">
+                  <div class="profile-details">
+                    <img src="../resource/images/profile.jpg" class="img" alt="profileImg">
+                    <span class="name">홍길동님</span>
+                    <i class="arrow down"></i>
+                  </div>
+
+                </button>
+                <div class="dropdown-box">
+                  <ul>
+                    <li><a href="#" class="btn-drop-menu">내 프로필</a></li>
+                    <li><a href="#" class="btn-drop-menu">회사 정보</a></li>
+                    <li><a href="#" class="btn-drop-menu">알림 설정</a></li>
+                    <li><a href="#" class="btn-drop-menu">로그아웃</a></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            <li><button type="button" class="btn-menu" data-info="mail"><i class="ico mail"></i></button></li>
+            <li><button type="button" class="btn-menu" data-info="alarm"><i class="ico alarm"></i></button></li>
+          </ul>
+        </header>
+        <!-- /header -->
+        <aside id="side_right_menu" class="side-menu">
+          <div class="gnb-box right mail">
+              <ul class="clear">
+                  <li><a href="#">메뉴1</a></li>
+                  <li><a href="#">메뉴2</a></li>
+                  <li><a href="#">메뉴3</a></li>
+              </ul>
+              <button type="button" class="btn-side-close close-box"><span class="txt">닫기</span></button>
+          </div>
+          </aside>
+        <aside id="side_right_menu" class="side-menu">
+          <div class="gnb-box right alarm">
+              <ul class="clear">
+                  <li><a href="#">메뉴21</a></li>
+                  <li><a href="#">메뉴22</a></li>
+                  <li><a href="#">메뉴23</a></li>
+              </ul>
+              <button type="button" class="btn-side-close close-box"><span class="txt">닫기</span></button>
+          </div>
+          </aside>
+      </div>
+
+      <!-- location -->
+      <ul class="location-wrap">
+        <li><a href="dahboard.html" target="_blank"><img src="../resource/images/nav/ico_home-bk.png" alt=""/></a></li>
+        <li><a href="myprofile.html">프로필 설정</a></li>
+      </ul>
+      <!-- //location -->
+
+      <div class="cnt-box-wrap">
+          <!-- cnt-inner -->
+          <div class="cnt-inner">
+
+            <div class="content-box profile">
+              <!-- tabs -->
+              <div class="tab-wrap">
+                <ul class="tabs">
+                  <li><button type="button" class="tab-btn active" data-tab="tab1">내 프로필</button></li>
+                  <li class="on"><button type="button" class="tab-btn" data-tab="tab2">회사 정보</button></li>
+                </ul>
+                <span class="slider" data-left="0"></span>
+              </div>
+              <!-- //tabs -->
+              <section class="tab-content">
+                <div class="content active" id="tab1">
+                  <h2 class="inp-title">프로필 이미지</h2>
+                  <div class="profile-box">
+                    <div class="profile-head">
+                      <div class="profile">
+                        <!-- dropdown-wrap -->
+                        <div class="dropdown-wrap hover">
+                          <button type="button" class="btn-thum-edit"><span>수정하기</span></button>
+                          <div class="dropdown-box">
+                            <ul>
+                              <li>
+                                <span class="inp">
+                                  <input type="file" name="" id="file1" placeholder="파일 검색">
+                                  <label for="file1" class="btn-drop-menu"><span>사진 변경</span></label>
+                                </span>
+                              </li>
+                              <li><button type="button" class="btn-drop-menu">사진 삭제</button></li>
+                            </ul>
+                          </div>
+                        </div>
+                        <!-- //dropdown-wrap -->
+
+                      </div>
+                    </div>
+                    <div class="profile-cnt">
+                      <div class="filter-box">
+                        <p class="filter-title">개인 코드 <button type="button" class="btn-copy on pop-toast"><span>복사하기</span></button></p>
+                        <div class="inp">
+                          <input type="text" name="" id="" value="sklksl234" disabled>
+                        </div>
+                      </div>
+
+                      <div class="filter-box">
+                        <p class="filter-title">이름</p>
+                        <div class="inp">
+                          <input type="text" name="" id="" placeholder="고객명" value="홍길동" readonly>
+                          <button type="button" class="pos btn-edit"><span class="txt hide">수정</span></button>
+                        </div>
+                        <p class="warning-txt02">이름을 입력해주세요.</p>
+                      </div>
+
+                      <div class="filter-box">
+                        <p class="filter-title">이용중인 버전</p>
+                        <div class="inp">
+                          <input type="text" name="" id="" value="스타터" disabled>
+                        </div>
+                      </div>
+
+                      <div class="filter-box">
+                        <p class="filter-title">휴대폰 번호</p>
+                        <div class="inp">
+                          <input type="tel" name="" id="" value="010.1234.5678" disabled>
+                        </div>
+                      </div>
+
+                      <div class="filter-box">
+                        <p class="filter-title">비밀번호</p>
+                        <div class="inp">
+                          <input type="password" name="" id="" value="123456" readonly>
+                          <button type="button" class="pos btn-edit open-layer" data-info="layer-password-change"><span class="txt hide">수정</span></button>
+                        </div>
+                      </div>
+
+                      <div class="filter-box">
+                        <p class="filter-title">이메일</p>
+                        <div class="inp">
+                          <input type="text" name="" id="" value="sample@naver.com" readonly>
+                          <button type="button" class="pos btn-edit"><span class="txt hide">수정</span></button>
+                        </div>
+                        <p class="warning-txt02">정확한 이메일을 입력해주세요.</p>
+                        <p class="warning-txt02">이미 가입된 이메일입니다.</p>
+                      </div>
+                      <div class="btn-group02" style="margin-top:40px">
+                        <!-- <button type="button" class="btn-link open-layer" data-info="layer-account-delete-error"><span>계정 삭제(회사)</span></button>
+                        <button type="button" class="btn-link open-layer" data-info="layer-account-delete-confirm"><span>계정 삭제 확인</span></button> -->
+                        <button type="button" class="btn-link open-layer" data-info="layer-account-delete"><span>계정 삭제</span></button>
+                      </div>
+
+                    </div>
+                  </div>
+
+              </div>
+                <div class="content active" id="tab2">
+                  <div class="data-empty-box customer">
+                    <div class="txt-group">
+                      <p class="txt">소속된 회사가 없습니다</p>
+                      <p class="sub-txt">회사를 생성하거나 회사 URL을 통해 기존 회사에 참여하세요</p>
+                      <div class="btn-group02">
+                        <button type="button" class="btn btn-bk-line open-layer" data-info="layer-company-enroll"><span>회사 생성하기</span></button>
+                        <button type="button" class="btn btn-bk open-layer" data-info="layer-company-in"><span>회사 참여하기</span></button>
+                      </div>
+                    </div>
+                  </div>
+
+              </div>
+
+              </section>
+
+
+
+            </div>
+          </div>
+          <!-- //cnt-inner -->
+      </div>
+      <div id="toast"></div>
+    </section>
+
+  </div>
+
+
+  <!-- 비밀번호 변경 -->
+  <div class="layer-pop" id="layer-password-change">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">비밀번호 변경</h2>
+      </div>
+      <div class="layer-mid">
+        <div class="form-area">
+          <label for="user_phone" class="filter-title">새 비밀번호</label>
+          <div class="inp">
+            <input type="password" id="user_phone" placeholder="새로운 비밀번호를 입력해주세요."/>
+            <button type="button" class="pos btn-pw-show"><span class="txt hide">비밀번호 보기</span></button>
+          </div>
+          <p class="warning-txt02">영문, 숫자, 특수문자 혼합 8~16자리로 입력해주세요. </p>
+
+          <label for="user_auth" class="filter-title">비밀번호 확인</label>
+          <div class="inp">
+            <input type="password" id="user_auth" placeholder="새로운 비밀번호를 다시 입력해주세요.">
+            <button type="button" class="pos btn-pw-show"><span class="txt hide">비밀번호 보기</span></button>
+          </div>
+          <p class="warning-txt02">비밀번호가 일치하지 않습니다.</p>
+        </div>
+
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-gray layer-close"><span>취소</span></button>
+          <button type="button" class="btn btn-bk layer-close confirm"><span>확인</span></button>
+        </div>
+        <button type="button" class="btn-close layer-close"><span class="txt">닫기</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 계정 삭제 오류 -->
+  <div class="layer-pop confirm" id="layer-account-delete-error">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">계정 삭제</h2>
+      </div>
+      <div class="layer-mid">
+        <p class="confirm-msg">계정을 삭제하려면 현재 속해 있는 회사에서<br>나온 후 다시 시도해주세요</p>
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-bk layer-close btn-ok"><span>확인</span></button>
+        </div>
+      </div>
+      <button type="button" class="btn-close layer-close"><span class="txt">팝업 닫기</span></button>
+    </div>
+  </div>
+
+  <!-- 계정 삭제 확인 -->
+  <div class="layer-pop confirm" id="layer-account-delete-confirm">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">계정 삭제</h2>
+      </div>
+      <div class="layer-mid">
+        <p class="confirm-msg">계정을 삭제하시겠습니까?<br> 계정을 삭제하면 모든 데이터가 사라지고 복구할 수 없습니다.</p>
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-gray layer-close"><span>취소</span></button>
+          <button type="button" class="btn btn-bk layer-close btn-ok"><span>확인</span></button>
+        </div>
+      </div>
+      <button type="button" class="btn-close layer-close"><span class="txt">팝업 닫기</span></button>
+    </div>
+  </div>
+
+  <!-- 계정 삭제 -->
+  <div class="layer-pop" id="layer-account-delete">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">계정 삭제</h2>
+      </div>
+      <div class="layer-mid">
+        <p class="info-txt02">탈퇴 사유 선택과 비밀번호 입력 완료 후 버튼을 클릭하면 계정 삭제가 완료됩니다.</p>
+        <div class="form-area">
+          <label for="user_phone" class="filter-title">탈퇴 사유</label>
+          <div class="inp-select">
+            <select name="areaType" style="width:100%;">
+              <option value="000" disabled>탈퇴 사유를 선택해주세요</option>
+              <option value="001">1</option>
+            </select>
+          </div>
+          <p class="warning-txt02">탈퇴 사유를 선택해주세요.</p>
+
+          <label for="user_auth" class="filter-title">비밀번호</label>
+          <div class="inp">
+            <input type="password" id="user_auth" placeholder="비밀번호를 입력해주세요.">
+            <button type="button" class="pos btn-pw-show"><span class="txt hide">비밀번호 보기</span></button>
+          </div>
+          <p class="warning-txt02">비밀번호가 일치하지 않습니다.</p>
+        </div>
+
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-gray layer-close"><span>취소</span></button>
+          <button type="button" class="btn btn-bk layer-close btn-ok"><span>확인</span></button>
+        </div>
+      </div>
+      <button type="button" class="btn-close layer-close"><span class="txt">팝업 닫기</span></button>
+    </div>
+  </div>
+
+  <!-- 회사 나가기 -->
+  <div class="layer-pop" id="layer-company-out">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">회사 나가기</h2>
+      </div>
+      <div class="layer-mid">
+        <p class="info-txt02">비밀번호 입력 완료 후 버튼을 클릭하면 회사 나가기가 완료됩니다.</p>
+        <div class="form-area">
+          <label for="user_auth" class="filter-title">비밀번호</label>
+          <div class="inp">
+            <input type="password" id="user_auth" placeholder="비밀번호를 입력해주세요.">
+            <button type="button" class="pos btn-pw-show"><span class="txt hide">비밀번호 보기</span></button>
+          </div>
+          <p class="warning-txt02">비밀번호가 일치하지 않습니다.</p>
+        </div>
+
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-gray layer-close"><span>취소</span></button>
+          <button type="button" class="btn btn-bk layer-close btn-ok"><span>회사 나가기</span></button>
+        </div>
+      </div>
+      <button type="button" class="btn-close layer-close"><span class="txt">팝업 닫기</span></button>
+    </div>
+  </div>
+
+  <!-- 회사 참여하기 -->
+  <div class="layer-pop" id="layer-company-in">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">회사 참여하기</h2>
+      </div>
+      <div class="layer-mid">
+        <p class="info-txt02">참여할 회사의 URL을 입력해 주세요. 회사 참여 승인 이후 회사를 변경할 수 없습니다.</p>
+        <div class="form-area">
+          <label for="user_companyUrl" class="filter-title">회사 URL</label>
+          <div class="inp-line url">
+            <span class="inp">
+              <input type="text" id="user_companyUrl" placeholder="회사 URL">
+            </span>
+            <span class="url-address">.ordercheck.io</span>
+          </div>
+        </div>
+
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-gray layer-close"><span>취소</span></button>
+          <button type="button" class="btn btn-bk layer-close btn-ok"><span>참여 요청</span></button>
+        </div>
+      </div>
+      <button type="button" class="btn-close layer-close"><span class="txt">팝업 닫기</span></button>
+    </div>
+  </div>
+
+  <!-- 회사 생성하기 -->
+  <div class="layer-pop confirm" id="layer-company-enroll">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">회사 생성하기</h2>
+      </div>
+      <div class="layer-mid">
+        <p class="confirm-msg">신규 회사 생성은 유료 플랜에서만 가능합니다. 요금제를 확인하고 희망하는 요금제 가입을 진행해주세요.</p>
+
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-gray layer-close"><span>취소</span></button>
+          <button type="button" class="btn btn-bk layer-close btn-ok"><span>요금제 가입</span></button>
+        </div>
+      </div>
+      <button type="button" class="btn-close layer-close"><span class="txt">팝업 닫기</span></button>
+    </div>
+  </div>
+
+  <!-- script -->
+  <script src="../resource/js/vendor/jquery-2.1.3.min.js"></script>
+  <script src="../resource/js/vendor/jquery.nice-select.min.js"></script>
+  <script src="../resource/js/layerpop.js"></script><!-- 레이어팝업 -->
+  <script src="../resource/js/common.js" ></script>
+  <script>
+    ToastFunc(".pop-toast",'클립보드에 복사되었습니다.',2000)
+
+    //관리페이지용 공통 함수
+    pageInit ()
+    //우측 탭
+    tabFunc (".tab-wrap")
+
+    clickTargetCloseAddFunc(".pos.btn-edit",".inp","edit", function (e){
+      if(e.currentTarget.closest(".inp").classList.contains("edit")) {
+        e.currentTarget.previousElementSibling.readOnly = false
+      } else {
+        e.currentTarget.previousElementSibling.readOnly = true
+      }
+    })
+    //레이어
+    layerFunc (".open-layer",null, function (){
+      var input = document.querySelectorAll(".inp")
+
+      Array.prototype.forEach.call(input, function(inp, idx){
+        inp.classList.remove("edit")
+        if(inp.classList.contains("edit")) {
+          inp.querySelector("input").readOnly = false
+        } else {
+          inp.querySelector("input").readOnly = true
+        }
+      })
+
+    })
+
+    //select box = jquery plugin
+    $('.inp-select select').niceSelect();
+
+    dropMenuOpen(".profile-head .profile .btn-thum-edit",".profile-head .profile .dropdown-box",".profile-head .profile .btn-drop-menu")
+    inpTypeSwitch()
+  </script>
+</body>
+</html>

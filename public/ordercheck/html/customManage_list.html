@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="">
+  <meta property="og:type" content="website">
+  <meta name="naver-site-verification" content="">
+  <meta property="og:image" content="">
+  <meta http-equiv="Cache-Control" content="No-Cache">
+  <meta http-equiv="Pragma" content="No-Cache">
+  <meta name="language" content="ko">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+
+  <title>고객 관리 목록</title>
+
+  <!-- css, js 연결 -->
+  <link rel="stylesheet" href="../resource/css/vendor/nice-select.css">
+  <link rel="stylesheet" type="text/css" href="../resource/css/vendor/daterangepicker.css" />
+  <link rel="stylesheet" href="../resource/css/layout.css">
+  <link rel="stylesheet" href="../resource/css/contents.css">
+
+</head>
+
+<body>
+
+  <div id="wrap">
+    <nav class="sidebar">
+      <div class="logo-details">
+        <button type="button" class="btn-side-open"><img src="../resource/images/common/ico_logo-mark.png" alt="오더체크"></button>
+        <h1 class="logo_name"><img src="../resource/images/common/ico_logo-name.png" alt="오더체크"/></h1>
+      </div>
+
+      <ul class="nav-list">
+        <li>
+          <a href="#">
+            <i class='ico home'></i>
+            <span class="links_name">홈</span>
+          </a>
+        </li>
+        <li class="on">
+          <a href="customManage_list.html">
+            <i class="ico user"></i>
+            <span class="links_name">고객 관리</span>
+          </a>
+        </li>
+        <li>
+          <a href="file_storage.html">
+            <i class='ico file'></i>
+            <span class="links_name">파일 보관함</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class='ico chat'></i>
+            <span class="links_name">채팅</span>
+          </a>
+        </li>
+        <li>
+          <a href="form_list.html">
+            <i class='ico form'></i>
+            <span class="links_name">상담 신청폼</span>
+          </a>
+        </li>
+       </ul>
+        <ul class="btm">
+          <li>
+            <a href="#">
+              <i class='ico help'></i>
+              <span class="links_name">자주 묻는 질문</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class='ico setting'></i>
+              <span class="links_name">설정</span>
+            </a>
+          </li>
+        </ul>
+    </nav>
+    <section id="content" class="content-section">
+      <!-- #include file="include_header.html" -->
+        <!-- header -->
+        <div class="header-wrap">
+          <header id="header" class="header">
+            <h2 class="title">고객 관리</h2>
+
+            <ul class="menu">
+              <li>
+                <div class="searchbox">
+                  <i class='ico search'></i>
+                  <input type="text" placeholder="검색해보세요.">
+                </div>
+              </li>
+              <li>
+                <div class="dropdown-wrap">
+                  <button type="button" class="btn-drop">
+                    <div class="profile-details">
+                      <img src="../resource/images/profile.jpg" class="img" alt="profileImg">
+                      <span class="name">홍길동님</span>
+                      <i class="arrow down"></i>
+                    </div>
+
+                  </button>
+                  <div class="dropdown-box">
+                    <ul>
+                      <li><a href="#" class="btn-drop-menu">내 프로필</a></li>
+                      <li><a href="#" class="btn-drop-menu">회사 정보</a></li>
+                      <li><a href="#" class="btn-drop-menu">알림 설정</a></li>
+                      <li><a href="#" class="btn-drop-menu">로그아웃</a></li>
+                   </ul>
+                  </div>
+                </div>
+              </li>
+              <li><button type="button" class="btn-menu" data-info="mail"><i class="ico mail"></i></button></li>
+              <li><button type="button" class="btn-menu" data-info="alarm"><i class="ico alarm"></i></button></li>
+            </ul>
+          </header>
+          <!-- /header -->
+
+          <aside id="side_right_menu" class="side-menu">
+            <div class="gnb-box right mail">
+                <ul class="clear">
+                    <li><a href="#">메뉴1</a></li>
+                    <li><a href="#">메뉴2</a></li>
+                    <li><a href="#">메뉴3</a></li>
+                </ul>
+                <button type="button" class="btn-side-close close-box"><span class="txt">닫기</span></button>
+            </div>
+           </aside>
+          <aside id="side_right_menu" class="side-menu">
+            <div class="gnb-box right alarm">
+                <ul class="clear">
+                    <li><a href="#">메뉴21</a></li>
+                    <li><a href="#">메뉴22</a></li>
+                    <li><a href="#">메뉴23</a></li>
+                </ul>
+                <button type="button" class="btn-side-close close-box"><span class="txt">닫기</span></button>
+            </div>
+           </aside>
+        </div>
+
+        <!-- location -->
+        <ul class="location-wrap">
+          <li><a href="dahboard.html" target="_blank"><img src="../resource/images/nav/ico_home-bk.png" alt=""/></a></li>
+          <li><a href="customManage_list.html">고객관리</a></li>
+          <li>고객명</li>
+        </ul>
+        <!-- //location -->
+
+        <div class="cnt-box-wrap">
+          <div class="cnt-box left">
+            <div class="cnt-top">
+              <h3 class="cnt-title"><i class="ico filter"></i>필터</h3>
+              <button type="button" class="btn btn-bk-line"><span><i class="ico refresh"></i>필터 초기화</span></button>
+            </div>
+            <div class="filter-box">
+              <p class="filter-title">날짜</p>
+              <div class="inp-row">
+                <!-- select -->
+                <div class="inp-select">
+                  <select name="range" style="width:100%;">
+                    <option value="today">오늘</option>
+                    <option value="yesterday">어제</option>
+                    <option value="lastweek">지난 주</option>
+                    <option value="thismonth">이번 달</option>
+                    <option value="lastyear">지난 1년</option>
+                    <option value="all" selected>전체 기간</option>
+                    <option value="custom">직접 설정</option>
+                  </select>
+                </div>
+
+               <div class="inp inp-cal">
+                 <!-- <input type="text" name="" id="" class="cal" value="2021.09.30-2021.09.30" readonly> -->
+                 <input type="text" name="daterange" class="cal"  value="01.01.2018-01.15.2018" readonly/>
+               </div>
+              </div>
+            </div>
+            <div class="filter-box">
+              <p class="filter-title">상담 상태</p>
+              <span class="checkbox">
+                <input type="checkbox" name="consulting_state" id="consulting_apply" class="check">
+                <label for="consulting_apply"><span class="box"></span><span>상담 신청</span></label>
+              </span>
+              <span class="checkbox">
+                <input type="checkbox" name="consulting_state" id="consulting_on" class="check">
+                <label for="consulting_on"><span class="box"></span><span>상담 중</span></label>
+              </span>
+              <span class="checkbox">
+                <input type="checkbox" name="consulting_state" id="consulting_complete" class="check">
+                <label for="consulting_complete"><span class="box"></span><span>상담 완료</span></label>
+              </span>
+              <span class="checkbox">
+                <input type="checkbox" name="consulting_state" id="consulting_issue" class="check">
+                <label for="consulting_issue"><span class="box"></span><span>이슈</span></label>
+              </span>
+              <span class="checkbox">
+                <input type="checkbox" name="consulting_state" id="consulting_refuse" class="check">
+                <label for="consulting_refuse"><span class="box"></span><span>거절</span></label>
+              </span>
+            </div>
+
+            <div class="filter-box">
+              <p class="filter-title">계약 가능성</p>
+              <div class="tab-radio-box row-list">
+                <span class="tab">
+                  <input type="checkbox" name="contact" id="contact1">
+                  <label for="contact1"><span>없음</span></label>
+                </span>
+                <span class="tab">
+                  <input type="checkbox" name="contact" id="contact2" checked>
+                  <label for="contact2"><span>50% 미만</span></label>
+                </span>
+                <span class="tab">
+                  <input type="checkbox" name="contact" id="contact3">
+                  <label for="contact3"><span>50% 이상</span></label>
+                </span>
+                <span class="tab">
+                  <input type="checkbox" name="contact" id="contact4">
+                  <label for="contact4"><span>계약 완료</span></label>
+                </span>
+              </div>
+
+            </div>
+
+            <div class="filter-box">
+              <p class="filter-title">담당자 설정</p>
+
+              <div class="manager-list">
+                <button type="button" class="btn-manager-add open-layer" data-info="layer-manager-set"><span><i class="ico plus"></i>추가</span></button>
+                <button type="button" class="btn-sel">
+                  <span><span class="txt">전체</span><i class="ico remove">삭제</i></span>
+                </button>
+                <button type="button" class="btn-sel">
+                  <span><span class="txt">전체</span><i class="ico remove">삭제</i></span>
+                </button>
+                <button type="button" class="btn-sel">
+                  <span><span class="txt">전체</span><i class="ico remove">삭제</i></span>
+                </button>
+                <button type="button" class="btn-sel">
+                  <span><span class="txt">전체</span><i class="ico remove">삭제</i></span>
+                </button>
+              </div>
+            </div>
+
+            <div class="btn-group">
+              <button type="submit" class="btn-l btn-bk"><span><strong>15</strong>건 검색결과 보기</span></button>
+            </div>
+          </div>
+          <div class="cnt-box right">
+            <div class="tbl-top">
+              <h3 class="cnt-title">고객 리스트</h3>
+              <div class="row-list">
+                 <!-- select -->
+                <div class="inp-select">
+                  <select name="searchOpt" style="width:100%;">
+                    <option value="10">10개씩</option>
+                    <option value="25">25개씩</option>
+                    <option value="50">50개씩</option>
+                  </select>
+                </div>
+
+                <span class="inp">
+                  <input type="text" name="" placeholder="고객명/연락처/주소를 검색하세요.">
+                </span>
+                <button type="button" class="btn btn-bk-line"><span>검색</span></button>
+                <button type="button" class="btn btn-bk open-layer" data-info="layer-customer-enroll"><span><i class="ico plus"></i>신규고객등록</span></button>
+              </div>
+            </div>
+
+            <div class="tbl-type1 tbl-sort">
+              <table>
+                <caption>고객 리스트 정보</caption>
+                <colgroup>
+                  <col style="width:100px">
+                  <col style="width:300px">
+                  <col style="width:128px">
+                  <col style="width:332px">
+                  <col style="width:174px">
+                  <col style="width:167px">
+                  <col style="width:138px">
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">No
+                      <span class="sort-wrap">
+                        <button type="button" class="btn-sort up" data-info="0"><span>정렬</span></button>
+                      <button type="button" class="btn-sort down" data-info="0"><span>정렬</span></button></span></th>
+                    <th scope="col">고객명
+                      <span class="sort-wrap">
+                        <button type="button" class="btn-sort up" data-info="1"><span>정렬</span></button>
+                      <button type="button" class="btn-sort down" data-info="1"><span>정렬</span></button></span></th>
+                    <th scope="col">연락처</th>
+                    <th scope="col">주소
+                      <span class="sort-wrap">
+                        <button type="button" class="btn-sort up" data-info="1"><span>정렬</span></button>
+                      <button type="button" class="btn-sort down" data-info="1"><span>정렬</span></button></span></th>
+                    <th scope="col">문의일자
+                      <span class="sort-wrap">
+                        <button type="button" class="btn-sort up" data-info="3"><span>정렬</span></button>
+                      <button type="button" class="btn-sort down" data-info="3"><span>정렬</span></button></span></th>
+                    <th scope="col">상태</th>
+                    <th scope="col">담당자</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><a href="#">50</a></td>
+                    <td class="left"><a href="#">홍길동</a></td>
+                    <td><a href="#">010.1234.5678</a></td>
+                    <td class="left"><a href="#">서울특별시 성복구 도산대로 1234 101동 1010호</a></td>
+                    <td><a href="#">2021.12.30</a></td>
+                    <td><a href="#"><span class="badge apply">상담신청</span></a></td>
+                    <td><a href="#">담당자 없음</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="#">49</a></td>
+                    <td class="left"><a href="#">회사명 | 이름</a></td>
+                    <td><a href="#">010.1234.5678</a></td>
+                    <td class="left"><a href="#">서울특별시 성복구</a></td>
+                    <td><a href="#">2021.12.30</a></td>
+                    <td><a href="#"><span class="badge consulting">상담 중</span></a></td>
+                    <td><a href="#"><span class="badge self">나(홍길동)</span></a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="#">48</a></td>
+                    <td class="left"><a href="#">김수안무</a></td>
+                    <td><a href="#">010.1234.5678</a></td>
+                    <td class="left"><a href="#">서울특별시 성복구 도산대로 1234</a></td>
+                    <td><a href="#">2021.12.30</a></td>
+                    <td><a href="#"><span class="badge complete">상담 완료</span></a></td>
+                    <td><a href="#">담당자 없음</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="#">47</a></td>
+                    <td class="left"><a href="#">김수안무거북이와</a></td>
+                    <td><a href="#">010.1234.5678</a></td>
+                    <td class="left"><a href="#">서울특별시 성복구</a></td>
+                    <td><a href="#">2021.12.30</a></td>
+                    <td><a href="#"><span class="badge refuse">거절</span></a></td>
+                    <td><a href="#"><span class="badge self">나(홍길동)</span></a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="#">46</a></td>
+                    <td class="left"><a href="#">김수안무</a></td>
+                    <td><a href="#">010.1234.5678</a></td>
+                    <td class="left"><a href="#">서울특별시 성복구 도산대로 1234</a></td>
+                    <td><a href="#">2021.12.30</a></td>
+                    <td><a href="#"><span class="badge issue">이슈</span></a></td>
+                    <td><a href="#"><span class="badge other">김철수</span></a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="#">45</a></td>
+                    <td class="left"><a href="#">김수안무거북이와</a></td>
+                    <td><a href="#">010.1234.5678</a></td>
+                    <td class="left"><a href="#">서울특별시 성복구</a></td>
+                    <td><a href="#">2021.12.30</a></td>
+                    <td><a href="#"><span class="badge consulting">상담 중</span></a></td>
+                    <td><a href="#">담당자 없음</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="#">44</a></td>
+                    <td class="left"><a href="#">김수안무</a></td>
+                    <td><a href="#">010.1234.5678</a></td>
+                    <td class="left"><a href="#">서울특별시 성복구 도산대로 1234</a></td>
+                    <td><a href="#">2021.12.30</a></td>
+                    <td><a href="#"><span class="badge complete">상담 완료</span></a></td>
+                    <td><a href="#">담당자 없음</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="#">43</a></td>
+                    <td class="left"><a href="#">김수안무거북이와</a></td>
+                    <td><a href="#">010.1234.5678</a></td>
+                    <td class="left"><a href="#">서울특별시 성복구</a></td>
+                    <td><a href="#">2021.12.30</a></td>
+                    <td><a href="#"><span class="badge issue">이슈</span></a></td>
+                    <td><a href="#"><span class="badge other">김철수</span></a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="#">42</a></td>
+                    <td class="left"><a href="#">김수안무</a></td>
+                    <td><a href="#">010.1234.5678</a></td>
+                    <td class="left"><a href="#">서울특별시 성복구 도산대로 1234</a></td>
+                    <td><a href="#">2021.12.30</a></td>
+                    <td><a href="#"><span class="badge complete">상담 완료</span></a></td>
+                    <td><a href="#">담당자 없음</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="#">41</a></td>
+                    <td class="left"><a href="#">김수안무거북이와</a></td>
+                    <td><a href="#">010.1234.5678</a></td>
+                    <td class="left"><a href="#">서울특별시 성복구</a></td>
+                    <td><a href="#">2021.12.30</a></td>
+                    <td><a href="#"><span class="badge refuse">거절</span></a></td>
+                    <td><a href="#"><span class="badge self">나(홍길동)</span></a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="#">40</a></td>
+                    <td class="left"><a href="#">김수안무</a></td>
+                    <td><a href="#">010.1234.5678</a></td>
+                    <td class="left"><a href="#">서울특별시 성복구 도산대로 1234</a></td>
+                    <td><a href="#">2021.12.30</a></td>
+                    <td><a href="#"><span class="badge complete">상담 완료</span></a></td>
+                    <td><a href="#">담당자 없음</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="#">39</a></td>
+                    <td class="left"><a href="#">김수안무거북이와</a></td>
+                    <td><a href="#">010.1234.5678</a></td>
+                    <td class="left"><a href="#">서울특별시 성복구</a></td>
+                    <td><a href="#">2021.12.30</a></td>
+                    <td><a href="#"><span class="badge refuse">거절</span></a></td>
+                    <td><a href="#"><span class="badge self">나(홍길동)</span></a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- paging -->
+            <div class="paging">
+              <a href="#" class="btn-paging first"><span class="hide">처음으로</span></a>
+              <a href="#" class="btn-paging prev"><span class="hide">이전</span></a>
+              <ul class="list">
+                <li class="on"><button type="button" class="btn-paging">1</button></li>
+                <li><button type="button" class="btn-paging">2</button></li>
+                <li><button type="button" class="btn-paging">3</button></li>
+              </ul>
+              <a href="#" class="btn-paging next"><span class="hide">다음</span></a>
+              <a href="#" class="btn-paging last"><span class="hide">마지막으로</span></a>
+            </div>
+          </div>
+        </div>
+    </section>
+
+  </div>
+
+
+  <div class="layer-pop" id="layer-manager-set">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">담당자 설정</h2>
+      </div>
+      <div class="layer-mid">
+        <div class="search-top">
+          <strong class="txt">팀원<var class="tx-org">12</var></strong>
+          <span class="tx-gray">(열람 가능한 팀원들만 노출됩니다.)</span>
+        </div>
+        <div class="inp-line">
+          <span class="inp">
+            <input type="text" name="" placeholder="담당자명을 검색하세요.">
+          </span>
+          <button type="submit" class="btn btn-light-blue"><span>검색</span></button>
+        </div>
+        <div class="manager-box">
+          <span class="checkbox">
+            <input type="checkbox" name="manager_select" id="manager_all" class="check">
+            <label for="manager_all"><span class="box"></span><span>전체</span></label>
+          </span>
+          <div class="inbox">
+            <ul>
+              <li>
+                <span class="checkbox">
+                  <input type="checkbox" name="manager_select" id="manager_empty" class="check">
+                  <label for="manager_empty"><span class="box"></span><img src="../resource/images/thumnail/img_person1.png" alt="" /><strong>담당자 없음</strong></label>
+                </span>
+              </li>
+              <li>
+                <span class="checkbox">
+                  <input type="checkbox" name="manager_select" id="manager01" class="check">
+                  <label for="manager01"><span class="box"></span><img src="../resource/images/thumnail/img_person2.png" alt="" /><strong>나</strong><span class="txt">홍길동</span></label>
+                </span>
+              </li>
+              <li>
+                <span class="checkbox">
+                  <input type="checkbox" name="manager_select" id="manager02" class="check">
+                  <label for="manager02"><span class="box"></span><img src="../resource/images/thumnail/img_person3.png" alt="" /><span class="txt">김수안</span></label>
+                </span>
+              </li>
+              <li>
+                <span class="checkbox">
+                  <input type="checkbox" name="manager_select" id="manager03" class="check">
+                  <label for="manager03"><span class="box"></span><img src="../resource/images/thumnail/img_person4.png" alt="" /><span class="txt">김수안무</span></label>
+                </span>
+              </li>
+              <li>
+                <span class="checkbox">
+                  <input type="checkbox" name="manager_select" id="manager04" class="check">
+                  <label for="manager04"><span class="box"></span><img src="../resource/images/thumnail/img_person4.png" alt="" /><span class="txt">김수안무</span></label>
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="layer-btn tr">
+          <button type="button" class="btn-l btn-bk-line btn-reset"><span><i class="ico refresh"></i> 초기화</span></button>
+          <button type="button" class="btn-l btn-bk"><span>확인</span></button>
+        </div>
+        <button type="button" class="btn-close layer-close"><span class="txt">닫기</span></button>
+      </div>
+    </div>
+  </div>
+  <div class="layer-pop" id="layer-customer-enroll">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">신규 고객 등록</h2>
+      </div>
+      <div class="layer-mid">
+        <div class="filter-wrap">
+          <div class="filter-box">
+            <p class="filter-title">고객명</p>
+            <div class="inp">
+              <input type="text" name="" id="" placeholder="고객명" value="">
+            </div>
+            <span class="tx-warn tx-org">고객명을 알맞게 입력해주세요</span>
+          </div>
+
+          <div class="filter-box">
+            <p class="filter-title">연락처</p>
+            <div class="inp">
+              <input type="tel" name="" id="" placeholder="연락처" value="">
+            </div>
+          </div>
+
+          <div class="filter-box">
+            <p class="filter-title">주소</p>
+            <div class="inp-line">
+              <span class="inp">
+                <input type="text" name="" >
+              </span>
+              <button type="submit" class="btn btn-light-blue"><span>주소 검색</span></button>
+            </div>
+            <div class="inp">
+              <input type="text" name="" placeholder="상세주소">
+            </div>
+          </div>
+
+          <div class="filter-box">
+            <p class="filter-title">평형</p>
+            <div class="inp-row">
+
+             <div class="inp">
+               <input type="text" name="" id="" class="cal" value="000">
+               <span class="unit">평</span>
+             </div>
+             <!-- select -->
+             <div class="inp-select">
+              <select name="areaType" style="width:100%;">
+                <option value="000">공급</option>
+                <option value="001">전용</option>
+              </select>
+            </div>
+
+            </div>
+          </div>
+
+          <div class="filter-box">
+            <p class="filter-title">담당자</p>
+            <span class="inp">
+              <input type="text" name="" placeholder="담당자 없음">
+            </span>
+          </div>
+        </div><!-- filter wrap-->
+
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-gray layer-close"><span>취소</span></button>
+          <button type="button" class="btn btn-bk layer-close"><span>추가</span></button>
+        </div>
+        <button type="button" class="btn-close layer-close"><span class="txt">닫기</span></button>
+      </div>
+    </div>
+  </div>
+  <!-- script -->
+  <script src="../resource/js/vendor/jquery-2.1.3.min.js"></script>
+  <script src="../resource/js/vendor/jquery.nice-select.min.js"></script>
+  <script type="text/javascript" src="../resource/js/vendor/moment.min.js"></script>
+  <script type="text/javascript" src="../resource/js/vendor/daterangepicker.js"></script>
+  <script src="../resource/js/table_sort.js"></script><!-- 테이블 소팅 기능 -->
+  <script src="../resource/js/layerpop.js"></script><!-- 레이어팝업 -->
+  <script src="../resource/js/common.js"></script>
+  <script>
+    //관리페이지용 공통 함수
+    pageInit ()
+    //테이블 sorting 함수
+    btnSortFunc (".btn-sort")
+    //레이어팝업 : 매개변수 : ID명
+    layerFunc (".open-layer")
+    //필터 담당자 삭제
+    btnRemoveFunc(".manager-list",".btn-sel")
+    agreeChkFunc(".manager-box","manager_all")
+
+    //select box = jquery plugin
+    $('.inp-select select').niceSelect();
+    //select option 값에 따른 input date 변경
+
+    // date picker
+    $('input[name="daterange"]').daterangepicker({
+      locale: {                    // 시작일시와 종료일시 구분자
+      "format": 'YYYY.MM.DD',     // 일시 노출 포맷
+      "applyLabel": "확인",                    // 확인 버튼 텍스트
+      "cancelLabel": "초기화",                   // 취소 버튼 텍스트
+      "daysOfWeek": ["일", "월", "화", "수", "목", "금", "토"],
+      "monthNames": ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+      },
+      opens: 'center',
+      timePicker: false,
+      buttonClasses: "btn",
+      applyButtonClasses: "btn-bk",
+      cancelButtonClasses:"btn-bk-line btn-reset",
+      isCustomDate : function(tdDate) {//2021-12-16
+        var thisDate = tdDate._d
+        var today = new Date()
+        var thisYear =thisDate.getFullYear()
+        var thisMonth = thisDate.getMonth() + 1
+        var thisDay = thisDate.getDate()
+        var nowYear = today.getFullYear()
+        var nowMonth = today.getMonth() + 1
+        var nowDay = today.getDate()
+
+        if(thisYear == nowYear && thisMonth == nowMonth ) {
+          if($(".available").text() == nowDay) {
+            $(this).classList.add("today")
+          }
+        }
+
+      }
+    }, function(start, end, label) {
+      console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    });
+    $('input[name="daterange"]').on('show.daterangepicker', function(ev, picker) {
+      //do something, like clearing an input
+      $(".inp-select select option:last-child").prop('selected', true)
+      $(".inp-select select").niceSelect("update")
+    });
+    $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {//2021-12-20
+      $(this).addClass("selected")
+    });
+
+  </script>
+</body>
+
+</html>

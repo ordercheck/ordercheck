@@ -1,0 +1,107 @@
+<%
+  let token = locals.token;
+%>
+
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <%- include('../common/authHead.ejs') %>
+</head>
+
+<body>
+  <!-- skip -->
+  <div id="skip">
+    <a href="#content">컨텐츠 바로가기</a>
+  </div>
+  <!-- //skip -->
+  <input type="hidden" id="HOST" value="<%= locals.HOST%>"/>
+  <input type="hidden" id="TOKEN" value="<%= token%>"/>
+
+  <div id="wrap">
+    <section id="content" class="subpage">
+      <header class="header">
+        <%- include('../common/logo.ejs') %>
+      </header>
+      <div class="center-box">
+        <div class="login-wrap">
+          <div class="login-top">
+            <h2 class="title">약관동의</h2>
+          </div>
+          <div class="agree-wrap">
+            <!-- 전체 동의 -->
+            <div class="agree-box all">
+              <span class="checkbox">
+                <input type="checkbox" name="agree_chk" id="agree_all" class="check">
+                <label for="agree_all"><span class="box round"></span>아래 약관에 모두 동의합니다.</label>
+              </span>
+            </div>
+            <ul class="agree-box">
+              <li>
+                <span class="checkbox">
+                  <input type="checkbox" name="agree_chk" id="agree01" class="check" required>
+                  <label for="agree01"><span class="box round"></span>이용약관 동의 <span class="tx-blue">(필수)</span></label>
+                  <a href="#" target="_blank" class="btn-link"><span>자세히 보기</span></a>
+                </span>
+              </li>
+              <li>
+                <span class="checkbox">
+                  <input type="checkbox" name="agree_chk" id="agree02" class="check" required>
+                  <label for="agree02"><span class="box round"></span>개인정보 처리방침 동의 <span class="tx-blue">(필수)</span></label>
+                  <a href="#" target="_blank" class="btn-link"><span>자세히 보기</span></a>
+                </span>
+              </li>
+              <li>
+                <span class="checkbox">
+                  <input type="checkbox" name="agree_chk" id="agree03" class="check" required>
+                  <label for="agree03"><span class="box round"></span>만 14세 이상 <span class="tx-blue">(필수)</span></label>
+                  <a href="#" target="_blank" class="btn-link"><span>자세히 보기</span></a>
+                </span>
+              </li>
+              <li>
+                <span class="checkbox">
+                  <input type="checkbox" name="agree_chk" id="agree04" class="check">
+                  <label for="agree04"><span class="box round"></span>마케팅 정보 수신 동의 <span class="tx-gray02">(선택)</span></label>
+                  <a href="#" target="_blank" class="btn-link"><span>자세히 보기</span></a>
+                </span>
+              </li>
+            </ul>
+
+            <div class="btn-group">
+              <button type="submit" class="btn-l btn-bk confirm" disabled onclick="doAgree()"><span>다음</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- 내용 수정 레이어 -->
+  <div class="layer-pop type02" id="layer-private-agree">
+    <div class="layer-cnt">
+      <div class="layer-mid">
+        <div class="revise-box">
+          <label for="textarea1" class="filter-title">메모</label>
+          <div class="article-wrap border">
+            예시텍스트입니다
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn-close layer-close"><span class="txt">팝업 닫기</span></button>
+    </div>
+  </div>
+
+
+  <!-- script -->
+  <%- include('../common/joinScript.ejs') %>
+  <script>
+    agreeChkFunc(".agree-wrap ","agree_all",function() {
+      chkActiveFunc (".agree-wrap", "agree_all",".confirm")
+    })
+
+  </script>
+</body>
+
+</html>

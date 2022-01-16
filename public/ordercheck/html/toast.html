@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toast</title>
+</head>
+<body>
+  <button type="button" class="btn">Show Notification</button>
+  <div id="toast">
+  </div>
+
+  <style>
+    body {background-color:rebeccapurple; display:flex; align-items: center; justify-content: center; min-height: 100vh; margin:0; overflow: hidden;}
+    .btn {background: #fff; border:none; color:rebeccapurple; font-size:16px; padding:10px 15px; border-radius: 6px; cursor:pointer;}
+    .btn:active {transform:scale(0.95); }
+    #toast {position:absolute; top:20px; left:0; right:0px; margin:0 auto; display: flex; border-radius:5px; margin-top:10px; flex-direction: column; align-items: center }
+    .toast {width: 706px; height: 60px; padding:20px 20px 20px 54px; background: #1D58FF url(../resource/images/common/ico_toast.png) no-repeat left 25px center; box-shadow: 0px 2px 12px rgba(29, 88, 255, 0.51); border-radius: 10px; user-select: none;
+     font-size: 14px;line-height: 20px; color: #fff; box-sizing: border-box ; transition: all 1s; opacity: 0;}
+    .toast+ .toast {margin-top:20px;}
+    .toast.active {opacity: 1;}
+
+  </style>
+  <script>
+    function ToastFunc(btn, time) {
+      var button = document.querySelector(btn)
+      var toastCont = document.querySelector("#toast")
+
+      var randomMsg = ['인증번호가 문자로 전송되었습니다', 'Not so good', 'Hello, Developer','Very Bad!']
+      var colors = ['info','green','red']
+
+      button.addEventListener("click", createToast)
+
+      function createToast () {
+        var toastEl = document.createElement("div")
+        toastEl.classList.add("toast")
+
+        toastEl.classList.add(getColors())
+        toastEl.innerText = getRandomMsg()
+        toastCont.appendChild(toastEl)
+
+
+        setTimeout(function () {
+          toastEl.classList.add("active")
+
+        },10)
+        setTimeout(function () {
+          toastEl.remove()
+          toastEl.classList.remove("active")
+        },time)
+      }
+
+      function getRandomMsg() {
+        return randomMsg[ Math.floor(Math.random() * randomMsg.length )]
+      }
+      function getColors () {
+        return colors[Math.floor(Math.random() * colors.length )]
+      }
+
+    }
+    ToastFunc(".btn",3000)
+  </script>
+</body>
+</html>

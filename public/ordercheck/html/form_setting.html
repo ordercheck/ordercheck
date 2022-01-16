@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="">
+  <meta property="og:type" content="website">
+  <meta name="naver-site-verification" content="">
+  <meta property="og:image" content="">
+  <meta http-equiv="Cache-Control" content="No-Cache">
+  <meta http-equiv="Pragma" content="No-Cache">
+  <meta name="language" content="ko">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+
+  <title>상담 신청 폼</title>
+
+  <!-- css, js 연결 -->
+  <link rel="stylesheet" href="../resource/css/vendor/nice-select.css">
+  <link rel="stylesheet" type="text/css" href="../resource/css/vendor/slick.css"/>
+  <link rel="stylesheet" type="text/css" href="../resource/css/vendor/slick-theme.css"/>
+  <link rel="stylesheet" href="../resource/css/layout.css">
+  <link rel="stylesheet" href="../resource/css/contents.css">
+
+</head>
+
+<body>
+  <div id="wrap">
+    <section id="content" class="content-section type02">
+
+      <!-- header -->
+      <div class="header-wrap">
+        <header id="header" class="header">
+          <div class="title">
+            <button type="button" class="btn-txt-prev"><span>신청폼 리스트 돌아가기</span></button>
+          </div>
+          <ul class="menu">
+            <li>
+              <div class="searchbox">
+                <i class='ico search'></i>
+                <input type="text" placeholder="검색하세요">
+              </div>
+            </li>
+            <li>
+              <div class="dropdown-wrap">
+                <button type="button" class="btn-drop">
+                  <div class="profile-details">
+                    <img src="../resource/images/profile.jpg" class="img" alt="profileImg">
+                    <span class="name">홍길동님</span>
+                    <i class="arrow down"></i>
+                  </div>
+
+                </button>
+                <div class="dropdown-box">
+                  <ul>
+                    <li><a href="#" class="btn-drop-menu">내 프로필</a></li>
+                    <li><a href="#" class="btn-drop-menu">회사 정보</a></li>
+                    <li><a href="#" class="btn-drop-menu">알림 설정</a></li>
+                    <li><a href="#" class="btn-drop-menu">로그아웃</a></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            <li><button type="button" class="btn-menu" data-info="mail"><i class="ico mail"></i></button></li>
+            <li><button type="button" class="btn-menu" data-info="alarm"><i class="ico alarm"></i></button></li>
+          </ul>
+        </header>
+        <!-- /header -->
+        <aside id="side_right_menu" class="side-menu">
+          <div class="gnb-box right mail">
+              <ul class="clear">
+                  <li><a href="#">메뉴1</a></li>
+                  <li><a href="#">메뉴2</a></li>
+                  <li><a href="#">메뉴3</a></li>
+              </ul>
+              <button type="button" class="btn-side-close close-box"><span class="txt">닫기</span></button>
+          </div>
+          </aside>
+        <aside id="side_right_menu" class="side-menu">
+          <div class="gnb-box right alarm">
+              <ul class="clear">
+                  <li><a href="#">메뉴21</a></li>
+                  <li><a href="#">메뉴22</a></li>
+                  <li><a href="#">메뉴23</a></li>
+              </ul>
+              <button type="button" class="btn-side-close close-box"><span class="txt">닫기</span></button>
+          </div>
+        </aside>
+      </div>
+
+
+      <header class="tbl-top band">
+        <div class="inp">
+          <input type="text" value="제목 없는 신청폼" placeholder="제목 없는 신청폼"class="inp-title">
+        </div>
+        <div class="band-center tc">
+          <div class="tab-wrap">
+            <ul class="tabs">
+              <li><a href="../html/form_detail1.html" class="tab-btn">편집하기</a></li>
+              <li><a href="../html/form_share.html" class="tab-btn active">공유하기</a></li>
+              <li class="on"><a href="../html/form_setting.html" class="tab-btn">설정</a></li>
+            </ul>
+            <span class="slider" data-left="0"></span>
+          </div>
+        </div>
+        <div class="row-list">
+
+          <button type="button" class="btn-m btn-white-line open-layer" data-info="layer-type-preview"><span>미리보기</span></button>
+          <button type="submit" class="btn-m btn-white open-confirm"><span>게시하기</span></button>
+        </div>
+      </header>
+      <div class="cnt-box-side">
+        <div class="left-bar-style">
+          <ul class="tabs">
+            <li class="on"><button type="button" class="btn-tab-share btn-setting-alarm" data-tab="tab-alarm">열람 권한</button></li>
+            <li><button type="button" class="btn-tab-share btn-setting-label" data-tab="tab-label">화이트 라벨링</button></li>
+          </ul>
+        </div>
+        <div class="right-bar-style">
+          <section class="tab-content02">
+            <div class="content active" id="tab-alarm">
+              <h2 class="cnt-title">열람 권한</h2>
+              <p class="info tx-gray">신청폼으로 접수된 신청 내역을 확인 할 수 있는 팀원을 설정해보세요.</p>
+
+              <div class="manager-box page">
+                <div class="flex-sidebox center">
+                  <p class="cnt-title">열람 가능 팀원</p>
+                  <a href="#" class="btn-link-type02" target="_blank"><span class="txt">권한 수정</span></a>
+                </div>
+
+                <div class="inbox">
+                  <ul>
+                    <li>
+                      <div class="label">
+                        <img src="../resource/images/thumnail/img_person2.png" alt="" /><strong>나</strong> <span class="txt">홍길동</span>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="label">
+                        <img src="../resource/images/thumnail/img_person1.png" alt="" /><span class="txt">김수</span>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="label">
+                        <img src="../resource/images/thumnail/img_person3.png" alt="" /><span class="txt">김수안</span>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="label">
+                        <img src="../resource/images/thumnail/img_person4.png" alt="" /><span class="txt">김수안무</span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="content" id="tab-label">
+              <h2 class="cnt-title">화이트 라벨링 <button type="button" class="btn-info open-layer-slider" data-info="layer-guide-white-label" style="vertical-align:7px"><span class="hide">화이트라벨링팝업</span></button></h2>
+              <p class="info tx-gray">오더체크 이용중 표시를 끄고 신청폼 하단의 오더체크 브랜딩을 지워보세요.</p>
+              <div class="label-set-box flexbox center">
+                <span class="filter-title">오더체크 이용중 표시</span>
+                <span class="switch">
+                  <input type="checkbox" id="ordercheck" checked="">
+                  <label for="ordercheck" class="slider round"></label>
+                </span>
+              </div>
+
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  <!-- 미리보기 -->
+  <div class="layer-pop confirm" id="layer-info-label">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">오더체크 이용중 표시 끄기</h2>
+      </div>
+      <div class="layer-mid">
+        <p class="info">오더체크 이용중 ‘끄기’ 를 진행하시려면 ‘화이트 라벨링’ 부가 서비스 이용이 필요합니다. 플랜을 확인하고 ‘화이트 라벨링’ 부가서비스 가입을 진행해주세요.</p>
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-gray layer-close"><span>취소</span></button>
+          <button type="button" class="btn btn-bk"><span>플랜 변경</span></button>
+        </div>
+      </div>
+      <button type="button" class="btn-close layer-close"><span class="txt">팝업 닫기</span></button>
+    </div>
+  </div>
+  <!-- 코드 받기 -->
+  <div class="layer-pop" id="layer-code">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">코드 받기</h2>
+      </div>
+      <div class="layer-mid">
+        <div class="layer-inner">
+          <button type="button" class="box active"><span>https://www.figma.com/file/RhoRLD3p8DP1H20qa6Opye/%EC%98%A4%EB %8D%94% EC%B2%B4%ED%81%AC-%EC%BB%B4%ED%8E%8C?node-id=8 84%3A90 3</span></button>
+        </div>
+        <div class="layer-btn tr">
+          <button type="button" class="btn btn-bk"><span>코드 복사</span></button>
+        </div>
+      </div>
+      <button type="button" class="btn-close layer-close"><span class="txt">팝업 닫기</span></button>
+    </div>
+  </div>
+
+  <!-- 코드 받기 -->
+  <div class="layer-pop" id="layer-guide-white-label">
+    <div class="layer-cnt">
+      <div class="layer-mid">
+        <div class="label-guide-box">
+          <div>
+            <div class="layer-top">
+              <h2 class="title">오더체크 이용중 표시 ON</h2>
+            </div>
+            <img src="../resource/images/common/img_white-label01.png">
+          </div>
+          <div>
+            <div class="layer-top">
+              <h2 class="title">오더체크 이용중 표시 OFF</h2>
+            </div>
+            <img src="../resource/images/common/img_white-label02.png">
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn-close layer-close"><span class="txt">팝업 닫기</span></button>
+    </div>
+  </div>
+
+  <!-- script -->
+  <script src="../resource/js/vendor/jquery-2.1.3.min.js"></script>
+  <script src="../resource/js/vendor/jquery-ui-1.13.0.js"></script>
+  <script src="../resource/js/vendor/jquery.nice-select.min.js"></script>
+  <script src="../resource/js/vendor/slick.min.js"></script>
+  <script src="../resource/js/layerpop.js"></script><!-- 레이어팝업 -->
+  <script src="../resource/js/common.js" ></script>
+  <script>
+    //공통 페이지용 함수
+    pageInit ()
+    //우측 탭
+    window.onload = function(){
+      tabFunc (".tab-wrap",true)
+      tabBasicFunc (".left-bar-style",".btn-tab-share",".tab-content02 .content")
+    }
+    //레이어
+    layerFunc (".open-layer")
+    layerFunc (".open-layer-slider",function(){
+      $('.label-guide-box').slick({
+        dots: true,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+      });
+    })
+    //폼 페이지 공통
+    templateFunc()
+    // 레이블 체크
+
+
+  </script>
+</body>
+</html>

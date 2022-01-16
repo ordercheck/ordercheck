@@ -1,0 +1,161 @@
+<%
+  let plan = locals.plan;
+%>
+<!doctype html>
+<html lang="ko">
+
+
+<head>
+  <%- include('../common/authHead.ejs') %>
+</head>
+
+<body>
+  <!-- skip -->
+  <div id="skip">
+    <a href="#content">컨텐츠 바로가기</a>
+  </div>
+  <!-- //skip -->
+  <input type="hidden" id="HOST" value="<%= locals.HOST%>"/>
+  <div id="wrap">
+    <section id="content" class="subpage">
+      <header class="header">
+        <%- include('../common/logo.ejs') %>
+      </header>
+      <div class="center-box">
+        <div class="login-wrap">
+          <div class="tbl-top-type02">
+            <h2 class="title">요금제 선택</h2>
+            <p class="sub-title"><strong class="tx-blue">14일 무료 체험</strong></p>
+            <a href="#" class="btn-link-type02" target="_blank"><span class="txt">자세한 가격 및 기능 알아보기</span></a>
+          </div>
+
+          <div class="tab-wrap">
+            <ul class="tabs">
+              <li class="on"><button type="button" class="tab-btn active" onclick="changePlan('month')">월</button></li>
+              <li><button type="button" class="tab-btn" onclick="changePlan('year')">연(10%할인)</button></li>
+            </ul>
+            <span class="slider" data-left="0"></span>
+          </div>
+
+          <div class="dropdown-wrap">
+            <button type="button" class="btn-member-drop btn-drop-type02">
+              <dl>
+                <dt><span class="company"><%= plan[0].title %></span> <span class="desc">월 상담 신청 <%= plan[0].limitCount %>건 이하</span></dt>
+                <dd><strong class="price"><var class="d-won"><%= Number(plan[0].price).toLocaleString() %></var><span class="unit">월</span></strong></dd>
+              </dl>
+            </button>
+            <div class="drop-menu-list">
+              <input id="planIdx" type="hidden" value="0"/>
+              <ul>
+                <%for(let i=0; i<plan.length; i++){%>
+                  <li class="<%= plan[i].plan %>">
+                    
+                    <button type="button" class="btn-member-drop button-<%= plan[i].idx %>">
+                      <dl>
+                        <dt><span class="company"><%= plan[i].title %></span> <span class="desc">월 상담 신청 <%= plan[i].limitCount %>건 이하</span></dt>
+                        <dd><strong class="price"><var class="d-won"><%= plan[i].price.toLocaleString() %></var><span class="unit">월</span></strong></dd>
+                        <input class="planIdx" type="hidden" value="<%= plan[i].idx %>" />
+                      </dl>
+                    </button>
+                  </li>
+                <%}%>
+                
+                <!-- <li>
+                  <button type="button" class="btn-member-drop">
+                    <dl>
+                      <dt><span class="company">컴퍼니2</span> <span class="desc">월 상담 신청 430건 이하</span></dt>
+                      <dd><strong class="price"><var class="d-won">93,300</var><span class="unit">월</span></strong></dd>
+                    </dl>
+                  </button>
+                </li> -->
+              </ul>
+            </div>
+          </div>
+
+          <div class="service-box">
+            <h2 class="filter-title">부가 서비스</h2>
+            <ul class="info-list side">
+              <li>
+                <div class="checkbox">
+                  <input type="checkbox" name="service" id="service01" class="check" disabled>
+                  <label for="service01"><span class="box"></span><dl><dt class="label-head">화이트 라벨링</dt><dd class="label-desc" id="service01Price">팀 플랜부터 가능</dd></dl></label>
+                </div>
+              </li>
+              <li>
+                <div class="checkbox">
+                  <input type="checkbox" name="service" id="service02" class="check" checked>
+                  <label for="service02"><span class="box"></span><dl><dt><span class="label-head">채팅</span></dt><dd><span class="label-desc">₩ <var id="service02Price">21,500</var> <span class="unit">월</span></span></dd></dl></label>
+                </div>
+              </li>
+              <li>
+                <div class="checkbox">
+                  <input type="checkbox" name="service" id="service03" class="check">
+                  <label for="service03"><span class="box"></span><dl><dt><span class="label-head">통계/분석</span></dt><dd><span class="label-desc">₩ <var id="service03Price">21,500</var> <span class="unit">월</span></span></dd></dl></label>
+                </div>
+              </li>
+              <li class="total">
+                <div class="head">합계<p class="sm">모든 이용 요금은 세금(10%) 별도입니다</p></div>
+                <span class="total-price"><var class="won" id="resultPrice">64,500</var><span class="unit">월</span></span>
+              </li>
+            </ul>
+
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn-l btn-bk" onclick="openMemberInfo()"><span>다음 </span></button>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="layer-pop" id="layer-member-info">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">구독 정보 확인</h2>
+      </div>
+      <div class="layer-mid">
+        <div class="member-box">
+          <div class="info-box">
+            <div class="box">
+              <p class="member-info-title">14일 무료 체험</p>
+              <ul class="member-info-list">
+                <li>
+                  <span class="head">무료 체험기간</span>
+                  <span class="desc"><span class="start_plan">2021.08.18</span> ~ <span class="free_plan">2021.08.18</span></span>
+                </li>
+              </ul>
+            </div>
+            <div class="box active">
+              <p class="member-info-title">무료 체험 후 예정된 연 정기구독</p>
+              <ul class="member-info-list">
+                <li><span class="head">구독 기간</span><span class="desc"><span class="start_plan">2021.08.18</span> ~ <span class="expire_plan">2021.08.18</span></span></li>
+                <li><span class="head">결제 시작일</span><span class="desc"><span class="free_plan">2021.08.18</span></span></li>
+                <li><span class="head">결제 금액</span><span class="desc result_price">1,000,000원</span>원</li>
+              </ul>
+            </div>
+          </div>
+          <ul class="dot-list">
+            <li>무료체험 기간 종료 시 다음날부터 구독료가 결제됩니다.<br> 결제를 원하지 않으시면 구독을 무료로 변경해두세요.</li>
+            <li>구독기간은 자동 갱신됩니다. 구독결제 갱신을 중단하시려면 구독기간 종료일 전까지 구독을 해지하세요.</li>
+            <li>세금(10%)이 별도 추가됩니다.</li>
+          </ul>
+        </div>
+
+        <div class="layer-btn tr">
+          <button type="button" class="btn-l btn-bk" onclick="goSubscribeStep02()"><span>확인</span></button>
+        </div>
+        <button type="button" class="btn-close layer-close"><span class="txt">닫기</span></button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- script -->
+  <%- include('../common/authScript') %>
+ 
+</body>
+
+</html>

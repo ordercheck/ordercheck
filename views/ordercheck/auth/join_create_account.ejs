@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <%- include('../common/authHead.ejs') %>
+</head>
+
+<body>
+  <!-- skip -->
+  <div id="skip">
+    <a href="#content">컨텐츠 바로가기</a>
+  </div>
+  <!-- //skip -->
+  <input type="hidden" id="HOST" value="<%= locals.HOST%>"/>
+
+  <div id="wrap">
+    <section id="content" class="subpage">
+      <header class="header">
+        <%- include('../common/logo.ejs') %>
+      </header>
+      <div class="center-box">
+        <div class="login-wrap">
+          <div class="login-top">
+            <h2 class="title">회원가입</h2>
+          </div>
+          <div class="form-area">
+            <label for="user_phone" class="inp-title">휴대폰 번호</label>
+            <div class="inp">
+              <input type="tel" id="user_phone" pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}" maxlength="13" placeholder="휴대폰 번호 (‘-’ 없이 입력해주세요)" required/>
+            </div>
+            <p class="warning-txt02 warning-phone01" style="display: none;">이미 가입된 휴대폰 번호입니다.</p>
+            <p class="warning-txt02 warning-phone02" style="display: none;">휴대폰 형식에 맞춰 11자리를 입력해주세요.</p>
+
+            <label for="user_name" class="inp-title">이름</label>
+            <div class="inp">
+              <input type="text" id="user_name" placeholder="이름"/>
+            </div>
+            <p class="warning-txt02 warning-name" style="display: none;">이름을 입력해주세요.</p>
+
+            <label for="user_password" class="inp-title">비밀번호</label>
+            <div class="inp">
+              <input type="password" id="user_password" placeholder="비밀번호">
+              <button type="button" class="pos btn-pw-show"><span class="txt hide">비밀번호 보기</span></button>
+            </div>
+            <p class="warning-txt02 warning-password01" style="display: none;">비밀번호를 입력해주세요.  </p>
+            <p class="warning-txt02 warning-password02" style="display: none;">영문, 숫자, 특수문자 혼합 8~16자리로 입력해주세요.  </p>
+
+            <label for="user_email" class="inp-title">이메일</label>
+            <div class="inp">
+              <input type="text" id="user_email" placeholder="이메일"/>
+            </div>
+            <p class="warning-txt02 warning-email01" style="display: none;">정확한 이메일을 입력해주세요.  </p>
+            <p class="warning-txt02 warning-email02" style="display: none;">이미 가입된 이메일입니다.  </p>
+
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn-l btn-bk confirm" disabled onclick="doJoin()"><span>다음</span></button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- 견적 공유 레이어 -->
+  <div class="layer-pop confirm" id="layer-join-auth">
+    <div class="layer-cnt">
+      <div class="layer-top">
+        <h2 class="title">인증번호 입력</h2>
+      </div>
+      <div class="layer-mid">
+        <div class="auth-box">
+          <p class="msg"><strong id="target_phone">010-1234-5678</strong>으로<br> 인증번호 6자리가 전송되었습니다.</p>
+          <div class="inp-line">
+            <span class="inp">
+              <input type="text" id="user_auth" maxlength="6" placeholder="인증번호" />
+              <span class="pos auth-time" id="count-down-timer">2:00</span>
+            </span>
+            <button type="button" class="btn btn-light-blue" onclick="reAuth()"><span>재전송</span></button>
+          </div>
+          <p class="warning-txt02 warning-auth" style="display: none;">입력하신 인증번호가 일치하지 않습니다.  </p>
+        </div>
+      </div>
+      <button type="button" class="btn-close layer-close"><span class="txt">팝업 닫기</span></button>
+      <button type="button" class="btn btn-light-blue" onclick="doAuth()" style="float: right;background-color: #02164F;color: #fff;"><span>확인</span></button>
+    </div>
+  </div>
+
+  <!-- script -->
+  <%- include('../common/joinScript.ejs') %>
+
+</body>
+
+</html>

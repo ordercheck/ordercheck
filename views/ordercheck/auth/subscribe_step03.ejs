@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <%- include('../common/authHead.ejs') %>
+</head>
+
+<body>
+  <!-- skip -->
+  <div id="skip">
+    <a href="#content">컨텐츠 바로가기</a>
+  </div>
+  <!-- //skip -->
+  <input type="hidden" id="HOST" value="<%= locals.HOST%>"/>
+  <div id="wrap">
+    <section id="content" class="subpage">
+      <header class="header">
+        <img src="/public/ordercheck//images/common/logo_color.png" alt="오더체크"/>
+      </header>
+      <div class="center-box">
+        <div class="login-wrap">
+          <div class="login-top">
+            <h2 class="title">회사 생성</h2>
+          </div>
+          <div class="form-area">
+            <label for="user_company" class="inp-title">회사 이름</label>
+            <div class="inp">
+              <input type="text" id="user_company" placeholder="회사 이름">
+            </div>
+            <p class="warning-txt02 company-name-wraning" style="display: none;">10자 이내로 입력해주세요.</p>
+            <p class="warning-txt02 company-name-duplicate-wraning" style="display: none;">해당 회사명은 이미 사용되었습니다.</p>
+
+            <label for="user_companyUrl" class="inp-title">회사 URL</label>
+            <div class="inp-line url">
+              <span class="inp">
+                <input type="text" id="user_companyUrl" placeholder="URL주소를 입력">
+              </span>
+              <span class="url-address">.ordercheck.io</span>
+            </div>
+            <p class="warning-txt02 domain-valid-wraning" style="display: none;">영문, 숫자 혼합 3-50자로 입력해주세요</p>
+            <p class="warning-txt02 domain-duplicate-wraning" style="display: none;">해당 회사 도메인은 이미 사용되었습니다.</p>
+
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn-l btn-bk confirm" onclick="doRegistCompany()"><span>14일 무료 체험 시작</span></button>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- script -->
+  <%- include('../common/joinScript.ejs') %>
+</body>
+
+</html>

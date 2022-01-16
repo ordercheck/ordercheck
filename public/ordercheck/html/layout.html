@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="">
+  <meta property="og:type" content="website">
+  <meta name="naver-site-verification" content="">
+  <meta property="og:image" content="">
+  <meta http-equiv="Cache-Control" content="No-Cache">
+  <meta http-equiv="Pragma" content="No-Cache">
+  <meta name="language" content="ko">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+
+  <title>layout</title>
+
+  <!-- css, js 연결 -->
+  <link rel="stylesheet" href="../resource/css/layout.css">
+  <link rel="stylesheet" href="../resource/css/contents.css">
+
+</head>
+
+<body>
+  <!-- skip -->
+  <div id="skip">
+    <a href="#content">컨텐츠 바로가기</a>
+  </div>
+  <!-- //skip -->
+
+  <div id="wrap">
+    <nav class="sidebar">
+      <div class="logo-details">
+        <button type="button" class="btn-side-open"><img src="../resource/images/common/ico_logo-mark.png" alt="오더체크"></button>
+        <h1 class="logo_name"><img src="../resource/images/common/ico_logo-name.png" alt="오더체크"/></h1>
+      </div>
+
+      <ul class="nav-list">
+        <li>
+          <a href="#">
+            <i class='ico home'></i>
+            <span class="links_name">홈</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="ico user"></i>
+            <span class="links_name">고객 관리</span>
+          </a>
+        </li>
+        <li>
+          <a href="file_storage.html">
+            <i class='ico file'></i>
+            <span class="links_name">파일 보관함</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class='ico chat'></i>
+            <span class="links_name">채팅</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class='ico form'></i>
+            <span class="links_name">상담 신청폼</span>
+          </a>
+        </li>
+      </ul>
+      <ul class="btm">
+        <li>
+          <a href="#">
+            <i class='ico help'></i>
+            <span class="links_name">자주 묻는 질문</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class='ico setting'></i>
+            <span class="links_name">설정</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <section id="content" class="content-section">
+        <!-- header -->
+        <header id="header" class="header">
+          <h2 class="title">Dashboard</h2>
+
+          <ul class="menu">
+            <li>
+              <div class="searchbox">
+                <i class='ico search'></i>
+                <input type="text" placeholder="검색해보세요.">
+              </div>
+            </li>
+            <li>
+              <div class="dropdwon-wrap">
+                <a href="#" class="btn-drop">
+                  <div class="profile-details">
+                    <img src="../resource/images/profile.jpg" class="img" alt="profileImg">
+                    <span class="name">홍길동님</span>
+                    <i class="arrow down"></i>
+                  </div>
+                </a>
+                <div class="dropdown-box">
+                  <ul>
+                    <li><a href="#" class="btn-drop-menu">내 프로필</a></li>
+                    <li><a href="#" class="btn-drop-menu">회사 정보</a></li>
+                    <li><a href="#" class="btn-drop-menu">알림 설정</a></li>
+                    <li><a href="#" class="btn-drop-menu">로그아웃</a></li>
+                 </ul>
+                </div>
+              </div>
+            </li>
+            <li><button type="button" class="btn-menu" data-info="mail"><i class="ico mail"></i></button></li>
+            <li><button type="button" class="btn-menu" data-info="alarm"><i class="ico alarm"></i></button></li>
+          </ul>
+        </header>
+        <!-- /header -->
+
+
+    </section>
+    <aside id="side_right_menu" class="side-menu">
+      <div class="gnb-box right mail">
+          <ul class="clear">
+              <li><a href="#">메뉴1</a></li>
+              <li><a href="#">메뉴2</a></li>
+              <li><a href="#">메뉴3</a></li>
+          </ul>
+          <button type="button" class="btn-side-close close-box"><span class="txt">닫기</span></button>
+      </div>
+     </aside>
+    <aside id="side_right_menu" class="side-menu">
+      <div class="gnb-box right alarm">
+          <ul class="clear">
+              <li><a href="#">메뉴21</a></li>
+              <li><a href="#">메뉴22</a></li>
+              <li><a href="#">메뉴23</a></li>
+          </ul>
+          <button type="button" class="btn-side-close close-box"><span class="txt">닫기</span></button>
+      </div>
+     </aside>
+  </div>
+
+
+  <script src="../resource/js/vendor/jquery-2.1.3.min.js"></script>
+  <script src="../resource/js/common.js"></script>
+  <script>
+
+
+
+  </script>
+</body>
+
+</html>

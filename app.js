@@ -1,0 +1,213 @@
+'use strict';
+const http = require('http');
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const helmet = require('helmet');
+const session = require('express-session');
+const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger/config');
+
+const json2xls = require('json2xls');
+const corsOptions = {
+  origin: 'https://ordercheck-file.s3.ap-northeast-2.amazonaws.com',
+  credentials: true,
+};
+const allowedOrigins = [
+  'https://ordercheck-file.s3.ap-northeast-2.amazonaws.com',
+];
+require('dotenv').config();
+const db_config = require('./lib/config/db_config');
+// const redis = require("redis");
+// const RedisStore = require("connect-redis")(session);
+// const redisClient = redis.createClient();
+// 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
+// ssh -i /Users/kimgunhee/Desktop/keys/ordercheck.pem ubuntu@3.37.20.22
+var MySQLStore = require('express-mysql-session')(session);
+var options = db_config;
+//세션 생성에 limit이 생기거나 한계가 있으면 sequelize pool limit을 확인!
+const sessionStore = new MySQLStore(options);
+const sess = {
+  resave: false,
+  saveUninitialized: false,
+  secret: 'sessionscrete',
+  name: 'sessionId',
+  cookie: {
+    httpOnly: true,
+    secure: false,
+  },
+  store: sessionStore,
+  schema: {
+    columnNames: {
+      session_id: 'custom_session_id',
+      expires: 'custom_expires_column_name',
+      data: 'custom_data_column_name',
+    },
+  },
+};
+
+//client
+// const adminRouter = require('./router/admin/indexRouter')
+// const clientRouter = require('./router/client/indexRouter')
+const ordercheckRouter = require('./router/ordercheck/indexRouter');
+const apiRouter = require('./router/api/ordercheck');
+const consultingRouter = require('./router/api/consulting');
+const updateRouter = require('./router/api/update');
+const db = require('./model/db');
+
+class AppServer extends http.Server {
+  constructor(config) {
+    const app = express();
+    super(app);
+    this.config = config;
+    this.app = app;
+    this.currentConns = new Set();
+    this.busy = new WeakSet();
+    this.stop = false;
+    process.env.NODE_ENV =
+      process.env.NODE_ENV &&
+      process.env.NODE_ENV.trim().toLowerCase() == 'production'
+        ? 'production'
+        : 'development';
+  }
+  start() {
+    this.set();
+    this.middleWare();
+    this.router();
+    this.dbConnection();
+    this.schedule();
+
+    // let testMail = {
+    //     receiver: ['gunhee21@gmail.com'],
+    //     subject: '클래스형 노드서버가 켜짐',
+    //     content:'<h1>서버 안전운행중 - 이상무</h1>'
+    // }
+    // testMailer(testMail)
+    return this;
+  }
+
+  set() {
+    this.app.engine('ejs', require('ejs').renderFile);
+    this.app.set('views', __dirname + '/views');
+    this.app.set('view engine', 'ejs');
+  }
+
+  middleWare() {
+    this.app.enable('trust proxy');
+
+    this.app.use(helmet());
+
+    this.app.use(cors(corsOptions));
+
+    this.app.use(function (req, res, next) {
+      var origin = req.headers.origin;
+      if (allowedOrigins.indexOf(origin) > -1) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+      }
+      // res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Methods', '*');
+      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      res.header('Access-Control-Allow-Credentials', true);
+      return next();
+    });
+    this.app.use(
+      express.json({
+        limit: '100mb',
+      })
+    );
+    this.app.use(
+      express.urlencoded({
+        limit: '100mb',
+        extended: true,
+      })
+    );
+    // this.app.use(bodyParser())
+    this.app.use(cookieParser());
+    this.app.use('/public', express.static(__dirname + '/public'));
+    this.app.use(session(sess));
+    this.app.use(json2xls.middleware);
+
+    this.app.use(async (req, res, next) => {
+      var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      // console.log("IP::" + ip)
+      next();
+
+      // console.log("ENV::"+process.env.NODE_ENV)
+      // console.log("URL::"+req.url)
+      // await db.views.create({ip,path:req.url})
+      // if (process.env.NODE_ENV == 'development') {
+      //     next()
+      // } else {
+      //     let protocol = req.headers['x-forwarded-proto'] || req.protocol;
+      //     if (protocol == 'https') {
+      //         let from = `${protocol}://${req.hostname}${req.url}`;
+      //         console.log(from)
+      //         next();
+      //     } else {
+      //         let from = `${protocol}://${req.hostname}${req.url}`;
+      //         let to = `https://www.ordercheck.io`;
+      //         // log and redirect
+      //         console.log(`[${req.method}]: ${from} -> ${to}`);
+      //         res.redirect(to);
+      //     }
+      // }
+    });
+  }
+
+  router() {
+    this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    this.app.use('/', ordercheckRouter);
+    this.app.use('/api', apiRouter);
+    this.app.use('/api/consulting', consultingRouter);
+    this.app.use('/api/update', updateRouter);
+    this.app.use((req, res, next) => {
+      res.status(404);
+      res.render('404');
+    });
+  }
+  dbConnection() {
+    console.log('Eviroment ::: ' + process.env.NODE_ENV);
+    db.sequelize
+      .authenticate()
+      .then(() => {
+        console.log(
+          'development: Connection has been established successfully.'
+        );
+        return db.sequelize.sync({
+          force: false,
+        });
+      })
+      .then(() => {
+        console.log('DB Sync complete.');
+      })
+      .catch((err) => {
+        console.error('Unable to connect to the database:', err);
+      });
+  }
+
+  schedule() {
+    // sessionCheck.run()
+    console.log('[SCHEDULE]');
+    console.log(process.env.NODE_ENV);
+    if (process.env.NODE_ENV == 'development') {
+      // pushNotify.run(3)
+      // emailSend.run(3)
+      // kakaoPush.run(5)
+      // kakaoPush.run(5)
+    } else {
+      // pushNotify.run(3)
+      // emailSend.run(3)
+      // kakaoPush.run(5)
+      // kakaoPush.run(5)
+    }
+  }
+}
+
+const createServer = (config = {}) => {
+  const server = new AppServer(config);
+  return server.start();
+};
+
+exports.createServer = createServer;
+// exports.sessionCheck = sessionCheck

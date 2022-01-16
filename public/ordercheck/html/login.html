@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="">
+  <meta property="og:type" content="website">
+  <meta name="naver-site-verification" content="">
+  <meta property="og:image" content="">
+  <meta http-equiv="Cache-Control" content="No-Cache">
+  <meta http-equiv="Pragma" content="No-Cache">
+  <meta name="language" content="ko">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+
+  <title>로그인</title>
+
+  <!-- css, js 연결 -->
+  <link rel="stylesheet" href="../resource/css/layout.css">
+  <link rel="stylesheet" href="../resource/css/contents.css">
+
+</head>
+
+<body>
+  <!-- skip -->
+  <div id="skip">
+    <a href="#content">컨텐츠 바로가기</a>
+  </div>
+  <!-- //skip -->
+
+  <div id="wrap">
+    <section id="content" class="subpage">
+      <header class="header">
+        <img src="../resource/images/common/logo_color.png" alt="오더체크"/>
+      </header>
+      <div class="center-box">
+        <div class="login-wrap main">
+          <div class="login-top">
+            <h2 class="title">로그인</h2>
+          </div>
+          <div class="form-area">
+            <label for="user_id" class="inp-title">아이디</label>
+            <div class="inp large">
+              <input type="tel" id="user_id" pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}" maxlength="13" placeholder="아이디(휴대폰 번호)" required/>
+            </div>
+            <label for="user_pw" class="inp-title">비밀번호</label>
+            <div class="inp large">
+              <input type="password" id="user_pw" placeholder="비밀번호">
+              <button type="button" class="pos btn-pw-show"><span class="txt hide">비밀번호 보기</span></button>
+            </div>
+            <p class="warning-txt">아이디 또는 비밀번호가 일치하지 않습니다! 😵 </p>
+          </div>
+          <div class="form-btm tl">
+            <span class="txt">비밀번호를 잊으셨나요?</span>
+            <a href="login_find-pw.html" class="btn-golink tx-darkgray" target="_blank"><span>비밀번호 찾기</span></a>
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn-l btn-bk login" disabled><span>로그인</span></button>
+          </div>
+          <div class="form-btm tc">
+            <span class="txt">오더체크가 처음이신가요?</span>
+            <a href="join_form.html" class="btn-golink" target="_blank"><span>회원가입</span></a>
+          </div>
+          <p class="line"><span class="txt">OR</span></p>
+          <div class="social-login">
+            <button type="button" class="btn-l btn-kakao"><span>카카오톡 계정으로 계속하기</span></button>
+            <button type="button" class="btn-l btn-apple"><span>애플 계정으로 계속하기</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- script -->
+  <script src="../resource/js/vendor/jquery-2.1.3.min.js"></script>
+  <script src="../resource/js/common.js"></script>
+  <script>
+    inpTypeSwitch () //눈 모양 누르면, input[password] 에서 패스워드 type 속성을 text/password 로 스윗칭
+    inpActiveFunc (".login-wrap",".login") //인풋 들의 value 값이 타이핑 되면 버튼 활성화
+    autoHypenTelFunc ("user_id") // input 내 벨류 입력시, 4자리마다 하이픈 추가
+  </script>
+</body>
+
+</html>

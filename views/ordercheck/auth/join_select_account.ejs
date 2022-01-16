@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <%- include('../common/authHead.ejs') %>
+</head>
+
+<body>
+  <!-- skip -->
+  <div id="skip">
+    <a href="#content">컨텐츠 바로가기</a>
+  </div>
+  <!-- //skip -->
+  <input type="hidden" id="HOST" value="<%= locals.HOST%>"/>
+  <div id="wrap">
+    <section id="content" class="subpage">
+      <header class="header">
+        <%- include('../common/logo.ejs') %>
+      </header>
+      <div class="center-box">
+        <div class="login-wrap">
+          <div class="login-top">
+            <h2 class="title">회원가입</h2>
+          </div>
+          <div class="social-login">
+            <a href="/join/create-account" class="btn-l btn-phone"><span>휴대폰 번호로 계속하기</span></a>
+            <!-- <button type="button" class="btn-l btn-kakao"><span>카카오톡 계정으로 계속하기</span></button>
+            <button type="button" class="btn-l btn-apple"><span>애플 계정으로 계속하기</span></button> -->
+          </div>
+          <div class="form-btm tc">
+            <span class="txt">회원이신가요?</span>
+            <a href="/login" class="btn-golink"><span>로그인</span></a>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+    <%- include('../common/authScript') %>
+</body>
+
+</html>
