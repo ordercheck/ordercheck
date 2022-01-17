@@ -11,28 +11,43 @@
  *           schema:
  *             type: object
  *             properties:
- *               first:
+ *                choice:
  *                 type: string
- *               second:
+ *                address:
  *                 type: string
- *               third:
+ *                detail_address:
  *                 type: string
- *               fourth:
- *                 type: string
- *               customer_name:
- *                 type: string
- *               customer_phoneNumber:
- *                 type: string
- *               company_idx:
- *                 type: int
+ *                building_type:
+ *                  type: string
+ *                size:
+ *                  type: integer
+ *                elv:
+ *                  type: string
+ *                hope_Date:
+ *                  type: string
+ *                predicted_living:
+ *                  type: string
+ *                budget:
+ *                  type: string
+ *                customer_name:
+ *                  type: string
+ *                customer_phoneNumber:
+ *                  type: string
+ *                company_idx:
+ *                  type: integer
  *             example:
- *               first: "token"
- *               second: "token"
- *               third: "token"
- *               fourth: "token"
- *               customer_name: "김기태"
- *               customer_phoneNumber: "010-6719-6919"
- *               company_idx: 1
+ *                choice: "창호"
+ *                address: "경기도 광명"
+ *                detail_address: "일직동"
+ *                building_type: "아파트"
+ *                size: 24
+ *                elv: "true"
+ *                hope_Date: "2022.01.06"
+ *                predicted_living : "2022.01.07"
+ *                budget: "1,000만원"
+ *                customer_name: "김기태"
+ *                customer_phoneNumber : "010-6719-6919"
+ *                company_idx : 1
  *     responses:
  *       '200':
  *         description: 성공
@@ -358,7 +373,7 @@
  *                 type: string
  *             example:
  *               company_idx: 16
- *               pdf_data: 'base64'
+ *               img: 견적서file
  *               pdf_name: 'pdf 제목'
  *               title: '제1차 견적서'
  *               predicted_price: '1,000,000'

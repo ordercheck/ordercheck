@@ -36,6 +36,7 @@ db.plan = sequelize.import(__dirname + '/plan.js');
 db.card = sequelize.import(__dirname + '/card.js');
 db.company = sequelize.import(__dirname + '/company.js');
 db.consulting = sequelize.import(__dirname + '/consulting.js');
+
 db.userCompany = sequelize.import(__dirname + '/userCompany.js');
 db.timeLine = sequelize.import(__dirname + '/consultingTimeLine.js');
 db.calculate = sequelize.import(__dirname + '/calculate.js');
@@ -60,6 +61,7 @@ db.consulting.belongsTo(db.company, {
 db.consulting.belongsTo(db.user, {
   foreignKey: 'contact_person',
 });
+
 // plan과 company
 db.plan.belongsTo(db.company, {
   foreignKey: 'company_idx',

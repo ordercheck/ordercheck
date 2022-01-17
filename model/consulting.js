@@ -6,8 +6,32 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-
     choice: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    idx: {
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER,
+    },
+    customer_name: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    customer_phoneNumber: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    customer_email: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    application_route: {
       allowNull: false,
       defaultValue: '',
       type: DataTypes.STRING(100),
@@ -28,12 +52,25 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(100),
     },
     size: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.INTEGER,
     },
-    elv: {
+    rooms_count: {
+      allowNull: true,
+      type: DataTypes.INTEGER,
+    },
+    bathrooms_count: {
+      allowNull: true,
+      type: DataTypes.INTEGER,
+    },
+    completion_year: {
       allowNull: false,
-      defaultValue: 'true',
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    floor_plan: {
+      allowNull: false,
+      defaultValue: '',
       type: DataTypes.STRING(100),
     },
     hope_Date: {
@@ -51,14 +88,128 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: '',
       type: DataTypes.STRING(100),
     },
-    customer_name: {
+
+    destruction: {
       allowNull: false,
       defaultValue: '',
       type: DataTypes.STRING(100),
     },
-    customer_phoneNumber: {
+
+    expand: {
       allowNull: false,
       defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    window: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    carpentry: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    paint: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    papering: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    bathroom: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+
+    bathroom_option: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    floor: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    tile: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+
+    electricity_lighting: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+
+    kitchen: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    kitchen_option: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+
+    furniture: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+
+    facility: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    film: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    art_wall: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+
+    etc: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    hope_concept: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+
+    contact_time: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    etc_question: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    active: {
+      allowNull: false,
+      defaultValue: '상담 신청',
+      type: DataTypes.STRING(100),
+    },
+    contract_possibility: {
+      allowNull: false,
+      defaultValue: '없음',
       type: DataTypes.STRING(100),
     },
     active: {

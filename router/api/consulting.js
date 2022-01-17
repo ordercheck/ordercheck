@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const { multer_calculate_upload } = require('../../lib/aws/aws');
 const loginCheck = require('../../middleware/auth');
 const {
   dateFilter,
@@ -24,7 +24,6 @@ const {
   addCalculate,
   downCalculate,
 } = require('../../controller/consultingStatus');
-const { Op } = require('sequelize');
 
 // date필터링
 router.get('/date/:company_idx/:date', loginCheck, dateFilter);
@@ -70,7 +69,11 @@ router.get('/customer/:company_idx', loginCheck, showCompanyCustomers);
 // 컨설팅 상태 수정 및 메모
 router.patch('/status', loginCheck, patchConsultingStatus);
 // 견적서 등록
-router.post('/calculate', loginCheck, addCalculate);
+router.post(
+  '/calculate',
+  multer_calculate_upload().single('img'),
+  addCalculate
+);
 // 견적서 다운로드
 router.post('/calculate/down', loginCheck, downCalculate);
 // 상담폼 추가 라우터

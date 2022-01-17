@@ -1,4 +1,3 @@
-const bodyParser = require('body-parser');
 const { checkUserCompany } = require('../lib/apiFunctions');
 const verify_data = require('../lib/jwtfunctions');
 
@@ -6,32 +5,9 @@ const db = require('../model/db');
 const { pdfUpload, downFile } = require('../lib/aws/fileupload').ufile;
 module.exports = {
   addConsultingForm: async (req, res) => {
-    let {
-      first,
-      second,
-      third,
-      fourth,
-      customer_name,
-      customer_phoneNumber,
-      company_idx,
-    } = req.body;
-
-    first = await verify_data(first);
-    second = await verify_data(second);
-    third = await verify_data(third);
-    fourth = await verify_data(fourth);
-
-    addElement = {
-      ...first,
-      ...second,
-      ...third,
-      ...fourth,
-      customer_name,
-      customer_phoneNumber,
-      company_idx,
-    };
+    console.log(req.body);
     try {
-      await db.consulting.create(addElement);
+      await db.consulting.create(req.body);
       return res.send({ success: 200 });
     } catch (err) {
       const Err = err.message;
@@ -128,45 +104,50 @@ module.exports = {
   },
 
   addCalculate: async (req, res) => {
-    const { body, loginUser: user_idx } = req;
-    try {
-      // 관리자가 회사소속인지 체크
-      const checkResult = await checkUserCompany(body.company_idx, user_idx);
-      if (checkResult == false) {
-        return res.send({ success: 400 });
+    const { body, file, loginUser: user_idx } = req;
+    if (!file) {
+      try {
+        // 관리자가 회사소속인지 체크
+        // const checkResult = await checkUserCompany(body.company_idx, user_idx);
+        // if (checkResult == false) {
+        //   return res.send({ success: 400 });
+        // }
+
+        body.pdf_name = file.originalname;
+        const result = await db.calculate.create(body);
+        return res.send({ success: 200, url_Idx: result.idx });
+      } catch (err) {
+        const Err = err.message;
+        return res.send({ success: 500, Err });
       }
-      // pdf s3 저장
-      let file = body.pdf_data;
-      let query = {
-        file: file,
-        fileName: body.pdf_name,
-        fileType: 'pdf',
-      };
-      pdfUpload(query, async (err, url, final_name) => {
-        if (err) {
-          res.send({ success: 400, message: err });
-        } else {
-          body.pdf_data = url.original;
-          body.pdf_name = final_name;
-          const result = await db.calculate.create(body);
-          return res.send({ success: 200, url_Idx: result.idx });
-        }
-      });
-    } catch (err) {
-      const Err = err.message;
-      return res.send({ success: 500, Err });
+    } else {
+      try {
+        // 관리자가 회사소속인지 체크
+        // const checkResult = await checkUserCompany(body.company_idx, user_idx);
+        // if (checkResult == false) {
+        //   return res.send({ success: 400 });
+        // }
+        // pdf s3 저장
+        const [, file_name] = file.key.split('/');
+        body.pdf_name = file_name;
+        body.pdf_data = req.file.location;
+        const result = await db.calculate.create(body);
+        return res.send({ success: 200, url_Idx: result.idx });
+      } catch (err) {
+        const Err = err.message;
+        return res.send({ success: 500, Err });
+      }
     }
   },
   downCalculate: async (req, res) => {
     const result = await db.calculate.findByPk(req.body.url_idx);
-    result.pdf_name += '.pdf';
+    console.log(result.pdf_name);
     downFile(result.pdf_name, (err, url) => {
       if (err) {
-        console.log('실패', err);
         res.send({ success: 400, message: err });
       } else {
-        res.attachment(result.pdf_name); // or whatever your logic needs
-        res.send(url.Body);
+        res.attachment(result.pdf_name);
+        return res.send(url.Body);
       }
     });
   },
