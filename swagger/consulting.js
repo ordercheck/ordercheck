@@ -391,4 +391,26 @@
  *            description: 성공
  *         '400':
  *           description: 실패
+ * /api/consulting/calculate/down:
+ *   post:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       -  consult
+ *     summary: 견적서 pdf 다운로드
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               url_idx:
+ *                 type: string
+ *             example:
+ *               url_idx: 6
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

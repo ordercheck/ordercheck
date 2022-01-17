@@ -22,6 +22,7 @@ const {
   addCompanyCustomer,
   patchConsultingStatus,
   addCalculate,
+  downCalculate,
 } = require('../../controller/consultingStatus');
 const { Op } = require('sequelize');
 
@@ -70,6 +71,8 @@ router.get('/customer/:company_idx', loginCheck, showCompanyCustomers);
 router.patch('/status', loginCheck, patchConsultingStatus);
 // 견적서 등록
 router.post('/calculate', loginCheck, addCalculate);
+// 견적서 다운로드
+router.post('/calculate/down', loginCheck, downCalculate);
 // 상담폼 추가 라우터
 router.post('/', addConsultingForm);
 // 고객등록 api

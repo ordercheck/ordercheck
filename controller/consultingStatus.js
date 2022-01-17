@@ -1,8 +1,9 @@
 const bodyParser = require('body-parser');
 const { checkUserCompany } = require('../lib/apiFunctions');
 const verify_data = require('../lib/jwtfunctions');
+
 const db = require('../model/db');
-const { pdfUpload } = require('../lib/aws/fileupload').ufile;
+const { pdfUpload, downFile } = require('../lib/aws/fileupload').ufile;
 module.exports = {
   addConsultingForm: async (req, res) => {
     let {
@@ -141,18 +142,32 @@ module.exports = {
         fileName: body.pdf_name,
         fileType: 'pdf',
       };
-      pdfUpload(query, async (err, url) => {
+      pdfUpload(query, async (err, url, final_name) => {
         if (err) {
           res.send({ success: 400, message: err });
         } else {
           body.pdf_data = url.original;
-          await db.calculate.create(body);
-          return res.send({ success: 200, url });
+          body.pdf_name = final_name;
+          const result = await db.calculate.create(body);
+          return res.send({ success: 200, url_Idx: result.idx });
         }
       });
     } catch (err) {
       const Err = err.message;
       return res.send({ success: 500, Err });
     }
+  },
+  downCalculate: async (req, res) => {
+    const result = await db.calculate.findByPk(req.body.url_idx);
+    result.pdf_name += '.pdf';
+    downFile(result.pdf_name, (err, url) => {
+      if (err) {
+        console.log('실패', err);
+        res.send({ success: 400, message: err });
+      } else {
+        res.attachment(result.pdf_name); // or whatever your logic needs
+        res.send(url.Body);
+      }
+    });
   },
 };
