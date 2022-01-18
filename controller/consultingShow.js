@@ -12,27 +12,13 @@ module.exports = {
       if (checkResult == false) {
         return res.send({ success: 400 });
       }
-      const totalData = await db.consulting.count();
+      const totalData = await db.customer.count();
       const start = (page - 1) * limit;
-      const result = await db.consulting.findAll({
+      const result = await db.customer.findAll({
         offset: start,
         limit,
-        where: { company_idx },
-        attributes: [
-          'idx',
-          'choice',
-          'address',
-          'building_type',
-          'size',
-          'elv',
-          'hope_Date',
-          'predicted_living',
-          'budget',
-          'customer_name',
-          'customer_phoneNumber',
-          'active',
-        ],
       });
+
       if (result.length == 0) {
         return res.send({ success: 400 });
       }
@@ -70,31 +56,18 @@ module.exports = {
   showDetailConsulting: async (req, res) => {
     const { idx } = req.params;
     try {
-      const result = await db.consulting.findOne({
+      const result = await db.customer.findAll({
         where: {
           idx,
         },
-        attributes: [
-          'idx',
-          'choice',
-          'address',
-          'detail_address',
-          'building_type',
-          'size',
-          'elv',
-          'hope_Date',
-          'predicted_living',
-          'budget',
-          'customer_name',
-          'customer_phoneNumber',
-          'active',
-          'contract_possibility',
-          'createdAt',
-        ],
         include: [
           {
-            model: db.timeLine,
-            attributes: ['status', 'memo'],
+            model: db.consulting,
+            include: [
+              {
+                model: db.timeLine,
+              },
+            ],
           },
         ],
       });
@@ -150,7 +123,31 @@ module.exports = {
       return res.send({ success: 500, Err });
     }
   },
-  showDetailTimeLine: (req, res) => {
-    return res.send({ success: 200 });
+  showIntegratedUser: async (req, res) => {
+    const {
+      body: { company_idx, customer_phoneNumber },
+      loginUser: user_idx,
+    } = req;
+    try {
+      const checkResult = await checkUserCompany(company_idx, user_idx);
+      if (checkResult == false) {
+        return res.send({ success: 400 });
+      }
+      const result = await db.customer.findAll({
+        where: { customer_phoneNumber },
+        attributes: [
+          'idx',
+          'customer_name',
+          'customer_phoneNumber',
+          'createdAt',
+          'address',
+          'detail_address',
+        ],
+      });
+      return res.send({ result });
+    } catch (err) {
+      const Err = err.message;
+      return res.send({ success: 500, Err });
+    }
   },
 };

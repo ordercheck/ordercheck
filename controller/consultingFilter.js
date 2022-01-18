@@ -11,7 +11,7 @@ const makeArrforFilter = (data, status) => {
   return countArr;
 };
 module.exports = {
-  dateFilter: async () => {
+  dateFilter: async (req, res) => {
     let {
       params: { company_idx, date },
       loginUser: user_idx,
@@ -21,11 +21,18 @@ module.exports = {
       if (checkResult == false) {
         return res.send({ success: 400 });
       }
+
       date = date.replace(/ /gi, '').split('-');
+
+      const firstDate = new Date(date[0].replace(/\./gi, '-'));
+      const secondDate = new Date(date[1].replace(/\./gi, '-'));
+      firstDate.setDate(firstDate.getDate() - 1);
+      secondDate.setDate(secondDate.getDate() + 1);
+
       const result = await db.consulting.count({
         where: {
           company_idx,
-          hope_Date: { [Op.between]: [date[0], date[1]] },
+          createdAt: { [Op.between]: [firstDate, secondDate] },
         },
       });
       return res.send({ success: 200, result });
@@ -46,13 +53,12 @@ module.exports = {
       }
       const countArr = makeArrforFilter(active, (status = 'active'));
 
-      const result = await db.consulting.count({
+      const result = await db.customer.count({
         where: {
           company_idx,
           [Op.or]: countArr,
         },
       });
-
       return res.send({ success: 200, result });
     } catch (err) {
       const Err = err.message;
@@ -74,7 +80,7 @@ module.exports = {
         contract_possibility,
         (status = 'contract_possibility')
       );
-      const result = await db.consulting.count({
+      const result = await db.customer.count({
         where: {
           company_idx,
           [Op.or]: countArr,

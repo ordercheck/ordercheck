@@ -4,7 +4,7 @@
  *   post:
  *     tags:
  *       -  consult
- *     summary: consulting 추가 api
+ *     summary: consulting 추가 api (FORM DATA)
  *     requestBody:
  *       content:
  *         application/json:
@@ -352,7 +352,7 @@
  *      - bearerAuth: []
  *     tags:
  *       -  consult
- *     summary: consulting 견적 업로드
+ *     summary: consulting 견적 업로드 (FORM DATA)
  *     requestBody:
  *       content:
  *         application/json:
@@ -423,6 +423,59 @@
  *                 type: string
  *             example:
  *               url_idx: 6
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/consulting/integrated/user:
+ *   post:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       -  consult
+ *     summary: 같은 전화번호 고객 보여주기
+ *     requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              customer_phoneNumber:
+ *                type: string
+ *              company_idx:
+ *                type: integer
+ *            example:
+ *               customer_phoneNumber: "010-6719-6919"
+ *               company_idx: "1"
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/consulting/integrated/user/:
+ *   patch:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       -  consult
+ *     summary: 같은 번호 고객 통합하기
+ *     requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              company_idx:
+ *                type: integer
+ *              main_idx:
+ *                type: integer
+ *              target_idx:
+ *                type: array
+ *            example:
+ *               company_idx: "1"
+ *               main_idx: 4
+ *               target_idx: [1,2,3]
  *     responses:
  *       '200':
  *         description: 성공

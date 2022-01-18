@@ -11,21 +11,7 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: '',
       type: DataTypes.STRING(100),
     },
-    idx: {
-      autoIncrement: true,
-      primaryKey: true,
-      type: DataTypes.INTEGER,
-    },
-    customer_name: {
-      allowNull: false,
-      defaultValue: '',
-      type: DataTypes.STRING(100),
-    },
-    customer_phoneNumber: {
-      allowNull: false,
-      defaultValue: '',
-      type: DataTypes.STRING(100),
-    },
+
     customer_email: {
       allowNull: false,
       defaultValue: '',
@@ -36,25 +22,13 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: '',
       type: DataTypes.STRING(100),
     },
-    address: {
-      allowNull: false,
-      defaultValue: '',
-      type: DataTypes.STRING(100),
-    },
-    detail_address: {
-      allowNull: false,
-      defaultValue: '',
-      type: DataTypes.STRING(100),
-    },
+
     building_type: {
       allowNull: false,
       defaultValue: '',
       type: DataTypes.STRING(100),
     },
-    size: {
-      allowNull: true,
-      type: DataTypes.INTEGER,
-    },
+
     rooms_count: {
       allowNull: true,
       type: DataTypes.INTEGER,
@@ -71,7 +45,7 @@ module.exports = function (sequelize, DataTypes) {
     floor_plan: {
       allowNull: false,
       defaultValue: '',
-      type: DataTypes.STRING(100),
+      type: DataTypes.TEXT(),
     },
     hope_Date: {
       allowNull: false,
@@ -180,7 +154,11 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: '',
       type: DataTypes.STRING(100),
     },
-
+    elv: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
     etc: {
       allowNull: false,
       defaultValue: '',
@@ -189,7 +167,7 @@ module.exports = function (sequelize, DataTypes) {
     hope_concept: {
       allowNull: false,
       defaultValue: '',
-      type: DataTypes.STRING(100),
+      type: DataTypes.TEXT(),
     },
 
     contact_time: {
@@ -200,26 +178,6 @@ module.exports = function (sequelize, DataTypes) {
     etc_question: {
       allowNull: false,
       defaultValue: '',
-      type: DataTypes.STRING(100),
-    },
-    active: {
-      allowNull: false,
-      defaultValue: '상담 신청',
-      type: DataTypes.STRING(100),
-    },
-    contract_possibility: {
-      allowNull: false,
-      defaultValue: '없음',
-      type: DataTypes.STRING(100),
-    },
-    active: {
-      allowNull: false,
-      defaultValue: '상담 신청',
-      type: DataTypes.STRING(100),
-    },
-    contract_possibility: {
-      allowNull: false,
-      defaultValue: '없음',
       type: DataTypes.STRING(100),
     },
   });

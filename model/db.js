@@ -40,42 +40,70 @@ db.consulting = sequelize.import(__dirname + '/consulting.js');
 db.userCompany = sequelize.import(__dirname + '/userCompany.js');
 db.timeLine = sequelize.import(__dirname + '/consultingTimeLine.js');
 db.calculate = sequelize.import(__dirname + '/calculate.js');
-db.test = sequelize.import(__dirname + '/test.js');
+db.customer = sequelize.import(__dirname + '/customer.js');
 
-//consulting과 timeLine, calculate
+//consulting과 timeLine, calculate, customer
 db.consulting.hasMany(db.timeLine, { foreignKey: 'consulting_idx' });
-db.consulting.hasMany(db.calculate, { foreignKey: 'consulting_idx' });
 db.timeLine.belongsTo(db.consulting, {
   foreignKey: 'consulting_idx',
 });
+db.consulting.hasMany(db.calculate, { foreignKey: 'consulting_idx' });
 db.calculate.belongsTo(db.consulting, {
   foreignKey: 'consulting_idx',
+});
+
+db.customer.hasMany(db.consulting, { foreignKey: 'customer_idx' });
+db.consulting.belongsTo(db.customer, {
+  foreignKey: 'customer_idx',
+});
+db.user.hasOne(db.customer, { foreignKey: 'contact_person' });
+db.customer.belongsTo(db.user, {
+  foreignKey: 'contact_person',
+});
+// customer과 company
+db.company.hasMany(db.customer, { foreignKey: 'company_idx' });
+db.customer.belongsTo(db.company, {
+  foreignKey: 'company_idx',
 });
 
 // consulting과 company
 db.consulting.belongsTo(db.company, {
   foreignKey: 'company_idx',
 });
-
-// consulting과 user
-db.consulting.belongsTo(db.user, {
-  foreignKey: 'contact_person',
+db.company.hasMany(db.consulting, {
+  foreignKey: 'company_idx',
 });
 
 // plan과 company
 db.plan.belongsTo(db.company, {
   foreignKey: 'company_idx',
 });
+
+db.company.hasMany(db.plan, {
+  foreignKey: 'company_idx',
+});
+
 // card와 company
 db.card.belongsTo(db.company, {
   foreignKey: 'company_idx',
 });
+db.company.hasMany(db.card, {
+  foreignKey: 'company_idx',
+});
+
 // userCompany와 user
 db.userCompany.belongsTo(db.user, {
   foreignKey: 'user_idx',
 });
+db.user.hasOne(db.userCompany, {
+  foreignKey: 'user_idx',
+});
+
 // userCompany와 company
 db.userCompany.belongsTo(db.company, {
+  foreignKey: 'company_idx',
+});
+db.company.hasMany(db.userCompany, {
   foreignKey: 'company_idx',
 });
 //추후에 연결된 sequelize 객체를 통해, 직접적으로 데이터베이스에 쿼리도 날릴 수 있습니다

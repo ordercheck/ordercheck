@@ -54,6 +54,7 @@ const ordercheckRouter = require('./router/ordercheck/indexRouter');
 const apiRouter = require('./router/api/ordercheck');
 const consultingRouter = require('./router/api/consulting');
 const updateRouter = require('./router/api/update');
+const s3ControllRouter = require('./router/api/s3');
 const db = require('./model/db');
 
 class AppServer extends http.Server {
@@ -160,6 +161,7 @@ class AppServer extends http.Server {
     this.app.use('/', ordercheckRouter);
     this.app.use('/api', apiRouter);
     this.app.use('/api/consulting', consultingRouter);
+    this.app.use('/s3', s3ControllRouter);
     this.app.use('/api/update', updateRouter);
     this.app.use((req, res, next) => {
       res.status(404);

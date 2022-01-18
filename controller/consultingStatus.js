@@ -1,13 +1,41 @@
 const { checkUserCompany } = require('../lib/apiFunctions');
-const verify_data = require('../lib/jwtfunctions');
 
 const db = require('../model/db');
-const { pdfUpload, downFile } = require('../lib/aws/fileupload').ufile;
+const { downFile } = require('../lib/aws/fileupload').ufile;
 module.exports = {
   addConsultingForm: async (req, res) => {
-    console.log(req.body);
+    // url을 string으로 연결
+    const { body, files } = req;
+    changeToStringUrl = (files) => {
+      let changeToString = '';
+      try {
+        files.forEach((element) => {
+          changeToString += `${element.location}@@`;
+        });
+        return changeToString;
+      } catch (err) {
+        return;
+      }
+    };
+    if (!files.img && !files.concept) {
+      try {
+        const result = await db.customer.create(body);
+        body.customer_idx = result.idx;
+        await db.consulting.create(body);
+        return res.send({ success: 200 });
+      } catch (err) {
+        const Err = err.message;
+        return res.send({ success: 500, Err });
+      }
+    }
+    const imgUrlString = changeToStringUrl(files.img);
+    const conceptUrlString = changeToStringUrl(files.concept);
+    body.floor_plan = imgUrlString;
+    body.hope_concept = conceptUrlString;
     try {
-      await db.consulting.create(req.body);
+      const result = await db.customer.create(body);
+      body.customer_idx = result.idx;
+      await db.consulting.create(body);
       return res.send({ success: 200 });
     } catch (err) {
       const Err = err.message;
@@ -88,7 +116,7 @@ module.exports = {
         return res.send({ success: 400 });
       }
 
-      await db.consulting.update(
+      await db.customer.update(
         { active: body.status },
         { where: { idx: body.consulting_idx } },
         { transaction: t }
@@ -108,10 +136,10 @@ module.exports = {
     if (!file) {
       try {
         // 관리자가 회사소속인지 체크
-        // const checkResult = await checkUserCompany(body.company_idx, user_idx);
-        // if (checkResult == false) {
-        //   return res.send({ success: 400 });
-        // }
+        const checkResult = await checkUserCompany(body.company_idx, user_idx);
+        if (checkResult == false) {
+          return res.send({ success: 400 });
+        }
 
         body.pdf_name = file.originalname;
         const result = await db.calculate.create(body);
@@ -120,28 +148,26 @@ module.exports = {
         const Err = err.message;
         return res.send({ success: 500, Err });
       }
-    } else {
-      try {
-        // 관리자가 회사소속인지 체크
-        // const checkResult = await checkUserCompany(body.company_idx, user_idx);
-        // if (checkResult == false) {
-        //   return res.send({ success: 400 });
-        // }
-        // pdf s3 저장
-        const [, file_name] = file.key.split('/');
-        body.pdf_name = file_name;
-        body.pdf_data = req.file.location;
-        const result = await db.calculate.create(body);
-        return res.send({ success: 200, url_Idx: result.idx });
-      } catch (err) {
-        const Err = err.message;
-        return res.send({ success: 500, Err });
+    }
+    try {
+      // 관리자가 회사소속인지 체크
+      const checkResult = await checkUserCompany(body.company_idx, user_idx);
+      if (checkResult == false) {
+        return res.send({ success: 400 });
       }
+      // pdf s3 저장
+      const [, file_name] = file.key.split('/');
+      body.pdf_name = file_name;
+      body.pdf_data = req.file.location;
+      const result = await db.calculate.create(body);
+      return res.send({ success: 200, url_Idx: result.idx });
+    } catch (err) {
+      const Err = err.message;
+      return res.send({ success: 500, Err });
     }
   },
   downCalculate: async (req, res) => {
     const result = await db.calculate.findByPk(req.body.url_idx);
-    console.log(result.pdf_name);
     downFile(result.pdf_name, (err, url) => {
       if (err) {
         res.send({ success: 400, message: err });
@@ -150,5 +176,43 @@ module.exports = {
         return res.send(url.Body);
       }
     });
+  },
+  doIntegratedUser: async (req, res) => {
+    const { body, loginUser: user_idx } = req;
+    try {
+      const checkResult = await checkUserCompany(body.company_idx, user_idx);
+      if (checkResult == false) {
+        return res.send({ success: 400 });
+      }
+      // 대표 상담폼과 병합
+
+      body.target_idx.forEach(async (data) => {
+        const t = await db.sequelize.transaction();
+        try {
+          await db.consulting.update(
+            {
+              customer_idx: body.main_idx,
+            },
+            {
+              where: { idx: data },
+            },
+            { transaction: t }
+          );
+          await db.customer.destroy(
+            {
+              where: { idx: data },
+            },
+            { transaction: t }
+          );
+          await t.commit();
+        } catch (err) {
+          await t.rollback();
+        }
+      });
+      return res.send({ success: 200 });
+    } catch (err) {
+      const Err = err.message;
+      return res.send({ success: 500, Err });
+    }
   },
 };

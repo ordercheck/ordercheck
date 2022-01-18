@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { multer_calculate_upload } = require('../../lib/aws/aws');
+const {
+  multer_calculate_upload,
+  multer_form2_upload,
+} = require('../../lib/aws/aws');
 const loginCheck = require('../../middleware/auth');
 const {
   dateFilter,
@@ -12,7 +15,7 @@ const {
   showCompanyCustomers,
   showDetailConsulting,
   showCompanyMembers,
-  showDetailTimeLine,
+  showIntegratedUser,
   showCalculate,
 } = require('../../controller/consultingShow');
 const {
@@ -23,6 +26,7 @@ const {
   patchConsultingStatus,
   addCalculate,
   downCalculate,
+  doIntegratedUser,
 } = require('../../controller/consultingStatus');
 
 // date필터링
@@ -35,12 +39,9 @@ router.get(
   loginCheck,
   contractPossibilityFilter
 );
-// 해당 상담 타임라인 보여주기
-router.get(
-  '/time/:company_idx/:consulting_idx',
-  loginCheck,
-  showDetailTimeLine
-);
+// 고객 연동하기에서 고객들을 보여주기
+router.post('/integrated/user', loginCheck, showIntegratedUser);
+router.patch('/integrated/user', loginCheck, doIntegratedUser);
 
 // 해당 상담 견적서 보여주기
 router.get(
@@ -48,7 +49,6 @@ router.get(
   loginCheck,
   showCalculate
 );
-
 // 회사별 전체 상담내용 리스트(default)
 router.get(
   '/:company_idx/:limit/:page',
@@ -77,7 +77,11 @@ router.post(
 // 견적서 다운로드
 router.post('/calculate/down', loginCheck, downCalculate);
 // 상담폼 추가 라우터
-router.post('/', addConsultingForm);
+router.post(
+  '/',
+  multer_form2_upload().fields([{ name: 'img' }, { name: 'concept' }]),
+  addConsultingForm
+);
 // 고객등록 api
 router.post('/customer', loginCheck, addCompanyCustomer);
 // 컨설팅 삭제
