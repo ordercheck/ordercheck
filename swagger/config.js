@@ -24,7 +24,6 @@ const swaggerDefinition = {
      "card_pw":"ro", 
      "card_birth":"900501", 
      "card_email": "gunhee21@gmail.com", 
-     "huidx": "2"
      } 
      법인카드
      {
@@ -33,7 +32,6 @@ const swaggerDefinition = {
       "card_pw":"ro", 
       "business_number":"900501", 
       "card_email": "gunhee21@gmail.com", 
-      "huidx": "2"
       } 
      -----Consulting Form 1 --------
 
