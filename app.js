@@ -10,10 +10,10 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger/config');
 
 const json2xls = require('json2xls');
-const corsOptions = {
-  origin: 'https://ordercheck-file.s3.ap-northeast-2.amazonaws.com',
-  credentials: true,
-};
+// const corsOptions = {
+//   origin: 'https://ordercheck-file.s3.ap-northeast-2.amazonaws.com',
+//   credentials: true,
+// };
 const allowedOrigins = [
   'https://ordercheck-file.s3.ap-northeast-2.amazonaws.com',
 ];
@@ -54,6 +54,7 @@ const ordercheckRouter = require('./router/ordercheck/indexRouter');
 const apiRouter = require('./router/api/ordercheck');
 const consultingRouter = require('./router/api/consulting');
 const updateRouter = require('./router/api/update');
+const infoRouter = require('./router/api/infoRouter');
 const s3ControllRouter = require('./router/api/s3');
 const db = require('./model/db');
 
@@ -99,7 +100,7 @@ class AppServer extends http.Server {
 
     this.app.use(helmet());
 
-    this.app.use(cors(corsOptions));
+    this.app.use(cors());
 
     this.app.use(function (req, res, next) {
       var origin = req.headers.origin;
@@ -161,6 +162,7 @@ class AppServer extends http.Server {
     this.app.use('/', ordercheckRouter);
     this.app.use('/api', apiRouter);
     this.app.use('/api/consulting', consultingRouter);
+    this.app.use('/api/info', infoRouter);
     this.app.use('/s3', s3ControllRouter);
     this.app.use('/api/update', updateRouter);
     this.app.use((req, res, next) => {

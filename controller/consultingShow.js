@@ -153,7 +153,14 @@ module.exports = {
     }
   },
   showFilterResult: async (req, res) => {
-    let { company_idx, date, limit, page } = req.query;
+    let {
+      query: { company_idx, date, limit, page },
+      loginUser: user_idx,
+    } = req;
+    const checkResult = await checkUserCompany(company_idx, user_idx);
+    if (checkResult == false) {
+      return res.send({ success: 400 });
+    }
     // 주어진 조건으로 데이터를 찾기
     const findData = async (
       type,

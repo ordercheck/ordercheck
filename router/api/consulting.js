@@ -76,6 +76,7 @@ router.patch('/status', loginCheck, patchConsultingStatus);
 // 견적서 등록
 router.post(
   '/calculate',
+  loginCheck,
   multer_calculate_upload().single('img'),
   addCalculate
 );

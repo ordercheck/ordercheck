@@ -118,6 +118,7 @@ router.post('/join/do', async (req, res) => {
     if (phoneCheck.length > 0) {
       res.send({ success: 200 });
     } else {
+      user_data.personal_code = Math.random().toString(36).substr(2, 11);
       await db.user.create(user_data);
       res.send({ success: 200 });
     }
