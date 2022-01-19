@@ -90,6 +90,13 @@ db.card.belongsTo(db.company, {
 db.company.hasMany(db.card, {
   foreignKey: 'company_idx',
 });
+db.card.belongsTo(db.company, {
+  foreignKey: 'huidx_idx',
+  targetKey: 'huidx',
+});
+db.company.hasMany(db.card, {
+  foreignKey: 'huidx_idx',
+});
 
 // userCompany와 user
 db.userCompany.belongsTo(db.user, {

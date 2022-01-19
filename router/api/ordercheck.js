@@ -188,12 +188,17 @@ router.post('/company/check', async (req, res) => {
           );
           plan_data.company_idx = idx;
           card_data.company_idx = idx;
-
+          card_data.huidx_idx = huidx;
           // 플랜 정보 등록 후
           await db.plan.create(plan_data, { transaction: t });
-
+          // 법인카드 유무 확인 후 체크
+          card_data.card_birth
+            ? (card_data.credit_yn = 'false')
+            : (card_data.credit_yn = 'true');
+          console.log(card_data);
           // 카드 정보 등록 후
           await db.card.create(card_data, { transaction: t });
+
           //  트랜젝션 종료
           await t.commit();
 

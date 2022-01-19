@@ -8,10 +8,9 @@ module.exports = function (sequelize, DataTypes) {
     },
     //host uidx
     huidx: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
       unique: true,
-      type: DataTypes.STRING(100),
+      type: DataTypes.INTEGER,
     },
     company_name: {
       allowNull: false,
@@ -19,6 +18,26 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(100),
     },
     company_subdomain: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    address: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    detail_address: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    business_number: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
+    business_enrollment: {
       allowNull: false,
       defaultValue: '',
       type: DataTypes.STRING(100),

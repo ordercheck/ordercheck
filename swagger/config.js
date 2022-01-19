@@ -17,15 +17,24 @@ const swaggerDefinition = {
       "chatChecked": "true",
       "analysticChecked":"true"
      }
-     
+     일반카드
      {
      "card_number": "1234123412341234", 
      "expired_date": "121234",  
      "card_pw":"ro", 
      "card_birth":"900501", 
      "card_email": "gunhee21@gmail.com", 
-     "customerUid": "2"
+     "huidx": "2"
      } 
+     법인카드
+     {
+      "card_number": "1234123412341234", 
+      "expired_date": "121234",  
+      "card_pw":"ro", 
+      "business_number":"900501", 
+      "card_email": "gunhee21@gmail.com", 
+      "huidx": "2"
+      } 
      -----Consulting Form 1 --------
 
      {
