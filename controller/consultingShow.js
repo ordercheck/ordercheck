@@ -153,33 +153,42 @@ module.exports = {
   },
   showFilterResult: async (req, res) => {
     const { company_idx } = req.query;
+    try {
+      const makeArrforFilter = (data, status) => {
+        try {
+          let countArr = data.split(',');
+          countArr = countArr.map((el) => {
+            el = { [status]: el };
+            return el;
+          });
+          return countArr;
+        } catch (err) {
+          return;
+        }
+      };
+      const activeArrResult = makeArrforFilter(
+        req.query.active,
+        (status = 'active')
+      );
 
-    const makeArrforFilter = (data, status) => {
-      let countArr = data.split(',');
-      countArr = countArr.map((el) => {
-        el = { [status]: el };
-        return el;
+      const possibilityArrResult = makeArrforFilter(
+        req.query.contract_possibility,
+        (status = 'contract_possibility')
+      );
+      console.log(activeArrResult);
+      console.log(possibilityArrResult);
+      const totalArr = activeArrResult.concat(possibilityArrResult);
+
+      const result = await db.customer.findAll({
+        where: {
+          company_idx,
+          [Op.or]: totalArr,
+        },
+        order: [['createdAt', 'DESC']],
       });
-      return countArr;
-    };
-    const activeArrResult = makeArrforFilter(
-      req.query.active,
-      (status = 'active')
-    );
-
-    const possibilityArrResult = makeArrforFilter(
-      req.query.contract_possibility,
-      (status = 'contract_possibility')
-    );
-    const totalArr = activeArrResult.concat(possibilityArrResult);
-
-    const result = await db.customer.findAll({
-      where: {
-        company_idx,
-        [Op.or]: totalArr,
-      },
-      order: [['createdAt', 'DESC']],
-    });
-    return res.send({ result });
+      return res.send({ result });
+    } catch (err) {
+      console.log('bye');
+    }
   },
 };

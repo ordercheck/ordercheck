@@ -139,4 +139,44 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/duplicate/phoneNumber:
+ *   post:
+ *     tags:
+ *       - 회원가입
+ *     summary: 핸드폰 중복 체크
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_phone:
+ *                 type: string
+ *             example:
+ *               user_phone: '010-6719-6919'
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/duplicate/email:
+ *   post:
+ *     tags:
+ *       - 회원가입
+ *     summary: 이메일 중복 체크
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_email:
+ *                 type: string
+ *             example:
+ *               user_phone: 'rlxo6919@naver.com'
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */
