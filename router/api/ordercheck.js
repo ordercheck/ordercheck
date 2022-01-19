@@ -105,21 +105,19 @@ router.post('/join/check', async (req, res) => {
 });
 // 회원가입 라우터
 router.post('/join/do', async (req, res) => {
-  const { token } = req.body;
-  let user_data = await verify_data(token);
   let last_login = _f.getNowTimeFormatNow();
-  user_data.last_login = last_login;
-  if (user_data) {
+  req.body.last_login = last_login;
+  if (req.body) {
     let phoneCheck = await db.user
-      .findAll({ where: { user_phone: user_data.user_phone } })
+      .findAll({ where: { user_phone: req.body.user_phone } })
       .then((r) => {
         return makeArray(r);
       });
     if (phoneCheck.length > 0) {
       res.send({ success: 200 });
     } else {
-      user_data.personal_code = Math.random().toString(36).substr(2, 11);
-      await db.user.create(user_data);
+      req.body.personal_code = Math.random().toString(36).substr(2, 11);
+      await db.user.create(req.body);
       res.send({ success: 200 });
     }
   } else {
