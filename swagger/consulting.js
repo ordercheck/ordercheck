@@ -58,7 +58,7 @@
  *      security:
  *       - bearerAuth: []
  *      tags:
- *       -  consult
+ *       -  consult get info
  *      summary: 회사 consult 조회(default)
  *      parameters:
  *         - in: path
@@ -83,17 +83,19 @@
  *      security:
  *       - bearerAuth: []
  *      tags:
- *       -  consult
+ *       -  consult filter
  *      summary: consult date 필터 api
  *      parameters:
  *         - in: path
  *           name: company_idx
  *           schema:
  *             type: integer
+ *           example: 1
  *         - in: path
  *           name: date
  *           schema:
  *             type: string
+ *           example: "2021.09.30 - 2021.09.30"
  *      responses:
  *         '200':
  *            description: 성공
@@ -104,7 +106,7 @@
  *      security:
  *       - bearerAuth: []
  *      tags:
- *       -  consult
+ *       -  consult filter
  *      summary: consult 상담 상태 필터 api
  *      parameters:
  *         - in: path
@@ -127,7 +129,7 @@
  *      security:
  *       - bearerAuth: []
  *      tags:
- *       -  consult
+ *       -  consult filter
  *      summary: consult 계약 가능성 필터 api
  *      parameters:
  *         - in: path
@@ -150,7 +152,7 @@
  *      security:
  *       - bearerAuth: []
  *      tags:
- *       -  consult
+ *       -  consult get info
  *      summary: 같은 팀원 리스트 보기
  *      parameters:
  *         - in: path
@@ -261,7 +263,7 @@
  *      security:
  *       - bearerAuth: []
  *      tags:
- *       -  consult
+ *       -  consult get info
  *      summary: 회사별 컨설팅 상세보기
  *      parameters:
  *         - in: path
@@ -279,7 +281,7 @@
  *      security:
  *       - bearerAuth: []
  *      tags:
- *       -  consult
+ *       -  consult get info
  *      summary: 회사별 고객정보 보기
  *      parameters:
  *         - in: path
@@ -328,7 +330,7 @@
  *      security:
  *       - bearerAuth: []
  *      tags:
- *       -  consult
+ *       -  consult get info
  *      summary: 타임라인 보여주기
  *      parameters:
  *         - in: path
@@ -351,7 +353,7 @@
  *     security:
  *      - bearerAuth: []
  *     tags:
- *       -  consult
+ *       -  consult calculate
  *     summary: consulting 견적 업로드 (FORM DATA)
  *     requestBody:
  *       content:
@@ -388,7 +390,7 @@
  *      security:
  *       - bearerAuth: []
  *      tags:
- *       -  consult
+ *       -  consult calculate
  *      summary: 견적서 보여주기
  *      parameters:
  *         - in: path
@@ -411,7 +413,7 @@
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       -  consult
+ *       -  consult calculate
  *     summary: 견적서 pdf 다운로드
  *     requestBody:
  *       content:
@@ -481,4 +483,47 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/consulting/filter:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  consult get info
+ *      summary: 회사 consult 조회(default)
+ *      parameters:
+ *         - in: query
+ *           name: company_idx
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *         - in: query
+ *           name: limit
+ *           schema:
+ *             type: integer
+ *           example: 10
+ *         - in: query
+ *           name: page
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *         - in: query
+ *           name: date
+ *           schema:
+ *             type: string
+ *           example: "2021.09.30 - 2021.09.30"
+ *         - in: query
+ *           name: active
+ *           schema:
+ *             type: string
+ *           example: "상담 신청,상담완료,이슈"
+ *         - in: query
+ *           name: contract_possibility
+ *           schema:
+ *             type: string
+ *           example: "없음,50%이상,50%미만"
+ *      responses:
+ *         '200':
+ *            description: 성공
+ *         '400':
+ *           description: 실패
  */

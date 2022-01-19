@@ -17,6 +17,7 @@ const {
   showCompanyMembers,
   showIntegratedUser,
   showCalculate,
+  showFilterResult,
 } = require('../../controller/consultingShow');
 const {
   addConsultingForm,
@@ -28,7 +29,7 @@ const {
   downCalculate,
   doIntegratedUser,
 } = require('../../controller/consultingStatus');
-
+// *****************************filter*********************************
 // date필터링
 router.get('/date/:company_idx/:date', loginCheck, dateFilter);
 // 상담 상태 필터링
@@ -39,6 +40,7 @@ router.get(
   loginCheck,
   contractPossibilityFilter
 );
+// *****************************show*********************************
 // 고객 연동하기에서 고객들을 보여주기
 router.post('/integrated/user', loginCheck, showIntegratedUser);
 router.patch('/integrated/user', loginCheck, doIntegratedUser);
@@ -55,10 +57,9 @@ router.get(
   loginCheck,
   showTotalConsultingDefault
 );
+
 // 회사별 팀원 리스트 보기
 router.get('/member/:company_idx', loginCheck, showCompanyMembers);
-// 컨설팅 담당자 설정하기
-router.post('/member/set', loginCheck, setConsultingContactMember);
 
 // 컨설팅 상세정보
 router.get('/detail/:idx', loginCheck, showDetailConsulting);
@@ -66,6 +67,10 @@ router.get('/detail/:idx', loginCheck, showDetailConsulting);
 // 해당 회사 고객정보 보여주기
 router.get('/customer/:company_idx', loginCheck, showCompanyCustomers);
 
+// filter결과 보여주기
+router.get('/filter', loginCheck, showFilterResult);
+
+// *****************************changeStatus*********************************
 // 컨설팅 상태 수정 및 메모
 router.patch('/status', loginCheck, patchConsultingStatus);
 // 견적서 등록
@@ -74,6 +79,10 @@ router.post(
   multer_calculate_upload().single('img'),
   addCalculate
 );
+
+// 컨설팅 담당자 설정하기
+router.post('/member/set', loginCheck, setConsultingContactMember);
+
 // 견적서 다운로드
 router.post('/calculate/down', loginCheck, downCalculate);
 // 상담폼 추가 라우터

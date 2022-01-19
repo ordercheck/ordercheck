@@ -69,8 +69,10 @@ router.post('/login', async (req, res, next) => {
 });
 // 회원가입 체크 라우터
 router.post('/join/check', async (req, res) => {
-  const { user_email, user_phone, message } = req.body;
+  const { user_email, user_phone } = req.body;
+  const randInt = Math.random() * 1000;
 
+  const message = `[오더체크] \n 인증번호: ${parseInt(randInt)}`;
   let phoneCheck = await db.user
     .findAll({ where: { user_phone } })
     .then((r) => {
@@ -96,7 +98,7 @@ router.post('/join/check', async (req, res) => {
   });
 
   if (result.data.success == 200) {
-    res.send({ success: 200 });
+    res.send({ success: 200, number: parseInt(randInt) });
   } else {
     res.send({ success: 400, type: 'code' });
   }

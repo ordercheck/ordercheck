@@ -1,5 +1,6 @@
 const { checkUserCompany } = require('../lib/apiFunctions');
 const db = require('../model/db');
+const { Op } = require('sequelize');
 module.exports = {
   showTotalConsultingDefault: async (req, res) => {
     let {
@@ -149,5 +150,36 @@ module.exports = {
       const Err = err.message;
       return res.send({ success: 500, Err });
     }
+  },
+  showFilterResult: async (req, res) => {
+    const { company_idx } = req.query;
+
+    const makeArrforFilter = (data, status) => {
+      let countArr = data.split(',');
+      countArr = countArr.map((el) => {
+        el = { [status]: el };
+        return el;
+      });
+      return countArr;
+    };
+    const activeArrResult = makeArrforFilter(
+      req.query.active,
+      (status = 'active')
+    );
+
+    const possibilityArrResult = makeArrforFilter(
+      req.query.contract_possibility,
+      (status = 'contract_possibility')
+    );
+    const totalArr = activeArrResult.concat(possibilityArrResult);
+
+    const result = await db.customer.findAll({
+      where: {
+        company_idx,
+        [Op.or]: totalArr,
+      },
+      order: [['createdAt', 'DESC']],
+    });
+    return res.send({ result });
   },
 };

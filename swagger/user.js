@@ -38,12 +38,9 @@
  *                 type: string
  *               user_phone:
  *                 type: string
- *               message:
- *                 type: string
  *             example:
  *               user_email: 'rlxo6919@naver.com'
  *               user_phone: '010-6719-6919'
- *               message: 'test'
  *     responses:
  *       '200':
  *         description: 성공
