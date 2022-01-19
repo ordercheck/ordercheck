@@ -1,4 +1,5 @@
 const { checkUserCompany } = require('../lib/apiFunctions');
+const { changeDate } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { Op } = require('sequelize');
 // 받은 params를 sequelize or형태에 맞게 만들어주는 함수
@@ -21,13 +22,7 @@ module.exports = {
       if (checkResult == false) {
         return res.send({ success: 400 });
       }
-
-      date = date.replace(/ /gi, '').split('-');
-
-      const firstDate = new Date(date[0].replace(/\./gi, '-'));
-      const secondDate = new Date(date[1].replace(/\./gi, '-'));
-      firstDate.setDate(firstDate.getDate() - 1);
-      secondDate.setDate(secondDate.getDate() + 1);
+      const { firstDate, secondDate } = changeDate(date);
 
       const result = await db.consulting.count({
         where: {
