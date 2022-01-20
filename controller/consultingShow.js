@@ -5,18 +5,20 @@ const { Op } = require('sequelize');
 module.exports = {
   showTotalConsultingDefault: async (req, res) => {
     let {
-      params: { company_idx, limit, page },
+      params: { form_link, limit, page },
       loginUser: user_idx,
     } = req;
     limit = parseInt(limit);
+
     try {
-      const checkResult = await checkUserCompany(company_idx, user_idx);
-      if (checkResult == false) {
-        return res.send({ success: 400 });
-      }
-      const totalData = await db.customer.count();
+      // const checkResult = await checkUserCompany(company_idx, user_idx);
+      // if (checkResult == false) {
+      //   return res.send({ success: 400 });
+      // }
+      const totalData = await db.customer.count({ where: { form_link } });
       const start = (page - 1) * limit;
       const result = await db.customer.findAll({
+        where: { form_link },
         offset: start,
         limit,
       });
@@ -35,18 +37,19 @@ module.exports = {
     }
   },
 
-  showCompanyCustomers: async (req, res) => {
+  showCustomers: async (req, res) => {
     const {
-      params: { company_idx },
+      params: { form_link },
       loginUser: user_idx,
     } = req;
     try {
       // 유저회사 정보를 체크
-      const checkResult = await checkUserCompany(company_idx, user_idx);
-      if (checkResult == false) {
-        return res.send({ success: 400 });
-      }
-      const result = await db.consulting.findAll({
+      // const checkResult = await checkUserCompany(company_idx, user_idx);
+      // if (checkResult == false) {
+      //   return res.send({ success: 400 });
+      // }
+      const result = await db.customer.findAll({
+        where: { form_link },
         group: ['customer_phoneNumber'],
       });
       return res.send({ result });
@@ -86,10 +89,10 @@ module.exports = {
       loginUser: user_idx,
     } = req;
     try {
-      const checkResult = await checkUserCompany(company_idx, user_idx);
-      if (checkResult == false) {
-        return res.send({ success: 400 });
-      }
+      // const checkResult = await checkUserCompany(company_idx, user_idx);
+      // if (checkResult == false) {
+      //   return res.send({ success: 400 });
+      // }
 
       const findAllUser = await db.userCompany.findAll({
         where: { company_idx },
@@ -108,10 +111,10 @@ module.exports = {
       loginUser: user_idx,
     } = req;
     try {
-      const checkResult = await checkUserCompany(company_idx, user_idx);
-      if (checkResult == false) {
-        return res.send({ success: 400 });
-      }
+      // const checkResult = await checkUserCompany(company_idx, user_idx);
+      // if (checkResult == false) {
+      //   return res.send({ success: 400 });
+      // }
       const result = await db.consulting.findByPk(consulting_idx, {
         include: [
           {
@@ -127,14 +130,14 @@ module.exports = {
   },
   showIntegratedUser: async (req, res) => {
     const {
-      body: { company_idx, customer_phoneNumber },
+      body: { customer_phoneNumber },
       loginUser: user_idx,
     } = req;
     try {
-      const checkResult = await checkUserCompany(company_idx, user_idx);
-      if (checkResult == false) {
-        return res.send({ success: 400 });
-      }
+      // const checkResult = await checkUserCompany(company_idx, user_idx);
+      // if (checkResult == false) {
+      //   return res.send({ success: 400 });
+      // }
       const result = await db.customer.findAll({
         where: { customer_phoneNumber },
         attributes: [
@@ -154,13 +157,13 @@ module.exports = {
   },
   showFilterResult: async (req, res) => {
     let {
-      query: { company_idx, date, limit, page },
+      query: { form_link, date, limit, page },
       loginUser: user_idx,
     } = req;
-    const checkResult = await checkUserCompany(company_idx, user_idx);
-    if (checkResult == false) {
-      return res.send({ success: 400 });
-    }
+    // const checkResult = await checkUserCompany(company_idx, user_idx);
+    // if (checkResult == false) {
+    //   return res.send({ success: 400 });
+    // }
     // 주어진 조건으로 데이터를 찾기
     const findData = async (
       type,
@@ -174,7 +177,7 @@ module.exports = {
       try {
         const result = await db.customer[type]({
           where: {
-            company_idx,
+            form_link,
             createdAt: { [Op.between]: [firstDate, secondDate] },
             active: { [Op.in]: activeArrResult },
             contract_possibility: { [Op.in]: possibilityArrResult },

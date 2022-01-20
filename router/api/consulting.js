@@ -12,7 +12,7 @@ const {
 } = require('../../controller/consultingFilter');
 const {
   showTotalConsultingDefault,
-  showCompanyCustomers,
+  showCustomers,
   showDetailConsulting,
   showCompanyMembers,
   showIntegratedUser,
@@ -52,11 +52,7 @@ router.get(
   showCalculate
 );
 // 회사별 전체 상담내용 리스트(default)
-router.get(
-  '/:company_idx/:limit/:page',
-  loginCheck,
-  showTotalConsultingDefault
-);
+router.get('/:form_link/:limit/:page', loginCheck, showTotalConsultingDefault);
 
 // 회사별 팀원 리스트 보기
 router.get('/member/:company_idx', loginCheck, showCompanyMembers);
@@ -65,7 +61,7 @@ router.get('/member/:company_idx', loginCheck, showCompanyMembers);
 router.get('/detail/:idx', loginCheck, showDetailConsulting);
 
 // 해당 회사 고객정보 보여주기
-router.get('/customer/:company_idx', loginCheck, showCompanyCustomers);
+router.get('/customer/:form_link', loginCheck, showCustomers);
 
 // filter결과 보여주기
 router.get('/filter', loginCheck, showFilterResult);

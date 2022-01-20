@@ -33,8 +33,8 @@
  *                  type: string
  *                customer_phoneNumber:
  *                  type: string
- *                company_idx:
- *                  type: integer
+ *                form_link:
+ *                  type: string
  *             example:
  *                choice: "창호"
  *                address: "경기도 광명"
@@ -47,13 +47,13 @@
  *                budget: "1,000만원"
  *                customer_name: "김기태"
  *                customer_phoneNumber : "010-6719-6919"
- *                company_idx : 1
+ *                form_link : "oe2n87z209"
  *     responses:
  *       '200':
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/consulting/{company_idx}/{limit}/{page}:
+ * /api/consulting/{form_link}/{limit}/{page}:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -62,9 +62,9 @@
  *      summary: 회사 consult 조회(default)
  *      parameters:
  *         - in: path
- *           name: company_idx
+ *           name: form_link
  *           schema:
- *             type: integer
+ *             type: string
  *         - in: path
  *           name: limit
  *           schema:
@@ -78,7 +78,7 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/date/{company_idx}/{date}:
+ * /api/consulting/date/{form_link}/{date}:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -87,10 +87,10 @@
  *      summary: consult date 필터 api
  *      parameters:
  *         - in: path
- *           name: company_idx
+ *           name: form_link
  *           schema:
- *             type: integer
- *           example: 1
+ *             type: string
+ *           example: "lsidjfsdil"
  *         - in: path
  *           name: date
  *           schema:
@@ -101,7 +101,7 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/active/{company_idx}/{active}:
+ * /api/consulting/active/{form_link}/{active}:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -110,10 +110,10 @@
  *      summary: consult 상담 상태 필터 api
  *      parameters:
  *         - in: path
- *           name: company_idx
+ *           name: form_link
  *           schema:
- *             type: integer
- *           example: 16
+ *             type: string
+ *           example: "sldfjd"
  *         - in: path
  *           name: active
  *           schema:
@@ -124,7 +124,7 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/contract-possibility/{company_idx}/{contract_possibility}:
+ * /api/consulting/contract-possibility/{form_link}/{contract_possibility}:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -133,10 +133,10 @@
  *      summary: consult 계약 가능성 필터 api
  *      parameters:
  *         - in: path
- *           name: company_idx
+ *           name: form_link
  *           schema:
- *             type: integer
- *           example: 16
+ *             type: string
+ *           example: "sldkjfd"
  *         - in: path
  *           name: contract_possibility
  *           schema:
@@ -208,11 +208,11 @@
  *             properties:
  *               idx:
  *                 type: int
- *               company_idx:
- *                 type: int
+ *               form_link:
+ *                 type: string
  *             example:
  *               idx: 2
- *               company_idx: 16
+ *               form_link: "sdfsdd"
  *      responses:
  *         '200':
  *            description: 성공
@@ -241,8 +241,8 @@
  *                 type: string
  *               customer_phoneNumber:
  *                 type: string
- *               company_idx:
- *                 type: integer
+ *               form_link:
+ *                 type: string
  *               contact_person:
  *                 type: integer
  *             example:
@@ -251,7 +251,7 @@
  *               size: 7
  *               customer_name: "김기태"
  *               customer_phoneNumber: "010-6719-6919"
- *               company_idx: 1
+ *               form_link: "lsdfjlsd"
  *               contact_person: 4
  *     responses:
  *       '200':
@@ -264,7 +264,7 @@
  *       - bearerAuth: []
  *      tags:
  *       -  consult get info
- *      summary: 회사별 컨설팅 상세보기
+ *      summary: 컨설팅 상세보기
  *      parameters:
  *         - in: path
  *           name: idx
@@ -276,18 +276,18 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/customer/{company_idx}:
+ * /api/consulting/customer/{form_link}:
  *   get:
  *      security:
  *       - bearerAuth: []
  *      tags:
  *       -  consult get info
- *      summary: 회사별 고객정보 보기
+ *      summary: 고객정보 보기 모두
  *      parameters:
  *         - in: path
- *           name: company_idx
+ *           name: form_link
  *           schema:
- *             type: integer
+ *             type: string
  *           example: 16
  *      responses:
  *         '200':
@@ -313,13 +313,13 @@
  *                 type: string
  *               status:
  *                 type: string
- *               company_idx:
- *                 type: integer
+ *               form_link:
+ *                 type: string
  *             example:
  *               consulting_idx: 1
  *               memo: test
  *               status: 상담중
- *               company_idx: 16
+ *               form_link: 'sdfsdf'
  *      responses:
  *         '200':
  *            description: 성공
@@ -331,7 +331,7 @@
  *       - bearerAuth: []
  *      tags:
  *       -  consult get info
- *      summary: 타임라인 보여주기
+ *      summary: 타임라인 보여주기 (사용 x)
  *      parameters:
  *         - in: path
  *           name: company_idx
@@ -361,8 +361,8 @@
  *           schema:
  *             type: object
  *             properties:
- *               company_idx:
- *                 type: integer
+ *               form_link:
+ *                 type: string
  *               pdf_data:
  *                 type: string
  *               pdf_name:
@@ -374,7 +374,7 @@
  *               consulting_idx:
  *                 type: string
  *             example:
- *               company_idx: 16
+ *               form_link: 'sdfsdf'
  *               img: 견적서file
  *               pdf_name: 'pdf 제목'
  *               title: '제1차 견적서'
@@ -385,7 +385,7 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/consulting/calculate/{company_idx}/{consulting_idx}:
+ * /api/consulting/calculate/{form_link}/{consulting_idx}:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -394,10 +394,10 @@
  *      summary: 견적서 보여주기
  *      parameters:
  *         - in: path
- *           name: company_idx
+ *           name: form_link
  *           schema:
- *             type: integer
- *           example: 16
+ *             type: string
+ *           example: 'sdfsdf'
  *         - in: path
  *           name: consulting_idx
  *           schema:
@@ -445,11 +445,8 @@
  *            properties:
  *              customer_phoneNumber:
  *                type: string
- *              company_idx:
- *                type: integer
  *            example:
  *               customer_phoneNumber: "010-6719-6919"
- *               company_idx: "1"
  *     responses:
  *       '200':
  *         description: 성공
@@ -468,14 +465,14 @@
  *          schema:
  *            type: object
  *            properties:
- *              company_idx:
- *                type: integer
+ *              form_link:
+ *                type: string
  *              main_idx:
  *                type: integer
  *              target_idx:
  *                type: array
  *            example:
- *               company_idx: "1"
+ *               form_link: "skldfkdjf"
  *               main_idx: 4
  *               target_idx: [1,2,3]
  *     responses:
@@ -489,12 +486,12 @@
  *       - bearerAuth: []
  *      tags:
  *       -  consult get info
- *      summary: 회사 consult 조회(default)
+ *      summary: consult 조회
  *      parameters:
  *         - in: query
- *           name: company_idx
+ *           name: form_link
  *           schema:
- *             type: integer
+ *             type: string
  *           example: 1
  *         - in: query
  *           name: limit

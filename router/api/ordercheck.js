@@ -41,9 +41,9 @@ const check_data = (req, res, next) => {
 };
 
 const createToken = async (data) => {
-  const expiresIn = 60 * 60 * 60;
+  // const expiresIn = 60 * 60 * 60;
   const last_login = _f.getNowTime();
-  const token = await jwt.sign(data, process.env.tokenSecret, { expiresIn });
+  const token = await jwt.sign(data, process.env.tokenSecret);
   return token;
 };
 // 로그인 라우터
@@ -71,7 +71,6 @@ router.post('/login', async (req, res, next) => {
 router.post('/join/check', async (req, res) => {
   const { user_email, user_phone } = req.body;
   const randInt = Math.random() * 1000;
-
   const message = `[오더체크] \n 인증번호: ${parseInt(randInt)}`;
   let phoneCheck = await db.user
     .findAll({ where: { user_phone } })
@@ -105,19 +104,23 @@ router.post('/join/check', async (req, res) => {
 });
 // 회원가입 라우터
 router.post('/join/do', async (req, res) => {
+  let { token } = req.body;
+  let user_data = await verify_data(token);
+
   let last_login = _f.getNowTimeFormatNow();
-  req.body.last_login = last_login;
-  if (req.body) {
+  user_data.last_login = last_login;
+  if (user_data) {
     let phoneCheck = await db.user
-      .findAll({ where: { user_phone: req.body.user_phone } })
+      .findAll({ where: { user_phone: user_data.user_phone } })
       .then((r) => {
         return makeArray(r);
       });
     if (phoneCheck.length > 0) {
-      res.send({ success: 200 });
+      res.send({ success: 400, msg: '이미 존재하는 계정' });
     } else {
-      req.body.personal_code = Math.random().toString(36).substr(2, 11);
-      await db.user.create(req.body);
+      user_data.personal_code = Math.random().toString(36).substr(2, 11);
+      user_data.form_link = Math.random().toString(36).substr(2, 11);
+      await db.user.create(user_data);
       res.send({ success: 200 });
     }
   } else {
@@ -184,7 +187,9 @@ router.post('/company/check', async (req, res) => {
             },
             { transaction: t }
           );
+          // 각 데이터에 필요한 key, value
           plan_data.company_idx = idx;
+          plan_data.user_idx = huidx;
           card_data.company_idx = idx;
           card_data.huidx_idx = huidx;
           // 플랜 정보 등록 후

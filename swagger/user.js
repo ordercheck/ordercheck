@@ -57,19 +57,10 @@
  *           schema:
  *             type: object
  *             properties:
- *               user_phone:
- *                 type: string
- *               user_password:
- *                 type: string
- *               user_email:
- *                 type: string
- *               user_name:
+ *               token:
  *                 type: string
  *             example:
- *               user_phone: "010-6719-6919"
- *               user_password: "rlxo12345"
- *               user_email: "rlxo6919@naver.com"
- *               user_name: "김기태"
+ *               token: "token"
  *     responses:
  *       '200':
  *         description: 성공

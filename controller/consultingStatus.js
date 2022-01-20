@@ -50,10 +50,10 @@ module.exports = {
     } = req;
     try {
       // 관리자가 회사소속인지 체크
-      const checkResult = await checkUserCompany(company_idx, user_idx);
-      if (checkResult == false) {
-        return res.send({ success: 400 });
-      }
+      // const checkResult = await checkUserCompany(company_idx, user_idx);
+      // if (checkResult == false) {
+      //   return res.send({ success: 400 });
+      // }
       // 유저의 권환을 체크
       if (checkResult.authority == 1) {
         await db.consulting.update({ contact_person }, { where: { idx } });
@@ -73,10 +73,10 @@ module.exports = {
     } = req;
     try {
       // 관리자가 회사소속인지 체크
-      const checkResult = await checkUserCompany(company_idx, user_idx);
-      if (checkResult == false) {
-        return res.send({ success: 400 });
-      }
+      // const checkResult = await checkUserCompany(company_idx, user_idx);
+      // if (checkResult == false) {
+      //   return res.send({ success: 400 });
+      // }
       // 유저의 권환을 체크
       if (checkResult.authority == 1) {
         await db.consulting.destroy({ where: { idx } });
@@ -92,13 +92,13 @@ module.exports = {
     const { body: customerData, loginUser: user_idx } = req;
     try {
       // 관리자가 회사소속인지 체크
-      const checkResult = await checkUserCompany(
-        customerData.company_idx,
-        user_idx
-      );
-      if (checkResult == false) {
-        return res.send({ success: 400 });
-      }
+      // const checkResult = await checkUserCompany(
+      //   customerData.company_idx,
+      //   user_idx
+      // );
+      // if (checkResult == false) {
+      //   return res.send({ success: 400 });
+      // }
       await db.consulting.create(customerData);
       return res.send({ success: 200 });
     } catch (err) {
@@ -111,10 +111,10 @@ module.exports = {
     const t = await db.sequelize.transaction();
     try {
       // 관리자가 회사소속인지 체크
-      const checkResult = await checkUserCompany(body.company_idx, user_idx);
-      if (checkResult == false) {
-        return res.send({ success: 400 });
-      }
+      // const checkResult = await checkUserCompany(body.company_idx, user_idx);
+      // if (checkResult == false) {
+      //   return res.send({ success: 400 });
+      // }
 
       await db.customer.update(
         { active: body.status },
@@ -136,10 +136,10 @@ module.exports = {
     if (!file) {
       try {
         // 관리자가 회사소속인지 체크
-        const checkResult = await checkUserCompany(body.company_idx, user_idx);
-        if (checkResult == false) {
-          return res.send({ success: 400 });
-        }
+        // const checkResult = await checkUserCompany(body.company_idx, user_idx);
+        // if (checkResult == false) {
+        //   return res.send({ success: 400 });
+        // }
 
         body.pdf_name = file.originalname;
         const result = await db.calculate.create(body);
@@ -151,10 +151,10 @@ module.exports = {
     }
     try {
       // 관리자가 회사소속인지 체크
-      const checkResult = await checkUserCompany(body.company_idx, user_idx);
-      if (checkResult == false) {
-        return res.send({ success: 400 });
-      }
+      // const checkResult = await checkUserCompany(body.company_idx, user_idx);
+      // if (checkResult == false) {
+      //   return res.send({ success: 400 });
+      // }
       // pdf s3 저장
       const [, file_name] = file.key.split('/');
       body.pdf_name = file_name;
@@ -179,13 +179,13 @@ module.exports = {
   },
   doIntegratedUser: async (req, res) => {
     const { body, loginUser: user_idx } = req;
-    try {
-      const checkResult = await checkUserCompany(body.company_idx, user_idx);
-      if (checkResult == false) {
-        return res.send({ success: 400 });
-      }
-      // 대표 상담폼과 병합
 
+    try {
+      // const checkResult = await checkUserCompany(body.company_idx, user_idx);
+      // if (checkResult == false) {
+      //   return res.send({ success: 400 });
+      // }
+      // 대표 상담폼과 병합
       body.target_idx.forEach(async (data) => {
         const t = await db.sequelize.transaction();
         try {
