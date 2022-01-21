@@ -22,8 +22,10 @@ module.exports = {
   getCompanyProfile: async (req, res) => {
     let result = await db.sequelize
       .query(
-        `SELECT company_name, company_subdomain, address, detail_address, business_number, business_enrollment FROM company 
-        LEFT JOIN user ON company.huidx = user.idx WHERE 
+        `SELECT company_name, company_subdomain, address, detail_address, business_number, business_enrollment, user_name FROM usercompany 
+        LEFT JOIN company ON usercompany.company_idx = company.idx 
+        LEFT JOIN user ON company.huidx = user.idx
+        WHERE usercompany.user_idx = ${req.loginUser}
      `
       )
       .spread((r) => {

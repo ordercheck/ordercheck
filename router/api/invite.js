@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const loginCheck = require('../../middleware/auth');
-const { updateCompany } = require('../../controller/update');
+const { updateCompany } = require('../../controller/invite');
 const {
   resizeUpload,
   blobUpload,
@@ -9,5 +9,5 @@ const {
   pdfUpload,
 } = require('../../lib/aws/fileupload').ufile;
 // update Company
-router.post('/company', loginCheck, updateCompany);
+router.post('/email', loginCheck, updateCompany);
 module.exports = router;
