@@ -118,28 +118,17 @@ router.post('/join/do', async (req, res) => {
     if (phoneCheck.length > 0) {
       res.send({ success: 400, msg: '이미 존재하는 계정' });
     } else {
+      const loginToken = await createToken(phoneCheck[0].idx);
       user_data.personal_code = Math.random().toString(36).substr(2, 11);
       user_data.form_link = Math.random().toString(36).substr(2, 11);
       await db.user.create(user_data);
-      res.send({ success: 200 });
+      return res.send({ success: 200, loginToken });
     }
   } else {
     res.send({ success: 400 });
   }
 });
 
-// 회원가입 후 바로 로그인 시키기
-router.post('/join/do/login', async (req, res) => {
-  let { token } = req.body;
-  let user_data = await verify_data(token);
-  let phoneCheck = await db.user
-    .findAll({ where: { user_phone: user_data.user_phone } })
-    .then((r) => {
-      return makeArray(r);
-    });
-  const loginToken = await createToken(phoneCheck[0].idx);
-  return res.send({ scucess: 200, loginToken });
-});
 //회사 등록 라우터
 router.post('/company/check', async (req, res) => {
   const { ut, ct, pt, company_name, company_subdomain } = req.body;

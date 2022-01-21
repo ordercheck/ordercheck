@@ -1,5 +1,6 @@
 const db = require('../model/db');
 const { makeSpreadArray } = require('../lib/functions');
+const { sequelize } = require('../model/db');
 module.exports = {
   getUserProfile: async (req, res) => {
     try {
@@ -19,21 +20,15 @@ module.exports = {
     }
   },
   getCompanyProfile: async (req, res) => {
-    const result = await db.userCompany.findOne({
-      wehre: { user_idx: req.loginUser },
-      include: [
-        {
-          model: db.company,
-          attributes: ['company_name'],
-          include: [
-            {
-              model: db.user,
-              attributes: ['user_name'],
-            },
-          ],
-        },
-      ],
-    });
+    let result = await db.sequelize
+      .query(
+        `SELECT company_name, company_subdomain, address, detail_address, business_number, business_enrollment FROM company 
+        LEFT JOIN user ON company.huidx = user.idx WHERE 
+     `
+      )
+      .spread((r) => {
+        return makeSpreadArray(r);
+      });
 
     return res.send({ success: 200, result });
   },
