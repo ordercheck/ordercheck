@@ -18,4 +18,23 @@ module.exports = {
       return res.send({ success: 500, Err });
     }
   },
+  getCompanyProfile: async (req, res) => {
+    const result = await db.userCompany.findOne({
+      wehre: { user_idx: req.loginUser },
+      include: [
+        {
+          model: db.company,
+          attributes: ['company_name'],
+          include: [
+            {
+              model: db.user,
+              attributes: ['user_name'],
+            },
+          ],
+        },
+      ],
+    });
+
+    return res.send({ success: 200, result });
+  },
 };

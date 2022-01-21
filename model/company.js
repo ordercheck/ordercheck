@@ -7,11 +7,11 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
     },
     //host uidx
-    huidx: {
-      allowNull: true,
-      unique: true,
-      type: DataTypes.INTEGER,
-    },
+    // huidx: {
+    //   allowNull: true,
+    //   unique: true,
+    //   type: DataTypes.INTEGER,
+    // },
     company_name: {
       allowNull: false,
       defaultValue: '',

@@ -94,12 +94,19 @@ db.card.belongsTo(db.company, {
 db.company.hasMany(db.card, {
   foreignKey: 'company_idx',
 });
+// company와 user
+db.company.belongsTo(db.user, {
+  foreignKey: 'huidx',
+});
+db.user.hasOne(db.company, {
+  foreignKey: 'huidx',
+});
 db.card.belongsTo(db.company, {
-  foreignKey: 'huidx_idx',
+  foreignKey: 'huidx',
   targetKey: 'huidx',
 });
 db.company.hasMany(db.card, {
-  foreignKey: 'huidx_idx',
+  foreignKey: 'huidx',
 });
 
 // userCompany와 user
@@ -117,6 +124,7 @@ db.userCompany.belongsTo(db.company, {
 db.company.hasMany(db.userCompany, {
   foreignKey: 'company_idx',
 });
+
 //추후에 연결된 sequelize 객체를 통해, 직접적으로 데이터베이스에 쿼리도 날릴 수 있습니다
 //그래서 앞으로 우리가 사용할 db 객체에 sequelize 객체와 바로 위에서 만든 모델들을 채워 넣습니다.
 db.sequelize = sequelize;

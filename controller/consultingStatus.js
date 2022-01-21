@@ -6,7 +6,6 @@ module.exports = {
   addConsultingForm: async (req, res) => {
     // url을 string으로 연결
     let { body, files } = req;
-
     selectUrl = (files) => {
       try {
         return (result = files.map((element) => {
@@ -28,9 +27,7 @@ module.exports = {
       }
     }
     const imgUrlString = selectUrl(files.img);
-
     const conceptUrlString = selectUrl(files.concept);
-
     body.floor_plan = JSON.stringify(imgUrlString);
     body.hope_concept = JSON.stringify(conceptUrlString);
     try {

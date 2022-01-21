@@ -181,4 +181,24 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/join/do/login:
+ *   post:
+ *     tags:
+ *       - 회원가입
+ *     summary: 회원가입 후 바로 로그인 시키기
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *             example:
+ *               token: 'token'
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */
