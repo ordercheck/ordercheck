@@ -75,6 +75,7 @@ module.exports = {
             ],
           },
         ],
+        order: [['createdAt', 'DESC']],
       });
 
       return res.send({ result });

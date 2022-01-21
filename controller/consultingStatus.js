@@ -5,14 +5,13 @@ const { downFile } = require('../lib/aws/fileupload').ufile;
 module.exports = {
   addConsultingForm: async (req, res) => {
     // url을 string으로 연결
-    const { body, files } = req;
-    changeToStringUrl = (files) => {
-      let changeToString = '';
+    let { body, files } = req;
+
+    selectUrl = (files) => {
       try {
-        files.forEach((element) => {
-          changeToString += `${element.location}@@`;
-        });
-        return changeToString;
+        return (result = files.map((element) => {
+          return element.location;
+        }));
       } catch (err) {
         return;
       }
@@ -28,10 +27,12 @@ module.exports = {
         return res.send({ success: 500, Err });
       }
     }
-    const imgUrlString = changeToStringUrl(files.img);
-    const conceptUrlString = changeToStringUrl(files.concept);
-    body.floor_plan = imgUrlString;
-    body.hope_concept = conceptUrlString;
+    const imgUrlString = selectUrl(files.img);
+
+    const conceptUrlString = selectUrl(files.concept);
+
+    body.floor_plan = JSON.stringify(imgUrlString);
+    body.hope_concept = JSON.stringify(conceptUrlString);
     try {
       const result = await db.customer.create(body);
       body.customer_idx = result.idx;

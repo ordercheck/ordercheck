@@ -34,7 +34,7 @@ const swaggerDefinition = {
       "card_email": "gunhee21@gmail.com", 
       } 
      -----Consulting Form 1 --------
-
+      복수선택은 배열 형태로 넘겨주기
      {
       "choice":"창호"
       "address":"경기도 광명",
@@ -50,6 +50,7 @@ const swaggerDefinition = {
       "company_idx" : 1
       }
       -----Consulting Form 2 --------
+      복수선택은 배열 형태로 넘겨주기
       {
         "customer_name":"김기태",
         "customer_phoneNumber" : "010-6719-6919",
