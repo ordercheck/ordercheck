@@ -118,10 +118,10 @@ router.post('/join/do', async (req, res) => {
     if (phoneCheck.length > 0) {
       res.send({ success: 400, msg: '이미 존재하는 계정' });
     } else {
-      const loginToken = await createToken(phoneCheck[0].idx);
       user_data.personal_code = Math.random().toString(36).substr(2, 11);
       user_data.form_link = Math.random().toString(36).substr(2, 11);
-      await db.user.create(user_data);
+      const result = await db.user.create(user_data);
+      const loginToken = await createToken(result.idx);
       return res.send({ success: 200, loginToken });
     }
   } else {
