@@ -19,17 +19,17 @@ const swaggerDefinition = {
      }
      일반카드
      {
-     "card_number": "1234123412341234", 
-     "expired_date": "121234",  
-     "card_pw":"ro", 
-     "card_birth":"900501", 
-     "card_email": "gunhee21@gmail.com", 
+     "card_number": "5387208246852660", 
+     "expiry": "2026-05",  
+     "pwd_2digit":"49", 
+     "birth":"961005", 
+     "card_email": "rlxo6919@naver.com", 
      } 
      법인카드
      {
       "card_number": "1234123412341234", 
-      "expired_date": "121234",  
-      "card_pw":"ro", 
+      "expiry": "2026-05",  
+      "pwd_2digit":"ro", 
       "business_number":"900501", 
       "card_email": "gunhee21@gmail.com", 
       } 

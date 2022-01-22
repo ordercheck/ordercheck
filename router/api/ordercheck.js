@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { addCard, payNow, refund } = require('../../lib/payFunction');
 const db = require('../../model/db');
 const _f = require('../../lib/functions');
 const verify_data = require('../../lib/jwtfunctions');
@@ -200,7 +201,7 @@ router.post('/company/check', async (req, res) => {
           card_data.card_birth
             ? (card_data.credit_yn = 'false')
             : (card_data.credit_yn = 'true');
-          console.log(card_data);
+
           // 카드 정보 등록 후
           await db.card.create(card_data, { transaction: t });
 
@@ -280,8 +281,33 @@ router.post('/create/token', async (req, res) => {
 });
 
 router.post('/create/token/data', async (req, res) => {
+  const { card_number, expiry, pwd_2digit, birth, business_number } = req.body;
+  const customer_uid = randomString9();
+  req.body.customer_uid = customer_uid;
+  // 카드를 등록하는 경우
+  if (req.body.card_number) {
+    const cardAddResult = await addCard(
+      card_number,
+      expiry,
+      birth,
+      pwd_2digit,
+      customer_uid,
+      business_number
+    );
+
+    // 카드 등록 실패
+    if (!cardAddResult.success) {
+      return res.send({ success: 400, message: cardAddResult.message });
+    }
+    const imp_uid = await payNow(cardAddResult.access_token, customer_uid);
+
+    await refund(cardAddResult.access_token, imp_uid);
+    let token = await createToken(req.body);
+    return res.send({ success: 200, token });
+  }
+
   let token = await createToken(req.body);
-  res.send({ success: 200, token });
+  return res.send({ success: 200, token });
 });
 router.post('/decode/token/data', async (req, res) => {
   const { token } = req.body;

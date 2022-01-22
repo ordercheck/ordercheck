@@ -11,17 +11,17 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: '',
       type: DataTypes.STRING(100),
     },
-    expired_date: {
+    expiry: {
       allowNull: false,
       defaultValue: '',
       type: DataTypes.STRING(100),
     },
-    card_pw: {
+    pwd_2digit: {
       allowNull: false,
       defaultValue: '',
       type: DataTypes.STRING(100),
     },
-    card_birth: {
+    birth: {
       allowNull: false,
       defaultValue: '',
       type: DataTypes.STRING(100),
@@ -35,9 +35,18 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.INTEGER,
     },
+    customer_uid: {
+      allowNull: true,
+      unique: true,
+      type: DataTypes.STRING,
+    },
+    imp_uid: {
+      allowNull: true,
+      unique: true,
+      type: DataTypes.STRING,
+    },
     credit_yn: {
       allowNull: false,
-
       defaultValue: '',
       type: DataTypes.STRING(100),
     },
