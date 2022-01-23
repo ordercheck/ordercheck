@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { addCard, payNow, refund } = require('../../lib/payFunction');
+const {
+  addCard,
+  payNow,
+  refund,
+  schedulePay,
+} = require('../../lib/payFunction');
 const db = require('../../model/db');
 const _f = require('../../lib/functions');
 const verify_data = require('../../lib/jwtfunctions');
@@ -227,11 +232,10 @@ router.post('/company/check', async (req, res) => {
           // 각 데이터에 필요한 key, value
           plan_data.company_idx = idx;
           plan_data.user_idx = huidx;
-          plan_data.imp_uid = card_data.imp_uid;
+
           card_data.company_idx = idx;
           card_data.huidx_idx = huidx;
-          // 플랜 정보 등록 후
-          await db.plan.create(plan_data, { transaction: t });
+
           // 법인카드 유무 확인 후 체크
           card_data.card_birth
             ? (card_data.credit_yn = 'false')
@@ -240,11 +244,31 @@ router.post('/company/check', async (req, res) => {
           // 카드 정보 등록 후
           await db.card.create(card_data, { transaction: t });
 
+          // 카드 결제
+          const imp_uid = await payNow(
+            card_data.customer_uid,
+            plan_data.result_price.replace(/,/g, '')
+          );
+          // 결제 후 plan data에 주문 번호 넣고 plan db에 저장
+          plan_data.imp_uid = imp_uid;
+          await db.plan.create(plan_data, { transaction: t });
+          // 시간을 unix형태로 변경
+          const changeToTime = new Date(plan_data.start_plan);
+          const changeToUnix = changeToTime.getTime() / 1000;
+
+          // 다음 카드 결제 신청
+          await schedulePay(
+            changeToUnix,
+            card_data.customer_uid,
+            plan_data.result_price.replace(/,/g, ''),
+            user_data.user_name,
+            user_data.user_phone,
+            user_data.user_email
+          );
           //  트랜젝션 종료
           await t.commit();
 
-          // 카드 결제도 여기서 스케줄링 시작
-          res.send({ success: 200 });
+          return res.send({ success: 200 });
         } catch (err) {
           // create과정에서 오류가 뜨면 롤백
           await t.rollback();
@@ -253,7 +277,7 @@ router.post('/company/check', async (req, res) => {
         }
       }
     } else {
-      res.send({ success: 400, type: 'auth' });
+      return res.send({ success: 400, type: 'auth' });
     }
   };
   if (user_data.user_phone) {
@@ -275,9 +299,9 @@ router.post('/phone/check', async (req, res) => {
     return makeArray(r);
   });
   if (check.length > 0) {
-    res.send({ success: 200 });
+    return res.send({ success: 200 });
   } else {
-    res.send({ success: 400 });
+    return res.send({ success: 400 });
   }
 });
 // 패스워드 수정 라우터
@@ -288,9 +312,9 @@ router.post('/password/reset', async (req, res) => {
   });
   if (check.length > 0) {
     await db.user.update({ user_password }, { where: { user_phone } });
-    res.send({ success: 200 });
+    return res.send({ success: 200 });
   } else {
-    res.send({
+    return res.send({
       success: 400,
       message:
         '사용자 정보가 잘못되었습니다.\n비밀번호 재설정 초기화면으로 돌아가 다시 시작해주시기 바랍니다.',
@@ -308,7 +332,7 @@ router.post('/create/token', async (req, res) => {
       user_name,
     });
     console.log(token);
-    res.send({ success: 200, token });
+    return res.send({ success: 200, token });
   } catch (err) {
     const Err = err.message;
     return res.send({ success: 500, Err });
@@ -334,9 +358,9 @@ router.post('/create/token/data', async (req, res) => {
     if (!cardAddResult.success) {
       return res.send({ success: 400, message: cardAddResult.message });
     }
-    const imp_uid = await payNow(cardAddResult.access_token, customer_uid);
-    req.body.imp_uid = imp_uid;
-    await refund(cardAddResult.access_token, imp_uid);
+    const imp_uid = await payNow(customer_uid, 100);
+
+    await refund(imp_uid, 100);
     let token = await createToken(req.body);
     return res.send({ success: 200, token });
   }
@@ -347,13 +371,13 @@ router.post('/create/token/data', async (req, res) => {
 router.post('/decode/token/data', async (req, res) => {
   const { token } = req.body;
   let data = await verify_data(token);
-  res.send({ success: 200, data });
+  return res.send({ success: 200, data });
 });
 // sms 보내기
 router.post('/send/sms', async (req, res) => {
   const { user_phone, message } = req.body;
   let result = await _f.smsPush(user_phone, message);
-  res.send(result);
+  return res.send(result);
 });
 // 중복된 핸드폰 번호 여부 확인
 router.post('/duplicate/phoneNumber', async (req, res) => {

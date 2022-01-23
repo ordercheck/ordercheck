@@ -9,8 +9,8 @@ const swaggerDefinition = {
     -----Plan, Card Token 만들기--------
     {
       "planIdx": "2",
-      "start_plan": "2021.12.26",
-      "free_plan": "2022.01.09",
+      "free_plan": "2021.12.26",
+      "start_plan": "2022.01.09",
       "expire_plan": "2022.02.08",
       "result_price": "426,100", 
       "whiteLabelChecked":"false",
