@@ -103,6 +103,23 @@ router.post('/join/check', async (req, res) => {
     res.send({ success: 400, type: 'code' });
   }
 });
+// 비밀번호 찾기 인증번호
+router.post('/check/pw', async (req, res) => {
+  const { user_phone } = req.body;
+  const randInt = Math.random() * 1000;
+  const message = `[오더체크] \n 인증번호: ${parseInt(randInt)}`;
+  try {
+    let result = await axios({
+      url: '/api/send/sms',
+      method: 'post', // POST method
+      headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
+      data: { user_phone, message },
+    });
+    return res.send({ success: 200, number: parseInt(randInt) });
+  } catch (err) {
+    return res.send({ success: 500, msg: err.message });
+  }
+});
 // 회원가입 라우터
 router.post('/join/do', async (req, res) => {
   let { token } = req.body;
@@ -193,6 +210,7 @@ router.post('/company/check', async (req, res) => {
           // 각 데이터에 필요한 key, value
           plan_data.company_idx = idx;
           plan_data.user_idx = huidx;
+          plan_data.imp_uid = card_data.imp_uid;
           card_data.company_idx = idx;
           card_data.huidx_idx = huidx;
           // 플랜 정보 등록 후
@@ -262,7 +280,7 @@ router.post('/password/reset', async (req, res) => {
     });
   }
 });
-
+// 회원 정보로 token 만들기
 router.post('/create/token', async (req, res) => {
   const { user_phone, user_email, user_password, user_name } = req.body;
   try {
@@ -279,7 +297,7 @@ router.post('/create/token', async (req, res) => {
     return res.send({ success: 500, Err });
   }
 });
-
+// body 데이터를 토큰으로 만들기
 router.post('/create/token/data', async (req, res) => {
   const { card_number, expiry, pwd_2digit, birth, business_number } = req.body;
   const customer_uid = randomString9();
@@ -300,7 +318,7 @@ router.post('/create/token/data', async (req, res) => {
       return res.send({ success: 400, message: cardAddResult.message });
     }
     const imp_uid = await payNow(cardAddResult.access_token, customer_uid);
-
+    req.body.imp_uid = imp_uid;
     await refund(cardAddResult.access_token, imp_uid);
     let token = await createToken(req.body);
     return res.send({ success: 200, token });
@@ -314,13 +332,13 @@ router.post('/decode/token/data', async (req, res) => {
   let data = await verify_data(token);
   res.send({ success: 200, data });
 });
-
+// sms 보내기
 router.post('/send/sms', async (req, res) => {
   const { user_phone, message } = req.body;
   let result = await _f.smsPush(user_phone, message);
   res.send(result);
 });
-
+// 중복된 핸드폰 번호 여부 확인
 router.post('/duplicate/phoneNumber', async (req, res) => {
   const { user_phone } = req.body;
   try {
@@ -333,6 +351,7 @@ router.post('/duplicate/phoneNumber', async (req, res) => {
     return res.send({ success: 500, Err });
   }
 });
+// 중복된 이메일 여부 확인
 router.post('/duplicate/email', async (req, res) => {
   const { user_email } = req.body;
   try {

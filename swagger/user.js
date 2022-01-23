@@ -201,4 +201,24 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/check/pw:
+ *   post:
+ *     tags:
+ *       - 비밀번호 찾기
+ *     summary: 비밀번호 찾기에서 인증번호 보내기
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_phone:
+ *                 type: string
+ *             example:
+ *               user_phone: '010-6719-6919'
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

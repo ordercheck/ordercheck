@@ -40,11 +40,12 @@ module.exports = function (sequelize, DataTypes) {
       unique: true,
       type: DataTypes.STRING,
     },
-    imp_uid: {
+    customer_uid: {
       allowNull: true,
       unique: true,
       type: DataTypes.STRING,
     },
+
     credit_yn: {
       allowNull: false,
       defaultValue: '',
