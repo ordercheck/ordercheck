@@ -51,10 +51,11 @@ const sess = {
 // const adminRouter = require('./router/admin/indexRouter')
 // const clientRouter = require('./router/client/indexRouter')
 const ordercheckRouter = require('./router/ordercheck/indexRouter');
-const apiRouter = require('./router/api/ordercheck');
+const apiRouter = require('./router/api/user');
 const consultingRouter = require('./router/api/consulting');
 const inviteRouter = require('./router/api/invite');
 const infoRouter = require('./router/api/infoRouter');
+const schedulePayRouter = require('./router/api/schedulePay');
 const s3ControllRouter = require('./router/api/s3');
 const db = require('./model/db');
 
@@ -163,6 +164,7 @@ class AppServer extends http.Server {
     this.app.use('/api', apiRouter);
     this.app.use('/api/consulting', consultingRouter);
     this.app.use('/api/info', infoRouter);
+    this.app.use('/api/schedule/pay', schedulePayRouter);
     this.app.use('/s3', s3ControllRouter);
     this.app.use('/api/invite', inviteRouter);
     this.app.use((req, res, next) => {

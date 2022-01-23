@@ -120,6 +120,23 @@ router.post('/check/pw', async (req, res) => {
     return res.send({ success: 500, msg: err.message });
   }
 });
+// 비밀번호 찾기
+router.post('/check/pw', async (req, res) => {
+  const { user_phone } = req.body;
+  const randInt = Math.random() * 1000;
+  const message = `[오더체크] \n 인증번호: ${parseInt(randInt)}`;
+  try {
+    let result = await axios({
+      url: '/api/send/sms',
+      method: 'post', // POST method
+      headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
+      data: { user_phone, message },
+    });
+    return res.send({ success: 200, number: parseInt(randInt) });
+  } catch (err) {
+    return res.send({ success: 500, msg: err.message });
+  }
+});
 // 회원가입 라우터
 router.post('/join/do', async (req, res) => {
   let { token } = req.body;
