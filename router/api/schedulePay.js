@@ -1,15 +1,22 @@
 const express = require('express');
 const router = express.Router();
+const { schedulePay, getPayment } = require('../../lib/payFunction');
+const db = require('../../model/db');
 // 정기 결제 완료 후 다음달 결제 예약
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
+  console.log(req.body);
   const { imp_uid, merchant_uid, status } = req.body;
-  console.log('imp_uid', imp_uid);
-  console.log(' merchant_uid', merchant_uid);
-  console.log(' status', status);
+  const getResult = await getPayment(imp_uid);
+  if (getResult.amount == 100) {
+    return res.send({ success: 400 });
+  }
   if (status == 'paid') {
-    const changeToTime = new Date();
-    const changeToUnix = changeToTime.getTime() / 1000;
-    console.log(changeToUnix);
+    const now = new Date();
+    const afterMonth = new Date(now.setMonth(now.getMonth() + 1));
+    customer_uid, price, buyer_name, buyer_tel, buyer_email;
+
+    buyer_name, buyer_tel, buyer_email;
+    await schedulePay(afterMonth, getResult.customer_uid, getResult.amount);
   }
 });
 

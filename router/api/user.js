@@ -31,6 +31,7 @@ const {
   randomString9,
 } = require('../../lib/functions');
 const functions = require('../../lib/functions');
+const { checkCard } = require('../../model/db');
 
 let global_uidx = 0;
 
@@ -244,11 +245,14 @@ router.post('/company/check', async (req, res) => {
           // 카드 정보 등록 후
           await db.card.create(card_data, { transaction: t });
 
+          const merchant_uid = _f.random5();
           // 카드 결제
           const imp_uid = await payNow(
             card_data.customer_uid,
-            plan_data.result_price.replace(/,/g, '')
+            plan_data.result_price.replace(/,/g, ''),
+            merchant_uid
           );
+
           // 결제 후 plan data에 주문 번호 넣고 plan db에 저장
           plan_data.imp_uid = imp_uid;
           await db.plan.create(plan_data, { transaction: t });
@@ -341,7 +345,7 @@ router.post('/create/token', async (req, res) => {
 // body 데이터를 토큰으로 만들기
 router.post('/create/token/data', async (req, res) => {
   const { card_number, expiry, pwd_2digit, birth, business_number } = req.body;
-  const customer_uid = randomString9();
+  const customer_uid = _f.random5();
   req.body.customer_uid = customer_uid;
   // 카드를 등록하는 경우
   if (req.body.card_number) {
@@ -358,7 +362,10 @@ router.post('/create/token/data', async (req, res) => {
     if (!cardAddResult.success) {
       return res.send({ success: 400, message: cardAddResult.message });
     }
-    const imp_uid = await payNow(customer_uid, 100);
+    const merchant_uid = _f.random5();
+    const imp_uid = await payNow(customer_uid, 100, merchant_uid);
+
+    await checkCard.create({ merchant_uid });
 
     await refund(imp_uid, 100);
     let token = await createToken(req.body);
