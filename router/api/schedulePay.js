@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
         attributes: ['user_name', 'user_phone', 'user_email', 'customer_uid'],
       });
       const newMerchant_uid = _f.random5();
-      console.log('hi');
+
       const scheduleResult = await schedulePay(
         afterMonth,
         customer_uid,
@@ -39,6 +39,14 @@ router.post('/', async (req, res) => {
         user_email,
         newMerchant_uid
       );
+
+      await db.pay.create({
+        imp_uid,
+        user_name,
+        user_email,
+        user_phone,
+        customer_uid,
+      });
       console.log(scheduleResult);
       const result = await db.planExpect.update(
         { merchant_uid: newMerchant_uid },
