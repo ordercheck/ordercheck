@@ -39,10 +39,15 @@ db.consulting = sequelize.import(__dirname + '/consulting.js');
 db.pay = sequelize.import(__dirname + '/pay.js');
 db.config = sequelize.import(__dirname + '/config.js');
 db.userCompany = sequelize.import(__dirname + '/userCompany.js');
+db.planExpect = sequelize.import(__dirname + '/planExpect.js');
 db.timeLine = sequelize.import(__dirname + '/consultingTimeLine.js');
 db.calculate = sequelize.import(__dirname + '/calculate.js');
 db.customer = sequelize.import(__dirname + '/customer.js');
-
+// plan과 planExpect
+db.plan.hasMany(db.planExpect, { foreignKey: 'plan_idx' });
+db.planExpect.belongsTo(db.plan, {
+  foreignKey: 'plan_idx',
+});
 //consulting과 timeLine, calculate, customer
 db.consulting.hasMany(db.timeLine, { foreignKey: 'consulting_idx' });
 db.timeLine.belongsTo(db.consulting, {

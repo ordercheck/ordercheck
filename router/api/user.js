@@ -78,7 +78,9 @@ router.post('/login', async (req, res, next) => {
 router.post('/join/check', async (req, res) => {
   const { user_email, user_phone } = req.body;
   const randInt = Math.random() * 1000;
-  const message = `[오더체크] \n 인증번호: ${parseInt(randInt)}`;
+  const message = `[인증번호: ${parseInt(
+    randInt
+  )}] 오더체크에서 보내는 인증번호입니다. \n 오더체크와 편리한 고객응대를 시작해보세요.`;
   let phoneCheck = await db.user
     .findAll({ where: { user_phone } })
     .then((r) => {
@@ -113,7 +115,9 @@ router.post('/join/check', async (req, res) => {
 router.post('/check/pw', async (req, res) => {
   const { user_phone } = req.body;
   const randInt = Math.random() * 1000;
-  const message = `[오더체크] \n 인증번호: ${parseInt(randInt)}`;
+  const message = `[인증번호:${parseInt(
+    randInt
+  )}] \n 오더체크에서 보내는 인증번호입니다.`;
   try {
     let result = await axios({
       url: '/api/send/sms',
@@ -126,23 +130,7 @@ router.post('/check/pw', async (req, res) => {
     return res.send({ success: 500, msg: err.message });
   }
 });
-// 비밀번호 찾기
-router.post('/check/pw', async (req, res) => {
-  const { user_phone } = req.body;
-  const randInt = Math.random() * 1000;
-  const message = `[오더체크] \n 인증번호: ${parseInt(randInt)}`;
-  try {
-    let result = await axios({
-      url: '/api/send/sms',
-      method: 'post', // POST method
-      headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
-      data: { user_phone, message },
-    });
-    return res.send({ success: 200, number: parseInt(randInt) });
-  } catch (err) {
-    return res.send({ success: 500, msg: err.message });
-  }
-});
+
 // 회원가입 라우터
 router.post('/join/do', async (req, res) => {
   let { token } = req.body;
@@ -245,12 +233,12 @@ router.post('/company/check', async (req, res) => {
           // 카드 정보 등록 후
           await db.card.create(card_data, { transaction: t });
 
-          const merchant_uid = _f.random5();
+          const nowMerchant_uid = _f.random5();
           // 카드 결제
           const { success, imp_uid, message } = await payNow(
             card_data.customer_uid,
             plan_data.result_price.replace(/,/g, ''),
-            merchant_uid
+            nowMerchant_uid
           );
 
           // 잔고가 없을때
@@ -260,14 +248,16 @@ router.post('/company/check', async (req, res) => {
           }
           // 결제 후 plan data에 주문 번호 넣고 plan db에 저장
           plan_data.imp_uid = imp_uid;
-          await db.plan.create(plan_data, { transaction: t });
+          const createPlanResult = await db.plan.create(plan_data, {
+            transaction: t,
+          });
           // 시간을 unix형태로 변경
           const changeToTime = new Date();
-          const changeToUnix = new Date(
+          let changeToUnix = new Date(
             changeToTime.setSeconds(changeToTime.getSeconds() + 30)
           );
           // const changeToTime = new Date(plan_data.start_plan);
-          // const changeToUnix = changeToTime.getTime() / 1000;
+          changeToUnix = changeToTime.getTime() / 1000;
 
           await db.pay.create(
             {
@@ -279,7 +269,7 @@ router.post('/company/check', async (req, res) => {
             },
             { transaction: t }
           );
-
+          const nextMerchant_uid = _f.random5();
           // 다음 카드 결제 신청
           await schedulePay(
             changeToUnix,
@@ -287,8 +277,17 @@ router.post('/company/check', async (req, res) => {
             plan_data.result_price.replace(/,/g, ''),
             user_data.user_name,
             user_data.user_phone,
-            user_data.user_email
+            user_data.user_email,
+            nextMerchant_uid
           );
+          await db.planExpect.create(
+            {
+              merchant_uid: nextMerchant_uid,
+              plan_idx: createPlanResult.idx,
+            },
+            { transaction: t }
+          );
+
           //  트랜젝션 종료
           await t.commit();
 
