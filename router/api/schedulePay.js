@@ -32,19 +32,19 @@ router.post('/', async (req, res) => {
       await schedulePay(
         afterMonth,
         customer_uid,
-        getResult.customer_uid,
         getResult.amount,
         user_name,
         user_phone,
         user_email,
         newMerchant_uid
       );
-      await db.planExpect.update(
+      const result = await db.planExpect.update(
         { merchant_uid: newMerchant_uid },
         {
           where: { merchant_uid },
         }
       );
+      console.log('업데이트 결과', result);
 
       return res.send({ success: 200 });
     }
