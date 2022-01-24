@@ -14,19 +14,19 @@ router.post('/', async (req, res) => {
     const now = new Date();
     const afterMonth = new Date(now.setMonth(now.getMonth() + 1));
 
-    const result = await db.pay.findOne({
+    const { user_name, user_email, user_phone } = await db.pay.findOne({
       where: { imp_uid },
       attributes: ['user_name', 'user_phone', 'user_email'],
     });
-    console.log(result);
-    // await schedulePay(
-    //   afterMonth,
-    //   getResult.customer_uid,
-    //   getResult.amount,
-    //   user_name,
-    //   user_phone,
-    //   user_email
-    // );
+
+    await schedulePay(
+      afterMonth,
+      getResult.customer_uid,
+      getResult.amount,
+      user_name,
+      user_phone,
+      user_email
+    );
   }
 });
 
