@@ -36,7 +36,7 @@ db.plan = sequelize.import(__dirname + '/plan.js');
 db.card = sequelize.import(__dirname + '/card.js');
 db.company = sequelize.import(__dirname + '/company.js');
 db.consulting = sequelize.import(__dirname + '/consulting.js');
-
+db.pay = sequelize.import(__dirname + '/pay.js');
 db.config = sequelize.import(__dirname + '/config.js');
 db.userCompany = sequelize.import(__dirname + '/userCompany.js');
 db.timeLine = sequelize.import(__dirname + '/consultingTimeLine.js');

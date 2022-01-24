@@ -259,6 +259,15 @@ router.post('/company/check', async (req, res) => {
           // 시간을 unix형태로 변경
           const changeToTime = new Date(plan_data.start_plan);
           const changeToUnix = changeToTime.getTime() / 1000;
+          await db.pay.create(
+            {
+              imp_uid,
+              user_name: user_data.user_name,
+              user_phone: user_data.user_phone,
+              user_email: user_data.user_email,
+            },
+            { transaction: t }
+          );
 
           // 다음 카드 결제 신청
           await schedulePay(
