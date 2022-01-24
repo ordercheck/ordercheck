@@ -1,13 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const { schedulePay, getPayment } = require('../../lib/payFunction');
+const _f = require('../../lib/functions');
 const db = require('../../model/db');
 // 정기 결제 완료 후 다음달 결제 예약
 router.post('/', async (req, res) => {
   try {
     const { imp_uid, merchant_uid, status } = req.body;
     const getResult = await getPayment(imp_uid);
-
+    console.log(req.body);
+    console.log(getResult.buyer_name);
+    console.log(getResult.buyer_tel);
+    console.log(getResult.buyer_email);
+    console.log(getResult.customer_uid);
     await db.pay.create({
       imp_uid,
       user_name: getResult.buyer_name,
