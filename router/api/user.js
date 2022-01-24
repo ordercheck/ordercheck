@@ -259,16 +259,6 @@ router.post('/company/check', async (req, res) => {
           // const changeToTime = new Date(plan_data.start_plan);
           changeToUnix = changeToTime.getTime() / 1000;
 
-          await db.pay.create(
-            {
-              imp_uid,
-              user_name: user_data.user_name,
-              user_phone: user_data.user_phone,
-              user_email: user_data.user_email,
-              customer_uid: card_data.customer_uid,
-            },
-            { transaction: t }
-          );
           const nextMerchant_uid = _f.random5();
           // 다음 카드 결제 신청
           await schedulePay(
