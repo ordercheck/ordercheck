@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
       // const now = new Date();
       // const afterMonth = new Date(now.setMonth(now.getMonth() + 1));
       const now = new Date();
-      let afterMonth = new Date(now.setSeconds(now.getSeconds() + 15));
+      let afterMonth = new Date(now.setSeconds(now.getSeconds() + 20));
       afterMonth = changeToTime.getTime() / 1000;
 
       const {
