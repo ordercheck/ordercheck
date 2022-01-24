@@ -4,6 +4,7 @@ const { schedulePay, getPayment } = require('../../lib/payFunction');
 const db = require('../../model/db');
 // 정기 결제 완료 후 다음달 결제 예약
 router.post('/', async (req, res) => {
+  console.log(req.body);
   try {
     const { imp_uid, merchant_uid, status } = req.body;
     const getResult = await getPayment(imp_uid);
@@ -29,7 +30,8 @@ router.post('/', async (req, res) => {
         attributes: ['user_name', 'user_phone', 'user_email', 'customer_uid'],
       });
       const newMerchant_uid = _f.random5();
-      await schedulePay(
+      console.log('hi');
+      const scheduleResult = await schedulePay(
         afterMonth,
         customer_uid,
         getResult.amount,
@@ -38,6 +40,7 @@ router.post('/', async (req, res) => {
         user_email,
         newMerchant_uid
       );
+      console.log(scheduleResult);
       const result = await db.planExpect.update(
         { merchant_uid: newMerchant_uid },
         {
