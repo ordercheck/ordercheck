@@ -8,11 +8,10 @@ router.post('/', async (req, res) => {
   try {
     const { imp_uid, merchant_uid, status } = req.body;
     const getResult = await getPayment(imp_uid);
-    console.log(req.body);
-    console.log(getResult.buyer_name);
-    console.log(getResult.buyer_tel);
-    console.log(getResult.buyer_email);
-    console.log(getResult.customer_uid);
+
+    if (getResult.amount == 100 || status == 'cancelled') {
+      return res.send({ success: 400 });
+    }
     await db.pay.create({
       imp_uid,
       user_name: getResult.buyer_name,
@@ -20,10 +19,6 @@ router.post('/', async (req, res) => {
       user_email: getResult.buyer_email,
       customer_uid: getResult.customer_uid,
     });
-
-    if (getResult.amount == 100 || status == 'cancelled') {
-      return res.send({ success: 400 });
-    }
     // 계속 스케줄을 할 때
     if (status == 'paid') {
       // const now = new Date();
