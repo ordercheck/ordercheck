@@ -18,10 +18,10 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-    planIdx: {
+    plan: {
       allowNull: false,
       defaultValue: 0,
-      type: DataTypes.INTEGER(4),
+      type: DataTypes.STRING(100),
     },
 
     start_plan: {

@@ -1,22 +1,21 @@
 const nodemailer = require('nodemailer');
 
+exports.findPasswordEmail = async function (email, message, type, url, button) {
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+      user: 'hey@stkypic.com',
+      pass: 'bbvonwlpezbfehrf',
+    },
+  });
+  let emailList = [];
+  emailList.push(email);
 
-exports.findPasswordEmail = async function(email,message,type,url,button){
-    const transporter = nodemailer.createTransport({
-        service : 'Gmail',
-            auth : {
-                user : 'hey@stkypic.com',
-                pass : 'bbvonwlpezbfehrf'
-            }
-    })
-    let emailList = [];
-    emailList.push(email)
-
-    const mailOptions = {
-        from: 'hey@stkypic.com', // sender address
-        to: emailList, // list of receivers
-        subject: '[스티키픽]비밀번호 재설정 URL', // Subject line
-        html : `
+  const mailOptions = {
+    from: 'hey@stkypic.com', // sender address
+    to: emailList, // list of receivers
+    subject: '[스티키픽]비밀번호 재설정 URL', // Subject line
+    html: `
         <!DOCTYPE html>
         <html>
         <head>
@@ -87,18 +86,14 @@ exports.findPasswordEmail = async function(email,message,type,url,button){
             </table>
         </body>
         </html>
-        `
+        `,
+  };
+  await transporter.sendMail(mailOptions, function (error, info) {
+    console.log(info);
+    if (error) {
+      console.log(error);
+      return error;
     }
-    await transporter.sendMail(mailOptions, function(error, info){                                          
-        console.log(info)
-        if(error)  {
-            console.log(error)
-            return error
-        }
-        return info
-    });
-}
-
-            
-
-
+    return info;
+  });
+};

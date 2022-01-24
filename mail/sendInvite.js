@@ -1,14 +1,17 @@
 const nodemailer = require('nodemailer');
+
 const transport = nodemailer.createTransport({
   service: 'Gmail',
+
   auth: {
-    user: 'rlxo6919@gmail.com',
-    pass: 'tnvj79135@',
+    user: process.env.SEND_EMAIL_ID,
+    pass: process.env.SEND_PASSWORD,
   },
 });
+
 const sendMail = async (company_url, company_name, inviter, target) => {
   let mailOptions = {
-    from: 'rlxo6919@gmail.com',
+    from: process.env.SEND_EMAIL_ID,
     to: target,
     subject: 'invite Test',
     html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -183,9 +186,11 @@ const sendMail = async (company_url, company_name, inviter, target) => {
         `,
   };
   try {
-    await transport.sendMail(mailOptions);
+    const result = await transport.sendMail(mailOptions);
+    console.log(result);
     return true;
   } catch (err) {
+    console.log(err);
     return false;
   }
 };
