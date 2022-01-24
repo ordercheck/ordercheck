@@ -374,8 +374,6 @@ router.post('/create/token/data', async (req, res) => {
     const merchant_uid = _f.random5();
     const imp_uid = await payNow(customer_uid, 100, merchant_uid);
 
-    await checkCard.create({ merchant_uid });
-
     await refund(imp_uid, 100);
     let token = await createToken(req.body);
     return res.send({ success: 200, token });
