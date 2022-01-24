@@ -12,6 +12,12 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: 0,
       type: DataTypes.STRING(100),
     },
+    customer_uid: {
+      allowNull: false,
+      unique: true,
+      defaultValue: 0,
+      type: DataTypes.STRING(100),
+    },
 
     user_name: {
       allowNull: false,

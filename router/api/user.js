@@ -238,7 +238,7 @@ router.post('/company/check', async (req, res) => {
           card_data.huidx_idx = huidx;
 
           // 법인카드 유무 확인 후 체크
-          card_data.card_birth
+          card_data.birth
             ? (card_data.credit_yn = 'false')
             : (card_data.credit_yn = 'true');
 
@@ -247,24 +247,31 @@ router.post('/company/check', async (req, res) => {
 
           const merchant_uid = _f.random5();
           // 카드 결제
-          const imp_uid = await payNow(
+          const { success, imp_uid, message } = await payNow(
             card_data.customer_uid,
             plan_data.result_price.replace(/,/g, ''),
             merchant_uid
           );
 
+          // 잔고가 없을때
+          if (!success) {
+            await t.rollback();
+            return res.send({ sucecss: 400, message });
+          }
           // 결제 후 plan data에 주문 번호 넣고 plan db에 저장
           plan_data.imp_uid = imp_uid;
           await db.plan.create(plan_data, { transaction: t });
           // 시간을 unix형태로 변경
           const changeToTime = new Date(plan_data.start_plan);
           const changeToUnix = changeToTime.getTime() / 1000;
+
           await db.pay.create(
             {
               imp_uid,
               user_name: user_data.user_name,
               user_phone: user_data.user_phone,
               user_email: user_data.user_email,
+              customer_uid: card_data.customer_uid,
             },
             { transaction: t }
           );
@@ -284,6 +291,7 @@ router.post('/company/check', async (req, res) => {
           return res.send({ success: 200 });
         } catch (err) {
           // create과정에서 오류가 뜨면 롤백
+
           await t.rollback();
           const Err = err.message;
           return res.send({ success: 500, Err });
