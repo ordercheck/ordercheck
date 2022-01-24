@@ -39,13 +39,6 @@ router.post('/', async (req, res) => {
         newMerchant_uid
       );
 
-      await db.pay.create({
-        imp_uid,
-        user_name,
-        user_email,
-        user_phone,
-        customer_uid,
-      });
       console.log(scheduleResult);
       const result = await db.planExpect.update(
         { merchant_uid: newMerchant_uid },
