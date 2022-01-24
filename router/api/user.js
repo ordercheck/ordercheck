@@ -262,8 +262,12 @@ router.post('/company/check', async (req, res) => {
           plan_data.imp_uid = imp_uid;
           await db.plan.create(plan_data, { transaction: t });
           // 시간을 unix형태로 변경
-          const changeToTime = new Date(plan_data.start_plan);
-          const changeToUnix = changeToTime.getTime() / 1000;
+          const changeToTime = new Date();
+          const changeToUnix = new Date(
+            changeToTime.setSeconds(changeToTime.getSeconds() + 30)
+          );
+          // const changeToTime = new Date(plan_data.start_plan);
+          // const changeToUnix = changeToTime.getTime() / 1000;
 
           await db.pay.create(
             {
