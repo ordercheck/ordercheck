@@ -8,19 +8,12 @@ module.exports = function (sequelize, DataTypes) {
     },
     imp_uid: {
       allowNull: false,
-      unique: true,
       defaultValue: 0,
       type: DataTypes.STRING(100),
     },
-    merchant_uid: {
-      allowNull: false,
-      unique: true,
-      defaultValue: 0,
-      type: DataTypes.STRING(100),
-    },
+
     customer_uid: {
       allowNull: false,
-      unique: true,
       defaultValue: 0,
       type: DataTypes.STRING(100),
     },
