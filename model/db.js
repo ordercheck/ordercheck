@@ -107,12 +107,11 @@ db.company.belongsTo(db.user, {
 db.user.hasOne(db.company, {
   foreignKey: 'huidx',
 });
-db.card.belongsTo(db.company, {
-  foreignKey: 'huidx',
-  targetKey: 'huidx',
+db.card.belongsTo(db.user, {
+  foreignKey: 'user_idx',
 });
-db.company.hasMany(db.card, {
-  foreignKey: 'huidx',
+db.user.hasMany(db.card, {
+  foreignKey: 'user_idx',
 });
 
 // userCompany와 user

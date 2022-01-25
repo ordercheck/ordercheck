@@ -9,6 +9,7 @@ module.exports = function (sequelize, DataTypes) {
     imp_uid: {
       allowNull: false,
       defaultValue: 0,
+      unique: true,
       type: DataTypes.STRING(100),
     },
 

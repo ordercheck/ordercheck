@@ -78,9 +78,9 @@ router.post('/login', async (req, res, next) => {
 router.post('/join/check', async (req, res) => {
   const { user_email, user_phone } = req.body;
   const randInt = Math.random() * 1000;
-  const message = `[인증번호: ${parseInt(
+  const message = `[인증번호:${parseInt(
     randInt
-  )}] 오더체크에서 보내는 인증번호입니다. \n 오더체크와 편리한 고객응대를 시작해보세요.`;
+  )}] 오더체크에서 보내는 인증번호입니다.\n오더체크와 편리한 고객응대를 시작해보세요.`;
   let phoneCheck = await db.user
     .findAll({ where: { user_phone } })
     .then((r) => {
@@ -115,7 +115,7 @@ router.post('/join/check', async (req, res) => {
 router.post('/check/pw', async (req, res) => {
   const { user_phone } = req.body;
   const randInt = Math.random() * 1000;
-  const message = `[인증번호:${parseInt(
+  const message = `[인증번호: ${parseInt(
     randInt
   )}] \n 오더체크에서 보내는 인증번호입니다.`;
   try {
@@ -223,7 +223,7 @@ router.post('/company/check', async (req, res) => {
           plan_data.user_idx = huidx;
 
           card_data.company_idx = idx;
-          card_data.huidx_idx = huidx;
+          card_data.user_idx = user[0].idx;
 
           // 법인카드 유무 확인 후 체크
           card_data.birth
