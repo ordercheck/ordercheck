@@ -10,7 +10,7 @@ router.post('/', async (req, res) => {
     const getResult = await getPayment(imp_uid);
 
     if (
-      getResult.amount == 100 ||
+      getResult.amount == 1000 ||
       status == 'cancelled' ||
       !getResult.buyer_email
     ) {

@@ -309,7 +309,6 @@ router.post('/company/check', async (req, res) => {
   if (user_data.user_phone) {
     let user_phone = user_data.user_phone;
     const user = await db.user.findOne({ where: { user_phone } });
-
     const user_idx = user.idx;
     await companyCheck(user_phone, user_idx);
   } else {
@@ -386,9 +385,9 @@ router.post('/create/token/data', async (req, res) => {
       return res.send({ success: 400, message: cardAddResult.message });
     }
     const merchant_uid = _f.random5();
-    const imp_uid = await payNow(customer_uid, 100, merchant_uid);
-
-    await refund(imp_uid, 100);
+    const imp_uid = await payNow(customer_uid, 1000, merchant_uid);
+    console.log(imp_uid);
+    await refund(imp_uid, 1000);
     let token = await createToken(req.body);
     return res.send({ success: 200, token });
   }
