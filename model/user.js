@@ -46,12 +46,7 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: '',
       type: DataTypes.STRING(100),
     },
-    form_link: {
-      allowNull: false,
-      unique: true,
-      defaultValue: '',
-      type: DataTypes.STRING(100),
-    },
+
     active: {
       allowNull: false,
       defaultValue: 1,

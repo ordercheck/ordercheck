@@ -148,9 +148,9 @@ router.post('/join/do', async (req, res) => {
       res.send({ success: 400, msg: '이미 존재하는 계정' });
     } else {
       user_data.personal_code = Math.random().toString(36).substr(2, 11);
-      user_data.form_link = Math.random().toString(36).substr(2, 11);
+
       const result = await db.user.create(user_data);
-      const loginToken = await createToken(result.idx);
+      const loginToken = await createToken({ idx: result.idx });
       return res.send({ success: 200, loginToken });
     }
   } else {

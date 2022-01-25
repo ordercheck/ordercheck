@@ -53,18 +53,14 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/consulting/{form_link}/{limit}/{page}:
+ * /api/consulting/customer/list/{limit}/{page}:
  *   get:
  *      security:
  *       - bearerAuth: []
  *      tags:
  *       -  consult get info
- *      summary: 회사 consult 조회(default)
+ *      summary: consult 조회(default)
  *      parameters:
- *         - in: path
- *           name: form_link
- *           schema:
- *             type: string
  *         - in: path
  *           name: limit
  *           schema:
@@ -258,7 +254,7 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/consulting/detail/{idx}:
+ * /api/consulting/detail/{customer_idx}:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -267,7 +263,7 @@
  *      summary: 컨설팅 상세보기
  *      parameters:
  *         - in: path
- *           name: idx
+ *           name: customer_idx
  *           schema:
  *             type: integer
  *           example: 3
@@ -307,19 +303,16 @@
  *           schema:
  *             type: object
  *             properties:
- *               consulting_idx:
+ *               customer_idx:
  *                 type: integer
  *               memo:
  *                 type: string
  *               status:
  *                 type: string
- *               form_link:
- *                 type: string
  *             example:
- *               consulting_idx: 1
+ *               customer_idx: 1
  *               memo: test
  *               status: 상담중
- *               form_link: 'sdfsdf'
  *      responses:
  *         '200':
  *            description: 성공
@@ -523,4 +516,26 @@
  *            description: 성공
  *         '400':
  *           description: 실패
+ * /api/consulting/create/form-link:
+ *   post:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       -  consult
+ *     summary: form link만들기 (form type이 1이면 form_type:1, 2이면 form_type:2 )
+ *     requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              form_type:
+ *                type: 1
+ *            example:
+ *              form_type: 1
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

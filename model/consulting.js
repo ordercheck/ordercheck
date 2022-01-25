@@ -180,5 +180,10 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: '',
       type: DataTypes.STRING(100),
     },
+    form_link: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
   });
 };

@@ -5,20 +5,16 @@ const { Op } = require('sequelize');
 module.exports = {
   showTotalConsultingDefault: async (req, res) => {
     let {
-      params: { form_link, limit, page },
+      params: { limit, page },
       loginUser: user_idx,
     } = req;
     limit = parseInt(limit);
 
     try {
-      // const checkResult = await checkUserCompany(company_idx, user_idx);
-      // if (checkResult == false) {
-      //   return res.send({ success: 400 });
-      // }
-      const totalData = await db.customer.count({ where: { form_link } });
+      const totalData = await db.customer.count({ where: { user_idx } });
       const start = (page - 1) * limit;
       const result = await db.customer.findAll({
-        where: { form_link },
+        where: { user_idx },
         offset: start,
         limit,
       });
@@ -59,23 +55,22 @@ module.exports = {
     }
   },
   showDetailConsulting: async (req, res) => {
-    const { idx } = req.params;
+    const { customer_idx } = req.params;
+
     try {
-      const result = await db.customer.findAll({
+      const result = await db.customer.findOne({
         where: {
-          idx,
+          idx: customer_idx,
         },
         include: [
           {
             model: db.consulting,
-            include: [
-              {
-                model: db.timeLine,
-              },
-            ],
+          },
+          {
+            model: db.timeLine,
           },
         ],
-        order: [['createdAt', 'DESC']],
+        order: [[db.consulting, 'createdAt', 'DESC']],
       });
 
       return res.send({ result });
@@ -140,7 +135,7 @@ module.exports = {
       //   return res.send({ success: 400 });
       // }
       const result = await db.customer.findAll({
-        where: { customer_phoneNumber },
+        where: { customer_phoneNumber, user_idx },
         attributes: [
           'idx',
           'customer_name',

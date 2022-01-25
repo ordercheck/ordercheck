@@ -28,6 +28,7 @@ const {
   addCalculate,
   downCalculate,
   doIntegratedUser,
+  createFromLink,
 } = require('../../controller/consultingStatus');
 // *****************************filter*********************************
 // date필터링
@@ -44,6 +45,8 @@ router.get(
 // 고객 연동하기에서 고객들을 보여주기
 router.post('/integrated/user', loginCheck, showIntegratedUser);
 router.patch('/integrated/user', loginCheck, doIntegratedUser);
+// formlink 만들기
+router.post('/create/form-link', loginCheck, createFromLink);
 
 // 해당 상담 견적서 보여주기
 router.get(
@@ -51,14 +54,19 @@ router.get(
   loginCheck,
   showCalculate
 );
-// 회사별 전체 상담내용 리스트(default)
-router.get('/:form_link/:limit/:page', loginCheck, showTotalConsultingDefault);
 
 // 회사별 팀원 리스트 보기
 router.get('/member/:company_idx', loginCheck, showCompanyMembers);
 
 // 컨설팅 상세정보
-router.get('/detail/:idx', loginCheck, showDetailConsulting);
+router.get('/detail/:customer_idx', loginCheck, showDetailConsulting);
+
+// 회사별 전체 상담내용 리스트(default)
+router.get(
+  '/customer/list/:limit/:page',
+  loginCheck,
+  showTotalConsultingDefault
+);
 
 // 해당 회사 고객정보 보여주기
 router.get('/customer/:form_link', loginCheck, showCustomers);

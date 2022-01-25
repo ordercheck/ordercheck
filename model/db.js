@@ -39,6 +39,7 @@ db.consulting = sequelize.import(__dirname + '/consulting.js');
 db.pay = sequelize.import(__dirname + '/pay.js');
 db.config = sequelize.import(__dirname + '/config.js');
 db.userCompany = sequelize.import(__dirname + '/userCompany.js');
+db.formLink = sequelize.import(__dirname + '/formLink.js');
 db.planExpect = sequelize.import(__dirname + '/planExpect.js');
 db.timeLine = sequelize.import(__dirname + '/consultingTimeLine.js');
 db.calculate = sequelize.import(__dirname + '/calculate.js');
@@ -48,11 +49,14 @@ db.plan.hasMany(db.planExpect, { foreignKey: 'plan_idx' });
 db.planExpect.belongsTo(db.plan, {
   foreignKey: 'plan_idx',
 });
-//consulting과 timeLine, calculate, customer
-db.consulting.hasMany(db.timeLine, { foreignKey: 'consulting_idx' });
-db.timeLine.belongsTo(db.consulting, {
-  foreignKey: 'consulting_idx',
+
+// user와 timeLine
+db.customer.hasMany(db.timeLine, { foreignKey: 'customer_idx' });
+db.timeLine.belongsTo(db.customer, {
+  foreignKey: 'customer_idx',
 });
+//consulting과  calculate, customer
+
 db.consulting.hasMany(db.calculate, { foreignKey: 'consulting_idx' });
 db.calculate.belongsTo(db.consulting, {
   foreignKey: 'consulting_idx',
@@ -66,24 +70,31 @@ db.user.hasOne(db.customer, { foreignKey: 'contact_person' });
 db.customer.belongsTo(db.user, {
   foreignKey: 'contact_person',
 });
-
-// consulting과 user
-db.consulting.belongsTo(db.user, {
-  foreignKey: 'form_link',
-  targetKey: 'form_link',
-});
-db.company.hasMany(db.consulting, {
-  foreignKey: 'form_link',
+db.user.hasMany(db.customer, { foreignKey: 'user_idx' });
+db.customer.belongsTo(db.user, {
+  foreignKey: 'user_idx',
 });
 
 // customer와 user
-db.customer.belongsTo(db.user, {
+// db.customer.belongsTo(db.user, {
+//   foreignKey: 'form_link',
+//   targetKey: 'form_link',
+// });
+// db.user.hasMany(db.customer, {
+//   foreignKey: 'form_link',
+// });
+
+// user와 formLink
+db.user.hasMany(db.formLink, { foreignKey: 'user_idx' });
+db.formLink.belongsTo(db.user, { foreignKey: 'user_idx' });
+
+// consulting과 formLink
+
+db.consulting.belongsTo(db.formLink, {
   foreignKey: 'form_link',
   targetKey: 'form_link',
 });
-db.user.hasMany(db.customer, {
-  foreignKey: 'form_link',
-});
+
 // plan과 company
 db.plan.belongsTo(db.company, {
   foreignKey: 'company_idx',

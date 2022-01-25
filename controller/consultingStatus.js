@@ -1,11 +1,13 @@
 const { checkUserCompany } = require('../lib/apiFunctions');
-
 const db = require('../model/db');
 const { downFile } = require('../lib/aws/fileupload').ufile;
+const _f = require('../lib/functions');
 module.exports = {
   addConsultingForm: async (req, res) => {
     // url을 string으로 연결
     let { body, files } = req;
+    // 트랜젝션 시작
+    const t = await db.sequelize.transaction();
     selectUrl = (files) => {
       try {
         return (result = files.map((element) => {
@@ -15,13 +17,20 @@ module.exports = {
         return;
       }
     };
+    const formLinkUser = await db.formLink.findOne({
+      where: { form_link: body.form_link },
+    });
+
     if (!files.img && !files.concept) {
       try {
-        const result = await db.customer.create(body);
+        body.user_idx = formLinkUser.user_idx;
+        const result = await db.customer.create(body, { transaction: t });
         body.customer_idx = result.idx;
-        await db.consulting.create(body);
+        await db.consulting.create(body, { transaction: t });
+        t.commit();
         return res.send({ success: 200 });
       } catch (err) {
+        t.rollback();
         const Err = err.message;
         return res.send({ success: 500, Err });
       }
@@ -31,11 +40,14 @@ module.exports = {
     body.floor_plan = JSON.stringify(imgUrlString);
     body.hope_concept = JSON.stringify(conceptUrlString);
     try {
-      const result = await db.customer.create(body);
+      body.user_idx = formLinkUser.user_idx;
+      const result = await db.customer.create(body, { transaction: t });
       body.customer_idx = result.idx;
-      await db.consulting.create(body);
+      await db.consulting.create(body, { transaction: t });
+      t.commit();
       return res.send({ success: 200 });
     } catch (err) {
+      t.rollback();
       const Err = err.message;
       return res.send({ success: 500, Err });
     }
@@ -107,6 +119,7 @@ module.exports = {
   patchConsultingStatus: async (req, res) => {
     const { body, loginUser: user_idx } = req;
     const t = await db.sequelize.transaction();
+
     try {
       // 관리자가 회사소속인지 체크
       // const checkResult = await checkUserCompany(body.company_idx, user_idx);
@@ -116,7 +129,7 @@ module.exports = {
 
       await db.customer.update(
         { active: body.status },
-        { where: { idx: body.consulting_idx } },
+        { where: { idx: body.customer_idx } },
         { transaction: t }
       );
       await db.timeLine.create(body, { transaction: t });
@@ -184,30 +197,45 @@ module.exports = {
       //   return res.send({ success: 400 });
       // }
       // 대표 상담폼과 병합
+
       body.target_idx.forEach(async (data) => {
-        const t = await db.sequelize.transaction();
         try {
           await db.consulting.update(
             {
               customer_idx: body.main_idx,
             },
             {
-              where: { idx: data },
-            },
-            { transaction: t }
+              where: { customer_idx: data },
+            }
           );
-          await db.customer.destroy(
+          await db.timeLine.update(
             {
-              where: { idx: data },
+              customer_idx: body.main_idx,
             },
-            { transaction: t }
+            {
+              where: { customer_idx: data },
+            }
           );
-          await t.commit();
+          await db.customer.destroy({
+            where: { idx: data },
+          });
         } catch (err) {
-          await t.rollback();
+          console.log(err);
         }
       });
       return res.send({ success: 200 });
+    } catch (err) {
+      const Err = err.message;
+      return res.send({ success: 500, Err });
+    }
+  },
+  createFromLink: async (req, res) => {
+    try {
+      req.body.form_link = _f.random5();
+      req.body.user_idx = req.loginUser;
+
+      await db.formLink.create(req.body);
+      return res.send({ success: 200, message: '폼 링크 생성' });
     } catch (err) {
       const Err = err.message;
       return res.send({ success: 500, Err });
