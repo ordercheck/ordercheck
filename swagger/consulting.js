@@ -74,7 +74,7 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/date/{form_link}/{date}:
+ * /api/consulting/date/{user_idx}/{date}:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -83,10 +83,10 @@
  *      summary: consult date 필터 api
  *      parameters:
  *         - in: path
- *           name: form_link
+ *           name: user_idx
  *           schema:
- *             type: string
- *           example: "lsidjfsdil"
+ *             type: integer
+ *           example: 1
  *         - in: path
  *           name: date
  *           schema:
@@ -97,7 +97,7 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/active/{form_link}/{active}:
+ * /api/consulting/active/{user_idx}/{active}:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -106,10 +106,10 @@
  *      summary: consult 상담 상태 필터 api
  *      parameters:
  *         - in: path
- *           name: form_link
+ *           name: user_idx
  *           schema:
- *             type: string
- *           example: "sldfjd"
+ *             type: integer
+ *           example: 1
  *         - in: path
  *           name: active
  *           schema:
@@ -120,7 +120,7 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/contract-possibility/{form_link}/{contract_possibility}:
+ * /api/consulting/contract-possibility/{user_idx}/{contract_possibility}:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -129,10 +129,10 @@
  *      summary: consult 계약 가능성 필터 api
  *      parameters:
  *         - in: path
- *           name: form_link
+ *           name: user_idx
  *           schema:
- *             type: string
- *           example: "sldkjfd"
+ *             type: integer
+ *           example: 1
  *         - in: path
  *           name: contract_possibility
  *           schema:
@@ -278,10 +278,10 @@
  *       - bearerAuth: []
  *      tags:
  *       -  consult get info
- *      summary: 고객정보 보기 모두
+ *      summary: 고객정보 보기 모두 (사용x)
  *      parameters:
  *         - in: path
- *           name: form_link
+ *           name: user_idx
  *           schema:
  *             type: string
  *           example: 16
@@ -354,31 +354,25 @@
  *           schema:
  *             type: object
  *             properties:
- *               form_link:
- *                 type: string
- *               pdf_data:
- *                 type: string
- *               pdf_name:
+ *               img:
  *                 type: string
  *               title:
  *                 type: string
  *               predicted_price:
  *                 type: string
- *               consulting_idx:
+ *               customer_idx:
  *                 type: string
  *             example:
- *               form_link: 'sdfsdf'
  *               img: 견적서file
- *               pdf_name: 'pdf 제목'
  *               title: '제1차 견적서'
  *               predicted_price: '1,000,000'
- *               consulting_idx: '1'
+ *               customer_idx: '1'
  *     responses:
  *       '200':
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/consulting/calculate/{form_link}/{consulting_idx}:
+ * /api/consulting/calculate/{customer_idx}:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -387,12 +381,7 @@
  *      summary: 견적서 보여주기
  *      parameters:
  *         - in: path
- *           name: form_link
- *           schema:
- *             type: string
- *           example: 'sdfsdf'
- *         - in: path
- *           name: consulting_idx
+ *           name: customer_idx
  *           schema:
  *             type: integer
  *           example: 1
@@ -479,12 +468,12 @@
  *       - bearerAuth: []
  *      tags:
  *       -  consult get info
- *      summary: consult 조회
+ *      summary: consult filter 결과 조회
  *      parameters:
  *         - in: query
- *           name: form_link
+ *           name: user_idx
  *           schema:
- *             type: string
+ *             type: integer
  *           example: 1
  *         - in: query
  *           name: limit

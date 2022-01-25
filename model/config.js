@@ -158,5 +158,9 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: 'false',
       type: DataTypes.STRING(100),
     },
+    user_idx: {
+      unique: true,
+      type: DataTypes.INTEGER,
+    },
   });
 };

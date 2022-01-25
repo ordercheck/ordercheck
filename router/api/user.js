@@ -9,6 +9,7 @@ const {
 const db = require('../../model/db');
 const _f = require('../../lib/functions');
 const verify_data = require('../../lib/jwtfunctions');
+let masterConfig = require('../../lib/masterConfig');
 const user_session_check = (req, res, next) => {
   next();
 };
@@ -287,7 +288,8 @@ router.post('/company/check', async (req, res) => {
             },
             { transaction: t }
           );
-
+          masterConfig.user_idx = user[0].idx;
+          await db.config.create(masterConfig, { transaction: t });
           //  트랜젝션 종료
           await t.commit();
 
@@ -312,6 +314,7 @@ router.post('/company/check', async (req, res) => {
     await companyCheck(user_phone, user_idx);
   } else {
     let { user_phone } = await db.user.findByPk(user_data.idx);
+
     const user_idx = user_data.idx;
     await companyCheck(user_phone, user_idx);
   }

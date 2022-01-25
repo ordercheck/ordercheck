@@ -32,12 +32,12 @@ const {
 } = require('../../controller/consultingStatus');
 // *****************************filter*********************************
 // date필터링
-router.get('/date/:company_idx/:date', loginCheck, dateFilter);
+router.get('/date/:user_idx/:date', loginCheck, dateFilter);
 // 상담 상태 필터링
-router.get('/active/:company_idx/:active', loginCheck, statusFilter);
+router.get('/active/:user_idx/:active', loginCheck, statusFilter);
 // 계약 가능성 필터링
 router.get(
-  '/contract-possibility/:company_idx/:contract_possibility',
+  '/contract-possibility/:user_idx/:contract_possibility',
   loginCheck,
   contractPossibilityFilter
 );
@@ -49,11 +49,7 @@ router.patch('/integrated/user', loginCheck, doIntegratedUser);
 router.post('/create/form-link', loginCheck, createFromLink);
 
 // 해당 상담 견적서 보여주기
-router.get(
-  '/calculate/:company_idx/:consulting_idx',
-  loginCheck,
-  showCalculate
-);
+router.get('/calculate/:customer_idx', loginCheck, showCalculate);
 
 // 회사별 팀원 리스트 보기
 router.get('/member/:company_idx', loginCheck, showCompanyMembers);
@@ -69,7 +65,7 @@ router.get(
 );
 
 // 해당 회사 고객정보 보여주기
-router.get('/customer/:form_link', loginCheck, showCustomers);
+// router.get('/customer/:form_link', loginCheck, showCustomers);
 
 // filter결과 보여주기
 router.get('/filter', loginCheck, showFilterResult);

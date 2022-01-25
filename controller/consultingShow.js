@@ -103,7 +103,7 @@ module.exports = {
   },
   showCalculate: async (req, res) => {
     const {
-      params: { company_idx, consulting_idx },
+      params: { customer_idx },
       loginUser: user_idx,
     } = req;
     try {
@@ -111,13 +111,8 @@ module.exports = {
       // if (checkResult == false) {
       //   return res.send({ success: 400 });
       // }
-      const result = await db.consulting.findByPk(consulting_idx, {
-        include: [
-          {
-            model: db.calculate,
-          },
-        ],
-      });
+      const result = await db.calculate.findAll({ where: { customer_idx } });
+
       return res.send({ success: 200, result });
     } catch (err) {
       const Err = err.message;
@@ -153,8 +148,7 @@ module.exports = {
   },
   showFilterResult: async (req, res) => {
     let {
-      query: { form_link, date, limit, page },
-      loginUser: user_idx,
+      query: { user_idx, date, limit, page },
     } = req;
     // const checkResult = await checkUserCompany(company_idx, user_idx);
     // if (checkResult == false) {
@@ -173,7 +167,7 @@ module.exports = {
       try {
         const result = await db.customer[type]({
           where: {
-            form_link,
+            user_idx,
             createdAt: { [Op.between]: [firstDate, secondDate] },
             active: { [Op.in]: activeArrResult },
             contract_possibility: { [Op.in]: possibilityArrResult },

@@ -14,19 +14,18 @@ const makeArrforFilter = (data, status) => {
 module.exports = {
   dateFilter: async (req, res) => {
     let {
-      params: { company_idx, date },
-      loginUser: user_idx,
+      params: { user_idx, date },
     } = req;
     try {
-      const checkResult = await checkUserCompany(company_idx, user_idx);
-      if (checkResult == false) {
-        return res.send({ success: 400 });
-      }
+      // const checkResult = await checkUserCompany(company_idx, user_idx);
+      // if (checkResult == false) {
+      //   return res.send({ success: 400 });
+      // }
       const { firstDate, secondDate } = changeDate(date);
 
-      const result = await db.consulting.count({
+      const result = await db.customer.count({
         where: {
-          company_idx,
+          user_idx,
           createdAt: { [Op.between]: [firstDate, secondDate] },
         },
       });
@@ -38,19 +37,18 @@ module.exports = {
   },
   statusFilter: async (req, res) => {
     let {
-      params: { company_idx, active },
-      loginUser: user_idx,
+      params: { user_idx, active },
     } = req;
     try {
-      const checkResult = await checkUserCompany(company_idx, user_idx);
-      if (checkResult == false) {
-        return res.send({ success: 400 });
-      }
+      // const checkResult = await checkUserCompany(company_idx, user_idx);
+      // if (checkResult == false) {
+      //   return res.send({ success: 400 });
+      // }
       const countArr = makeArrforFilter(active, (status = 'active'));
 
       const result = await db.customer.count({
         where: {
-          company_idx,
+          user_idx,
           [Op.or]: countArr,
         },
       });
@@ -62,22 +60,21 @@ module.exports = {
   },
   contractPossibilityFilter: async (req, res) => {
     let {
-      params: { company_idx, contract_possibility },
-      loginUser: user_idx,
+      params: { user_idx, contract_possibility },
     } = req;
 
     try {
-      const checkResult = await checkUserCompany(company_idx, user_idx);
-      if (checkResult == false) {
-        return res.send({ success: 400 });
-      }
+      // const checkResult = await checkUserCompany(company_idx, user_idx);
+      // if (checkResult == false) {
+      //   return res.send({ success: 400 });
+      // }
       const countArr = makeArrforFilter(
         contract_possibility,
         (status = 'contract_possibility')
       );
       const result = await db.customer.count({
         where: {
-          company_idx,
+          user_idx,
           [Op.or]: countArr,
         },
       });
