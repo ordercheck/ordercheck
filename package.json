@@ -54,7 +54,6 @@
     "multiparty": "^4.2.1",
     "mysql2": "^2.1.0",
     "node-blob": "0.0.2",
-    "node-schedule": "^1.3.3",
     "nodemailer": "^6.4.8",
     "popbill": "^1.50.0",
     "raw-body": "^2.4.1",
