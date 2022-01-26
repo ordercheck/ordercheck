@@ -298,27 +298,12 @@
   "resolved" "https://registry.npmjs.org/base64-js/-/base64-js-1.3.1.tgz"
   "version" "1.3.1"
 
-"base64topdf@^1.1.8":
-  "integrity" "sha1-w8nGOkeDy4uZx8rSgYWF1LXk9dg="
-  "resolved" "https://registry.npmjs.org/base64topdf/-/base64topdf-1.1.8.tgz"
-  "version" "1.1.8"
-  dependencies:
-    "fs" "0.0.1-security"
-
 "bcrypt-pbkdf@^1.0.0", "bcrypt-pbkdf@^1.0.2":
   "integrity" "sha1-pDAdOJtqQ/m2f/PKEaP2Y342Dp4="
   "resolved" "https://registry.npmjs.org/bcrypt-pbkdf/-/bcrypt-pbkdf-1.0.2.tgz"
   "version" "1.0.2"
   dependencies:
     "tweetnacl" "^0.14.3"
-
-"bcrypt@^5.0.0":
-  "integrity" "sha512-jB0yCBl4W/kVHM2whjfyqnxTmOHkCX4kHEa5nYKSoGeYe8YrjTYTc87/6bwt1g8cmV0QrbhKriETg9jWtcREhg=="
-  "resolved" "https://registry.npmjs.org/bcrypt/-/bcrypt-5.0.0.tgz"
-  "version" "5.0.0"
-  dependencies:
-    "node-addon-api" "^3.0.0"
-    "node-pre-gyp" "0.15.0"
 
 "big-integer@^1.6.17":
   "integrity" "sha512-GPEid2Y9QU1Exl1rpO9B2IPJGHPSupF5GnVIP0blYvNOMer2bTvSWs1jGOUg04hTmu67nmLsQ9TBo1puaotBHg=="
@@ -655,13 +640,6 @@
     "node-pre-gyp" "^0.11.0"
     "simple-get" "^3.0.3"
 
-"card-validator@^8.1.1":
-  "integrity" "sha512-cN4FsKwoTfTFnqPwVc7TQLSsH/QMDB3n/gWm0XelcApz4sKipnOQ6k33sa3bWsNnnIpgs7eXOF+mUV2UQAX2Sw=="
-  "resolved" "https://registry.npmjs.org/card-validator/-/card-validator-8.1.1.tgz"
-  "version" "8.1.1"
-  dependencies:
-    "credit-card-type" "^9.1.0"
-
 "cardinal@^2.1.1":
   "integrity" "sha1-fMEFXYItISlU0HsIXeolHMe8VQU="
   "resolved" "https://registry.npmjs.org/cardinal/-/cardinal-2.1.1.tgz"
@@ -940,11 +918,6 @@
     "ripemd160" "^2.0.0"
     "safe-buffer" "^5.0.1"
     "sha.js" "^2.4.8"
-
-"credit-card-type@^9.1.0":
-  "integrity" "sha512-CpNFuLxiPFxuZqhSKml3M+t0K/484pMAnfYWH14JoD7OZMnmC0Lmo+P7JX9SobqFpRoo7ifA18kOHdxJywYPEA=="
-  "resolved" "https://registry.npmjs.org/credit-card-type/-/credit-card-type-9.1.0.tgz"
-  "version" "9.1.0"
 
 "cron-parser@^2.18.0":
   "integrity" "sha512-s4odpheTyydAbTBQepsqd2rNWGa2iV3cyo8g7zbI2QQYGLVsfbhmwukayS1XHppe02Oy1fg7mg6xoaraVJeEcg=="
@@ -1605,11 +1578,6 @@
   "integrity" "sha1-FQStJSMVjKpA20onh8sBQRmU6k8="
   "resolved" "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   "version" "1.0.0"
-
-"fs@0.0.1-security":
-  "integrity" "sha1-invTcYa23d84E/I4WLV+yq9eQdQ="
-  "resolved" "https://registry.npmjs.org/fs/-/fs-0.0.1-security.tgz"
-  "version" "0.0.1-security"
 
 "fstream@^1.0.12":
   "integrity" "sha512-WvJ193OHa0GHPEL+AycEJgxvBEwyfRkN1vhjca23OaPVMCaLCXTd5qAu82AjTcgP1UJmytkOKb63Ypde7raDIg=="
@@ -2474,7 +2442,7 @@
   "resolved" "https://registry.npmjs.org/mkdirp-classic/-/mkdirp-classic-0.5.3.tgz"
   "version" "0.5.3"
 
-"mkdirp@^0.5.1", "mkdirp@^0.5.3", "mkdirp@^0.5.4", "mkdirp@^0.5.5", "mkdirp@>=0.5 0":
+"mkdirp@^0.5.1", "mkdirp@^0.5.4", "mkdirp@^0.5.5", "mkdirp@>=0.5 0":
   "integrity" "sha512-NKmAlESf6jMGym1++R0Ra7wvhV+wFW63FaSOFPwRahvea0gMUcGUhVeAg/0BC0wiv9ih5NYPB1Wn1UEI1/L+xQ=="
   "resolved" "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.5.tgz"
   "version" "0.5.5"
@@ -2621,7 +2589,7 @@
   "resolved" "https://registry.npmjs.org/napi-build-utils/-/napi-build-utils-1.0.2.tgz"
   "version" "1.0.2"
 
-"needle@^2.2.1", "needle@^2.5.0":
+"needle@^2.2.1":
   "integrity" "sha512-LbRIwS9BfkPvNwNHlsA41Q29kL2L/6VaOJ0qisM5lLWsTV3nP15abO5ITL6L81zqFhzjRKDAYjpcBcwM0AVvLQ=="
   "resolved" "https://registry.npmjs.org/needle/-/needle-2.5.2.tgz"
   "version" "2.5.2"
@@ -2679,22 +2647,6 @@
     "rimraf" "^2.6.1"
     "semver" "^5.3.0"
     "tar" "^4"
-
-"node-pre-gyp@0.15.0":
-  "integrity" "sha512-7QcZa8/fpaU/BKenjcaeFF9hLz2+7S9AqyXFhlH/rilsQ/hPZKK32RtR5EQHJElgu+q5RfbJ34KriI79UWaorA=="
-  "resolved" "https://registry.npmjs.org/node-pre-gyp/-/node-pre-gyp-0.15.0.tgz"
-  "version" "0.15.0"
-  dependencies:
-    "detect-libc" "^1.0.2"
-    "mkdirp" "^0.5.3"
-    "needle" "^2.5.0"
-    "nopt" "^4.0.1"
-    "npm-packlist" "^1.1.6"
-    "npmlog" "^4.0.2"
-    "rc" "^1.2.7"
-    "rimraf" "^2.6.1"
-    "semver" "^5.3.0"
-    "tar" "^4.4.2"
 
 "node-schedule@^1.3.3":
   "integrity" "sha512-uF9Ubn6luOPrcAYKfsXWimcJ1tPFtQ8I85wb4T3NgJQrXazEzojcFZVk46ZlLHby3eEJChgkV/0T689IsXh2Gw=="
@@ -3863,19 +3815,6 @@
     "fs-constants" "^1.0.0"
     "inherits" "^2.0.3"
     "readable-stream" "^3.1.1"
-
-"tar@^4.4.2":
-  "integrity" "sha512-a20gEsvHnWe0ygBY8JbxoM4w3SJdhc7ZAuxkLqh+nvNQN2IOt0B5lLgM490X5Hl8FF0dl0tOf2ewFYAlIFgzVA=="
-  "resolved" "https://registry.npmjs.org/tar/-/tar-4.4.19.tgz"
-  "version" "4.4.19"
-  dependencies:
-    "chownr" "^1.1.4"
-    "fs-minipass" "^1.2.7"
-    "minipass" "^2.9.0"
-    "minizlib" "^1.3.3"
-    "mkdirp" "^0.5.5"
-    "safe-buffer" "^5.2.1"
-    "yallist" "^3.1.1"
 
 "tar@^4":
   "integrity" "sha512-a20gEsvHnWe0ygBY8JbxoM4w3SJdhc7ZAuxkLqh+nvNQN2IOt0B5lLgM490X5Hl8FF0dl0tOf2ewFYAlIFgzVA=="
