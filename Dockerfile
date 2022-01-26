@@ -4,7 +4,7 @@ WORKDIR /node/app
 
 COPY package.json ./
 
-RUN sudo apt-get install build-essential
+RUN apt-get install build-essential
 
 RUN npm install 
 
