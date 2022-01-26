@@ -1,6 +1,4 @@
-FROM node:8.12-alpine
-
-RUN apk add g++ make python
+FROM node:12
 
 RUN mkdir /app
 
