@@ -4,7 +4,7 @@ WORKDIR /node/app
 
 COPY package.json ./
 
-RUN apt-get install build-essential
+RUN apk update && apk add python make g++
 
 RUN npm install 
 
