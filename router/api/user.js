@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcrypt');
 const {
   addCard,
   payNow,
@@ -60,19 +61,22 @@ router.post('/login', async (req, res, next) => {
   // let user_password_crypt = functions.cryptFunction(0,user_password,'')
   // let user_password_decode = functions.cryptFunction(1,'',user_password_crypt)
   // console.log(user_password_decode)
-  let check = await db.user
-    .findAll({ where: { user_phone, user_password } })
-    .then((r) => {
-      return makeArray(r);
-    });
+  let check = await db.user.findOne({ where: { user_phone } });
 
-  if (check.length > 0) {
+  if (check) {
+    const compareResult = await bcrypt.compare(
+      user_password,
+      check.user_password
+    );
+    if (!compareResult) {
+      return res.send({ success: 400, message: '비밀번호 혹은 전화번호 오류' });
+    }
     const userIdx = {};
-    userIdx.idx = check[0].idx;
+    userIdx.idx = check.idx;
     token = await createToken(userIdx);
     res.send({ success: 200, token });
   } else {
-    res.send({ success: 400 });
+    res.send({ success: 400, message: '비밀번호 혹은 전화번호 오류' });
   }
 });
 // 회원가입 체크 라우터
@@ -150,6 +154,12 @@ router.post('/join/do', async (req, res) => {
     } else {
       user_data.personal_code = Math.random().toString(36).substr(2, 11);
 
+      // 비밀번호 암호화
+      const hashResult = await bcrypt.hash(
+        user_data.user_password,
+        parseInt(process.env.SALT)
+      );
+      user_data.user_password = hashResult;
       const result = await db.user.create(user_data);
       const loginToken = await createToken({ idx: result.idx });
       return res.send({ success: 200, loginToken });
@@ -165,6 +175,7 @@ router.post('/company/check', async (req, res) => {
   let user_data = await verify_data(ut);
   let plan_data = await verify_data(pt);
   let card_data = await verify_data(ct);
+
   const companyCheck = async (user_phone, user_idx) => {
     let check_name = await db.company
       .findAll({ where: { company_name } })
@@ -296,7 +307,6 @@ router.post('/company/check', async (req, res) => {
           return res.send({ success: 200 });
         } catch (err) {
           // create과정에서 오류가 뜨면 롤백
-
           await t.rollback();
           const Err = err.message;
           return res.send({ success: 500, Err });
@@ -311,11 +321,7 @@ router.post('/company/check', async (req, res) => {
     const user = await db.user.findOne({ where: { user_phone } });
     const user_idx = user.idx;
     await companyCheck(user_phone, user_idx);
-  } else {
-    let { user_phone } = await db.user.findByPk(user_data.idx);
-
-    const user_idx = user_data.idx;
-    await companyCheck(user_phone, user_idx);
+    return;
   }
 });
 // 핸드폰 등록 여부 확인 라우터
@@ -333,11 +339,16 @@ router.post('/phone/check', async (req, res) => {
 // 패스워드 수정 라우터
 router.post('/password/reset', async (req, res) => {
   const { user_phone, user_password } = req.body;
-  let check = await db.user.findAll({ where: { user_phone } }).then((r) => {
-    return makeArray(r);
-  });
-  if (check.length > 0) {
-    await db.user.update({ user_password }, { where: { user_phone } });
+  let check = await db.user.findOne({ where: { user_phone } });
+  if (check) {
+    const newHashPassword = await bcrypt.hash(
+      user_password,
+      parseInt(process.env.SALT)
+    );
+    await db.user.update(
+      { user_password: newHashPassword },
+      { where: { user_phone } }
+    );
     return res.send({ success: 200 });
   } else {
     return res.send({
@@ -357,7 +368,7 @@ router.post('/create/token', async (req, res) => {
       user_password,
       user_name,
     });
-    console.log(token);
+
     return res.send({ success: 200, token });
   } catch (err) {
     const Err = err.message;
@@ -369,31 +380,41 @@ router.post('/create/token/data', async (req, res) => {
   const { card_number, expiry, pwd_2digit, birth, business_number } = req.body;
   const customer_uid = _f.random5();
   req.body.customer_uid = customer_uid;
-  // 카드를 등록하는 경우
-  if (req.body.card_number) {
-    const cardAddResult = await addCard(
-      card_number,
-      expiry,
-      birth,
-      pwd_2digit,
-      customer_uid,
-      business_number
-    );
+  try {
+    // 카드를 등록하는 경우
+    if (req.body.card_number) {
+      const cardAddResult = await addCard(
+        card_number,
+        expiry,
+        birth,
+        pwd_2digit,
+        customer_uid,
+        business_number
+      );
 
-    // 카드 등록 실패
-    if (!cardAddResult.success) {
-      return res.send({ success: 400, message: cardAddResult.message });
+      // 카드 등록 실패
+      if (!cardAddResult.success) {
+        return res.send({ success: 400, message: cardAddResult.message });
+      }
+      const merchant_uid = _f.random5();
+      const imp_uid = await payNow(customer_uid, 1000, merchant_uid);
+      if (!imp_uid.success) {
+        return res.send({ success: 400, message: imp_uid.message });
+      }
+      const refundResult = await refund(imp_uid, 1000);
+      if (!refundResult.success) {
+        return res.send({ success: 400, message: refundResult.message });
+      }
+      let token = await createToken(req.body);
+      return res.send({ success: 200, token });
     }
-    const merchant_uid = _f.random5();
-    const imp_uid = await payNow(customer_uid, 1000, merchant_uid);
-    console.log(imp_uid);
-    await refund(imp_uid, 1000);
+
     let token = await createToken(req.body);
     return res.send({ success: 200, token });
+  } catch (err) {
+    const Err = err.message;
+    return res.send({ success: 500, Err });
   }
-
-  let token = await createToken(req.body);
-  return res.send({ success: 200, token });
 });
 router.post('/decode/token/data', async (req, res) => {
   const { token } = req.body;

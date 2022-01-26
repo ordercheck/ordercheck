@@ -10,7 +10,6 @@ const loginCheck = async (req, res, next) => {
   try {
     const user = await verify_data(token);
     req.loginUser = user.idx;
-
     next();
   } catch (err) {
     return res.send({ success: 400, msg: 'token err' });
