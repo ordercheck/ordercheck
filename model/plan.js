@@ -20,13 +20,13 @@ module.exports = function (sequelize, DataTypes) {
     },
     plan: {
       allowNull: false,
-      defaultValue: 0,
+      defaultValue: 'FREE',
       type: DataTypes.STRING(100),
     },
 
     start_plan: {
       allowNull: false,
-      defaultValue: 0,
+      defaultValue: '',
       type: DataTypes.STRING(100),
     },
     free_plan: {

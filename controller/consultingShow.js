@@ -6,7 +6,8 @@ module.exports = {
   showTotalConsultingDefault: async (req, res) => {
     let {
       params: { limit, page },
-      loginUser: user_idx,
+      user_idx,
+      company_idx,
     } = req;
     limit = parseInt(limit);
 
@@ -36,7 +37,8 @@ module.exports = {
   showCustomers: async (req, res) => {
     const {
       params: { form_link },
-      loginUser: user_idx,
+      user_idx,
+      company_idx,
     } = req;
     try {
       // 유저회사 정보를 체크
@@ -80,10 +82,7 @@ module.exports = {
     }
   },
   showCompanyMembers: async (req, res) => {
-    const {
-      params: { company_idx },
-      loginUser: user_idx,
-    } = req;
+    const { user_idx, company_idx } = req;
     try {
       // const checkResult = await checkUserCompany(company_idx, user_idx);
       // if (checkResult == false) {
@@ -104,7 +103,8 @@ module.exports = {
   showCalculate: async (req, res) => {
     const {
       params: { customer_idx },
-      loginUser: user_idx,
+      user_idx,
+      company_idx,
     } = req;
     try {
       // const checkResult = await checkUserCompany(company_idx, user_idx);
@@ -122,7 +122,8 @@ module.exports = {
   showIntegratedUser: async (req, res) => {
     const {
       body: { customer_phoneNumber },
-      loginUser: user_idx,
+      user_idx,
+      company_idx,
     } = req;
     try {
       // const checkResult = await checkUserCompany(company_idx, user_idx);

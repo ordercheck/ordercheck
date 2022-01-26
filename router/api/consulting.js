@@ -28,7 +28,7 @@ const {
   addCalculate,
   downCalculate,
   doIntegratedUser,
-  createFromLink,
+  createFormLink,
 } = require('../../controller/consultingStatus');
 // *****************************filter*********************************
 // date필터링
@@ -46,7 +46,7 @@ router.get(
 router.post('/integrated/user', loginCheck, showIntegratedUser);
 router.patch('/integrated/user', loginCheck, doIntegratedUser);
 // formlink 만들기
-router.post('/create/form-link', loginCheck, createFromLink);
+router.post('/create/form-link', loginCheck, createFormLink);
 
 // 해당 상담 견적서 보여주기
 router.get('/calculate/:customer_idx', loginCheck, showCalculate);

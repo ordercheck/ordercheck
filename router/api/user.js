@@ -39,8 +39,6 @@ let global_uidx = 0;
 
 const check_data = (req, res, next) => {
   jwt.verify(req.query.token, process.env.tokenSecret, function (err, decoded) {
-    console.log(err);
-    console.log(decoded);
     if (err) {
       res.redirect('/admin');
     } else {
@@ -62,7 +60,9 @@ router.post('/login', async (req, res, next) => {
   // let user_password_decode = functions.cryptFunction(1,'',user_password_crypt)
   // console.log(user_password_decode)
   let check = await db.user.findOne({ where: { user_phone } });
-
+  let findUserCompany = await db.userCompany.findOne({
+    where: { user_idx: check.idx },
+  });
   if (check) {
     const compareResult = await bcrypt.compare(
       user_password,
@@ -71,9 +71,11 @@ router.post('/login', async (req, res, next) => {
     if (!compareResult) {
       return res.send({ success: 400, message: '비밀번호 혹은 전화번호 오류' });
     }
-    const userIdx = {};
-    userIdx.idx = check.idx;
-    token = await createToken(userIdx);
+    const tokenData = {};
+    tokenData.user_idx = check.idx;
+    tokenData.company_idx = findUserCompany.company_idx;
+
+    token = await createToken(tokenData);
     res.send({ success: 200, token });
   } else {
     res.send({ success: 400, message: '비밀번호 혹은 전화번호 오류' });
@@ -153,15 +155,32 @@ router.post('/join/do', async (req, res) => {
       res.send({ success: 400, msg: '이미 존재하는 계정' });
     } else {
       user_data.personal_code = Math.random().toString(36).substr(2, 11);
-
       // 비밀번호 암호화
       const hashResult = await bcrypt.hash(
         user_data.user_password,
         parseInt(process.env.SALT)
       );
       user_data.user_password = hashResult;
-      const result = await db.user.create(user_data);
-      const loginToken = await createToken({ idx: result.idx });
+      const createUserResult = await db.user.create(user_data);
+      // 랜덤 회사 만들기
+      const randomCompany = await db.company.create({
+        company_name: Math.random().toString(36).substr(2, 11),
+        huidx: createUserResult.idx,
+      });
+
+      await db.userCompany.create({
+        user_idx: createUserResult.idx,
+        company_idx: randomCompany.idx,
+      });
+      // master 권한 주기
+      masterConfig.user_idx = createUserResult.idx;
+      await db.config.create(masterConfig);
+      // 무료 플랜 만들기
+      await db.plan.create({ company_idx: randomCompany.idx });
+      const loginToken = await createToken({
+        user_idx: createUserResult.idx,
+        company_idx: randomCompany.idx,
+      });
       return res.send({ success: 200, loginToken });
     }
   } else {
@@ -201,116 +220,99 @@ router.post('/company/check', async (req, res) => {
 
     if (user.length > 0) {
       let huidx = user[0].idx;
-      let doubleCheck = await db.company
-        .findAll({ where: { huidx } })
-        .then((r) => {
-          return makeArray(r);
-        });
-      if (doubleCheck.length > 0) {
-        res.send({ success: 400, type: 'double' });
-      } else {
-        const t = await db.sequelize.transaction();
-        try {
-          // 트랜젝션 시작
 
-          const { idx } = await db.company.create(
-            {
-              huidx,
-              company_name,
-              company_subdomain,
-            },
-            { transaction: t }
-          );
+      const t = await db.sequelize.transaction();
+      try {
+        // 트랜젝션 시작
 
-          await db.userCompany.create(
-            {
-              user_idx,
-              company_idx: idx,
-              authority: 1,
-            },
-            { transaction: t }
-          );
-          // 각 데이터에 필요한 key, value
-          plan_data.company_idx = idx;
-          plan_data.user_idx = huidx;
+        const company_idx = await db.company.update(
+          {
+            company_name,
+            company_subdomain,
+          },
+          { where: { huidx }, transaction: t }
+        );
 
-          card_data.company_idx = idx;
-          card_data.user_idx = user[0].idx;
+        // 각 데이터에 필요한 key, value
 
-          // 법인카드 유무 확인 후 체크
-          card_data.birth
-            ? (card_data.credit_yn = 'false')
-            : (card_data.credit_yn = 'true');
+        card_data.company_idx = company_idx;
+        card_data.user_idx = huidx;
 
-          // 카드 정보 등록 후
-          await db.card.create(card_data, { transaction: t });
+        // 법인카드 유무 확인 후 체크
+        card_data.birth
+          ? (card_data.credit_yn = 'false')
+          : (card_data.credit_yn = 'true');
 
-          const nowMerchant_uid = _f.random5();
-          // 카드 결제
-          const { success, imp_uid, message } = await payNow(
-            card_data.customer_uid,
-            plan_data.result_price.replace(/,/g, ''),
-            nowMerchant_uid
-          );
+        // 카드 정보 등록 후
+        await db.card.create(card_data, { transaction: t });
 
-          // 잔고가 없을때
-          if (!success) {
-            await t.rollback();
-            return res.send({ sucecss: 400, message });
-          }
-          // 결제 후 plan data에 주문 번호 넣고 plan db에 저장
-          plan_data.imp_uid = imp_uid;
-          const createPlanResult = await db.plan.create(plan_data, {
-            transaction: t,
-          });
-          // 시간을 unix형태로 변경
-          const changeToTime = new Date();
-          let changeToUnix = new Date(
-            changeToTime.setSeconds(changeToTime.getSeconds() + 30)
-          );
-          // const changeToTime = new Date(plan_data.start_plan);
-          changeToUnix = changeToTime.getTime() / 1000;
+        const nowMerchant_uid = _f.random5();
+        // 카드 결제
+        const { success, imp_uid, message } = await payNow(
+          card_data.customer_uid,
+          plan_data.result_price.replace(/,/g, ''),
+          nowMerchant_uid
+        );
 
-          await db.pay.create(
-            {
-              imp_uid,
-              user_name: user_data.user_name,
-              user_phone: user_data.user_phone,
-              user_email: user_data.user_email,
-              customer_uid: card_data.customer_uid,
-            },
-            { transaction: t }
-          );
-          const nextMerchant_uid = _f.random5();
-          // 다음 카드 결제 신청
-          await schedulePay(
-            changeToUnix,
-            card_data.customer_uid,
-            plan_data.result_price.replace(/,/g, ''),
-            user_data.user_name,
-            user_data.user_phone,
-            user_data.user_email,
-            nextMerchant_uid
-          );
-          await db.planExpect.create(
-            {
-              merchant_uid: nextMerchant_uid,
-              plan_idx: createPlanResult.idx,
-            },
-            { transaction: t }
-          );
-          masterConfig.user_idx = user[0].idx;
-          await db.config.create(masterConfig, { transaction: t });
-          //  트랜젝션 종료
-          await t.commit();
-
-          return res.send({ success: 200 });
-        } catch (err) {
-          // create과정에서 오류가 뜨면 롤백
+        // 잔고가 없을때
+        if (!success) {
           await t.rollback();
-          const Err = err.message;
-          return res.send({ success: 500, Err });
+          return res.send({ sucecss: 400, message });
         }
+        // 결제 후 plan data에 주문 번호 넣고 plan db에 저장
+        plan_data.imp_uid = imp_uid;
+        const createPlanResult = await db.plan.update(plan_data, {
+          where: { company_idx },
+          transaction: t,
+        });
+        // 시간을 unix형태로 변경
+        const changeToTime = new Date();
+        let changeToUnix = new Date(
+          changeToTime.setSeconds(changeToTime.getSeconds() + 30)
+        );
+        // const changeToTime = new Date(plan_data.start_plan);
+        changeToUnix = changeToTime.getTime() / 1000;
+
+        await db.pay.create(
+          {
+            imp_uid,
+            user_name: user_data.user_name,
+            user_phone: user_data.user_phone,
+            user_email: user_data.user_email,
+            customer_uid: card_data.customer_uid,
+          },
+          { transaction: t }
+        );
+        const nextMerchant_uid = _f.random5();
+        // 다음 카드 결제 신청
+        await schedulePay(
+          changeToUnix,
+          card_data.customer_uid,
+          plan_data.result_price.replace(/,/g, ''),
+          user_data.user_name,
+          user_data.user_phone,
+          user_data.user_email,
+          nextMerchant_uid
+        );
+        await db.planExpect.create(
+          {
+            merchant_uid: nextMerchant_uid,
+            plan_idx: createPlanResult.idx,
+          },
+          { transaction: t }
+        );
+        masterConfig.user_idx = user[0].idx;
+
+        //  트랜젝션 종료
+        await t.commit();
+
+        return res.send({ success: 200 });
+      } catch (err) {
+        console.log(err);
+        // create과정에서 오류가 뜨면 롤백
+        await t.rollback();
+        const Err = err.message;
+        return res.send({ success: 500, Err });
       }
     } else {
       return res.send({ success: 400, type: 'auth' });
@@ -402,6 +404,7 @@ router.post('/create/token/data', async (req, res) => {
         return res.send({ success: 400, message: imp_uid.message });
       }
       const refundResult = await refund(imp_uid, 1000);
+
       if (!refundResult.success) {
         return res.send({ success: 400, message: refundResult.message });
       }
@@ -412,6 +415,7 @@ router.post('/create/token/data', async (req, res) => {
     let token = await createToken(req.body);
     return res.send({ success: 200, token });
   } catch (err) {
+    console.log(err);
     const Err = err.message;
     return res.send({ success: 500, Err });
   }

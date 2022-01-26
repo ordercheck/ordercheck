@@ -237,8 +237,6 @@
  *                 type: string
  *               customer_phoneNumber:
  *                 type: string
- *               form_link:
- *                 type: string
  *               contact_person:
  *                 type: integer
  *             example:
@@ -247,7 +245,6 @@
  *               size: 7
  *               customer_name: "김기태"
  *               customer_phoneNumber: "010-6719-6919"
- *               form_link: "lsdfjlsd"
  *               contact_person: 4
  *     responses:
  *       '200':

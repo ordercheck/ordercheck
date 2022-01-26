@@ -17,19 +17,26 @@ module.exports = {
         return;
       }
     };
-    const formLinkUser = await db.formLink.findOne({
+    const formLinkCompany = await db.formLink.findOne({
       where: { form_link: body.form_link },
     });
 
     if (!files.img && !files.concept) {
       try {
-        body.user_idx = formLinkUser.user_idx;
+        body.company_idx = formLinkCompany.company_idx;
         const result = await db.customer.create(body, { transaction: t });
         body.customer_idx = result.idx;
         await db.consulting.create(body, { transaction: t });
-        t.commit();
+
+        await t.commit();
+
+        db.company.increment(
+          { form_link_count: 1 },
+          { where: { idx: formLinkCompany.company_idx } }
+        );
         return res.send({ success: 200 });
       } catch (err) {
+        console.log(err);
         t.rollback();
         const Err = err.message;
         return res.send({ success: 500, Err });
@@ -44,7 +51,7 @@ module.exports = {
       const result = await db.customer.create(body, { transaction: t });
       body.customer_idx = result.idx;
       await db.consulting.create(body, { transaction: t });
-      t.commit();
+      await t.commit();
       return res.send({ success: 200 });
     } catch (err) {
       t.rollback();
@@ -55,8 +62,9 @@ module.exports = {
 
   setConsultingContactMember: async (req, res) => {
     const {
-      body: { idx, company_idx, contact_person },
-      loginUser: user_idx,
+      body: { idx, contact_person },
+      user_idx,
+      company_idx,
     } = req;
     try {
       // 관리자가 회사소속인지 체크
@@ -78,8 +86,9 @@ module.exports = {
 
   delConsulting: async (req, res) => {
     const {
-      body: { idx, company_idx },
-      loginUser: user_idx,
+      body: { idx },
+      user_idx,
+      company_idx,
     } = req;
     try {
       // 관리자가 회사소속인지 체크
@@ -99,7 +108,8 @@ module.exports = {
     }
   },
   addCompanyCustomer: async (req, res) => {
-    const { body: customerData, loginUser: user_idx } = req;
+    const { body, user_idx, company_idx } = req;
+    const t = await db.sequelize.transaction();
     try {
       // 관리자가 회사소속인지 체크
       // const checkResult = await checkUserCompany(
@@ -109,15 +119,25 @@ module.exports = {
       // if (checkResult == false) {
       //   return res.send({ success: 400 });
       // }
-      await db.consulting.create(customerData);
+      body.user_idx = user_idx;
+      await db.customer.create(body, { transaction: t });
+      db.company.increment(
+        { form_self_count: 1 },
+        { where: { idx: user_idx } },
+        { transaction: t }
+      );
+      await t.commit();
+
       return res.send({ success: 200 });
     } catch (err) {
+      t.rollback();
       const Err = err.message;
+      console.log(Err);
       return res.send({ success: 500, Err });
     }
   },
   patchConsultingStatus: async (req, res) => {
-    const { body, loginUser: user_idx } = req;
+    const { body, user_idx, company_idx } = req;
     const t = await db.sequelize.transaction();
 
     try {
@@ -143,7 +163,7 @@ module.exports = {
   },
 
   addCalculate: async (req, res) => {
-    const { body, file, loginUser: user_idx } = req;
+    const { body, file, user_idx, company_idx } = req;
     if (!file) {
       try {
         // 관리자가 회사소속인지 체크
@@ -189,7 +209,7 @@ module.exports = {
     });
   },
   doIntegratedUser: async (req, res) => {
-    const { body, loginUser: user_idx } = req;
+    const { body, user_idx, company_idx } = req;
 
     try {
       // const checkResult = await checkUserCompany(body.company_idx, user_idx);
@@ -229,14 +249,15 @@ module.exports = {
       return res.send({ success: 500, Err });
     }
   },
-  createFromLink: async (req, res) => {
+  createFormLink: async (req, res) => {
     try {
       req.body.form_link = _f.random5();
-      req.body.user_idx = req.loginUser;
 
+      req.body.company_idx = req.company_idx;
       await db.formLink.create(req.body);
       return res.send({ success: 200, message: '폼 링크 생성' });
     } catch (err) {
+      console.log(err);
       const Err = err.message;
       return res.send({ success: 500, Err });
     }

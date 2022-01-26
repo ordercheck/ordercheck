@@ -4,6 +4,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+
 const session = require('express-session');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
@@ -194,7 +195,8 @@ class AppServer extends http.Server {
 
   schedule() {
     // sessionCheck.run()
-    console.log('[SCHEDULE]');
+
+    require('./lib/formSchedule');
     console.log(process.env.NODE_ENV);
     if (process.env.NODE_ENV == 'development') {
       // pushNotify.run(3)

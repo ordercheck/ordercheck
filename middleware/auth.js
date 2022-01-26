@@ -8,8 +8,9 @@ const loginCheck = async (req, res, next) => {
 
   const [, token] = authorization.split(' ');
   try {
-    const user = await verify_data(token);
-    req.loginUser = user.idx;
+    const data = await verify_data(token);
+    req.user_idx = data.user_idx;
+    req.company_idx = data.company_idx;
     next();
   } catch (err) {
     return res.send({ success: 400, msg: 'token err' });

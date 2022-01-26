@@ -70,9 +70,9 @@ db.user.hasOne(db.customer, { foreignKey: 'contact_person' });
 db.customer.belongsTo(db.user, {
   foreignKey: 'contact_person',
 });
-db.user.hasMany(db.customer, { foreignKey: 'user_idx' });
-db.customer.belongsTo(db.user, {
-  foreignKey: 'user_idx',
+db.company.hasMany(db.customer, { foreignKey: 'company_idx' });
+db.customer.belongsTo(db.company, {
+  foreignKey: 'company_idx',
 });
 
 // customer와 user
@@ -85,17 +85,17 @@ db.customer.belongsTo(db.user, {
 // });
 
 // user와 formLink
-db.user.hasMany(db.formLink, { foreignKey: 'user_idx' });
-db.formLink.belongsTo(db.user, { foreignKey: 'user_idx' });
+db.user.hasMany(db.formLink, { foreignKey: 'company_idx' });
+db.formLink.belongsTo(db.company, { foreignKey: 'company_idx' });
 
 // consulting과 formLink
 db.consulting.belongsTo(db.formLink, {
   foreignKey: 'form_link',
   targetKey: 'form_link',
 });
-// consulting과 user
-db.user.hasMany(db.consulting, { foreignKey: 'user_idx' });
-db.consulting.belongsTo(db.user, { foreignKey: 'user_idx' });
+// consulting과 company
+db.company.hasMany(db.consulting, { foreignKey: 'company_idx' });
+db.consulting.belongsTo(db.company, { foreignKey: 'company_idx' });
 
 // plan과 company
 db.plan.belongsTo(db.company, {

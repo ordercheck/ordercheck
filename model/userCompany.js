@@ -6,9 +6,5 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-    authority: {
-      primaryKey: true,
-      type: DataTypes.INTEGER,
-    },
   });
 };
