@@ -1,10 +1,8 @@
-FROM node:14.16-alpine
+FROM node:12
 
 WORKDIR /app
 
 COPY package.json ./
-
-RUN apk --no-cache add --virtual builds-deps build-base python
 
 RUN npm install 
 
