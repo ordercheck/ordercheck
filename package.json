@@ -23,6 +23,7 @@
     "async": "^3.2.0",
     "aws-sdk": "^2.700.0",
     "axios": "^0.24.0",
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
     "browserify": "^16.5.2",
     "buffer": "^5.6.0",
@@ -54,6 +55,7 @@
     "multiparty": "^4.2.1",
     "mysql2": "^2.1.0",
     "node-blob": "0.0.2",
+    "node-schedule": "^2.1.0",
     "nodemailer": "^6.4.8",
     "popbill": "^1.50.0",
     "raw-body": "^2.4.1",
@@ -68,8 +70,5 @@
     "swagger-ui-express": "^4.3.0",
     "tinyurl-api": "^1.0.1",
     "tunnel-ssh": "^4.1.4"
-  },
-  "devDependencies": {
-    "prettier": "2.2.1"
   }
 }
