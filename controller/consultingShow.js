@@ -6,16 +6,15 @@ module.exports = {
   showTotalConsultingDefault: async (req, res) => {
     let {
       params: { limit, page },
-      user_idx,
       company_idx,
     } = req;
     limit = parseInt(limit);
 
     try {
-      const totalData = await db.customer.count({ where: { user_idx } });
+      const totalData = await db.customer.count({ where: { company_idx } });
       const start = (page - 1) * limit;
       const result = await db.customer.findAll({
-        where: { user_idx },
+        where: { company_idx },
         offset: start,
         limit,
       });
@@ -57,12 +56,14 @@ module.exports = {
     }
   },
   showDetailConsulting: async (req, res) => {
+    const { company_idx } = req;
     const { customer_idx } = req.params;
 
     try {
       const result = await db.customer.findOne({
         where: {
           idx: customer_idx,
+          company_idx,
         },
         include: [
           {
@@ -122,7 +123,6 @@ module.exports = {
   showIntegratedUser: async (req, res) => {
     const {
       body: { customer_phoneNumber },
-      user_idx,
       company_idx,
     } = req;
     try {
@@ -131,7 +131,7 @@ module.exports = {
       //   return res.send({ success: 400 });
       // }
       const result = await db.customer.findAll({
-        where: { customer_phoneNumber, user_idx },
+        where: { customer_phoneNumber, company_idx },
         attributes: [
           'idx',
           'customer_name',
@@ -149,7 +149,8 @@ module.exports = {
   },
   showFilterResult: async (req, res) => {
     let {
-      query: { user_idx, date, limit, page },
+      query: { date, limit, page },
+      company_idx,
     } = req;
     // const checkResult = await checkUserCompany(company_idx, user_idx);
     // if (checkResult == false) {
@@ -168,7 +169,7 @@ module.exports = {
       try {
         const result = await db.customer[type]({
           where: {
-            user_idx,
+            company_idx,
             createdAt: { [Op.between]: [firstDate, secondDate] },
             active: { [Op.in]: activeArrResult },
             contract_possibility: { [Op.in]: possibilityArrResult },

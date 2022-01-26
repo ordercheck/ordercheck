@@ -209,7 +209,7 @@ module.exports = {
     });
   },
   doIntegratedUser: async (req, res) => {
-    const { body, user_idx, company_idx } = req;
+    const { body } = req;
 
     try {
       // const checkResult = await checkUserCompany(body.company_idx, user_idx);

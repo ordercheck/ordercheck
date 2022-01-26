@@ -14,7 +14,8 @@ const makeArrforFilter = (data, status) => {
 module.exports = {
   dateFilter: async (req, res) => {
     let {
-      params: { user_idx, date },
+      params: { date },
+      company_idx,
     } = req;
     try {
       // const checkResult = await checkUserCompany(company_idx, user_idx);
@@ -25,7 +26,7 @@ module.exports = {
 
       const result = await db.customer.count({
         where: {
-          user_idx,
+          company_idx,
           createdAt: { [Op.between]: [firstDate, secondDate] },
         },
       });
@@ -37,7 +38,8 @@ module.exports = {
   },
   statusFilter: async (req, res) => {
     let {
-      params: { user_idx, active },
+      params: { active },
+      company_idx,
     } = req;
     try {
       // const checkResult = await checkUserCompany(company_idx, user_idx);
@@ -48,7 +50,7 @@ module.exports = {
 
       const result = await db.customer.count({
         where: {
-          user_idx,
+          company_idx,
           [Op.or]: countArr,
         },
       });
@@ -60,7 +62,8 @@ module.exports = {
   },
   contractPossibilityFilter: async (req, res) => {
     let {
-      params: { user_idx, contract_possibility },
+      params: { contract_possibility },
+      company_idx,
     } = req;
 
     try {
@@ -74,7 +77,7 @@ module.exports = {
       );
       const result = await db.customer.count({
         where: {
-          user_idx,
+          company_idx,
           [Op.or]: countArr,
         },
       });

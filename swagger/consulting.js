@@ -74,7 +74,7 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/date/{user_idx}/{date}:
+ * /api/consulting/date/{date}:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -82,11 +82,6 @@
  *       -  consult filter
  *      summary: consult date 필터 api
  *      parameters:
- *         - in: path
- *           name: user_idx
- *           schema:
- *             type: integer
- *           example: 1
  *         - in: path
  *           name: date
  *           schema:
@@ -97,7 +92,7 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/active/{user_idx}/{active}:
+ * /api/consulting/active/{active}:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -105,11 +100,6 @@
  *       -  consult filter
  *      summary: consult 상담 상태 필터 api
  *      parameters:
- *         - in: path
- *           name: user_idx
- *           schema:
- *             type: integer
- *           example: 1
  *         - in: path
  *           name: active
  *           schema:
@@ -120,7 +110,7 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/contract-possibility/{user_idx}/{contract_possibility}:
+ * /api/consulting/contract-possibility/{contract_possibility}:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -128,11 +118,6 @@
  *       -  consult filter
  *      summary: consult 계약 가능성 필터 api
  *      parameters:
- *         - in: path
- *           name: user_idx
- *           schema:
- *             type: integer
- *           example: 1
  *         - in: path
  *           name: contract_possibility
  *           schema:
@@ -143,7 +128,7 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/member/{company_idx}:
+ * /api/consulting/member:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -151,11 +136,6 @@
  *       -  consult get info
  *      summary: 같은 팀원 리스트 보기
  *      parameters:
- *         - in: path
- *           name: company_idx
- *           schema:
- *             type: integer
- *           example: 16
  *      responses:
  *         '200':
  *            description: 성공
@@ -176,13 +156,10 @@
  *             properties:
  *               idx:
  *                 type: int
- *               company_idx:
- *                 type: int
  *               contact_person:
  *                 type: int
  *             example:
  *               idx: 2
- *               company_idx: 16
  *               contact_person: 6
  *      responses:
  *         '200':
@@ -277,11 +254,6 @@
  *       -  consult get info
  *      summary: 고객정보 보기 모두 (사용x)
  *      parameters:
- *         - in: path
- *           name: user_idx
- *           schema:
- *             type: string
- *           example: 16
  *      responses:
  *         '200':
  *            description: 성공
@@ -315,7 +287,7 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/time/{company_idx}/{consulting_idx}:
+ * /api/consulting/time/{consulting_idx}:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -323,11 +295,6 @@
  *       -  consult get info
  *      summary: 타임라인 보여주기 (사용 x)
  *      parameters:
- *         - in: path
- *           name: company_idx
- *           schema:
- *             type: integer
- *           example: 16
  *         - in: path
  *           name: consulting_idx
  *           schema:
@@ -467,11 +434,6 @@
  *       -  consult get info
  *      summary: consult filter 결과 조회
  *      parameters:
- *         - in: query
- *           name: user_idx
- *           schema:
- *             type: integer
- *           example: 1
  *         - in: query
  *           name: limit
  *           schema:
