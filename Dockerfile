@@ -1,10 +1,12 @@
-FROM node:11.12.0-alpine
+FROM node:8.12-alpine
 
-WORKDIR /node/app
+RUN apk add g++ make python
+
+RUN mkdir /app
+
+WORKDIR /app
 
 COPY package.json ./
-
-RUN apk update && apk add python make g++
 
 RUN npm install 
 
