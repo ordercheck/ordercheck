@@ -60,6 +60,9 @@ router.post('/login', async (req, res, next) => {
   // let user_password_decode = functions.cryptFunction(1,'',user_password_crypt)
   // console.log(user_password_decode)
   let check = await db.user.findOne({ where: { user_phone } });
+  if (!check) {
+    return res.send({ success: 400, message: '비밀번호 혹은 전화번호 오류' });
+  }
   let findUserCompany = await db.userCompany.findOne({
     where: { user_idx: check.idx },
   });

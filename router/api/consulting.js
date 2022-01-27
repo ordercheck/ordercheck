@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {
   multer_calculate_upload,
-  multer_form2_upload,
+  multer_form_upload,
 } = require('../../lib/aws/aws');
 const loginCheck = require('../../middleware/auth');
 const {
@@ -89,7 +89,7 @@ router.post('/calculate/down', loginCheck, downCalculate);
 // 상담폼 추가 라우터
 router.post(
   '/',
-  multer_form2_upload().fields([{ name: 'img' }, { name: 'concept' }]),
+  multer_form_upload().fields([{ name: 'img' }, { name: 'concept' }]),
   addConsultingForm
 );
 // 고객등록 api

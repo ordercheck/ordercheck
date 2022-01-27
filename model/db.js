@@ -38,6 +38,7 @@ db.company = sequelize.import(__dirname + '/company.js');
 db.consulting = sequelize.import(__dirname + '/consulting.js');
 db.pay = sequelize.import(__dirname + '/pay.js');
 db.config = sequelize.import(__dirname + '/config.js');
+db.alarm = sequelize.import(__dirname + '/alarm.js');
 db.userCompany = sequelize.import(__dirname + '/userCompany.js');
 db.formLink = sequelize.import(__dirname + '/formLink.js');
 db.planExpect = sequelize.import(__dirname + '/planExpect.js');
@@ -75,14 +76,20 @@ db.customer.belongsTo(db.company, {
   foreignKey: 'company_idx',
 });
 
-// customer와 user
-// db.customer.belongsTo(db.user, {
-//   foreignKey: 'form_link',
-//   targetKey: 'form_link',
-// });
-// db.user.hasMany(db.customer, {
-//   foreignKey: 'form_link',
-// });
+// alarm과 user, company
+db.alarm.belongsTo(db.user, {
+  foreignKey: 'user_idx',
+});
+db.user.hasMany(db.alarm, {
+  foreignKey: 'user_idx',
+});
+
+db.alarm.belongsTo(db.company, {
+  foreignKey: 'company_idx',
+});
+db.company.hasMany(db.alarm, {
+  foreignKey: 'company_idx',
+});
 
 // user와 formLink
 db.user.hasMany(db.formLink, { foreignKey: 'company_idx' });
@@ -101,7 +108,6 @@ db.consulting.belongsTo(db.company, { foreignKey: 'company_idx' });
 db.plan.belongsTo(db.company, {
   foreignKey: 'company_idx',
 });
-
 db.company.hasMany(db.plan, {
   foreignKey: 'company_idx',
 });
@@ -120,6 +126,8 @@ db.company.belongsTo(db.user, {
 db.user.hasOne(db.company, {
   foreignKey: 'huidx',
 });
+
+// card와 user
 db.card.belongsTo(db.user, {
   foreignKey: 'user_idx',
 });
