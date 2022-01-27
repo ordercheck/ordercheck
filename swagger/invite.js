@@ -29,7 +29,7 @@
  *   post:
  *      tags:
  *       - invite
- *      summary: email받은 팀원 회사 참여 신청
+ *      summary: email받은 팀원 회사 참여 신청 (미완성)
  *      requestBody:
  *       content:
  *         application/json:
@@ -80,22 +80,10 @@
  *           schema:
  *             type: object
  *             properties:
- *               user_phone:
- *                 type: string
- *               user_email:
- *                 type: string
- *               user_password:
- *                 type: string
- *               user_name:
- *                 type: string
- *               company_url:
- *                 type: string
+ *               customer_idx:
+ *                 type: integer
  *             example:
- *               user_phone: '010-6719-6919'
- *               user_password: 'rlxo12345'
- *               user_email: 'rlxo6919@naver.com'
- *               user_name: '김기태'
- *               company_url: 'url'
+ *               customer_idx:1
  *      responses:
  *       '200':
  *         description: 성공

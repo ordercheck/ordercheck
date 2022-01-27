@@ -60,4 +60,12 @@ module.exports = {
 
     return res.send({ success: 200, result });
   },
+  joinStandbyUser: async (req, res) => {
+    await db.userCompany.update(
+      { active: 1 },
+      { where: { idx: req.body.customer_idx } }
+    );
+
+    return res.send({ success: 200 });
+  },
 };
