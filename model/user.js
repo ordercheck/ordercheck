@@ -42,12 +42,6 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER(4),
     },
 
-    last_login: {
-      allowNull: false,
-      defaultValue: '',
-      type: DataTypes.STRING(100),
-    },
-
     active: {
       allowNull: false,
       defaultValue: 1,

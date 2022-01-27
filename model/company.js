@@ -20,6 +20,7 @@ module.exports = function (sequelize, DataTypes) {
     company_subdomain: {
       allowNull: false,
       defaultValue: '',
+      unique: true,
       type: DataTypes.STRING(100),
     },
     address: {

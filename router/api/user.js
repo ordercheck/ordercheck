@@ -14,6 +14,7 @@ let { masterConfig } = require('../../lib/standardTemplate');
 const user_session_check = (req, res, next) => {
   next();
 };
+const { joinFunction } = require('../../lib/apiFunctions');
 const jwt = require('jsonwebtoken');
 const fileUpload = require('../../lib/aws/fileupload.js');
 const multiparty = require('multiparty');
@@ -145,49 +146,38 @@ router.post('/check/pw', async (req, res) => {
 router.post('/join/do', async (req, res) => {
   let { token } = req.body;
   let user_data = await verify_data(token);
-  let last_login = _f.getNowTimeFormatNow();
-  user_data.last_login = last_login;
+
   if (user_data) {
-    let phoneCheck = await db.user
-      .findAll({ where: { user_phone: user_data.user_phone } })
-      .then((r) => {
-        return makeArray(r);
-      });
-
-    if (phoneCheck.length > 0) {
-      res.send({ success: 400, msg: '이미 존재하는 계정' });
-    } else {
-      user_data.personal_code = Math.random().toString(36).substr(2, 11);
-      // 비밀번호 암호화
-      const hashResult = await bcrypt.hash(
-        user_data.user_password,
-        parseInt(process.env.SALT)
-      );
-      user_data.user_password = hashResult;
-      const createUserResult = await db.user.create(user_data);
-      // 랜덤 회사 만들기
-      const randomCompany = await db.company.create({
-        company_name: Math.random().toString(36).substr(2, 11),
-        huidx: createUserResult.idx,
-      });
-
-      await db.userCompany.create({
-        user_idx: createUserResult.idx,
-        company_idx: randomCompany.idx,
-      });
-      // master 권한 주기
-
-      masterConfig.user_idx = createUserResult.idx;
-      masterConfig.company_idx = randomCompany.idx;
-      await db.config.create(masterConfig);
-      // 무료 플랜 만들기
-      await db.plan.create({ company_idx: randomCompany.idx });
-      const loginToken = await createToken({
-        user_idx: createUserResult.idx,
-        company_idx: randomCompany.idx,
-      });
-      return res.send({ success: 200, loginToken });
+    const { createUserResult, success, message } = await joinFunction(
+      user_data
+    );
+    if (!success) {
+      return res.send({ success: 400, message: message });
     }
+
+    // 랜덤 회사 만들기
+    const randomCompany = await db.company.create({
+      company_name: Math.random().toString(36).substr(2, 11),
+      company_subdomain: _f.randomNumber4(),
+      huidx: createUserResult.idx,
+    });
+
+    await db.userCompany.create({
+      user_idx: createUserResult.idx,
+      company_idx: randomCompany.idx,
+    });
+    // master 권한 주기
+
+    masterConfig.user_idx = createUserResult.idx;
+    masterConfig.company_idx = randomCompany.idx;
+    await db.config.create(masterConfig);
+    // 무료 플랜 만들기
+    await db.plan.create({ company_idx: randomCompany.idx });
+    const loginToken = await createToken({
+      user_idx: createUserResult.idx,
+      company_idx: randomCompany.idx,
+    });
+    return res.send({ success: 200, loginToken });
   } else {
     res.send({ success: 400 });
   }

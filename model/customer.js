@@ -6,10 +6,10 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
+
     customer_name: {
       allowNull: false,
       defaultValue: '',
-
       type: DataTypes.STRING(100),
     },
     customer_phoneNumber: {

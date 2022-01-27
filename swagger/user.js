@@ -60,7 +60,7 @@
  *               token:
  *                 type: string
  *             example:
- *               token: "token"
+ *               token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3Bob25lIjoiMDEwLTY3MTktNjkxOSIsInVzZXJfZW1haWwiOiJybHhvNjkxOUBuYXZlci5jb20iLCJ1c2VyX3Bhc3N3b3JkIjoicmx4bzEyMzQ1IiwidXNlcl9uYW1lIjoi6rmA6riw7YOcIiwiaWF0IjoxNjQzMjY4NzIwfQ.R8IV5vNo-CfEvIKrRYgycFV99nKsOMOeVpzVnCbq8Wg"
  *     responses:
  *       '200':
  *         description: 성공

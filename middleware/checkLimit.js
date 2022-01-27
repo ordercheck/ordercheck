@@ -1,7 +1,7 @@
 const db = require('../model/db');
 const { limitPlan } = require('../lib/standardTemplate');
 const { delFile } = require('../lib/aws/fileupload').ufile;
-
+// 고객 체크
 const checkCustomerCount = async (company_idx, data) => {
   const findCompanyData = await db.company.findByPk(company_idx, {
     attributes: [data],
@@ -16,7 +16,7 @@ const checkCustomerCount = async (company_idx, data) => {
   };
 };
 
-const checkFunction = async (reqData, data) => {
+const checkFormLimit = async (reqData, data) => {
   try {
     const findCompanyByLink = await db.formLink.findOne({
       where: { form_link: reqData },
@@ -30,7 +30,7 @@ const checkFunction = async (reqData, data) => {
 
 module.exports = {
   checkFormLimit: async (req, res, next) => {
-    const { findCompanyData, findPlanResult } = await checkFunction(
+    const { findCompanyData, findPlanResult } = await checkFormLimit(
       req.body.form_link,
       'form_link_count'
     );

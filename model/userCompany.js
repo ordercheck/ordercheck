@@ -6,5 +6,10 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
+    active: {
+      allowNull: false,
+      defaultValue: 1,
+      type: DataTypes.INTEGER,
+    },
   });
 };
