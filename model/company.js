@@ -47,7 +47,7 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: 0,
       type: DataTypes.INTEGER,
     },
-    form_self_count: {
+    customer_count: {
       allowNull: false,
       defaultValue: 0,
       type: DataTypes.INTEGER,

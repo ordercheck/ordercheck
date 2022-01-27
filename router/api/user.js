@@ -10,7 +10,7 @@ const {
 const db = require('../../model/db');
 const _f = require('../../lib/functions');
 const verify_data = require('../../lib/jwtfunctions');
-let masterConfig = require('../../lib/masterConfig');
+let { masterConfig } = require('../../lib/standardTemplate');
 const user_session_check = (req, res, next) => {
   next();
 };
@@ -176,7 +176,9 @@ router.post('/join/do', async (req, res) => {
         company_idx: randomCompany.idx,
       });
       // master 권한 주기
+
       masterConfig.user_idx = createUserResult.idx;
+      masterConfig.company_idx = randomCompany.idx;
       await db.config.create(masterConfig);
       // 무료 플랜 만들기
       await db.plan.create({ company_idx: randomCompany.idx });
@@ -439,6 +441,7 @@ router.post('/duplicate/phoneNumber', async (req, res) => {
   const { user_phone } = req.body;
   try {
     const result = await db.user.findOne({ where: { user_phone } });
+
     if (!result) {
       return res.send({ success: 200 });
     } else res.send({ success: 400, msg: '이미 존재하는 핸드폰 번호입니다' });

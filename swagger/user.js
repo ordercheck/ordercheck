@@ -185,7 +185,7 @@
  *   post:
  *     tags:
  *       - 회원가입
- *     summary: 회원가입 후 바로 로그인 시키기
+ *     summary: 회원가입 후 바로 로그인 시키기 (사용 x)
  *     requestBody:
  *       content:
  *         application/json:

@@ -31,13 +31,14 @@ module.exports = {
         await t.commit();
 
         db.company.increment(
-          { form_link_count: 1 },
+          { form_link_count: 1, customer_count: 1 },
           { where: { idx: formLinkCompany.company_idx } }
         );
+
         return res.send({ success: 200 });
       } catch (err) {
         console.log(err);
-        t.rollback();
+        await t.rollback();
         const Err = err.message;
         return res.send({ success: 500, Err });
       }
@@ -47,14 +48,15 @@ module.exports = {
     body.floor_plan = JSON.stringify(imgUrlString);
     body.hope_concept = JSON.stringify(conceptUrlString);
     try {
-      body.user_idx = formLinkUser.user_idx;
+      body.company_idx = formLinkCompany.company_idx;
       const result = await db.customer.create(body, { transaction: t });
       body.customer_idx = result.idx;
       await db.consulting.create(body, { transaction: t });
       await t.commit();
       return res.send({ success: 200 });
     } catch (err) {
-      t.rollback();
+      console.log(err);
+      await t.rollback();
       const Err = err.message;
       return res.send({ success: 500, Err });
     }
@@ -120,9 +122,10 @@ module.exports = {
       //   return res.send({ success: 400 });
       // }
       body.user_idx = user_idx;
+      body.company_idx = company_idx;
       await db.customer.create(body, { transaction: t });
       db.company.increment(
-        { form_self_count: 1 },
+        { customer_count: 1 },
         { where: { idx: user_idx } },
         { transaction: t }
       );
@@ -130,7 +133,7 @@ module.exports = {
 
       return res.send({ success: 200 });
     } catch (err) {
-      t.rollback();
+      await t.rollback();
       const Err = err.message;
       console.log(Err);
       return res.send({ success: 500, Err });

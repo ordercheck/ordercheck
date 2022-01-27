@@ -30,6 +30,10 @@ const {
   doIntegratedUser,
   createFormLink,
 } = require('../../controller/consultingStatus');
+const {
+  checkFormLimit,
+  checkCustomerLimit,
+} = require('../../middleware/checkLimit');
 // *****************************filter*********************************
 // date필터링
 router.get('/date/:user_idx/:date', loginCheck, dateFilter);
@@ -90,10 +94,11 @@ router.post('/calculate/down', loginCheck, downCalculate);
 router.post(
   '/',
   multer_form_upload().fields([{ name: 'img' }, { name: 'concept' }]),
+  checkFormLimit,
   addConsultingForm
 );
 // 고객등록 api
-router.post('/customer', loginCheck, addCompanyCustomer);
+router.post('/customer', loginCheck, checkCustomerLimit, addCompanyCustomer);
 // 컨설팅 삭제
 router.delete('/', loginCheck, delConsulting);
 
