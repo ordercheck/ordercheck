@@ -6,6 +6,12 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
+
+    card_name: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
     card_number: {
       allowNull: false,
       defaultValue: '',
