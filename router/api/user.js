@@ -468,7 +468,7 @@ router.post('/check/subdomain', async (req, res) => {
     const result = await db.company.findOne({ where: { company_subdomain } });
     if (!result) {
       return res.send({ success: 200 });
-    } else res.send({ success: 400, msg: '이미 존재하는 이메일입니다' });
+    } else res.send({ success: 400, msg: '이미 존재하는 도메인입니다.' });
   } catch (err) {
     const Err = err.message;
     return res.send({ success: 500, Err });
