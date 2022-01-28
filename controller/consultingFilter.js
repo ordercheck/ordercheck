@@ -88,17 +88,18 @@ module.exports = {
     }
   },
   searchCustomer: async (req, res) => {
+    const pureText = req.query.search.replace(/\W|\s/g, '');
     const result = await db.customer.findAll({
       where: {
         [Op.or]: {
           customer_name: {
-            [Op.like]: `%${req.query.search.replace(/\W|\s/g, '')}%`,
+            [Op.like]: `%${pureText}%`,
           },
           searchingPhoneNumber: {
-            [Op.like]: `%${req.query.search.replace(/\W|\s/g, '')}%`,
+            [Op.like]: `%${pureText}%`,
           },
           searchingAddress: {
-            [Op.like]: `%${req.query.search.replace(/\W|\s/g, '')}%`,
+            [Op.like]: `%${pureText}%`,
           },
         },
       },
