@@ -87,4 +87,23 @@ module.exports = {
       return res.send({ success: 500, Err });
     }
   },
+  searchCustomer: async (req, res) => {
+    const result = await db.customer.findAll({
+      where: {
+        [Op.or]: {
+          customer_name: {
+            [Op.like]: `%${req.query.search.replace(/\W|\s/g, '')}%`,
+          },
+          searchingPhoneNumber: {
+            [Op.like]: `%${req.query.search.replace(/\W|\s/g, '')}%`,
+          },
+          searchingAddress: {
+            [Op.like]: `%${req.query.search.replace(/\W|\s/g, '')}%`,
+          },
+        },
+      },
+    });
+
+    return res.send(result);
+  },
 };

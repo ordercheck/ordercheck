@@ -2,6 +2,20 @@ const { checkUserCompany } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { downFile } = require('../lib/aws/fileupload').ufile;
 const _f = require('../lib/functions');
+
+const changeToSearch = (body) => {
+  const searchingPhoneNumber = body.customer_phoneNumber.replace(/-/g, '');
+
+  const searchingAddress = `${body.address.replace(
+    / /g,
+    ''
+  )}${body.detail_address.replace(/ /g, '')}`;
+  return {
+    searchingPhoneNumber,
+    searchingAddress,
+  };
+};
+
 module.exports = {
   addConsultingForm: async (req, res) => {
     // url을 string으로 연결
@@ -23,7 +37,10 @@ module.exports = {
 
     if (!files.img && !files.concept) {
       try {
+        const { searchingAddress, searchingPhoneNumber } = changeToSearch(body);
         body.company_idx = formLinkCompany.company_idx;
+        body.searchingAddress = searchingAddress;
+        body.searchingPhoneNumber = searchingPhoneNumber;
         const result = await db.customer.create(body, { transaction: t });
         body.customer_idx = result.idx;
         await db.consulting.create(body, { transaction: t });
@@ -121,8 +138,14 @@ module.exports = {
       // if (checkResult == false) {
       //   return res.send({ success: 400 });
       // }
+
+      // 검색용으로 변경
+      const { searchingPhoneNumber, searchingAddress } = changeToSearch(body);
+
       body.user_idx = user_idx;
       body.company_idx = company_idx;
+      body.searchingAddress = searchingAddress;
+      body.searchingPhoneNumber = searchingPhoneNumber;
       await db.customer.create(body, { transaction: t });
       db.company.increment(
         { customer_count: 1 },

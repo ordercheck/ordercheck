@@ -46,6 +46,17 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: '상담 신청',
       type: DataTypes.STRING(100),
     },
+
+    searchingAddress: {
+      allowNull: false,
+      unique: true,
+      type: DataTypes.STRING(100),
+    },
+    searchingPhoneNumber: {
+      allowNull: false,
+      unique: true,
+      type: DataTypes.STRING(100),
+    },
     contract_possibility: {
       allowNull: false,
       defaultValue: '없음',

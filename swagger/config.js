@@ -47,7 +47,7 @@ const swaggerDefinition = {
       "budget":"1,000만원"
       "customer_name":"김기태",
       "customer_phoneNumber" : "010-6719-6919",
-      "company_idx" : 1
+      "form_link" : SDFJI
       }
       -----Consulting Form 2 --------
       복수선택은 배열 형태로 넘겨주기
@@ -88,7 +88,7 @@ const swaggerDefinition = {
           "hope_concept":"희망컨셉(file)",
           "contact_time":"연락 가능 시간", 
           "etc_question":"기타 문의",
-          "company_idx":1
+          "form_link" : SDFJI
          }
       `,
   },

@@ -9,6 +9,7 @@ const {
   dateFilter,
   statusFilter,
   contractPossibilityFilter,
+  searchCustomer,
 } = require('../../controller/consultingFilter');
 const {
   showTotalConsultingDefault,
@@ -99,6 +100,9 @@ router.post(
 );
 // 고객등록 api
 router.post('/customer', loginCheck, checkCustomerLimit, addCompanyCustomer);
+
+// 고객 통합 검색
+router.get('/customer/search', loginCheck, searchCustomer);
 // 컨설팅 삭제
 router.delete('/', loginCheck, delConsulting);
 

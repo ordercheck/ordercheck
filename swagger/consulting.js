@@ -486,4 +486,22 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/consulting/customer/search:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  consult get info
+ *      summary: consult 고객 통합검색
+ *      parameters:
+ *         - in: query
+ *           name: search
+ *           schema:
+ *             type: string
+ *           example: '김기태'
+ *      responses:
+ *         '200':
+ *            description: 성공
+ *         '400':
+ *           description: 실패
  */
