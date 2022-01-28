@@ -375,7 +375,7 @@ router.post('/create/token', async (req, res) => {
 // body 데이터를 토큰으로 만들기
 router.post('/create/token/data', async (req, res) => {
   const { card_number, expiry, pwd_2digit, birth, business_number } = req.body;
-  const customer_uid = `${_f.random5()}`;
+  const customer_uid = `${_f.random5()}${card_number.slice(-4)}`;
   req.body.customer_uid = customer_uid;
   try {
     // 카드를 등록하는 경우
@@ -452,6 +452,20 @@ router.post('/duplicate/email', async (req, res) => {
   const { user_email } = req.body;
   try {
     const result = await db.user.findOne({ where: { user_email } });
+    if (!result) {
+      return res.send({ success: 200 });
+    } else res.send({ success: 400, msg: '이미 존재하는 이메일입니다' });
+  } catch (err) {
+    const Err = err.message;
+    return res.send({ success: 500, Err });
+  }
+});
+
+// 중복된 회사 서브도메인 확인
+router.post('/check/subdomain', async (req, res) => {
+  const { company_subdomain } = req.body;
+  try {
+    const result = await db.company.findOne({ where: { company_subdomain } });
     if (!result) {
       return res.send({ success: 200 });
     } else res.send({ success: 400, msg: '이미 존재하는 이메일입니다' });

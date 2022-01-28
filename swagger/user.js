@@ -221,4 +221,24 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/check/subdomain:
+ *   post:
+ *     tags:
+ *       - 회원가입
+ *     summary: 중복된 회사 도메인 찾기
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               company_subdomain:
+ *                 type: string
+ *             example:
+ *               company_subdomain: 'subdomain'
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */
