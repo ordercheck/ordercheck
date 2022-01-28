@@ -394,7 +394,7 @@ router.post('/create/token/data', async (req, res) => {
         return res.send({ success: 400, message: cardAddResult.message });
       }
       const merchant_uid = _f.random5();
-      let { success, imp_uid, card_name, message } = await payNow(
+      const { success, imp_uid, card_name, message } = await payNow(
         customer_uid,
         1000,
         merchant_uid
@@ -402,7 +402,9 @@ router.post('/create/token/data', async (req, res) => {
       if (!success) {
         return res.send({ success: 400, message });
       }
-      res.body.card_name = card_name;
+
+      req.body.card_name = card_name;
+
       const refundResult = await refund(imp_uid, 1000);
 
       if (!refundResult.success) {
