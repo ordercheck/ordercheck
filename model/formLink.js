@@ -6,15 +6,17 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
+    title: {
+      allowNull: false,
+      type: DataTypes.STRING(100),
+    },
     form_link: {
       allowNull: false,
-      defaultValue: '',
       unique: true,
       type: DataTypes.STRING(100),
     },
-    form_type: {
+    tempType: {
       allowNull: false,
-      defaultValue: 1,
       type: DataTypes.INTEGER,
     },
   });

@@ -7,25 +7,25 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
     },
     choice: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
 
     customer_email: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     application_route: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
 
     building_type: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
 
@@ -38,151 +38,151 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
     },
     completion_year: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     floor_plan: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.TEXT(),
     },
     hope_Date: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     predicted_living: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     budget: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
 
     destruction: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
 
     expand: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     window: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     carpentry: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     paint: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     papering: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     bathroom: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
 
     bathroom_option: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     floor: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     tile: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
 
     electricity_lighting: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
 
     kitchen: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     kitchen_option: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
 
     furniture: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
 
     facility: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     film: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     art_wall: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     elv: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     etc: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     hope_concept: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.TEXT(),
     },
 
     contact_time: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     etc_question: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     form_link: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
   });

@@ -470,17 +470,20 @@
  *       - bearerAuth: []
  *     tags:
  *       -  consult
- *     summary: form link만들기 (form type이 1이면 form_type:1, 2이면 form_type:2 )
+ *     summary: form link만들기 (tempType이 1이면 tempType:1, tempType이 2이면 tempType:2 )
  *     requestBody:
  *      content:
  *        application/json:
  *          schema:
  *            type: object
  *            properties:
- *              form_type:
- *                type: 1
+ *              title:
+ *                type: string
+ *              tempType:
+ *                type: integer
  *            example:
- *              form_type: 1
+ *              title: "제목"
+ *              tempType : 1
  *     responses:
  *       '200':
  *         description: 성공

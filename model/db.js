@@ -95,11 +95,6 @@ db.company.hasMany(db.alarm, {
 db.user.hasMany(db.formLink, { foreignKey: 'company_idx' });
 db.formLink.belongsTo(db.company, { foreignKey: 'company_idx' });
 
-// consulting과 formLink
-db.consulting.belongsTo(db.formLink, {
-  foreignKey: 'form_link',
-  targetKey: 'form_link',
-});
 // consulting과 company
 db.company.hasMany(db.consulting, { foreignKey: 'company_idx' });
 db.consulting.belongsTo(db.company, { foreignKey: 'company_idx' });
