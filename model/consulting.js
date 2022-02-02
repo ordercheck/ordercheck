@@ -177,12 +177,6 @@ module.exports = function (sequelize, DataTypes) {
     },
     etc_question: {
       allowNull: true,
-
-      type: DataTypes.STRING(100),
-    },
-    form_link: {
-      allowNull: true,
-
       type: DataTypes.STRING(100),
     },
   });
