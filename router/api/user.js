@@ -375,11 +375,12 @@ router.post('/create/token', async (req, res) => {
 // body 데이터를 토큰으로 만들기
 router.post('/create/token/data', async (req, res) => {
   const { card_number, expiry, pwd_2digit, birth, business_number } = req.body;
-  const customer_uid = `${_f.random5()}${card_number.slice(-4)}`;
-  req.body.customer_uid = customer_uid;
+
   try {
     // 카드를 등록하는 경우
     if (req.body.card_number) {
+      const customer_uid = `${_f.random5()}${card_number.slice(-4)}`;
+      req.body.customer_uid = customer_uid;
       const cardAddResult = await addCard(
         card_number,
         expiry,

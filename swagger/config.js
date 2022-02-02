@@ -23,7 +23,7 @@ const swaggerDefinition = {
      "expiry": "2026-05",  
      "pwd_2digit":"49", 
      "birth":"961005", 
-     "card_email": "rlxo6919@naver.com", 
+     "card_email": "rlxo6919@naver.com"
      } 
      법인카드
      {
@@ -31,7 +31,7 @@ const swaggerDefinition = {
       "expiry": "2026-05",  
       "pwd_2digit":"ro", 
       "business_number":"900501", 
-      "card_email": "gunhee21@gmail.com", 
+      "card_email": "gunhee21@gmail.com"
       } 
      -----Consulting Form 1 --------
       복수선택은 배열 형태로 넘겨주기
