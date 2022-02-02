@@ -495,6 +495,18 @@
  *       - bearerAuth: []
  *      tags:
  *       -  consult get info
+ *      summary: 생성한 form들 보여주기
+ *      responses:
+ *         '200':
+ *            description: 성공
+ *         '400':
+ *           description: 실패
+ * /api/consulting/form-link/list:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  consult get info
  *      summary: consult 고객 통합검색
  *      parameters:
  *         - in: query

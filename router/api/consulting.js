@@ -19,6 +19,7 @@ const {
   showIntegratedUser,
   showCalculate,
   showFilterResult,
+  showFormLink,
 } = require('../../controller/consultingShow');
 const {
   addConsultingForm,
@@ -52,7 +53,8 @@ router.post('/integrated/user', loginCheck, showIntegratedUser);
 router.patch('/integrated/user', loginCheck, doIntegratedUser);
 // formlink 만들기
 router.post('/create/form-link', createFormLink);
-
+// 만든 fomlink Form 보여주기
+router.get('/form-link/list', showFormLink);
 // 해당 상담 견적서 보여주기
 router.get('/calculate/:customer_idx', loginCheck, showCalculate);
 

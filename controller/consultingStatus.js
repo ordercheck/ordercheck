@@ -284,7 +284,6 @@ module.exports = {
         where: { company_idx: req.body.company_idx },
         attributes: ['whiteLabelChecked'],
       });
-
       return res.send({
         success: 200,
         title: createResult.title,
