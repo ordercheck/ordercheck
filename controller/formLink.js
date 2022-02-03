@@ -1,5 +1,6 @@
 const _f = require('../lib/functions');
 const db = require('../model/db');
+
 module.exports = {
   createFormLink: async (req, res) => {
     try {
@@ -26,18 +27,23 @@ module.exports = {
     }
   },
   showFormLink: async (req, res) => {
-    const result = await db.formLink.findAll({
+    const formList = await db.formLink.findAll({
       where: { company_idx: req.company_idx },
       attributes: [
         'idx',
-        'thumbNail',
         'title',
-        'form_link',
-        'tempType',
-        'createdAt',
+        [
+          db.sequelize.fn(
+            'date_format',
+            db.sequelize.col('createdAt'),
+            '%Y.%m.%d'
+          ),
+          'date_col_formed',
+        ],
       ],
     });
-    return res.send({ success: 200, result });
+
+    return res.send({ success: 200, formList });
   },
   createThumbNail: async (req, res) => {
     await db.formLink.update(
