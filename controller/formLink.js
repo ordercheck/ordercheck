@@ -38,7 +38,7 @@ module.exports = {
             db.sequelize.col('createdAt'),
             '%Y.%m.%d'
           ),
-          'date_col_formed',
+          'createdAt',
         ],
       ],
     });
