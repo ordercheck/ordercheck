@@ -7,7 +7,6 @@ module.exports = {
       req.body.form_link = _f.random5();
       req.body.company_idx = req.company_idx;
       const createResult = await db.formLink.create(req.body);
-
       return res.send({
         success: 200,
         formId: createResult.idx,
@@ -105,7 +104,13 @@ module.exports = {
       });
       const formDetail = await db.formLink.findOne({
         where: { idx: req.params.formId },
-        attributes: ['thumbNail', 'form_link', 'tempType', 'expression'],
+        attributes: [
+          'title',
+          'thumbNail',
+          'form_link',
+          'tempType',
+          'expression',
+        ],
       });
       formDetail.dataValues.whiteLabelChecked = whiteCheck.whiteLabelChecked;
       return res.send({ success: 200, formDetail });
@@ -123,7 +128,6 @@ module.exports = {
             [Op.like]: `%${req.query.title}%`,
           },
         },
-
         attributes: [
           ['idx', 'formId'],
           'title',

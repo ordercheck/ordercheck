@@ -191,15 +191,6 @@ router.post('/company/check', async (req, res) => {
   let card_data = await verify_data(ct);
 
   const companyCheck = async (user_phone, user_idx) => {
-    let check_name = await db.company
-      .findAll({ where: { company_name } })
-      .then((r) => {
-        return makeArray(r);
-      });
-    if (check_name.length > 0) {
-      return res.send({ success: 400, type: 'name' });
-    }
-
     let check_domain = await db.company
       .findAll({ where: { company_subdomain } })
       .then((r) => {
