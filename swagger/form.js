@@ -52,11 +52,11 @@
  *            properties:
  *              file:
  *                type: string
- *              idx:
+ *              formId:
  *                type: integer
  *            example:
  *              file: "file"
- *              idx: "form idx"
+ *              formId: "form idx"
  *     responses:
  *       '200':
  *         description: 성공
@@ -75,13 +75,10 @@
  *          schema:
  *            type: object
  *            properties:
- *              file:
+ *              formId:
  *                type: string
- *              idx:
- *                type: integer
  *            example:
- *              file: "file"
- *              idx: "form idx"
+ *              formId: "form idx"
  *     responses:
  *       '200':
  *         description: 성공

@@ -1,16 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const {
-  multer_calculate_upload,
-  multer_form_upload,
-  multer_form_thumbNail_upload,
-} = require('../../lib/aws/aws');
+const { multer_form_thumbNail_upload } = require('../../lib/aws/aws');
 const loginCheck = require('../../middleware/auth');
 
 const {
   createFormLink,
   showFormLink,
   createThumbNail,
+  duplicateForm,
 } = require('../../controller/formLink');
 
 // formlink 만들기
@@ -25,4 +22,6 @@ router.post(
   multer_form_thumbNail_upload().single('img'),
   createThumbNail
 );
+// form 복사하기
+router.post('/duplicate', loginCheck, duplicateForm);
 module.exports = router;
