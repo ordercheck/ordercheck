@@ -113,8 +113,9 @@ module.exports = {
         ],
       });
       formDetail.dataValues.whiteLabelChecked = whiteCheck.whiteLabelChecked;
-      formDetail.dataValues.member = [1, 2, 3];
-      console.log(formDetail);
+      // 임의의 값
+      formDetail.dataValues.member = ['김기태', 'aaa', 'bbb'];
+
       return res.send({ success: 200, formDetail });
     } catch (err) {
       console.log(err);
