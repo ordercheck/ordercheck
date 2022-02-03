@@ -30,7 +30,7 @@ module.exports = {
     const formList = await db.formLink.findAll({
       where: { company_idx: req.company_idx },
       attributes: [
-        'idx',
+        ['idx', 'formId'],
         'title',
         [
           db.sequelize.fn(
@@ -42,7 +42,6 @@ module.exports = {
         ],
       ],
     });
-
     return res.send({ success: 200, formList });
   },
   createThumbNail: async (req, res) => {

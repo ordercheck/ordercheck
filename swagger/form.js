@@ -62,4 +62,29 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/form/link/duplicate:
+ *   post:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       -  Form
+ *     summary: form 복사
+ *     requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              file:
+ *                type: string
+ *              idx:
+ *                type: integer
+ *            example:
+ *              file: "file"
+ *              idx: "form idx"
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */
