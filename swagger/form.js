@@ -123,4 +123,22 @@
  *            description: 성공
  *         '400':
  *           description: 실패
+ * /api/form/link/search:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  Form
+ *      summary: form 제목으로 검색
+ *      parameters:
+ *         - in: query
+ *           name: title
+ *           schema:
+ *             type: string
+ *           example: "제목"
+ *      responses:
+ *         '200':
+ *            description: 성공
+ *         '400':
+ *           description: 실패
  */

@@ -1,6 +1,6 @@
 const _f = require('../lib/functions');
 const db = require('../model/db');
-
+const { Op } = require('sequelize');
 module.exports = {
   createFormLink: async (req, res) => {
     try {
@@ -57,16 +57,19 @@ module.exports = {
     }
   },
   duplicateForm: async (req, res) => {
+    // copyCount 1증가
     db.formLink
       .increment({ copyCount: 1 }, { where: { idx: req.body.formId } })
       .then(async () => {
         const findFormLink = await db.formLink.findByPk(req.body.formId, {
           attributes: { exclude: ['idx', 'createdAt', 'updatedAt'] },
         });
+        // 복사본 제목 생성
         const duplicateTitle = `${findFormLink.title}_${findFormLink.copyCount}`;
         findFormLink.title = duplicateTitle;
         findFormLink.form_link = _f.random5();
         const duplicateForm = await db.formLink.create(findFormLink.dataValues);
+        // 시간 형태에 맞게 변형
         const createdAt = duplicateForm.createdAt
           .toISOString()
           .split('T')[0]
@@ -106,6 +109,35 @@ module.exports = {
       });
       formDetail.dataValues.whiteLabelChecked = whiteCheck.whiteLabelChecked;
       return res.send({ success: 200, formDetail });
+    } catch (err) {
+      console.log(err);
+      const Err = err.message;
+      return res.send({ success: 500, Err });
+    }
+  },
+  searchFormLink: async (req, res) => {
+    try {
+      const searchResult = await db.formLink.findAll({
+        where: {
+          title: {
+            [Op.like]: `%${req.query.title}%`,
+          },
+        },
+
+        attributes: [
+          ['idx', 'formId'],
+          'title',
+          [
+            db.sequelize.fn(
+              'date_format',
+              db.sequelize.col('createdAt'),
+              '%Y.%m.%d'
+            ),
+            'createdAt',
+          ],
+        ],
+      });
+      return res.send({ success: 200, searchResult });
     } catch (err) {
       console.log(err);
       const Err = err.message;

@@ -10,6 +10,7 @@ const {
   duplicateForm,
   delFormLink,
   showFormDetail,
+  searchFormLink,
 } = require('../../controller/formLink');
 
 // formlink 만들기
@@ -31,7 +32,9 @@ router.post('/duplicate', loginCheck, duplicateForm);
 
 // form 삭제하기
 router.delete('/', loginCheck, delFormLink);
-
+// form 제목으로 검색
+router.get('/search', loginCheck, searchFormLink);
 // form 상세보기
 router.get('/:formId', loginCheck, showFormDetail);
+
 module.exports = router;
