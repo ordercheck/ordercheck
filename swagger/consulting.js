@@ -489,7 +489,7 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/consulting/customer/search:
+ * /api/consulting/form-link/list:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -501,7 +501,8 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/form-link/list:
+ *
+ * /api/consulting/customer/search:
  *   get:
  *      security:
  *       - bearerAuth: []
