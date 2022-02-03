@@ -243,17 +243,17 @@ router.post('/company/check', async (req, res) => {
 
         const nowMerchant_uid = _f.random5();
         // 카드 결제
-        const { success, imp_uid, message } = await payNow(
-          card_data.customer_uid,
-          plan_data.result_price.replace(/,/g, ''),
-          nowMerchant_uid
-        );
+        // const { success, imp_uid, message } = await payNow(
+        //   card_data.customer_uid,
+        //   plan_data.result_price.replace(/,/g, ''),
+        //   nowMerchant_uid
+        // );
 
         // 잔고가 없을때
-        if (!success) {
-          await t.rollback();
-          return res.send({ sucecss: 400, message });
-        }
+        // if (!success) {
+        //   await t.rollback();
+        //   return res.send({ sucecss: 400, message });
+        // }
         // 결제 후 plan data에 주문 번호 넣고 plan db에 저장
         plan_data.imp_uid = imp_uid;
         const createPlanResult = await db.plan.update(plan_data, {
@@ -261,23 +261,20 @@ router.post('/company/check', async (req, res) => {
           transaction: t,
         });
         // 시간을 unix형태로 변경
-        const changeToTime = new Date();
-        let changeToUnix = new Date(
-          changeToTime.setSeconds(changeToTime.getSeconds() + 30)
-        );
-        // const changeToTime = new Date(plan_data.start_plan);
+
+        const changeToTime = new Date(plan_data.start_plan);
         changeToUnix = changeToTime.getTime() / 1000;
 
-        await db.pay.create(
-          {
-            imp_uid,
-            user_name: user_data.user_name,
-            user_phone: user_data.user_phone,
-            user_email: user_data.user_email,
-            customer_uid: card_data.customer_uid,
-          },
-          { transaction: t }
-        );
+        // await db.pay.create(
+        //   {
+        //     imp_uid,
+        //     user_name: user_data.user_name,
+        //     user_phone: user_data.user_phone,
+        //     user_email: user_data.user_email,
+        //     customer_uid: card_data.customer_uid,
+        //   },
+        //   { transaction: t }
+        // );
         const nextMerchant_uid = _f.random5();
         // 다음 카드 결제 신청
         await schedulePay(

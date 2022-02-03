@@ -6,6 +6,10 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
+    thumbNail: {
+      allowNull: false,
+      type: DataTypes.STRING(100),
+    },
     title: {
       allowNull: false,
       type: DataTypes.STRING(100),
