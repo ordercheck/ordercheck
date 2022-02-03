@@ -60,11 +60,7 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: 0,
       type: DataTypes.STRING(100),
     },
-    imp_uid: {
-      allowNull: true,
-      unique: true,
-      type: DataTypes.STRING,
-    },
+
     active: {
       allowNull: false,
       defaultValue: 1,
