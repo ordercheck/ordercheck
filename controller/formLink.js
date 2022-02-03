@@ -113,7 +113,8 @@ module.exports = {
         ],
       });
       formDetail.dataValues.whiteLabelChecked = whiteCheck.whiteLabelChecked;
-      formDetail.member = [1, 2, 3];
+      formDetail.dataValues.member = [1, 2, 3];
+      console.log(formDetail);
       return res.send({ success: 200, formDetail });
     } catch (err) {
       console.log(err);
