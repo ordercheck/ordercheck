@@ -156,7 +156,6 @@ module.exports = function (sequelize, DataTypes) {
     },
     elv: {
       allowNull: true,
-
       type: DataTypes.STRING(100),
     },
     etc: {

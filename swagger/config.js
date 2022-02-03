@@ -13,9 +13,9 @@ const swaggerDefinition = {
       "start_plan": "2022.01.09",
       "expire_plan": "2022.02.08",
       "result_price": "1,000", 
-      "whiteLabelChecked":"false",
-      "chatChecked": "true",
-      "analysticChecked":"true"
+      "whiteLabelChecked": false,
+      "chatChecked": true,
+      "analysticChecked": true
      }
      일반카드
      {
@@ -41,13 +41,13 @@ const swaggerDefinition = {
       "detail_address":"일직동", 
       "building_type":"아파트", 
       "size": 24, 
-      "elv":"true" 
+      "elv": true 
       "hope_Date":"2022.01.06", 
       "predicted_living" :"2022.01.07"
       "budget":"1,000만원"
       "customer_name":"김기태",
       "customer_phoneNumber" : "010-6719-6919",
-      "form_link" : SDFJI
+      "form_link" : "SDFJI"
       }
       -----Consulting Form 2 --------
       복수선택은 배열 형태로 넘겨주기

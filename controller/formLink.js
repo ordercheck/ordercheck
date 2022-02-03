@@ -7,10 +7,7 @@ module.exports = {
       req.body.form_link = _f.random5();
       req.body.company_idx = req.company_idx;
       const createResult = await db.formLink.create(req.body);
-      const whiteCheck = await db.plan.findOne({
-        where: { company_idx: req.body.company_idx },
-        attributes: ['whiteLabelChecked'],
-      });
+
       return res.send({
         success: 200,
         formId: createResult.idx,
@@ -96,10 +93,23 @@ module.exports = {
     }
   },
   showFormDetail: async (req, res) => {
-    const formDetail = await db.formLink.findOne({
-      where: { idx: req.params.formId },
-      attributes: ['thumbNail', 'form_link', 'tempType'],
-    });
-    return res.send({ success: 200, formDetail });
+    try {
+      const whiteCheck = await db.plan.findOne({
+        where: { company_idx: req.company_idx },
+        attributes: ['whiteLabelChecked'],
+      });
+      const formDetail = await db.formLink.findOne({
+        where: { idx: req.params.formId },
+        attributes: ['thumbNail', 'form_link', 'tempType'],
+      });
+
+      formDetail.dataValues.whiteLabelChecked = whiteCheck.whiteLabelChecked;
+
+      return res.send({ success: 200, formDetail });
+    } catch (err) {
+      console.log(err);
+      const Err = err.message;
+      return res.send({ success: 500, Err });
+    }
   },
 };

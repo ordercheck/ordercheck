@@ -47,18 +47,18 @@ module.exports = function (sequelize, DataTypes) {
     },
     whiteLabelChecked: {
       allowNull: false,
-      defaultValue: 'true',
-      type: DataTypes.STRING(100),
+      defaultValue: true,
+      type: DataTypes.BOOLEAN,
     },
     chatChecked: {
       allowNull: false,
-      defaultValue: 0,
-      type: DataTypes.STRING(100),
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
     },
     analysticChecked: {
       allowNull: false,
-      defaultValue: 0,
-      type: DataTypes.STRING(100),
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
     },
 
     active: {

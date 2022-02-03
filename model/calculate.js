@@ -8,23 +8,23 @@ module.exports = function (sequelize, DataTypes) {
     },
 
     pdf_data: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     pdf_name: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     title: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     predicted_price: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
   });
