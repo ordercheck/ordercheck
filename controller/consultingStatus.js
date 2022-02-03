@@ -278,12 +278,13 @@ module.exports = {
   createFormLink: async (req, res) => {
     try {
       req.body.form_link = _f.random5();
-      req.body.company_idx = req.company_idx;
+      // req.body.company_idx = req.company_idx;
       const createResult = await db.formLink.create(req.body);
       const whiteCheck = await db.plan.findOne({
         where: { company_idx: req.body.company_idx },
         attributes: ['whiteLabelChecked'],
       });
+
       return res.send({
         success: 200,
         title: createResult.title,
