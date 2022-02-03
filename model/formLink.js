@@ -23,5 +23,13 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
+    expression: {
+      defaultValue: 0,
+      type: DataTypes.INTEGER,
+    },
+    copyCount: {
+      defaultValue: 0,
+      type: DataTypes.INTEGER,
+    },
   });
 };

@@ -440,7 +440,7 @@ router.post('/check/subdomain', async (req, res) => {
     return res.send({ success: 500, Err });
   }
 });
-// 증복된 회사 이름 확인
+// 중복된 회사 이름 확인
 router.post('/check/company-name', async (req, res) => {
   const { company_name } = req.body;
   try {

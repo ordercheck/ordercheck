@@ -57,30 +57,40 @@ module.exports = {
     }
   },
   duplicateForm: async (req, res) => {
-    try {
-      const findFormLink = await db.formLink.findByPk(req.body.formId, {
-        attributes: { exclude: ['idx', 'createdAt', 'updatedAt'] },
+    db.formLink
+      .increment({ copyCount: 1 }, { where: { idx: req.body.formId } })
+      .then(async () => {
+        try {
+          const findFormLink = await db.formLink.findByPk(req.body.formId, {
+            attributes: { exclude: ['idx', 'createdAt', 'updatedAt'] },
+          });
+          const duplicateTitle = `${findFormLink.title}_${findFormLink.copyCount}`;
+          findFormLink.title = duplicateTitle;
+          findFormLink.form_link = _f.random5();
+          const duplicateForm = await db.formLink.create(
+            findFormLink.dataValues
+          );
+          const createdAt = duplicateForm.createdAt
+            .toISOString()
+            .split('T')[0]
+            .replace(/-/g, '.');
+          return res.send({
+            success: 200,
+            formId: duplicateForm.idx,
+            title: duplicateForm.title,
+            createdAt,
+          });
+        } catch (err) {
+          console.log(err);
+          const Err = err.message;
+          return res.send({ success: 500, Err });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        const Err = err.message;
+        return res.send({ success: 500, Err });
       });
-      const duplicateTitle = `${findFormLink.title}.copy`;
-      findFormLink.title = duplicateTitle;
-      findFormLink.form_link = _f.random5();
-      const duplicateForm = await db.formLink.create(findFormLink.dataValues);
-
-      const createdAt = duplicateForm.createdAt
-        .toISOString()
-        .split('T')[0]
-        .replace(/-/g, '.');
-      return res.send({
-        success: 200,
-        formId: duplicateForm.idx,
-        title: duplicateForm.title,
-        createdAt,
-      });
-    } catch (err) {
-      console.log(err);
-      const Err = err.message;
-      return res.send({ success: 500, Err });
-    }
   },
   delFormLink: async (req, res) => {
     try {

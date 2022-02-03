@@ -255,7 +255,7 @@
  *               company_name:
  *                 type: string
  *             example:
- *               company_name: 'subdomain'
+ *               company_name: 'company_name'
  *     responses:
  *       '200':
  *         description: 성공
