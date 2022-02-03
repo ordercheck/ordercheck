@@ -84,4 +84,26 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/form/link/:
+ *   delete:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       -  Form
+ *     summary: form 삭제
+ *     requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              formId:
+ *                type: string
+ *            example:
+ *              formId: "form idx"
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

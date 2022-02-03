@@ -77,4 +77,14 @@ module.exports = {
       return res.send({ success: 500, Err });
     }
   },
+  delFormLink: async (req, res) => {
+    try {
+      await db.formLink.destroy({ where: { idx: req.body.formId } });
+      return res.send({ success: 200, message: '삭제 성공' });
+    } catch (err) {
+      console.log(err);
+      const Err = err.message;
+      return res.send({ success: 500, Err });
+    }
+  },
 };
