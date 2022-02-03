@@ -464,31 +464,6 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/create/form-link:
- *   post:
- *     security:
- *       - bearerAuth: []
- *     tags:
- *       -  consult
- *     summary: form link만들기 (tempType이 1이면 tempType:1, tempType이 2이면 tempType:2 )
- *     requestBody:
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              title:
- *                type: string
- *              tempType:
- *                type: integer
- *            example:
- *              title: "제목"
- *              tempType : 1
- *     responses:
- *       '200':
- *         description: 성공
- *       '401':
- *         description: 실패
  * /api/consulting/form-link/list:
  *   get:
  *      security:

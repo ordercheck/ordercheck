@@ -7,7 +7,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
     },
     thumbNail: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.STRING(100),
     },
     title: {

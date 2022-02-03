@@ -58,6 +58,7 @@ const inviteRouter = require('./router/api/invite');
 const infoRouter = require('./router/api/infoRouter');
 const schedulePayRouter = require('./router/api/schedulePay');
 const cardRouter = require('./router/api/card');
+const formLinkRouter = require('./router/api/formLink');
 const s3ControllRouter = require('./router/api/s3');
 const db = require('./model/db');
 
@@ -165,6 +166,7 @@ class AppServer extends http.Server {
     this.app.use('/', ordercheckRouter);
     this.app.use('/api', apiRouter);
     this.app.use('/api/consulting', consultingRouter);
+    this.app.use('/api/form/link', formLinkRouter);
     this.app.use('/api/info', infoRouter);
     this.app.use('/api/schedule/pay', schedulePayRouter);
     // this.app.use('/s3', s3ControllRouter);

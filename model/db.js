@@ -43,8 +43,10 @@ db.userCompany = sequelize.import(__dirname + '/userCompany.js');
 db.formLink = sequelize.import(__dirname + '/formLink.js');
 db.planExpect = sequelize.import(__dirname + '/planExpect.js');
 db.timeLine = sequelize.import(__dirname + '/consultingTimeLine.js');
+db.formOpen = sequelize.import(__dirname + '/formOpenMember.js');
 db.calculate = sequelize.import(__dirname + '/calculate.js');
 db.customer = sequelize.import(__dirname + '/customer.js');
+
 // plan과 planExpect
 db.plan.hasMany(db.planExpect, { foreignKey: 'plan_idx' });
 db.planExpect.belongsTo(db.plan, {
@@ -62,6 +64,19 @@ db.calculate.belongsTo(db.customer, {
   foreignKey: 'customer_idx',
 });
 
+// consulting과 formLink
+db.consulting.belongsTo(db.formLink, {
+  foreignKey: 'form_link',
+  targetKey: 'form_link',
+});
+// formOpen과 user
+db.formOpen.belongsTo(db.user, {
+  foreignKey: 'user_idx',
+});
+
+db.formOpen.belongsTo(db.formLink, {
+  foreignKey: 'formLink_idx',
+});
 //consulting과   customer
 db.customer.hasMany(db.consulting, { foreignKey: 'customer_idx' });
 db.consulting.belongsTo(db.customer, {

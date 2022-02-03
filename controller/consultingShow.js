@@ -225,11 +225,4 @@ module.exports = {
       return res.send({ success: 500, Err });
     }
   },
-  showFormLink: async (req, res) => {
-    const result = await db.formLink.findAll({
-      where: { company_idx: req.company_idx },
-      attributes: ['idx', 'title', 'form_link', 'tempType', 'createdAt'],
-    });
-    return res.send({ success: 200, result });
-  },
 };

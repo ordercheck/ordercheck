@@ -1,7 +1,6 @@
 const { checkUserCompany } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { downFile } = require('../lib/aws/fileupload').ufile;
-const _f = require('../lib/functions');
 
 const changeToSearch = (body) => {
   const searchingPhoneNumber = body.customer_phoneNumber.replace(/-/g, '');
@@ -271,29 +270,6 @@ module.exports = {
       });
       return res.send({ success: 200 });
     } catch (err) {
-      const Err = err.message;
-      return res.send({ success: 500, Err });
-    }
-  },
-  createFormLink: async (req, res) => {
-    try {
-      req.body.form_link = _f.random5();
-      // req.body.company_idx = req.company_idx;
-      const createResult = await db.formLink.create(req.body);
-      const whiteCheck = await db.plan.findOne({
-        where: { company_idx: req.body.company_idx },
-        attributes: ['whiteLabelChecked'],
-      });
-
-      return res.send({
-        success: 200,
-        title: createResult.title,
-        shareUrl: createResult.form_link,
-        isWhiteLabel: whiteCheck.whiteLabelChecked,
-        message: '폼 생성 ',
-      });
-    } catch (err) {
-      console.log(err);
       const Err = err.message;
       return res.send({ success: 500, Err });
     }
