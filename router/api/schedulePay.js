@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
     ) {
       return res.send({ success: 400 });
     }
-
+    console.log('가져온 결과', getResult);
     // 계속 스케줄을 할 때
     if (status == 'paid') {
       await db.pay.create({
@@ -60,9 +60,25 @@ router.post('/', async (req, res) => {
           where: { merchant_uid },
         });
         await db.plan.update(
-          { plan: 'FREE' },
-          { where: { idx: expectResult.idx } }
+          {
+            plan: 'FREE',
+            whiteLabelChecked: true,
+            start_plan: null,
+            free_plan: null,
+            expire_plan: null,
+            result_price: 0,
+            chatChecked: false,
+            analysticChecked: false,
+          },
+          { where: { idx: expectResult.plan_idx } }
         );
+        const findPlanResult = await db.plan.findByPk(expectResult.plan_idx, {
+          attributes: ['company_idx'],
+        });
+        await db.userCompany.destroy({
+          where: { company_idx: findPlanResult.company_idx },
+        });
+        // await db.userCompany.create({user_idx:})
         return res.send({ success: 200, message: '플랜 비활성화 성공' });
       } catch (err) {
         return res.send({ success: 400, message: err.message });

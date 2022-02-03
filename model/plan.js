@@ -25,24 +25,24 @@ module.exports = function (sequelize, DataTypes) {
     },
 
     start_plan: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     free_plan: {
-      allowNull: false,
-      defaultValue: 0,
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     expire_plan: {
-      allowNull: false,
-      defaultValue: 0,
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
 
     result_price: {
-      allowNull: false,
-      defaultValue: 0,
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     whiteLabelChecked: {

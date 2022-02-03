@@ -236,11 +236,15 @@ router.post('/company/check', async (req, res) => {
         where: { company_idx: findCompanyResult.idx },
       });
       // 시간을 unix형태로 변경
-      const changeToTime = new Date(plan_data.start_plan);
-      changeToUnix = changeToTime.getTime() / 1000;
-      const nextMerchant_uid = _f.random5();
+      // const changeToTime = new Date(plan_data.start_plan);
+      // changeToUnix = changeToTime.getTime() / 1000;
+      // const nextMerchant_uid = _f.random5();
+      const changeToTime = new Date();
+      let afterMonth = new Date(
+        changeToTime.setMonth(changeToTime.getSeconds() + 15)
+      );
+      changeToUnix = afterMonth.getTime() / 1000;
       // 다음 카드 결제 신청
-
       await schedulePay(
         changeToUnix,
         card_data.customer_uid,
@@ -248,7 +252,8 @@ router.post('/company/check', async (req, res) => {
         user_data.user_name,
         user_data.user_phone,
         user_data.user_email,
-        nextMerchant_uid
+        nextMerchant_uid,
+        findUser.idx
       );
       await db.planExpect.create(
         {
