@@ -240,15 +240,11 @@ router.post('/company/check', async (req, res) => {
 
         // 카드 정보 등록 후
         await db.card.create(card_data, { transaction: t });
-
-        const nowMerchant_uid = _f.random5();
-
         const createPlanResult = await db.plan.update(plan_data, {
           where: { company_idx },
           transaction: t,
         });
         // 시간을 unix형태로 변경
-
         const changeToTime = new Date(plan_data.start_plan);
         changeToUnix = changeToTime.getTime() / 1000;
         const nextMerchant_uid = _f.random5();
@@ -262,6 +258,7 @@ router.post('/company/check', async (req, res) => {
           user_data.user_email,
           nextMerchant_uid
         );
+
         await db.planExpect.create(
           {
             merchant_uid: nextMerchant_uid,
@@ -274,7 +271,7 @@ router.post('/company/check', async (req, res) => {
         //  트랜젝션 종료
         await t.commit();
 
-        return res.send({ success: 200 });
+        return res.send({ success: 200, message: '회사 등록 완료' });
       } catch (err) {
         console.log(err);
         // create과정에서 오류가 뜨면 롤백

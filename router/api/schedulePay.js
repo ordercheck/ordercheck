@@ -43,7 +43,6 @@ router.post('/', async (req, res) => {
         newMerchant_uid
       );
 
-      console.log(scheduleResult);
       const result = await db.planExpect.update(
         { merchant_uid: newMerchant_uid },
         {
@@ -61,7 +60,7 @@ router.post('/', async (req, res) => {
           where: { merchant_uid },
         });
         await db.plan.update(
-          { active: 0 },
+          { plan: 'FREE' },
           { where: { idx: expectResult.idx } }
         );
         return res.send({ success: 200, message: '플랜 비활성화 성공' });

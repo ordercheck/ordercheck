@@ -14,9 +14,10 @@ module.exports = {
 
       return res.send({
         success: 200,
-        idx: createResult.idx,
+        formId: createResult.idx,
         title: createResult.title,
         shareUrl: createResult.form_link,
+        tempType: createResult.tempType,
         isWhiteLabel: whiteCheck.whiteLabelChecked,
         message: '폼 생성 ',
       });
@@ -27,29 +28,41 @@ module.exports = {
     }
   },
   showFormLink: async (req, res) => {
-    const formList = await db.formLink.findAll({
-      where: { company_idx: req.company_idx },
-      attributes: [
-        ['idx', 'formId'],
-        'title',
-        [
-          db.sequelize.fn(
-            'date_format',
-            db.sequelize.col('createdAt'),
-            '%Y.%m.%d'
-          ),
-          'createdAt',
+    try {
+      const formList = await db.formLink.findAll({
+        where: { company_idx: req.company_idx },
+        attributes: [
+          ['idx', 'formId'],
+          'title',
+          [
+            db.sequelize.fn(
+              'date_format',
+              db.sequelize.col('createdAt'),
+              '%Y.%m.%d'
+            ),
+            'createdAt',
+          ],
         ],
-      ],
-    });
-    return res.send({ success: 200, formList });
+      });
+      return res.send({ success: 200, formList });
+    } catch (err) {
+      console.log(err);
+      const Err = err.message;
+      return res.send({ success: 500, Err });
+    }
   },
   createThumbNail: async (req, res) => {
-    await db.formLink.update(
-      { thumbNail: req.file.location },
-      { where: { idx: req.body.idx } }
-    );
-    return res.send({ success: 200, message: 'thumbNail 업로드 완료' });
+    try {
+      await db.formLink.update(
+        { thumbNail: req.file.location },
+        { where: { idx: req.body.idx } }
+      );
+      return res.send({ success: 200, message: 'thumbNail 업로드 완료' });
+    } catch (err) {
+      console.log(err);
+      const Err = err.message;
+      return res.send({ success: 500, Err });
+    }
   },
   duplicateForm: async (req, res) => {
     try {
