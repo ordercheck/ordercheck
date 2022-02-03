@@ -40,7 +40,9 @@ router.post('/', async (req, res) => {
         getResult.buyer_name,
         getResult.buyer_tel,
         getResult.buyer_email,
-        newMerchant_uid
+        newMerchant_uid,
+        getResult.user_idx,
+        getResult.company_idx
       );
 
       const result = await db.planExpect.update(
@@ -72,13 +74,14 @@ router.post('/', async (req, res) => {
           },
           { where: { idx: expectResult.plan_idx } }
         );
-        const findPlanResult = await db.plan.findByPk(expectResult.plan_idx, {
-          attributes: ['company_idx'],
-        });
+
         await db.userCompany.destroy({
           where: { company_idx: findPlanResult.company_idx },
         });
-        // await db.userCompany.create({user_idx:})
+        await db.userCompany.create({
+          user_idx: getResult.user_idx,
+          company_idx: getResult.company_idx,
+        });
         return res.send({ success: 200, message: '플랜 비활성화 성공' });
       } catch (err) {
         return res.send({ success: 400, message: err.message });
