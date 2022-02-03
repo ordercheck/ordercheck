@@ -24,7 +24,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
     },
     expression: {
-      defaultValue: 0,
+      defaultValue: 1,
       type: DataTypes.INTEGER,
     },
     copyCount: {

@@ -30,11 +30,11 @@ module.exports = {
             target
           );
         });
+        return res.send({ success: 200, msg: '이메일 보내기 성공' });
       } catch (err) {
-        console.log(err);
+        const Err = err.message;
+        return res.send({ success: 500, Err });
       }
-
-      return res.send({ success: 200, msg: '이메일 보내기 성공' });
     } catch (err) {
       const Err = err.message;
       return res.send({ success: 500, Err });

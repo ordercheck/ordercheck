@@ -2,7 +2,6 @@ const nodemailer = require('nodemailer');
 
 const transport = nodemailer.createTransport({
   service: 'Gmail',
-
   auth: {
     user: process.env.SEND_EMAIL_ID,
     pass: process.env.SEND_PASSWORD,
@@ -187,7 +186,7 @@ const sendMail = async (company_url, company_name, inviter, target) => {
   };
   try {
     const result = await transport.sendMail(mailOptions);
-    console.log(result);
+
     return true;
   } catch (err) {
     console.log(err);
