@@ -249,6 +249,7 @@ router.post('/company/check', async (req, res) => {
         changeToUnix = changeToTime.getTime() / 1000;
         const nextMerchant_uid = _f.random5();
         // 다음 카드 결제 신청
+
         await schedulePay(
           changeToUnix,
           card_data.customer_uid,
@@ -262,7 +263,7 @@ router.post('/company/check', async (req, res) => {
         await db.planExpect.create(
           {
             merchant_uid: nextMerchant_uid,
-            plan_idx: createPlanResult.idx,
+            plan_idx: createPlanResult,
           },
           { transaction: t }
         );
