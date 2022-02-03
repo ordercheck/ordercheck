@@ -440,5 +440,18 @@ router.post('/check/subdomain', async (req, res) => {
     return res.send({ success: 500, Err });
   }
 });
+// 증복된 회사 이름 확인
+router.post('/check/company-name', async (req, res) => {
+  const { company_name } = req.body;
+  try {
+    const result = await db.company.findOne({ where: { company_name } });
+    if (!result) {
+      return res.send({ success: 200 });
+    } else res.send({ success: 400, msg: '이미 존재하는 회사 이름입니다.' });
+  } catch (err) {
+    const Err = err.message;
+    return res.send({ success: 500, Err });
+  }
+});
 
 module.exports = router;

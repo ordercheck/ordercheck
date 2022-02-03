@@ -102,9 +102,7 @@ module.exports = {
         where: { idx: req.params.formId },
         attributes: ['thumbNail', 'form_link', 'tempType'],
       });
-
       formDetail.dataValues.whiteLabelChecked = whiteCheck.whiteLabelChecked;
-
       return res.send({ success: 200, formDetail });
     } catch (err) {
       console.log(err);
