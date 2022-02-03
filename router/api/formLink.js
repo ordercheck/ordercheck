@@ -9,6 +9,7 @@ const {
   createThumbNail,
   duplicateForm,
   delFormLink,
+  showFormDetail,
 } = require('../../controller/formLink');
 
 // formlink 만들기
@@ -31,4 +32,6 @@ router.post('/duplicate', loginCheck, duplicateForm);
 // form 삭제하기
 router.delete('/', loginCheck, delFormLink);
 
+// form 상세보기
+router.get('/:formId', loginCheck, showFormDetail);
 module.exports = router;

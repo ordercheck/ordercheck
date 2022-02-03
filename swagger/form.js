@@ -106,4 +106,21 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/form/link/{formId}:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  Form
+ *      summary: form 상세보기
+ *      parameters:
+ *         - in: path
+ *           name: formId
+ *           schema:
+ *             type: integer
+ *      responses:
+ *         '200':
+ *            description: 성공
+ *         '400':
+ *           description: 실패
  */

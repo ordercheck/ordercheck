@@ -11,14 +11,9 @@ module.exports = {
         where: { company_idx: req.body.company_idx },
         attributes: ['whiteLabelChecked'],
       });
-
       return res.send({
         success: 200,
         formId: createResult.idx,
-        title: createResult.title,
-        shareUrl: createResult.form_link,
-        tempType: createResult.tempType,
-        isWhiteLabel: whiteCheck.whiteLabelChecked,
         message: '폼 생성 ',
       });
     } catch (err) {
@@ -99,5 +94,12 @@ module.exports = {
       const Err = err.message;
       return res.send({ success: 500, Err });
     }
+  },
+  showFormDetail: async (req, res) => {
+    const formDetail = await db.formLink.findOne({
+      where: { idx: req.params.formId },
+      attributes: ['thumbNail', 'form_link', 'tempType'],
+    });
+    return res.send({ success: 200, formDetail });
   },
 };
