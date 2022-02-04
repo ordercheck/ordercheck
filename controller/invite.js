@@ -76,18 +76,17 @@ module.exports = {
   },
 
   showStandbyUser: async (req, res, next) => {
-    const result = await db.userCompany.findAll({
+    const standbyUser = await db.userCompany.findAll({
       where: { company_idx: req.company_idx, active: 0 },
     });
 
-    return res.send({ success: 200, result });
+    return res.send({ success: 200, standbyUser });
   },
   joinStandbyUser: async (req, res, next) => {
     await db.userCompany.update(
       { active: 1 },
       { where: { idx: req.body.user_idx } }
     );
-
     return res.send({ success: 200 });
   },
 };
