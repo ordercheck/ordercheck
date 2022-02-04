@@ -19,7 +19,6 @@ module.exports = {
     }
   },
   showFormLink: async (req, res) => {
-    console.log(req.company_idx);
     try {
       const formList = await db.formLink.findAll({
         where: { company_idx: req.company_idx },
@@ -38,11 +37,12 @@ module.exports = {
           ],
         ],
       });
+
       if (!formList) {
         return res.send({ success: 400, message: '등록된 폼이 없습니다' });
       }
 
-      formList.dataValues.urlPath = `${formList.form_link}/${formList.expression}`;
+      // formList.dataValues.urlPath = `${formList.form_link}/${formList.expression}`;
       return res.send({ success: 200, formList });
     } catch (err) {
       errorFunction(err);
