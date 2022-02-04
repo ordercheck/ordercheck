@@ -8,8 +8,7 @@ module.exports = function (sequelize, DataTypes) {
     },
 
     err: {
-      allowNull: false,
-      unique: true,
+      allowNull: true,
       type: DataTypes.STRING(100),
     },
   });

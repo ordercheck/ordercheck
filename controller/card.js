@@ -48,7 +48,6 @@ module.exports = {
     if (!refundResult.success) {
       return res.send({ success: 400, message: refundResult.message });
     }
-
     await db.card.create(req.body);
     return res.send({ success: 200, message: '카드 등록 완료' });
   },

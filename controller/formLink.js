@@ -13,10 +13,8 @@ module.exports = {
         message: '폼 생성 ',
       });
     } catch (err) {
-      console.log(err);
-      const Err = err.message;
-      await db.err.create({ err: Err });
-      return res.send({ success: 500, Err });
+      errorFunction(err);
+      return res.send({ success: 500, message: err.message });
     }
   },
   showFormLink: async (req, res) => {
@@ -38,10 +36,8 @@ module.exports = {
       });
       return res.send({ success: 200, formList });
     } catch (err) {
-      console.log(err);
-      const Err = err.message;
-      await db.err.create({ err: Err });
-      return res.send({ success: 500, Err });
+      errorFunction(err);
+      return res.send({ success: 500, message: err.message });
     }
   },
   createThumbNail: async (req, res) => {
@@ -52,10 +48,8 @@ module.exports = {
       );
       return res.send({ success: 200, message: 'thumbNail 업로드 완료' });
     } catch (err) {
-      console.log(err);
-      const Err = err.message;
-      await db.err.create({ err: Err });
-      return res.send({ success: 500, Err });
+      errorFunction(err);
+      return res.send({ success: 500, message: err.message });
     }
   },
   duplicateForm: async (req, res) => {
@@ -84,9 +78,8 @@ module.exports = {
         });
       })
       .catch((err) => {
-        console.log(err);
-        const Err = err.message;
-        return res.send({ success: 500, Err });
+        errorFunction(err);
+        return res.send({ success: 500, message: err.message });
       });
   },
   delFormLink: async (req, res) => {
@@ -94,10 +87,8 @@ module.exports = {
       await db.formLink.destroy({ where: { idx: req.body.formId } });
       return res.send({ success: 200, message: '삭제 성공' });
     } catch (err) {
-      console.log(err);
-      const Err = err.message;
-      await db.err.create({ err: Err });
-      return res.send({ success: 500, Err });
+      errorFunction(err);
+      return res.send({ success: 500, message: err.message });
     }
   },
   showFormDetail: async (req, res) => {
@@ -109,13 +100,7 @@ module.exports = {
 
       const formDetail = await db.formLink.findOne({
         where: { idx: req.params.formId },
-        attributes: [
-          'title',
-          'thumbNail',
-          'form_link',
-          'tempType',
-          'expression',
-        ],
+        attributes: ['title', 'thumbNail', 'form_link', 'tempType'],
       });
 
       formDetail.dataValues.whiteLabelChecked = whiteCheck.whiteLabelChecked;
@@ -124,10 +109,8 @@ module.exports = {
 
       return res.send({ success: 200, formDetail });
     } catch (err) {
-      console.log(err);
-      const Err = err.message;
-      await db.err.create({ err: Err });
-      return res.send({ success: 500, Err });
+      errorFunction(err);
+      return res.send({ success: 500, message: err.message });
     }
   },
   searchFormLink: async (req, res) => {
@@ -153,10 +136,24 @@ module.exports = {
       });
       return res.send({ success: 200, searchResult });
     } catch (err) {
-      console.log(err);
-      const Err = err.message;
-      await db.err.create({ err: Err });
-      return res.send({ success: 500, Err });
+      errorFunction(err);
+      return res.send({ success: 500, message: err.message });
+    }
+  },
+  updateForm: async (req, res) => {
+    const { title, whiteLabelChecked, formId } = req.body;
+    try {
+      await db.formLink.update(
+        {
+          title,
+          whiteLabelChecked,
+        },
+        { where: { idx: formId } }
+      );
+      return res.send({ success: 200, message: '업데이트 완료' });
+    } catch (err) {
+      errorFunction(err);
+      return res.send({ success: 500, message: err.message });
     }
   },
 };

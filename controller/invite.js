@@ -21,25 +21,19 @@ module.exports = {
       const user_result = await db.user.findByPk(user_idx, {
         attributes: ['user_name'],
       });
-      try {
-        target_email.forEach(async (target) => {
-          await sendMail(
-            company_url,
-            company_result.company_name,
-            user_result.user_name,
-            target
-          );
-        });
-        return res.send({ success: 200, msg: '이메일 보내기 성공' });
-      } catch (err) {
-        const Err = err.message;
-        await db.err.create({ err: Err });
-        return res.send({ success: 500, Err });
-      }
+
+      target_email.forEach(async (target) => {
+        await sendMail(
+          company_url,
+          company_result.company_name,
+          user_result.user_name,
+          target
+        );
+      });
+      return res.send({ success: 200, msg: '이메일 보내기 성공' });
     } catch (err) {
-      const Err = err.message;
-      await db.err.create({ err: Err });
-      return res.send({ success: 500, Err });
+      errorFunction(err);
+      return res.send({ success: 500, message: err.message });
     }
   },
   joinToCompany: async (req, res) => {

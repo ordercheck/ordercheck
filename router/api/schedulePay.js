@@ -3,6 +3,7 @@ const router = express.Router();
 const { schedulePay, getPayment } = require('../../lib/payFunction');
 const _f = require('../../lib/functions');
 const db = require('../../model/db');
+const { errorFunction } = require('../../lib/apiFunctions');
 
 // 정기 결제 완료 후 다음달 결제 예약
 router.post('/', async (req, res) => {
@@ -51,7 +52,6 @@ router.post('/', async (req, res) => {
           where: { merchant_uid },
         }
       );
-      console.log('업데이트 결과', result);
 
       return res.send({ success: 200 });
     }
@@ -84,6 +84,7 @@ router.post('/', async (req, res) => {
       }
     }
   } catch (err) {
+    errorFunction(err);
     return res.send({ success: 500, message: err.message });
   }
 });

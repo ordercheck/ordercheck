@@ -1,4 +1,4 @@
-const { checkUserCompany } = require('../lib/apiFunctions');
+const { checkUserCompany, errorFunction } = require('../lib/apiFunctions');
 const { changeDate } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { Op } = require('sequelize');
@@ -28,9 +28,8 @@ module.exports = {
         totalPage: Math.ceil(totalData / limit),
       });
     } catch (err) {
-      const Err = err.message;
-      await db.err.create({ err: Err });
-      return res.send({ success: 500, Err });
+      errorFunction(err);
+      return res.send({ success: 500, message: err.message });
     }
   },
 
@@ -52,9 +51,8 @@ module.exports = {
       });
       return res.send({ result });
     } catch (err) {
-      const Err = err.message;
-      await db.err.create({ err: Err });
-      return res.send({ success: 500, Err });
+      errorFunction(err);
+      return res.send({ success: 500, message: err.message });
     }
   },
   showDetailConsulting: async (req, res) => {
@@ -80,9 +78,8 @@ module.exports = {
 
       return res.send({ result });
     } catch (err) {
-      const Err = err.message;
-      await db.err.create({ err: Err });
-      return res.send({ success: 500, Err });
+      errorFunction(err);
+      return res.send({ success: 500, message: err.message });
     }
   },
   showCompanyMembers: async (req, res) => {
@@ -100,9 +97,8 @@ module.exports = {
 
       return res.send({ success: 200, findAllUser });
     } catch (err) {
-      const Err = err.message;
-      await db.err.create({ err: Err });
-      return res.send({ success: 500, Err });
+      errorFunction(err);
+      return res.send({ success: 500, message: err.message });
     }
   },
   showCalculate: async (req, res) => {
@@ -120,9 +116,8 @@ module.exports = {
 
       return res.send({ success: 200, result });
     } catch (err) {
-      const Err = err.message;
-      await db.err.create({ err: Err });
-      return res.send({ success: 500, Err });
+      errorFunction(err);
+      return res.send({ success: 500, message: err.message });
     }
   },
   showIntegratedUser: async (req, res) => {
@@ -148,9 +143,8 @@ module.exports = {
       });
       return res.send({ result });
     } catch (err) {
-      const Err = err.message;
-      await db.err.create({ err: Err });
-      return res.send({ success: 500, Err });
+      errorFunction(err);
+      return res.send({ success: 500, message: err.message });
     }
   },
   showFilterResult: async (req, res) => {
@@ -230,9 +224,8 @@ module.exports = {
 
       return res.send({ result, totalPage: Math.ceil(totalPage / limit) });
     } catch (err) {
-      const Err = err.message;
-      await db.err.create({ err: Err });
-      return res.send({ success: 500, Err });
+      errorFunction(err);
+      return res.send({ success: 500, message: err.message });
     }
   },
 };

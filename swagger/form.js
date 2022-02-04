@@ -141,4 +141,32 @@
  *            description: 성공
  *         '400':
  *           description: 실패
+ * /api/form/link/update:
+ *   patch:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       -  Form
+ *     summary: form 제목 화이트라벨 업데이트
+ *     requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              formId:
+ *                type: string
+ *              title:
+ *                type: string
+ *              whiteLabelChecked:
+ *                type: boolean
+ *            example:
+ *              formId: "form idx"
+ *              title: "title"
+ *              whiteLabelChecked: true
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

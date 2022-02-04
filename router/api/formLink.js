@@ -11,6 +11,7 @@ const {
   delFormLink,
   showFormDetail,
   searchFormLink,
+  updateForm,
 } = require('../../controller/formLink');
 
 // formlink 만들기
@@ -29,6 +30,9 @@ router.post(
 
 // form 복사하기
 router.post('/duplicate', loginCheck, duplicateForm);
+
+// form 제목 화이트라벨 업데이트
+router.patch('/update', loginCheck, updateForm);
 
 // form 삭제하기
 router.delete('/', loginCheck, delFormLink);
