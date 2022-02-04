@@ -20,7 +20,7 @@ module.exports = {
       return res.send({ success: 500, message: err.message });
     }
   },
-  getCompanyProfile: async (req, res) => {
+  getCompanyProfile: async (req, res, next) => {
     try {
       let companyProfile = await db.sequelize
         .query(
@@ -36,8 +36,7 @@ module.exports = {
 
       return res.send({ success: 200, companyProfile: companyProfile[0] });
     } catch (err) {
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
 };

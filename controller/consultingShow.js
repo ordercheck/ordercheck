@@ -3,7 +3,7 @@ const { changeDate } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { Op } = require('sequelize');
 module.exports = {
-  showTotalConsultingDefault: async (req, res) => {
+  showTotalConsultingDefault: async (req, res, next) => {
     let {
       params: { limit, page },
       company_idx,
@@ -28,12 +28,11 @@ module.exports = {
         totalPage: Math.ceil(totalData / limit),
       });
     } catch (err) {
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
 
-  showCustomers: async (req, res) => {
+  showCustomers: async (req, res, next) => {
     const {
       params: { form_link },
       user_idx,
@@ -51,11 +50,10 @@ module.exports = {
       });
       return res.send({ result });
     } catch (err) {
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
-  showDetailConsulting: async (req, res) => {
+  showDetailConsulting: async (req, res, next) => {
     const { company_idx } = req;
     const { customer_idx } = req.params;
 
@@ -78,11 +76,10 @@ module.exports = {
 
       return res.send({ result });
     } catch (err) {
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
-  showCompanyMembers: async (req, res) => {
+  showCompanyMembers: async (req, res, next) => {
     const { user_idx, company_idx } = req;
     try {
       // const checkResult = await checkUserCompany(company_idx, user_idx);
@@ -97,11 +94,10 @@ module.exports = {
 
       return res.send({ success: 200, findAllUser });
     } catch (err) {
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
-  showCalculate: async (req, res) => {
+  showCalculate: async (req, res, next) => {
     const {
       params: { customer_idx },
       user_idx,
@@ -116,11 +112,10 @@ module.exports = {
 
       return res.send({ success: 200, result });
     } catch (err) {
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
-  showIntegratedUser: async (req, res) => {
+  showIntegratedUser: async (req, res, next) => {
     const {
       body: { customer_phoneNumber },
       company_idx,
@@ -143,11 +138,10 @@ module.exports = {
       });
       return res.send({ result });
     } catch (err) {
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
-  showFilterResult: async (req, res) => {
+  showFilterResult: async (req, res, next) => {
     let {
       query: { date, limit, page },
       company_idx,
@@ -224,8 +218,7 @@ module.exports = {
 
       return res.send({ result, totalPage: Math.ceil(totalPage / limit) });
     } catch (err) {
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
 };

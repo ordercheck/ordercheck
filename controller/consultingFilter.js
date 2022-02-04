@@ -12,7 +12,7 @@ const makeArrforFilter = (data, status) => {
   return countArr;
 };
 module.exports = {
-  dateFilter: async (req, res) => {
+  dateFilter: async (req, res, next) => {
     let {
       params: { date },
       company_idx,
@@ -32,11 +32,10 @@ module.exports = {
       });
       return res.send({ success: 200, result });
     } catch (err) {
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
-  statusFilter: async (req, res) => {
+  statusFilter: async (req, res, next) => {
     let {
       params: { active },
       company_idx,
@@ -56,11 +55,10 @@ module.exports = {
       });
       return res.send({ success: 200, result });
     } catch (err) {
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
-  contractPossibilityFilter: async (req, res) => {
+  contractPossibilityFilter: async (req, res, next) => {
     let {
       params: { contract_possibility },
       company_idx,
@@ -83,12 +81,10 @@ module.exports = {
       });
       return res.send({ success: 200, result });
     } catch (err) {
-      errorFunction(err);
-
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
-  searchCustomer: async (req, res) => {
+  searchCustomer: async (req, res, next) => {
     const pureText = req.query.search.replace(/\W|\s/g, '');
     const result = await db.customer.findAll({
       where: {

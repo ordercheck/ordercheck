@@ -52,6 +52,7 @@ const sess = {
 // const adminRouter = require('./router/admin/indexRouter')
 // const clientRouter = require('./router/client/indexRouter')
 const ordercheckRouter = require('./router/ordercheck/indexRouter');
+const { errorFunction } = require('./lib/apiFunctions');
 const apiRouter = require('./router/api/user');
 const consultingRouter = require('./router/api/consulting');
 const inviteRouter = require('./router/api/invite');
@@ -172,9 +173,10 @@ class AppServer extends http.Server {
     // this.app.use('/s3', s3ControllRouter);
     this.app.use('/api/invite', inviteRouter);
     this.app.use('/api/card', cardRouter);
-    this.app.use((req, res, next) => {
-      res.status(404);
-      res.render('404');
+    // 에러처리
+    this.app.use((err, req, res, next) => {
+      errorFunction(err);
+      return res.send({ success: 500, message: err.message });
     });
   }
   dbConnection() {

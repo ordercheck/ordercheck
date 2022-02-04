@@ -3,7 +3,7 @@ const db = require('../model/db');
 const { errorFunction } = require('../lib/apiFunctions');
 const { Op } = require('sequelize');
 module.exports = {
-  createFormLink: async (req, res) => {
+  createFormLink: async (req, res, next) => {
     try {
       req.body.form_link = _f.random5();
       req.body.company_idx = req.company_idx;
@@ -14,11 +14,10 @@ module.exports = {
         message: '폼 생성 ',
       });
     } catch (err) {
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
-  showFormLink: async (req, res) => {
+  showFormLink: async (req, res, next) => {
     try {
       let formList = await db.formLink.findAll({
         where: { company_idx: req.company_idx },
@@ -50,11 +49,10 @@ module.exports = {
 
       return res.send({ success: 200, formList });
     } catch (err) {
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
-  createThumbNail: async (req, res) => {
+  createThumbNail: async (req, res, next) => {
     try {
       await db.formLink.update(
         { thumbNail: req.file.location },
@@ -62,11 +60,10 @@ module.exports = {
       );
       return res.send({ success: 200, message: 'thumbNail 업로드 완료' });
     } catch (err) {
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
-  duplicateForm: async (req, res) => {
+  duplicateForm: async (req, res, next) => {
     // copyCount 1증가
     db.formLink
       .increment({ copyCount: 1 }, { where: { idx: req.params.formId } })
@@ -105,16 +102,15 @@ module.exports = {
         return res.send({ success: 500, message: err.message });
       });
   },
-  delFormLink: async (req, res) => {
+  delFormLink: async (req, res, next) => {
     try {
       await db.formLink.destroy({ where: { idx: req.params.formId } });
       return res.send({ success: 200, message: '삭제 성공' });
     } catch (err) {
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
-  showFormDetail: async (req, res) => {
+  showFormDetail: async (req, res, next) => {
     try {
       const whiteCheck = await db.plan.findOne({
         where: { company_idx: req.company_idx },
@@ -139,11 +135,10 @@ module.exports = {
 
       return res.send({ success: 200, formDetail });
     } catch (err) {
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
-  searchFormLink: async (req, res) => {
+  searchFormLink: async (req, res, next) => {
     try {
       const searchResult = await db.formLink.findAll({
         where: {
@@ -168,11 +163,10 @@ module.exports = {
 
       return res.send({ success: 200, searchResult });
     } catch (err) {
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
-  updateForm: async (req, res) => {
+  updateForm: async (req, res, next) => {
     const { title, whiteLabelChecked, formId, expression } = req.body;
     try {
       await db.formLink.update(
@@ -185,8 +179,7 @@ module.exports = {
       );
       return res.send({ success: 200, message: '업데이트 완료' });
     } catch (err) {
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
 };

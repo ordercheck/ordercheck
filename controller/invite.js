@@ -3,7 +3,7 @@ const sendMail = require('../mail/sendInvite');
 
 const db = require('../model/db');
 module.exports = {
-  updateCompany: async (req, res) => {
+  updateCompany: async (req, res, next) => {
     const {
       body: { company_url, target_email },
       user_idx,
@@ -32,11 +32,10 @@ module.exports = {
       });
       return res.send({ success: 200, msg: '이메일 보내기 성공' });
     } catch (err) {
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
-  joinToCompany: async (req, res) => {
+  joinToCompany: async (req, res, next) => {
     const { createUserResult, success, message } = await joinFunction(req.body);
 
     if (!success) {
@@ -49,14 +48,14 @@ module.exports = {
     db.userCompany.create({});
   },
 
-  showStandbyUser: async (req, res) => {
+  showStandbyUser: async (req, res, next) => {
     const result = await db.userCompany.findAll({
       where: { company_idx: req.company_idx, active: 0 },
     });
 
     return res.send({ success: 200, result });
   },
-  joinStandbyUser: async (req, res) => {
+  joinStandbyUser: async (req, res, next) => {
     await db.userCompany.update(
       { active: 1 },
       { where: { idx: req.body.customer_idx } }

@@ -16,7 +16,7 @@ const changeToSearch = (body) => {
 };
 
 module.exports = {
-  addConsultingForm: async (req, res) => {
+  addConsultingForm: async (req, res, next) => {
     // url을 string으로 연결
     let { body, files } = req;
     // 트랜젝션 시작
@@ -54,8 +54,7 @@ module.exports = {
         return res.send({ success: 200 });
       } catch (err) {
         await t.rollback();
-        errorFunction(err);
-        return res.send({ success: 500, message: err.message });
+        next(err);
       }
     }
     const imgUrlString = selectUrl(files.img);
@@ -77,7 +76,7 @@ module.exports = {
     }
   },
 
-  setConsultingContactMember: async (req, res) => {
+  setConsultingContactMember: async (req, res, next) => {
     const {
       body: { idx, contact_person },
       user_idx,
@@ -101,7 +100,7 @@ module.exports = {
     }
   },
 
-  delConsulting: async (req, res) => {
+  delConsulting: async (req, res, next) => {
     const {
       body: { idx },
       user_idx,
@@ -124,7 +123,7 @@ module.exports = {
       return res.send({ success: 500, message: err.message });
     }
   },
-  addCompanyCustomer: async (req, res) => {
+  addCompanyCustomer: async (req, res, next) => {
     const { body, user_idx, company_idx } = req;
     const t = await db.sequelize.transaction();
     try {
@@ -159,7 +158,7 @@ module.exports = {
       return res.send({ success: 500, message: err.message });
     }
   },
-  patchConsultingStatus: async (req, res) => {
+  patchConsultingStatus: async (req, res, next) => {
     const { body, user_idx, company_idx } = req;
     const t = await db.sequelize.transaction();
 
@@ -185,7 +184,7 @@ module.exports = {
     }
   },
 
-  addCalculate: async (req, res) => {
+  addCalculate: async (req, res, next) => {
     const { body, file, user_idx, company_idx } = req;
     if (!file) {
       try {
@@ -199,8 +198,7 @@ module.exports = {
         const result = await db.calculate.create(body);
         return res.send({ success: 200, url_Idx: result.idx });
       } catch (err) {
-        errorFunction(err);
-        return res.send({ success: 500, message: err.message });
+        next(err);
       }
     }
     try {
@@ -220,7 +218,7 @@ module.exports = {
       return res.send({ success: 500, message: err.message });
     }
   },
-  downCalculate: async (req, res) => {
+  downCalculate: async (req, res, next) => {
     const result = await db.calculate.findByPk(req.body.url_idx);
     downFile(result.pdf_name, (err, url) => {
       if (err) {
@@ -231,7 +229,7 @@ module.exports = {
       }
     });
   },
-  doIntegratedUser: async (req, res) => {
+  doIntegratedUser: async (req, res, next) => {
     const { body } = req;
 
     try {
