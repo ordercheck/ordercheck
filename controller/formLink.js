@@ -112,7 +112,10 @@ module.exports = {
   },
   showFormDetail: async (req, res, next) => {
     try {
-      const { formDetail } = findWhiteFormDetail(req.company_idx, formId);
+      const { formDetail } = findWhiteFormDetail(
+        req.company_idx,
+        req.params.formId
+      );
       return res.send({ success: 200, formDetail });
     } catch (err) {
       next(err);
