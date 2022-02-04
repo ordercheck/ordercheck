@@ -1,5 +1,6 @@
 const _f = require('../lib/functions');
 const db = require('../model/db');
+const { errorFunction } = require('../lib/apiFunctions');
 const { Op } = require('sequelize');
 module.exports = {
   createFormLink: async (req, res) => {
@@ -24,6 +25,8 @@ module.exports = {
         attributes: [
           ['idx', 'formId'],
           'title',
+          'form_link',
+          'expression',
           [
             db.sequelize.fn(
               'date_format',
@@ -34,6 +37,7 @@ module.exports = {
           ],
         ],
       });
+      formList.dataValues.urlPath = `${formList.form_link}/${formList.expression}`;
       return res.send({ success: 200, formList });
     } catch (err) {
       errorFunction(err);
@@ -101,9 +105,16 @@ module.exports = {
 
       const formDetail = await db.formLink.findOne({
         where: { idx: req.params.formId },
-        attributes: ['title', 'thumbNail', 'form_link', 'tempType'],
+        attributes: [
+          'title',
+          'thumbNail',
+          'form_link',
+          'tempType',
+          'expression',
+        ],
       });
 
+      formDetail.dataValues.urlPath = `${formDetail.form_link}/${formDetail.expression}`;
       formDetail.dataValues.whiteLabelChecked = whiteCheck.whiteLabelChecked;
       // 임의의 값
       formDetail.dataValues.member = ['김기태', 'aaa', 'bbb'];
@@ -125,6 +136,7 @@ module.exports = {
         attributes: [
           ['idx', 'formId'],
           'title',
+
           [
             db.sequelize.fn(
               'date_format',
@@ -135,6 +147,7 @@ module.exports = {
           ],
         ],
       });
+
       return res.send({ success: 200, searchResult });
     } catch (err) {
       errorFunction(err);
@@ -142,12 +155,13 @@ module.exports = {
     }
   },
   updateForm: async (req, res) => {
-    const { title, whiteLabelChecked, formId } = req.body;
+    const { title, whiteLabelChecked, formId, expression } = req.body;
     try {
       await db.formLink.update(
         {
           title,
           whiteLabelChecked,
+          expression,
         },
         { where: { idx: formId } }
       );
