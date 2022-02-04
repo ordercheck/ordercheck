@@ -53,6 +53,7 @@ module.exports = {
     }
   },
   createThumbNail: async (req, res, next) => {
+    console.log(req.params);
     try {
       await db.formLink.update(
         { thumbNail: req.file.location },
