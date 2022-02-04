@@ -56,9 +56,15 @@ module.exports = {
     try {
       await db.formLink.update(
         { thumbNail: req.file.location },
-        { where: { idx: req.body.idx } }
+        { where: { idx: req.body.formId } }
       );
-      return res.send({ success: 200, message: 'thumbNail 업로드 완료' });
+
+      const { formDetail } = await findWhiteFormDetail(
+        req.company_idx,
+        req.body.formId
+      );
+
+      return res.send({ success: 200, formDetail });
     } catch (err) {
       next(err);
     }
@@ -166,9 +172,7 @@ module.exports = {
         },
         { where: { idx: req.company_idx } }
       );
-
       const { formDetail } = await findWhiteFormDetail(req.company_idx, formId);
-
       return res.send({ success: 200, formDetail });
     } catch (err) {
       next(err);

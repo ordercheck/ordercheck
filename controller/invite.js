@@ -1,4 +1,12 @@
-const { checkUserCompany, joinFunction } = require('../lib/apiFunctions');
+const {
+  checkUserCompany,
+  joinFunction,
+  includeUserToCompany,
+  createRandomCompany,
+
+  giveMasterAuth,
+  createFreePlan,
+} = require('../lib/apiFunctions');
 const sendMail = require('../mail/sendInvite');
 
 const db = require('../model/db');
@@ -45,17 +53,24 @@ module.exports = {
       if (!success) {
         return res.send({ success: 400, message: message });
       }
-
       // subdomain
       const findCompany = await db.company.findOne({
         where: { company_subdomain },
       });
       // userCompany 만들기 active는 0
-      db.userCompany.create({
+      await includeUserToCompany({
         user_idx: createUserResult.idx,
         company_idx: findCompany.idx,
         active: 0,
       });
+      // 랜덤 회사 만들기
+      const randomCompany = await createRandomCompany(createUserResult.idx);
+      // master 권한 주기
+
+      await giveMasterAuth(createUserResult.idx, randomCompany.idx);
+      // 무료 플랜 만들기
+      await createFreePlan(randomCompany.idx);
+
       return res.send({ success: 200, message: '가입 신청 완료' });
     } catch (err) {
       next(err);

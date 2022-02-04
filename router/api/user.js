@@ -11,11 +11,18 @@ const {
 const db = require('../../model/db');
 const _f = require('../../lib/functions');
 const verify_data = require('../../lib/jwtfunctions');
-let { masterConfig } = require('../../lib/standardTemplate');
+
 const user_session_check = (req, res, next) => {
   next();
 };
-const { joinFunction } = require('../../lib/apiFunctions');
+const {
+  joinFunction,
+  createRandomCompany,
+  includeUserToCompany,
+  giveMasterAuth,
+  createFreePlan,
+  createLoginToken,
+} = require('../../lib/apiFunctions');
 const jwt = require('jsonwebtoken');
 const fileUpload = require('../../lib/aws/fileupload.js');
 const multiparty = require('multiparty');
@@ -157,29 +164,22 @@ router.post('/join/do', async (req, res) => {
     }
 
     // 랜덤 회사 만들기
-    const randomCompany = await db.company.create({
-      company_name: Math.random().toString(36).substr(2, 11),
-      company_subdomain: _f.randomNumber4(),
-      huidx: createUserResult.idx,
-    });
-
-    await db.userCompany.create({
+    const randomCompany = await createRandomCompany(createUserResult.idx);
+    // 유저 회사에 소속시키기
+    await includeUserToCompany({
       user_idx: createUserResult.idx,
       company_idx: randomCompany.idx,
     });
     // master 권한 주기
-
-    masterConfig.user_idx = createUserResult.idx;
-    masterConfig.company_idx = randomCompany.idx;
-    await db.config.create(masterConfig);
+    await giveMasterAuth(createUserResult.idx, randomCompany.idx);
     // 무료 플랜 만들기
-    await db.plan.create({
-      company_idx: randomCompany.idx,
-    });
-    const loginToken = await createToken({
-      user_idx: createUserResult.idx,
-      company_idx: randomCompany.idx,
-    });
+    await createFreePlan(randomCompany.idx);
+
+    const loginToken = await createLoginToken(
+      createUserResult.idx,
+      randomCompany.idx
+    );
+
     return res.send({ success: 200, loginToken });
   } else {
     res.send({ success: 400 });
@@ -252,7 +252,6 @@ router.post('/company/check', async (req, res) => {
         transaction: t,
       });
 
-      masterConfig.user_idx = login_data.user_idx;
       //  트랜젝션 종료
       await t.commit();
       return res.send({ success: 200, message: '회사 등록 완료' });

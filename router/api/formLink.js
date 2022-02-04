@@ -24,7 +24,7 @@ router.get('/list', loginCheck, showFormLink);
 router.post(
   '/thumbNail',
   loginCheck,
-  multer_form_thumbNail_upload().single('img'),
+  multer_form_thumbNail_upload().single('thumbNail'),
   createThumbNail
 );
 
