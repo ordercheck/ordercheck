@@ -38,7 +38,7 @@ router.patch('/update', loginCheck, updateForm);
 router.delete('/:formId', loginCheck, delFormLink);
 
 // form 제목으로 검색
-router.get('/search', loginCheck, searchFormLink);
+router.get('/search/:title', loginCheck, searchFormLink);
 
 // form 상세보기
 router.get('/:formId', loginCheck, showFormDetail);

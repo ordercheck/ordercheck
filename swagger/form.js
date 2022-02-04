@@ -113,7 +113,7 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/form/link/search:
+ * /api/form/link/search/{title}:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -121,7 +121,7 @@
  *       -  Form
  *      summary: form 제목으로 검색
  *      parameters:
- *         - in: query
+ *         - in: path
  *           name: title
  *           schema:
  *             type: string

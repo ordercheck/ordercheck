@@ -120,6 +120,7 @@ module.exports = {
       const formDetail = await db.formLink.findOne({
         where: { idx: req.params.formId },
         attributes: [
+          ['idx', 'formId'],
           'title',
           'thumbNail',
           'form_link',
@@ -143,7 +144,7 @@ module.exports = {
       const searchResult = await db.formLink.findAll({
         where: {
           title: {
-            [Op.like]: `%${req.query.title}%`,
+            [Op.like]: `%${req.params.title}%`,
           },
         },
         attributes: [
