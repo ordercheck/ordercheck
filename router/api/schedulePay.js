@@ -1,4 +1,5 @@
 const express = require('express');
+const uuid = require('uuid').v1;
 const router = express.Router();
 const { schedulePay, getPayment } = require('../../lib/payFunction');
 const _f = require('../../lib/functions');
@@ -32,7 +33,7 @@ router.post('/', async (req, res) => {
 
       afterMonth = afterMonth.getTime() / 1000;
 
-      const newMerchant_uid = _f.random5();
+      const newMerchant_uid = uuid();
 
       const scheduleResult = await schedulePay(
         afterMonth,
