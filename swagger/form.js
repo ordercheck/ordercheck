@@ -62,23 +62,18 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/form/link/duplicate:
+ * /api/form/link/duplicate/{formId}:
  *   post:
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       -  Form
  *     summary: form 복사
- *     requestBody:
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              formId:
- *                type: string
- *            example:
- *              formId: "form idx"
+ *     parameters:
+ *         - in: path
+ *           name: formId
+ *           schema:
+ *             type: integer
  *     responses:
  *       '200':
  *         description: 성공

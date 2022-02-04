@@ -29,15 +29,17 @@ router.post(
 );
 
 // form 복사하기
-router.post('/duplicate', loginCheck, duplicateForm);
+router.post('/duplicate/:formId', loginCheck, duplicateForm);
 
 // form 제목 화이트라벨 업데이트
 router.patch('/update', loginCheck, updateForm);
 
 // form 삭제하기
 router.delete('/:formId', loginCheck, delFormLink);
+
 // form 제목으로 검색
 router.get('/search', loginCheck, searchFormLink);
+
 // form 상세보기
 router.get('/:formId', loginCheck, showFormDetail);
 
