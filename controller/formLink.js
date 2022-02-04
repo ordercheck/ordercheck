@@ -89,6 +89,8 @@ module.exports = {
         const duplicateResult = {
           formId: duplicateForm.dataValues.idx,
           title: duplicateForm.dataValues.title,
+          form_link: duplicateForm.dataValues.form_link,
+          expression: duplicateForm.dataValues.expression,
           pathUrl: `${duplicateForm.dataValues.form_link}/${duplicateForm.dataValues.expression}`,
           createdAt,
         };
