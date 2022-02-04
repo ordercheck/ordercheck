@@ -85,11 +85,17 @@ module.exports = {
           .toISOString()
           .split('T')[0]
           .replace(/-/g, '.');
+
+        const duplicateResult = {
+          formId: duplicateForm.dataValues.idx,
+          title: duplicateForm.dataValues.title,
+          pathUrl: `${duplicateForm.dataValues.form_link}/${duplicateForm.dataValues.expression}`,
+          createdAt,
+        };
+
         return res.send({
           success: 200,
-          formId: duplicateForm.idx,
-          title: duplicateForm.title,
-          createdAt,
+          duplicateResult,
         });
       })
       .catch((err) => {
