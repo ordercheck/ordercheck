@@ -7,6 +7,7 @@ module.exports = {
     try {
       req.body.form_link = _f.random5();
       req.body.company_idx = req.company_idx;
+      console.log(req.company_idx);
       const createResult = await db.formLink.create(req.body);
       return res.send({
         success: 200,

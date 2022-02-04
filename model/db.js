@@ -100,8 +100,8 @@ db.company.hasMany(db.alarm, {
   foreignKey: 'company_idx',
 });
 
-// user와 formLink
-db.user.hasMany(db.formLink, { foreignKey: 'company_idx' });
+// company와 formLink
+db.company.hasMany(db.formLink, { foreignKey: 'company_idx' });
 db.formLink.belongsTo(db.company, { foreignKey: 'company_idx' });
 
 // consulting과 company

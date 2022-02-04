@@ -21,7 +21,6 @@ const {
   includeUserToCompany,
   giveMasterAuth,
   createFreePlan,
-  createLoginToken,
 } = require('../../lib/apiFunctions');
 const jwt = require('jsonwebtoken');
 const fileUpload = require('../../lib/aws/fileupload.js');
@@ -175,10 +174,10 @@ router.post('/join/do', async (req, res) => {
     // 무료 플랜 만들기
     await createFreePlan(randomCompany.idx);
 
-    const loginToken = await createLoginToken(
-      createUserResult.idx,
-      randomCompany.idx
-    );
+    const loginToken = await createToken({
+      user_idx: createUserResult.idx,
+      company_idx: randomCompany.idx,
+    });
 
     return res.send({ success: 200, loginToken });
   } else {
