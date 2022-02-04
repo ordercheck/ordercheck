@@ -15,6 +15,7 @@ module.exports = {
     } catch (err) {
       console.log(err);
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },
@@ -39,6 +40,7 @@ module.exports = {
     } catch (err) {
       console.log(err);
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },
@@ -52,6 +54,7 @@ module.exports = {
     } catch (err) {
       console.log(err);
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },
@@ -93,6 +96,7 @@ module.exports = {
     } catch (err) {
       console.log(err);
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },
@@ -102,6 +106,7 @@ module.exports = {
         where: { company_idx: req.company_idx },
         attributes: ['whiteLabelChecked'],
       });
+
       const formDetail = await db.formLink.findOne({
         where: { idx: req.params.formId },
         attributes: [
@@ -112,6 +117,7 @@ module.exports = {
           'expression',
         ],
       });
+
       formDetail.dataValues.whiteLabelChecked = whiteCheck.whiteLabelChecked;
       // 임의의 값
       formDetail.dataValues.member = ['김기태', 'aaa', 'bbb'];
@@ -120,6 +126,7 @@ module.exports = {
     } catch (err) {
       console.log(err);
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },
@@ -148,6 +155,7 @@ module.exports = {
     } catch (err) {
       console.log(err);
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },

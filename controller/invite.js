@@ -33,10 +33,12 @@ module.exports = {
         return res.send({ success: 200, msg: '이메일 보내기 성공' });
       } catch (err) {
         const Err = err.message;
+        await db.err.create({ err: Err });
         return res.send({ success: 500, Err });
       }
     } catch (err) {
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },

@@ -79,6 +79,8 @@
  *             properties:
  *               ut:
  *                type: string
+ *               lt:
+ *                type: string
  *               ct:
  *                type: string
  *               pt:
@@ -89,6 +91,7 @@
  *                type: string
  *             example:
  *               ut: "userToken"
+ *               lt: "loginToken"
  *               ct: "cardToken"
  *               pt: "planToken"
  *               company_name: "회사 이름"

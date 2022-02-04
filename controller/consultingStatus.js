@@ -56,6 +56,7 @@ module.exports = {
         console.log(err);
         await t.rollback();
         const Err = err.message;
+        await db.err.create({ err: Err });
         return res.send({ success: 500, Err });
       }
     }
@@ -74,6 +75,7 @@ module.exports = {
       console.log(err);
       await t.rollback();
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },
@@ -98,6 +100,7 @@ module.exports = {
       return res.send({ success: 400 });
     } catch (err) {
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },
@@ -122,6 +125,7 @@ module.exports = {
       return res.send({ success: 400 });
     } catch (err) {
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },
@@ -157,6 +161,7 @@ module.exports = {
     } catch (err) {
       await t.rollback();
       const Err = err.message;
+      await db.err.create({ err: Err });
       console.log(Err);
       return res.send({ success: 500, Err });
     }
@@ -183,6 +188,7 @@ module.exports = {
     } catch (err) {
       await t.rollback();
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },
@@ -202,6 +208,7 @@ module.exports = {
         return res.send({ success: 200, url_Idx: result.idx });
       } catch (err) {
         const Err = err.message;
+        await db.err.create({ err: Err });
         return res.send({ success: 500, Err });
       }
     }
@@ -219,6 +226,7 @@ module.exports = {
       return res.send({ success: 200, url_Idx: result.idx });
     } catch (err) {
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },
@@ -271,6 +279,7 @@ module.exports = {
       return res.send({ success: 200 });
     } catch (err) {
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },

@@ -45,7 +45,7 @@ router.post('/', async (req, res) => {
         getResult.company_idx
       );
 
-      const result = await db.planExpect.update(
+      const result = await db.plan.update(
         { merchant_uid: newMerchant_uid },
         {
           where: { merchant_uid },
@@ -58,9 +58,6 @@ router.post('/', async (req, res) => {
     // 정기결제 실패했을 때
     if (status == 'failed') {
       try {
-        const expectResult = await db.planExpect.findOne({
-          where: { merchant_uid },
-        });
         await db.plan.update(
           {
             plan: 'FREE',
@@ -72,11 +69,10 @@ router.post('/', async (req, res) => {
             chatChecked: false,
             analysticChecked: false,
           },
-          { where: { idx: expectResult.plan_idx } }
+          { where: { merchant_uid } }
         );
-
         await db.userCompany.destroy({
-          where: { company_idx: findPlanResult.company_idx },
+          where: { company_idx: getResult.company_idx },
         });
         await db.userCompany.create({
           user_idx: getResult.user_idx,

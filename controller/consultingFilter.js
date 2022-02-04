@@ -33,6 +33,7 @@ module.exports = {
       return res.send({ success: 200, result });
     } catch (err) {
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },
@@ -57,6 +58,7 @@ module.exports = {
       return res.send({ success: 200, result });
     } catch (err) {
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },
@@ -84,6 +86,7 @@ module.exports = {
       return res.send({ success: 200, result });
     } catch (err) {
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },

@@ -60,6 +60,10 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+    merchant_uid: {
+      allowNull: true,
+      type: DataTypes.BOOLEAN,
+    },
 
     active: {
       allowNull: false,

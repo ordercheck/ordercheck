@@ -41,17 +41,11 @@ db.config = sequelize.import(__dirname + '/config.js');
 db.alarm = sequelize.import(__dirname + '/alarm.js');
 db.userCompany = sequelize.import(__dirname + '/userCompany.js');
 db.formLink = sequelize.import(__dirname + '/formLink.js');
-db.planExpect = sequelize.import(__dirname + '/planExpect.js');
+db.err = sequelize.import(__dirname + '/err.js');
 db.timeLine = sequelize.import(__dirname + '/consultingTimeLine.js');
 db.formOpen = sequelize.import(__dirname + '/formOpenMember.js');
 db.calculate = sequelize.import(__dirname + '/calculate.js');
 db.customer = sequelize.import(__dirname + '/customer.js');
-
-// plan과 planExpect
-db.plan.hasMany(db.planExpect, { foreignKey: 'plan_idx' });
-db.planExpect.belongsTo(db.plan, {
-  foreignKey: 'plan_idx',
-});
 
 // user와 timeLine
 db.customer.hasMany(db.timeLine, { foreignKey: 'customer_idx' });

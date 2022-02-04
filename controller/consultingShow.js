@@ -29,6 +29,7 @@ module.exports = {
       });
     } catch (err) {
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },
@@ -52,6 +53,7 @@ module.exports = {
       return res.send({ result });
     } catch (err) {
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },
@@ -79,6 +81,7 @@ module.exports = {
       return res.send({ result });
     } catch (err) {
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },
@@ -98,6 +101,7 @@ module.exports = {
       return res.send({ success: 200, findAllUser });
     } catch (err) {
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },
@@ -117,6 +121,7 @@ module.exports = {
       return res.send({ success: 200, result });
     } catch (err) {
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },
@@ -144,6 +149,7 @@ module.exports = {
       return res.send({ result });
     } catch (err) {
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },
@@ -181,6 +187,9 @@ module.exports = {
         return result;
       } catch (err) {
         console.log(err);
+        const Err = err.message;
+
+        await db.err.create({ err: Err });
       }
     };
     // 페이징을 위한 int처리
@@ -222,6 +231,7 @@ module.exports = {
       return res.send({ result, totalPage: Math.ceil(totalPage / limit) });
     } catch (err) {
       const Err = err.message;
+      await db.err.create({ err: Err });
       return res.send({ success: 500, Err });
     }
   },

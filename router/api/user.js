@@ -172,7 +172,9 @@ router.post('/join/do', async (req, res) => {
     masterConfig.company_idx = randomCompany.idx;
     await db.config.create(masterConfig);
     // 무료 플랜 만들기
-    await db.plan.create({ company_idx: randomCompany.idx });
+    await db.plan.create({
+      company_idx: randomCompany.idx,
+    });
     const loginToken = await createToken({
       user_idx: createUserResult.idx,
       company_idx: randomCompany.idx,
@@ -185,10 +187,11 @@ router.post('/join/do', async (req, res) => {
 
 //회사 등록 라우터
 router.post('/company/check', async (req, res) => {
-  const { ut, ct, pt, company_name, company_subdomain } = req.body;
+  const { lt, ut, ct, pt, company_name, company_subdomain } = req.body;
   let user_data = await verify_data(ut);
   let plan_data = await verify_data(pt);
   let card_data = await verify_data(ct);
+  let login_data = await verify_data(lt);
 
   const companyCheck = async (user_phone, user_idx) => {
     let check_domain = await db.company
@@ -203,23 +206,19 @@ router.post('/company/check', async (req, res) => {
     const t = await db.sequelize.transaction();
     try {
       // 트랜젝션 시작
-      const findUser = await db.user.findOne({
-        where: { user_phone: user_data.user_phone },
-      });
+
       await db.company.update(
         {
           company_name,
           company_subdomain,
         },
-        { where: { huidx: findUser.idx }, transaction: t }
+        { where: { huidx: login_data.user_idx }, transaction: t }
       );
-      const findCompanyResult = await db.company.findOne({
-        where: { huidx: findUser.idx },
-      });
+
       // 각 데이터에 필요한 key, value
 
-      card_data.company_idx = findCompanyResult.idx;
-      card_data.user_idx = findUser.idx;
+      card_data.company_idx = login_data.company_idx;
+      card_data.user_idx = login_data.user_idx;
 
       // 법인카드 유무 확인 후 체크
       card_data.birth
@@ -228,17 +227,10 @@ router.post('/company/check', async (req, res) => {
 
       // 카드 정보 등록 후
       await db.card.create(card_data, { transaction: t });
-      await db.plan.update(plan_data, {
-        where: { company_idx: findCompanyResult.idx },
-        transaction: t,
-      });
-      const findPlanResult = await db.plan.findOne({
-        where: { company_idx: findCompanyResult.idx },
-      });
+
       // 시간을 unix형태로 변경
       const changeToTime = new Date(plan_data.start_plan);
       changeToUnix = changeToTime.getTime() / 1000;
-
       const nextMerchant_uid = _f.random5();
 
       // 다음 카드 결제 신청
@@ -250,18 +242,16 @@ router.post('/company/check', async (req, res) => {
         user_data.user_phone,
         user_data.user_email,
         nextMerchant_uid,
-        findUser.idx,
-        findCompanyResult.idx
+        login_data.user_idx,
+        login_data.company_idx
       );
+      plan_data.merchant_uid = nextMerchant_uid;
+      await db.plan.update(plan_data, {
+        where: { company_idx: login_data.company_idx },
+        transaction: t,
+      });
 
-      await db.planExpect.create(
-        {
-          merchant_uid: nextMerchant_uid,
-          plan_idx: findPlanResult.idx,
-        },
-        { transaction: t }
-      );
-      masterConfig.user_idx = findUser.idx;
+      masterConfig.user_idx = login_data.user_idx;
       //  트랜젝션 종료
       await t.commit();
       return res.send({ success: 200, message: '회사 등록 완료' });
