@@ -53,13 +53,13 @@ module.exports = {
     }
   },
   createThumbNail: async (req, res, next) => {
-    console.log('formId', req.body.formId);
+    console.log('폼아이디', req.body.formId);
     try {
-      const update = await db.formLink.update(
+      await db.formLink.update(
         { thumbNail: req.file.location },
-        { where: { idx: req.body.formId } }
+        { where: { idx: parseInt(req.body.formId) } }
       );
-      console.log('업데이트 결과', update);
+
       const { formDetail } = await findWhiteFormDetail(
         req.company_idx,
         req.body.formId
