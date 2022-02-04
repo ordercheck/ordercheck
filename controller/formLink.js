@@ -53,10 +53,10 @@ module.exports = {
     }
   },
   createThumbNail: async (req, res, next) => {
-    const { formId } = req.params;
-    console.log(req.file.location);
-    console.log('1', formId);
     try {
+      const { formId } = req.params;
+      console.log(req.file.location);
+      console.log('1', formId);
       const result = await db.formLink.update(
         { thumbNail: req.file.location },
         { where: { idx: formId } }
