@@ -418,7 +418,7 @@ router.post('/check/subdomain', async (req, res) => {
   try {
     const result = await db.company.findOne({ where: { company_subdomain } });
     if (!result) {
-      return res.send({ success: 200, msg: '존재하지 않는 도메인입니다.' });
+      return res.send({ success: 400, msg: '존재하지 않는 도메인입니다.' });
     } else
       res.send({
         success: 200,
