@@ -36,16 +36,30 @@ module.exports = {
     }
   },
   joinToCompany: async (req, res, next) => {
-    const { createUserResult, success, message } = await joinFunction(req.body);
+    try {
+      const { company_subdomain } = req.body;
+      const { createUserResult, success, message } = await joinFunction(
+        req.body
+      );
 
-    if (!success) {
-      return res.send({ success: 400, message: message });
+      if (!success) {
+        return res.send({ success: 400, message: message });
+      }
+
+      // subdomain
+      const findCompany = await db.company.findOne({
+        where: { company_subdomain },
+      });
+      // userCompany 만들기 active는 0
+      db.userCompany.create({
+        user_idx: createUserResult.idx,
+        company_idx: findCompany.idx,
+        active: 0,
+      });
+      return res.send({ success: 200, message: '가입 신청 완료' });
+    } catch (err) {
+      next(err);
     }
-
-    // url 해쉬해서 subdomain찾기
-    db.company.findOne({});
-    // userCompany 만들기 active는 0
-    db.userCompany.create({});
   },
 
   showStandbyUser: async (req, res, next) => {

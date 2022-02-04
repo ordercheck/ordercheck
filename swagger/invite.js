@@ -44,14 +44,14 @@
  *                 type: string
  *               user_name:
  *                 type: string
- *               subdomain:
+ *               company_subdomain:
  *                 type: string
  *             example:
  *               user_phone: '010-6719-6919'
  *               user_password: 'rlxo12345'
  *               user_email: 'rlxo6919@naver.com'
  *               user_name: '김기태'
- *               subdomain: 'subdomain'
+ *               company_subdomain: 'subdomain'
  *      responses:
  *       '200':
  *         description: 성공
