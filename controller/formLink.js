@@ -53,12 +53,13 @@ module.exports = {
     }
   },
   createThumbNail: async (req, res, next) => {
-    console.log(req.body);
+    console.log('formId', req.body.formId);
     try {
-      await db.formLink.update(
+      const update = await db.formLink.update(
         { thumbNail: req.file.location },
         { where: { idx: req.body.formId } }
       );
+      console.log('업데이트 결과', update);
       const { formDetail } = await findWhiteFormDetail(
         req.company_idx,
         req.body.formId
@@ -121,7 +122,7 @@ module.exports = {
         req.company_idx,
         req.params.formId
       );
-      console.log(formDetail);
+
       return res.send({ success: 200, formDetail });
     } catch (err) {
       next(err);
