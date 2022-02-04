@@ -53,11 +53,10 @@ module.exports = {
     }
   },
   createThumbNail: async (req, res, next) => {
-    console.log('폼아이디', req.body.formId);
     try {
       await db.formLink.update(
         { thumbNail: req.file.location },
-        { where: { idx: parseInt(req.body.formId) } }
+        { where: { idx: req.params.formId } }
       );
 
       const { formDetail } = await findWhiteFormDetail(

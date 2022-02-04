@@ -22,7 +22,7 @@ router.get('/list', loginCheck, showFormLink);
 
 // 만든 fomlink thumbNail 만들기
 router.post(
-  '/thumbNail',
+  '/thumbNail/:formId',
   loginCheck,
   multer_form_thumbNail_upload().single('thumbNail'),
   createThumbNail
