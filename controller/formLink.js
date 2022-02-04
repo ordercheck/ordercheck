@@ -53,17 +53,15 @@ module.exports = {
     }
   },
   createThumbNail: async (req, res, next) => {
-    console.log(req.params);
+    const { formId } = req.params;
+
     try {
       await db.formLink.update(
         { thumbNail: req.file.location },
-        { where: { idx: req.params.formId } }
+        { where: { idx: formId } }
       );
 
-      const { formDetail } = await findWhiteFormDetail(
-        req.company_idx,
-        req.body.formId
-      );
+      const { formDetail } = await findWhiteFormDetail(req.company_idx, formId);
       return res.send({ success: 200, formDetail });
     } catch (err) {
       next(err);
