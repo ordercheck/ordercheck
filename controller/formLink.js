@@ -54,6 +54,7 @@ module.exports = {
   },
   createThumbNail: async (req, res, next) => {
     const { formId } = req.params;
+    console.log(req.file);
     console.log('1', formId);
     try {
       const result = await db.formLink.update(
@@ -63,7 +64,7 @@ module.exports = {
       console.log('결과', result);
       console.log('2', formId);
       const { formDetail } = await findWhiteFormDetail(req.company_idx, formId);
-      console.log('3', formDetail);
+
       return res.send({ success: 200, formDetail });
     } catch (err) {
       next(err);
