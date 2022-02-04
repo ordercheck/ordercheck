@@ -1,6 +1,7 @@
 const db = require('../model/db');
 const { makeSpreadArray } = require('../lib/functions');
 const { sequelize } = require('../model/db');
+const { errorFunction } = require('../lib/apiFunctions');
 module.exports = {
   getUserProfile: async (req, res) => {
     try {
@@ -15,9 +16,8 @@ module.exports = {
         });
       return res.send({ success: 200, result });
     } catch (err) {
-      const Err = err.message;
-      await db.err.create({ err: Err });
-      return res.send({ success: 500, Err });
+      errorFunction(err);
+      return res.send({ success: 500, message: err.message });
     }
   },
   getCompanyProfile: async (req, res) => {
@@ -36,9 +36,8 @@ module.exports = {
 
       return res.send({ success: 200, result });
     } catch (err) {
-      const Err = err.message;
-      await db.err.create({ err: Err });
-      return res.send({ success: 500, Err });
+      errorFunction(err);
+      return res.send({ success: 500, message: err.message });
     }
   },
 };

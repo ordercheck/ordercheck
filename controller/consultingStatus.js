@@ -1,4 +1,4 @@
-const { checkUserCompany } = require('../lib/apiFunctions');
+const { checkUserCompany, errorFunction } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { downFile } = require('../lib/aws/fileupload').ufile;
 
@@ -53,11 +53,9 @@ module.exports = {
 
         return res.send({ success: 200 });
       } catch (err) {
-        console.log(err);
         await t.rollback();
-        const Err = err.message;
-        await db.err.create({ err: Err });
-        return res.send({ success: 500, Err });
+        errorFunction(err);
+        return res.send({ success: 500, message: err.message });
       }
     }
     const imgUrlString = selectUrl(files.img);
