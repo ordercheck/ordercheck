@@ -37,16 +37,13 @@ module.exports = {
         ],
         raw: true,
       });
-
       if (!formList) {
         return res.send({ success: 400, message: '등록된 폼이 없습니다' });
       }
-
       formList = formList.map((data) => {
         data.urlPath = `${data.form_link}/${data.expression}`;
         return data;
       });
-
       return res.send({ success: 200, formList });
     } catch (err) {
       next(err);
@@ -55,17 +52,11 @@ module.exports = {
   createThumbNail: async (req, res, next) => {
     try {
       const { formId } = req.params;
-      console.log('초반', req.file.transforms[0].location);
-      console.log('1', formId);
-      const result = await db.formLink.update(
+      await db.formLink.update(
         { thumbNail: req.file.transforms[0].location },
         { where: { idx: formId } }
       );
-      console.log('결과', result);
-      console.log('2', formId);
       const { formDetail } = await findWhiteFormDetail(req.company_idx, formId);
-      console.log('3', '보여주기');
-
       return res.send({ success: 200, formDetail });
     } catch (err) {
       next(err);
@@ -83,7 +74,8 @@ module.exports = {
         const duplicateTitle = `${findFormLink.title}_${findFormLink.copyCount}`;
         findFormLink.title = duplicateTitle;
         findFormLink.form_link = _f.random5();
-        findFormLink.dataValues.copyCount = 0;
+        findFormLink.copyCount = 0;
+
         const duplicateForm = await db.formLink.create(findFormLink.dataValues);
         // 시간 형태에 맞게 변형
         const createdAt = duplicateForm.createdAt
@@ -92,11 +84,11 @@ module.exports = {
           .replace(/-/g, '.');
 
         const duplicateResult = {
-          formId: duplicateForm.dataValues.idx,
-          title: duplicateForm.dataValues.title,
-          form_link: duplicateForm.dataValues.form_link,
-          expression: duplicateForm.dataValues.expression,
-          pathUrl: `${duplicateForm.dataValues.form_link}/${duplicateForm.dataValues.expression}`,
+          formId: duplicateForm.idx,
+          title: duplicateForm.title,
+          form_link: duplicateForm.form_link,
+          expression: duplicateForm.expression,
+          pathUrl: `${duplicateForm.form_link}/${duplicateForm.expression}`,
           createdAt,
         };
 

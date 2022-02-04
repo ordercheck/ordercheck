@@ -37,26 +37,18 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/form/link/thumbNail:
+ * /api/form/link/thumbNail/{formId}:
  *   post:
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       -  Form
  *     summary: form link thumbNail 업로드(FORM DATA)
- *     requestBody:
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              file:
- *                type: string
- *              formId:
- *                type: integer
- *            example:
- *              file: "file"
- *              formId: "form idx"
+ *     parameters:
+ *         - in: path
+ *           name: formId
+ *           schema:
+ *             type: integer
  *     responses:
  *       '200':
  *         description: 성공

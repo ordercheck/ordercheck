@@ -3,7 +3,6 @@ const {
   joinFunction,
   includeUserToCompany,
   createRandomCompany,
-
   giveMasterAuth,
   createFreePlan,
 } = require('../lib/apiFunctions');
@@ -11,7 +10,7 @@ const sendMail = require('../mail/sendInvite');
 
 const db = require('../model/db');
 module.exports = {
-  updateCompany: async (req, res, next) => {
+  sendEmail: async (req, res, next) => {
     const {
       body: { company_url, target_email },
       user_idx,
@@ -29,7 +28,6 @@ module.exports = {
       const user_result = await db.user.findByPk(user_idx, {
         attributes: ['user_name'],
       });
-
       target_email.forEach(async (target) => {
         await sendMail(
           company_url,
@@ -87,7 +85,7 @@ module.exports = {
   joinStandbyUser: async (req, res, next) => {
     await db.userCompany.update(
       { active: 1 },
-      { where: { idx: req.body.customer_idx } }
+      { where: { idx: req.body.user_idx } }
     );
 
     return res.send({ success: 200 });

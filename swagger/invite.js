@@ -80,10 +80,10 @@
  *           schema:
  *             type: object
  *             properties:
- *               customer_idx:
+ *               user_idx:
  *                 type: integer
  *             example:
- *               customer_idx:1
+ *               user_idx:1
  *      responses:
  *       '200':
  *         description: 성공

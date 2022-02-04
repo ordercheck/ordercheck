@@ -63,7 +63,6 @@ module.exports = {
       params: { contract_possibility },
       company_idx,
     } = req;
-
     try {
       // const checkResult = await checkUserCompany(company_idx, user_idx);
       // if (checkResult == false) {
