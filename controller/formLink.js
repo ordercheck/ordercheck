@@ -84,7 +84,7 @@ module.exports = {
   },
   delFormLink: async (req, res) => {
     try {
-      await db.formLink.destroy({ where: { idx: req.body.formId } });
+      await db.formLink.destroy({ where: { idx: req.params.formId } });
       return res.send({ success: 200, message: '삭제 성공' });
     } catch (err) {
       errorFunction(err);

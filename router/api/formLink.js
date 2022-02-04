@@ -35,7 +35,7 @@ router.post('/duplicate', loginCheck, duplicateForm);
 router.patch('/update', loginCheck, updateForm);
 
 // form 삭제하기
-router.delete('/', loginCheck, delFormLink);
+router.delete('/:formId', loginCheck, delFormLink);
 // form 제목으로 검색
 router.get('/search', loginCheck, searchFormLink);
 // form 상세보기
