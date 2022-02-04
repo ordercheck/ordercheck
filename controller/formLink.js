@@ -184,7 +184,29 @@ module.exports = {
         { where: { idx: req.company_idx } }
       );
 
-      return res.send({ success: 200, updateResult: req.body });
+      const whiteCheck = await db.plan.findOne({
+        where: { company_idx: req.company_idx },
+        attributes: ['whiteLabelChecked'],
+      });
+
+      const formDetail = await db.formLink.findOne({
+        where: { idx: req.params.formId },
+        attributes: [
+          ['idx', 'formId'],
+          'title',
+          'thumbNail',
+          'form_link',
+          'tempType',
+          'expression',
+        ],
+      });
+
+      formDetail.dataValues.urlPath = `${formDetail.form_link}/${formDetail.expression}`;
+      formDetail.dataValues.whiteLabelChecked = whiteCheck.whiteLabelChecked;
+      // 임의의 값
+      formDetail.dataValues.member = ['김기태', 'aaa', 'bbb'];
+
+      return res.send({ success: 200, formDetail });
     } catch (err) {
       next(err);
     }
