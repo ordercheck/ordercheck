@@ -112,10 +112,11 @@ module.exports = {
   },
   showFormDetail: async (req, res, next) => {
     try {
-      const { formDetail } = findWhiteFormDetail(
+      const { formDetail } = await findWhiteFormDetail(
         req.company_idx,
         req.params.formId
       );
+      console.log(formDetail);
       return res.send({ success: 200, formDetail });
     } catch (err) {
       next(err);
@@ -166,7 +167,7 @@ module.exports = {
         { where: { idx: req.company_idx } }
       );
 
-      const { formDetail } = findWhiteFormDetail(req.company_idx, formId);
+      const { formDetail } = await findWhiteFormDetail(req.company_idx, formId);
 
       return res.send({ success: 200, formDetail });
     } catch (err) {
