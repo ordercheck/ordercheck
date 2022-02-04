@@ -190,7 +190,7 @@ module.exports = {
       });
 
       const formDetail = await db.formLink.findOne({
-        where: { idx: req.params.formId },
+        where: { idx: formId },
         attributes: [
           ['idx', 'formId'],
           'title',
