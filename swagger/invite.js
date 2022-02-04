@@ -29,7 +29,7 @@
  *   post:
  *      tags:
  *       - invite
- *      summary: email받은 팀원 회사 참여 신청 (미완성)
+ *      summary: email받은 팀원 회사 참여 신청
  *      requestBody:
  *       content:
  *         application/json:
@@ -44,14 +44,14 @@
  *                 type: string
  *               user_name:
  *                 type: string
- *               company_url:
+ *               subdomain:
  *                 type: string
  *             example:
  *               user_phone: '010-6719-6919'
  *               user_password: 'rlxo12345'
  *               user_email: 'rlxo6919@naver.com'
  *               user_name: '김기태'
- *               company_url: 'url'
+ *               subdomain: 'subdomain'
  *      responses:
  *       '200':
  *         description: 성공

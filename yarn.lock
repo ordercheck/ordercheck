@@ -2686,6 +2686,14 @@
   "resolved" "https://registry.npmjs.org/ms/-/ms-2.1.2.tgz"
   "version" "2.1.2"
 
+"multer-s3-transform@^2.3.2":
+  "integrity" "sha1-DxA5qu8TJ6Ba8mLi/BYMeh8rzMA="
+  "resolved" "https://registry.npmjs.org/multer-s3-transform/-/multer-s3-transform-2.3.2.tgz"
+  "version" "2.3.2"
+  dependencies:
+    "file-type" "^3.3.0"
+    "run-parallel" "^1.1.6"
+
 "multer-s3@^2.10.0":
   "integrity" "sha512-RZsiqG19C9gE82lB7v8duJ+TMIf70fWYHlIwuNcsanOH1ePBoPXZvboEQxEow9jUkk7WQsuyVA2TgriOuDrVrw=="
   "resolved" "https://registry.npmjs.org/multer-s3/-/multer-s3-2.10.0.tgz"
