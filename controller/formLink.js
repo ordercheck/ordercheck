@@ -173,12 +173,18 @@ module.exports = {
       await db.formLink.update(
         {
           title,
-          whiteLabelChecked,
           expression,
         },
         { where: { idx: formId } }
       );
-      return res.send({ success: 200, message: '업데이트 완료' });
+      await db.plan.update(
+        {
+          whiteLabelChecked,
+        },
+        { where: { idx: req.company_idx } }
+      );
+
+      return res.send({ success: 200, updateResult: req.body });
     } catch (err) {
       next(err);
     }
