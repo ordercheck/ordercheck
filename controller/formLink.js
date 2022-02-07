@@ -41,6 +41,7 @@ module.exports = {
             'createdAt',
           ],
         ],
+        order: [[db.formLink, 'createdAt', 'DESC']],
         raw: true,
       });
       if (!formList) {
@@ -155,6 +156,7 @@ module.exports = {
             'createdAt',
           ],
         ],
+        order: [[db.formLink, 'createdAt', 'DESC']],
       });
 
       return res.send({ success: 200, searchResult });
