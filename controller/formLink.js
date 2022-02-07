@@ -165,6 +165,7 @@ module.exports = {
   updateForm: async (req, res, next) => {
     const { title, whiteLabelChecked, formId, expression } = req.body;
     try {
+      // 프런트에서 준 최신 업데이트 정보로 formLink 수정
       await db.formLink.update(
         {
           title,
@@ -172,12 +173,15 @@ module.exports = {
         },
         { where: { idx: formId } }
       );
+
+      // 프런트에서 준 최신 업데이트 정보로 whiteLabel 수정
       await db.plan.update(
         {
           whiteLabelChecked,
         },
         { where: { idx: req.company_idx } }
       );
+      // 수정된 정보를 찾기
       const { formDetail } = await findWhiteFormDetail(req.company_idx, formId);
       return res.send({ success: 200, formDetail });
     } catch (err) {
@@ -186,17 +190,22 @@ module.exports = {
   },
   deleteThumbNail: async (req, res, next) => {
     try {
+      // formLink title 찾기
       const findThumbNailTitle = await db.formLink.findByPk(req.params.formId, {
         attributes: ['thumbNail_title'],
       });
 
+      // formLink thumbNail, thumbNail_title 초기화
       const updateResult = await db.formLink.update(
-        { thumbNail: null },
+        { thumbNail: '', thumbNail_title: null },
         { where: { idx: req.params.formId } }
       );
+      // 업데이트 결과가 0일때 (실패)
       if (updateResult[0] == 0) {
         return res.send({ success: 400, message: '썸네일 삭제 실패' });
       }
+
+      // s3에서 file이름으로 이미지 삭제 진행
       delFile(
         findThumbNailTitle.thumbNail_title,
         'ordercheck/formThumbNail',
