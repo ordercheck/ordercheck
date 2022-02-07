@@ -1,4 +1,8 @@
-const { checkUserCompany, errorFunction } = require('../lib/apiFunctions');
+const {
+  checkUserCompany,
+  errorFunction,
+  getFileName,
+} = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { downFile } = require('../lib/aws/fileupload').ufile;
 
@@ -208,7 +212,7 @@ module.exports = {
       //   return res.send({ success: 400 });
       // }
       // pdf s3 저장
-      const [, file_name] = file.key.split('/');
+      getFileName(file.key);
       body.pdf_name = file_name;
       body.pdf_data = req.file.location;
       const result = await db.calculate.create(body);

@@ -1,6 +1,11 @@
 const _f = require('../lib/functions');
 const db = require('../model/db');
-const { errorFunction, findWhiteFormDetail } = require('../lib/apiFunctions');
+const { delFile } = require('../lib/aws/fileupload').ufile;
+const {
+  errorFunction,
+  findWhiteFormDetail,
+  getFileName,
+} = require('../lib/apiFunctions');
 const { Op } = require('sequelize');
 module.exports = {
   createFormLink: async (req, res, next) => {
@@ -53,8 +58,14 @@ module.exports = {
   createThumbNail: async (req, res, next) => {
     try {
       const { formId } = req.params;
+      // 파일 이름 가져오기
+      const file_name = getFileName(req.file.transforms[0].key);
+
       await db.formLink.update(
-        { thumbNail: req.file.transforms[0].location },
+        {
+          thumbNail: req.file.transforms[0].location,
+          thumbNail_title: file_name,
+        },
         { where: { idx: formId } }
       );
       const { formDetail } = await findWhiteFormDetail(req.company_idx, formId);
@@ -169,6 +180,33 @@ module.exports = {
       );
       const { formDetail } = await findWhiteFormDetail(req.company_idx, formId);
       return res.send({ success: 200, formDetail });
+    } catch (err) {
+      next(err);
+    }
+  },
+  deleteThumbNail: async (req, res, next) => {
+    try {
+      const findThumbNailTitle = await db.formLink.findByPk(req.params.formId, {
+        attributes: ['thumbNail_title'],
+      });
+
+      const updateResult = await db.formLink.update(
+        { thumbNail: null },
+        { where: { idx: req.params.formId } }
+      );
+      if (updateResult[0] == 0) {
+        return res.send({ success: 400, message: '썸네일 삭제 실패' });
+      }
+      delFile(
+        findThumbNailTitle.thumbNail_title,
+        'ordercheck/formThumbNail',
+        (err, data) => {
+          if (err) {
+            next(err);
+          }
+          return res.send({ success: 200, message: '썸네일 삭제 ' });
+        }
+      );
     } catch (err) {
       next(err);
     }

@@ -10,6 +10,10 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
+    thumbNail_title: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
     title: {
       allowNull: false,
       type: DataTypes.STRING(100),

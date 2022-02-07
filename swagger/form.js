@@ -151,4 +151,21 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/form/link/thumbNail/{formId}/:
+ *   delete:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       -  Form
+ *     summary: formLink THumbNail 지우기
+ *     parameters:
+ *         - in: path
+ *           name: formId
+ *           schema:
+ *             type: integer
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

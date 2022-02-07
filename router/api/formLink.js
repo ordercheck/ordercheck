@@ -12,6 +12,7 @@ const {
   showFormDetail,
   searchFormLink,
   updateForm,
+  deleteThumbNail,
 } = require('../../controller/formLink');
 
 // formlink 만들기
@@ -27,6 +28,9 @@ router.post(
   multer_form_thumbNail_upload().single('thumbNail'),
   createThumbNail
 );
+
+// thumbNail 삭제하기
+router.delete('/thumbNail/:formId', loginCheck, deleteThumbNail);
 
 // form 복사하기
 router.post('/duplicate/:formId', loginCheck, duplicateForm);
