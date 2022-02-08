@@ -14,6 +14,7 @@ module.exports = function (sequelize, DataTypes) {
 
     user_phone: {
       allowNull: false,
+      unique: true,
       defaultValue: '',
       type: DataTypes.STRING(100),
     },

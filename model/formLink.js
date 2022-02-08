@@ -9,7 +9,7 @@ module.exports = function (sequelize, DataTypes) {
     thumbNail: {
       allowNull: true,
       defaultValue: '',
-      type: DataTypes.STRING(100),
+      type: DataTypes.TEXT,
     },
     thumbNail_title: {
       allowNull: true,
