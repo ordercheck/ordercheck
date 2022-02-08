@@ -22,18 +22,37 @@ const checkFormLimit = async (reqData, data) => {
       where: { form_link: reqData },
       attributes: ['company_idx'],
     });
-    return await checkCustomerCount(findCompanyByLink.company_idx, data);
+    if (!findCompanyByLink) {
+      return {
+        success: false,
+        message: '존재하지 않는 링크 입니다',
+      };
+    }
+    const { findCompanyData, findPlanResult } = await checkCustomerCount(
+      findCompanyByLink.company_idx,
+      data
+    );
+    return {
+      success: true,
+      findCompanyData,
+      findPlanResult,
+    };
   } catch (err) {
-    console.log(err);
+    return {
+      success: false,
+      message: err,
+    };
   }
 };
 
 module.exports = {
   checkFormLimit: async (req, res, next) => {
-    const { findCompanyData, findPlanResult } = await checkFormLimit(
-      req.body.form_link,
-      'form_link_count'
-    );
+    const { success, findCompanyData, findPlanResult, message } =
+      await checkFormLimit(req.body.form_link, 'form_link_count');
+
+    if (!success) {
+      return res.send({ success: 400, message });
+    }
 
     if (
       findCompanyData.form_link_count ==

@@ -41,22 +41,31 @@ db.config = sequelize.import(__dirname + '/config.js');
 db.alarm = sequelize.import(__dirname + '/alarm.js');
 db.customerFile = sequelize.import(__dirname + '/customerFile.js');
 db.userCompany = sequelize.import(__dirname + '/userCompany.js');
+db.files = sequelize.import(__dirname + '/files.js');
 db.formLink = sequelize.import(__dirname + '/formLink.js');
 db.err = sequelize.import(__dirname + '/err.js');
+db.folders = sequelize.import(__dirname + '/folders.js');
 db.timeLine = sequelize.import(__dirname + '/consultingTimeLine.js');
 db.formOpen = sequelize.import(__dirname + '/formOpenMember.js');
 db.calculate = sequelize.import(__dirname + '/calculate.js');
 db.customer = sequelize.import(__dirname + '/customer.js');
 
-// customer와 customerFile
-db.customer.hasMany(db.customerFile, { foreignKey: 'customer_idx' });
-db.customerFile.belongsTo(db.customer, {
-  foreignKey: 'customer_idx',
-});
 // company와 customerFile
 db.company.hasMany(db.customerFile, { foreignKey: 'company_idx' });
 db.customerFile.belongsTo(db.company, {
   foreignKey: 'company_idx',
+});
+
+// customerFile과 folders
+db.customerFile.hasMany(db.folders, { foreignKey: 'customerFile_idx' });
+db.folders.belongsTo(db.customerFile, {
+  foreignKey: 'customerFile_idx',
+});
+
+// folders와 files
+db.folders.hasMany(db.files, { foreignKey: 'folder_idx' });
+db.files.belongsTo(db.folders, {
+  foreignKey: 'folder_idx',
 });
 
 // user와 timeLine

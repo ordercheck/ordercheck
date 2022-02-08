@@ -1,7 +1,7 @@
 const {
   checkUserCompany,
-  errorFunction,
   getFileName,
+  createFileStore,
 } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { downFile } = require('../lib/aws/fileupload').ufile;
@@ -44,8 +44,20 @@ module.exports = {
         body.company_idx = formLinkCompany.company_idx;
         body.searchingAddress = searchingAddress;
         body.searchingPhoneNumber = searchingPhoneNumber;
-        const result = await db.customer.create(body, { transaction: t });
-        body.customer_idx = result.idx;
+        const createCustomerResult = await db.customer.create(body, {
+          transaction: t,
+        });
+        body.customer_phoneNumber = createCustomerResult.customer_phoneNumber;
+        body.customer_name = createCustomerResult.customer_name;
+        body.customer_idx = createCustomerResult.idx;
+        // 파일 보관함 db 생성
+        const createFileStoreResult = await createFileStore(body, t);
+
+        if (!createFileStoreResult.success) {
+          next(createFileStoreResult.err);
+          return;
+        }
+
         await db.consulting.create(body, { transaction: t });
 
         await t.commit();
@@ -67,16 +79,30 @@ module.exports = {
     body.hope_concept = JSON.stringify(conceptUrlString);
     try {
       body.company_idx = formLinkCompany.company_idx;
-      const result = await db.customer.create(body, { transaction: t });
-      body.customer_idx = result.idx;
+      const createCustomerResult = await db.customer.create(body, {
+        transaction: t,
+      });
+      body.customer_idx = createCustomerResult.idx;
+      body.customer_phoneNumber = createCustomerResult.customer_phoneNumber;
+      body.customer_name = createCustomerResult.customer_name;
+
+      // 파일 보관함 db 생성
+      const createFileStoreResult = await createFileStore(body, {
+        transaction: t,
+      });
+
+      if (!createFileStoreResult.success) {
+        next(createFileStoreResult.err);
+        return;
+      }
+
       await db.consulting.create(body, { transaction: t });
       await t.commit();
       return res.send({ success: 200 });
     } catch (err) {
       console.log(err);
       await t.rollback();
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
 
@@ -99,7 +125,7 @@ module.exports = {
       }
       return res.send({ success: 400 });
     } catch (err) {
-      errorFunction(err);
+      next(err);
       return res.send({ success: 500, message: err.message });
     }
   },
@@ -123,7 +149,7 @@ module.exports = {
       }
       return res.send({ success: 400 });
     } catch (err) {
-      errorFunction(err);
+      next(err);
       return res.send({ success: 500, message: err.message });
     }
   },
@@ -147,18 +173,24 @@ module.exports = {
       body.company_idx = company_idx;
       body.searchingAddress = searchingAddress;
       body.searchingPhoneNumber = searchingPhoneNumber;
-      await db.customer.create(body, { transaction: t });
-      db.company.increment(
-        { customer_count: 1 },
-        { where: { idx: user_idx } },
-        { transaction: t }
-      );
+      const createCustomerResult = await db.customer.create(body, {
+        transaction: t,
+      });
+      body.customer_phoneNumber = createCustomerResult.customer_phoneNumber;
+      body.customer_name = createCustomerResult.customer_name;
+      const { success, err } = await createFileStore(body, {
+        transaction: t,
+      });
+      if (!success) {
+        next(err);
+      }
+      db.company.increment({ customer_count: 1 }, { where: { idx: user_idx } });
       await t.commit();
 
       return res.send({ success: 200 });
     } catch (err) {
       await t.rollback();
-      errorFunction(err);
+      next(err);
       return res.send({ success: 500, message: err.message });
     }
   },
@@ -183,7 +215,7 @@ module.exports = {
       return res.send({ success: 200 });
     } catch (err) {
       await t.rollback();
-      errorFunction(err);
+      next(err);
       return res.send({ success: 500, message: err.message });
     }
   },
@@ -218,7 +250,7 @@ module.exports = {
       const result = await db.calculate.create(body);
       return res.send({ success: 200, url_Idx: result.idx });
     } catch (err) {
-      errorFunction(err);
+      next(err);
       return res.send({ success: 500, message: err.message });
     }
   },
@@ -270,7 +302,7 @@ module.exports = {
       });
       return res.send({ success: 200 });
     } catch (err) {
-      errorFunction(err);
+      next(err);
       return res.send({ success: 500, message: err.message });
     }
   },

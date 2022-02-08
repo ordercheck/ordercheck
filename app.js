@@ -179,6 +179,7 @@ class AppServer extends http.Server {
     // 에러처리
     this.app.use((err, req, res, next) => {
       errorFunction(err);
+
       return res.send({ success: 500, message: err.message });
     });
   }
