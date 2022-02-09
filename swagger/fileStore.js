@@ -43,15 +43,15 @@
  *          schema:
  *            type: object
  *            properties:
- *              folder_idx:
- *                type: integer
+ *              folder_name:
+ *                type: string
  *            example:
- *              folder_idx: 2
+ *              folder_name: "test"
  *     parameters:
  *         - in: path
  *           name: customerFile_idx
  *           schema:
- *             type: integer
+ *             type: 1
  *     responses:
  *       '200':
  *         description: 성공
@@ -104,6 +104,39 @@
  *                type: string
  *            example:
  *              folder_idx: 1
+ *     parameters:
+ *         - in: path
+ *           name: customerFile_idx
+ *           schema:
+ *             type: integer
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/file/store/update/title:
+ *   patch:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       -  FileStore
+ *     summary: 폴더 제목 변경하기
+ *     requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              folder_idx:
+ *                type: array
+ *              title:
+ *                type: string
+ *              before_title:
+ *                type: string
+ *            example:
+ *              folder_idx: [1,2,3,4]
+ *              before_title : "test"
+ *              title: "test2"
  *     parameters:
  *         - in: path
  *           name: customerFile_idx

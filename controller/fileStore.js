@@ -29,39 +29,31 @@ module.exports = {
   },
 
   getFolderPath: async (req, res, next) => {
-    const result = await db.folders.findOne({
+    const result = await db.folders.findAll({
       where: { customerFile_idx: req.params.customerFile_idx },
       attributes: [['idx', 'folder_idx'], 'folder_path', 'customerFile_idx'],
-      order: [['createdAt', 'DESC']],
     });
     return res.send({ success: 200, result });
   },
   addFolder: async (req, res, next) => {
     try {
-      const findFolderResult = await findFolder(req);
-
-      if (!findFolderResult) {
-        req.body.customerFile_idx = req.params.customerFile_idx;
-        await db.folders.create(req.body);
-        return res.send({ succes: true, message: '폴더 생성 완료' });
-      }
-      next((err = { message: '이미 폴더가 존재합니다' }));
+      req.body.customerFile_idx = req.params.customerFile_idx;
+      const createFolderResult = await db.folders.create(req.body);
+      return res.send({ succes: true, createFolderResult });
     } catch (err) {
       next(err);
     }
   },
   addFile: async (req, res, next) => {
+    const data = {};
     const createFile = async (fileData) => {
       data.file_url = fileData.location;
-      data.file_name = getFileName(fileData.key);
+      data.file_name = fileData.key;
       return await db.files.create(data);
     };
     try {
-      const data = {};
-
       const findFolderResult = await findFolder(req);
       data.folder_idx = findFolderResult.idx;
-
       const createFileResult = req.file.transforms
         ? await createFile(req.file.transforms[0])
         : await createFile(req.file);

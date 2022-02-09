@@ -1,6 +1,7 @@
-// const express = require('express');
-// const router = express.Router();
-// const { delFile } = require('../../lib/aws/fileupload').ufile;
+const express = require('express');
+const router = express.Router();
+const { delFile } = require('../../lib/aws/fileupload').ufile;
+const { kakaoPush } = require('../../lib/functions');
 
 // var AWS = require('aws-sdk');
 // AWS.config.update({
@@ -49,4 +50,7 @@
 //   // });
 // });
 
-// module.exports = router;
+router.post('/', (req, res) => {
+  kakaoPush('01067196919');
+});
+module.exports = router;

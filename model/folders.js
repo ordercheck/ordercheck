@@ -7,7 +7,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
     },
 
-    folder_path: {
+    folder_name: {
       allowNull: true,
       defaultValue: '',
       type: DataTypes.STRING(100),

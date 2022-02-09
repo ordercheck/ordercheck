@@ -172,7 +172,7 @@ class AppServer extends http.Server {
     this.app.use('/api/form/link', formLinkRouter);
     this.app.use('/api/info', infoRouter);
     this.app.use('/api/schedule/pay', schedulePayRouter);
-    // this.app.use('/s3', s3ControllRouter);
+    this.app.use('/s3', s3ControllRouter);
     this.app.use('/api/invite', inviteRouter);
     this.app.use('/api/card', cardRouter);
     this.app.use('/api/file/store', fileRouter);
