@@ -54,6 +54,7 @@ module.exports = {
             bodyData.customer_phoneNumber,
             bodyData.company_name,
             bodyData.customer_name,
+            '접수 내용 확인',
             bodyData.title
           );
 
@@ -73,6 +74,7 @@ module.exports = {
               data.user.user_phone,
               bodyData.title,
               bodyData.customer_name,
+              '확인하기',
               bodyData.customer_phoneNumber
             );
           });

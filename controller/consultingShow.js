@@ -58,7 +58,7 @@ module.exports = {
     const { customer_idx } = req.params;
 
     try {
-      const result = await db.customer.findOne({
+      const consultResult = await db.customer.findOne({
         where: {
           idx: customer_idx,
           company_idx,
@@ -74,13 +74,15 @@ module.exports = {
         order: [[db.consulting, 'createdAt', 'DESC']],
       });
 
-      return res.send({ result });
+      return res.send({ consultResult });
     } catch (err) {
       next(err);
     }
   },
   showCompanyMembers: async (req, res, next) => {
     const { user_idx, company_idx } = req;
+
+    // userId, 프로필사진, 이름
     try {
       // const checkResult = await checkUserCompany(company_idx, user_idx);
       // if (checkResult == false) {
@@ -89,9 +91,26 @@ module.exports = {
 
       const findAllUser = await db.userCompany.findAll({
         where: { company_idx },
-        attributes: ['user_idx'],
-      });
+        include: [
+          {
+            model: db.user,
+            attributes: ['user_name', 'user_name', 'user_profile'],
+          },
+        ],
+        attributes: [['user_idx', 'userId']],
 
+        raw: true,
+        nest: true,
+      });
+      console.log('전', findAllUser.length);
+      for (let i = 0; i < findAllUser.length; i++) {
+        if (findAllUser[i].userId == user_idx) {
+          findAllUser.unshift(findAllUser[i]);
+          findAllUser.splice(i + 1, 1);
+          break;
+        }
+      }
+      console.log('후', findAllUser.length);
       return res.send({ success: 200, findAllUser });
     } catch (err) {
       next(err);

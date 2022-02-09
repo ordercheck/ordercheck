@@ -12,6 +12,12 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(100),
     },
 
+    user_profile: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.TEXT,
+    },
+
     user_phone: {
       allowNull: false,
       unique: true,
