@@ -58,7 +58,7 @@ module.exports = {
     const { customer_idx } = req.params;
 
     try {
-      const consultResult = await db.customer.findOne({
+      let consultResult = await db.customer.findOne({
         where: {
           idx: customer_idx,
           company_idx,
@@ -66,14 +66,21 @@ module.exports = {
         include: [
           {
             model: db.consulting,
+            omitNull: true,
           },
           {
             model: db.timeLine,
           },
         ],
+        omitNull: true,
+
         order: [[db.consulting, 'createdAt', 'DESC']],
       });
 
+      consultResult = JSON.stringify(consultResult, (k, v) =>
+        v === null ? undefined : v
+      );
+      consultResult = JSON.parse(consultResult);
       return res.send({ consultResult });
     } catch (err) {
       next(err);
@@ -102,7 +109,8 @@ module.exports = {
         raw: true,
         nest: true,
       });
-      console.log('전', findAllUser.length);
+
+      // 로그인 한 사람 고정
       for (let i = 0; i < findAllUser.length; i++) {
         if (findAllUser[i].userId == user_idx) {
           findAllUser.unshift(findAllUser[i]);
@@ -110,7 +118,7 @@ module.exports = {
           break;
         }
       }
-      console.log('후', findAllUser.length);
+
       return res.send({ success: 200, findAllUser });
     } catch (err) {
       next(err);

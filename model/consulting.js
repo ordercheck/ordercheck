@@ -156,11 +156,11 @@ module.exports = function (sequelize, DataTypes) {
     },
     elv: {
       allowNull: true,
-      type: DataTypes.STRING(100),
+      default: false,
+      type: DataTypes.BOOLEAN,
     },
     etc: {
       allowNull: true,
-
       type: DataTypes.STRING(100),
     },
     hope_concept: {

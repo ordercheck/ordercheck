@@ -50,34 +50,34 @@ module.exports = {
           res.send({ success: 200 });
 
           // 고객 카카오 푸쉬 보내기
-          await customerkakaoPushNewForm(
-            bodyData.customer_phoneNumber,
-            bodyData.company_name,
-            bodyData.customer_name,
-            '접수 내용 확인',
-            bodyData.title
-          );
+          // await customerkakaoPushNewForm(
+          //   bodyData.customer_phoneNumber,
+          //   bodyData.company_name,
+          //   bodyData.customer_name,
+          //   '접수 내용 확인',
+          //   bodyData.title
+          // );
 
           // 팀원 카카오 푸쉬 보내기
-          const getMembers = await db.userCompany.findAll({
-            where: { company_idx: bodyData.company_idx },
-            include: [
-              {
-                model: db.user,
-                attributes: ['user_phone'],
-              },
-            ],
-            attributes: ['user_idx'],
-          });
-          getMembers.forEach(async (data) => {
-            await TeamkakaoPushNewForm(
-              data.user.user_phone,
-              bodyData.title,
-              bodyData.customer_name,
-              '확인하기',
-              bodyData.customer_phoneNumber
-            );
-          });
+          // const getMembers = await db.userCompany.findAll({
+          //   where: { company_idx: bodyData.company_idx },
+          //   include: [
+          //     {
+          //       model: db.user,
+          //       attributes: ['user_phone'],
+          //     },
+          //   ],
+          //   attributes: ['user_idx'],
+          // });
+          // getMembers.forEach(async (data) => {
+          //   await TeamkakaoPushNewForm(
+          //     data.user.user_phone,
+          //     bodyData.title,
+          //     bodyData.customer_name,
+          //     '확인하기',
+          //     bodyData.customer_phoneNumber
+          //   );
+          // });
         } catch (err) {
           await t.rollback();
           next(err);
