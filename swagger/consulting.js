@@ -453,12 +453,12 @@
  *           name: active
  *           schema:
  *             type: string
- *           example: "상담 신청,상담완료,이슈"
+ *           example: "0,1,2"
  *         - in: query
  *           name: contract_possibility
  *           schema:
  *             type: string
- *           example: "없음,50%이상,50%미만"
+ *           example: "0,1,2"
  *      responses:
  *         '200':
  *            description: 성공

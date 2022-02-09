@@ -190,10 +190,10 @@ module.exports = {
       // 주어진 데이터를 Arr형태로 변경
       const activeArrResult = req.query.active
         ? req.query.active.split(',')
-        : ['상담 신청', '상담완료', '이슈'];
+        : [0, 1, 2];
       const possibilityArrResult = req.query.contract_possibility
         ? req.query.contract_possibility.split(',')
-        : ['없음', '50%이상', '50%미만'];
+        : [0, 1, 2];
       // 총 페이지 수 체크
       const totalPage = await findData(
         'count',

@@ -26,7 +26,6 @@ module.exports = function (sequelize, DataTypes) {
     detail_address: {
       allowNull: false,
       defaultValue: '',
-
       type: DataTypes.STRING(100),
     },
 
@@ -36,15 +35,14 @@ module.exports = function (sequelize, DataTypes) {
     },
     room_size_kind: {
       allowNull: false,
-      defaultValue: '공급',
-
-      type: DataTypes.STRING(100),
+      defaultValue: 0,
+      type: DataTypes.INTEGER,
     },
 
     active: {
       allowNull: false,
-      defaultValue: '상담 신청',
-      type: DataTypes.STRING(100),
+      defaultValue: 0,
+      type: DataTypes.INTEGER,
     },
 
     searchingAddress: {
@@ -59,8 +57,8 @@ module.exports = function (sequelize, DataTypes) {
     },
     contract_possibility: {
       allowNull: false,
-      defaultValue: '없음',
-      type: DataTypes.STRING(100),
+      defaultValue: 0,
+      type: DataTypes.INTEGER,
     },
   });
 };
