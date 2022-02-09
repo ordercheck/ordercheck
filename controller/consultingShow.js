@@ -179,7 +179,6 @@ module.exports = {
           },
         ],
         attributes: [['user_idx', 'userId']],
-
         raw: true,
         nest: true,
       });
@@ -192,6 +191,10 @@ module.exports = {
           break;
         }
       }
+      findAllUser.unshift({
+        userId: 0,
+        user: { user_name: '담당자 없음', user_profile: '' },
+      });
 
       return res.send({ success: 200, findAllUser });
     } catch (err) {

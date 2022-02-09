@@ -146,7 +146,7 @@
  *       - bearerAuth: []
  *      tags:
  *       -  consult
- *      summary: 팀원 consulting 담당자 설정
+ *      summary: 원 consulting 담당자 설정
  *      requestBody:
  *       content:
  *         application/json:

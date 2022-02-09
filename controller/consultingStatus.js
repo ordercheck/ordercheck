@@ -51,11 +51,16 @@ module.exports = {
 
           // 고객 카카오 푸쉬 보내기
           // await customerkakaoPushNewForm(
-          //   bodyData.customer_phoneNumber,
-          //   bodyData.company_name,
-          //   bodyData.customer_name,
-          //   '접수 내용 확인',
-          //   bodyData.title
+          // bodyData.customer_phoneNumber,
+          // bodyData.company_name,
+          // bodyData.customer_name,
+          // '접수 내용 확인',
+          // bodyData.title
+          // '01030472952',
+          // '오더킹',
+          // '김오더',
+          // '접수 내용 확인',
+          // '간편 상담 접수'
           // );
 
           // 팀원 카카오 푸쉬 보내기
