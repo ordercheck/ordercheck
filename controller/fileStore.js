@@ -48,7 +48,8 @@ module.exports = {
     const data = {};
     const createFile = async (fileData) => {
       data.file_url = fileData.location;
-      data.file_name = fileData.key;
+      const [, file_name] = fileData.key.split('/');
+      data.file_name = file_name;
       return await db.files.create(data);
     };
     try {

@@ -5,10 +5,9 @@ const {
 } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { downFile } = require('../lib/aws/fileupload').ufile;
-
+const { kakaoPush } = require('../lib/functions');
 const changeToSearch = (body) => {
   const searchingPhoneNumber = body.customer_phoneNumber.replace(/-/g, '');
-
   const searchingAddress = `${body.address.replace(
     / /g,
     ''
@@ -21,86 +20,97 @@ const changeToSearch = (body) => {
 
 module.exports = {
   addConsultingForm: async (req, res, next) => {
-    // url을 string으로 연결
-    let { body, files } = req;
-    // 트랜젝션 시작
     const t = await db.sequelize.transaction();
-    selectUrl = (files) => {
-      try {
-        return (result = files.map((element) => {
-          return element.location;
-        }));
-      } catch (err) {
-        return;
-      }
-    };
-    const formLinkCompany = await db.formLink.findOne({
-      where: { form_link: body.form_link },
-    });
+    try {
+      // url을 string으로 연결
+      const { body, files } = req;
 
-    if (!files.img && !files.concept) {
-      try {
-        const { searchingAddress, searchingPhoneNumber } = changeToSearch(body);
-        body.company_idx = formLinkCompany.company_idx;
-        body.searchingAddress = searchingAddress;
-        body.searchingPhoneNumber = searchingPhoneNumber;
-        const createCustomerResult = await db.customer.create(body, {
-          transaction: t,
-        });
-        body.customer_phoneNumber = createCustomerResult.customer_phoneNumber;
-        body.customer_name = createCustomerResult.customer_name;
-        body.customer_idx = createCustomerResult.idx;
-        // 파일 보관함 db 생성
-        const createFileStoreResult = await createFileStore(body, t);
-
-        if (!createFileStoreResult.success) {
-          next(createFileStoreResult.err);
+      const selectUrl = (fileData) => {
+        try {
+          return (result = fileData.map((element) => {
+            return element.location;
+          }));
+        } catch (err) {
           return;
         }
+      };
 
-        await db.consulting.create(body, { transaction: t });
+      const createConsultingAndIncrement = async (bodyData) => {
+        try {
+          await db.consulting.create(bodyData, { transaction: t });
+          await t.commit();
 
-        await t.commit();
+          db.company.increment(
+            { form_link_count: 1, customer_count: 1 },
+            { where: { idx: formLinkCompany.company_idx } }
+          );
+          res.send({ success: 200 });
 
-        db.company.increment(
-          { form_link_count: 1, customer_count: 1 },
-          { where: { idx: formLinkCompany.company_idx } }
-        );
+          // 카카오 푸쉬 보내기
+          // await kakaoPush(
+          //   bodyData.customer_phoneNumber.replace(/-/g, ''),
+          //   'customFom',
+          //   `[${bodyData.company_name}]
+          // ${bodyData.customer_name} 고객님,
+          // ${bodyData.title} 접수가 완료되었습니다.
+          // 감사합니다.`,
+          //   `http://orderchecktest.s3-website.ap-northeast-2.amazonaws.com/`
+          // );
+        } catch (err) {
+          await t.rollback();
+          next(err);
+        }
+      };
 
-        return res.send({ success: 200 });
-      } catch (err) {
-        await t.rollback();
-        next(err);
-      }
-    }
-    const imgUrlString = selectUrl(files.img);
-    const conceptUrlString = selectUrl(files.concept);
-    body.floor_plan = JSON.stringify(imgUrlString);
-    body.hope_concept = JSON.stringify(conceptUrlString);
-    try {
+      const formLinkCompany = await db.formLink.findOne({
+        where: { form_link: body.form_link },
+        include: [
+          {
+            model: db.company,
+            attributes: ['company_name'],
+          },
+        ],
+        attributes: ['company_idx', 'title'],
+      });
+
+      const { searchingAddress, searchingPhoneNumber } = changeToSearch(body);
+      body.searchingAddress = searchingAddress;
+      body.searchingPhoneNumber = searchingPhoneNumber;
       body.company_idx = formLinkCompany.company_idx;
+      body.company_name = formLinkCompany.company.company_name;
+      body.title = formLinkCompany.title;
+
       const createCustomerResult = await db.customer.create(body, {
         transaction: t,
       });
-      body.customer_idx = createCustomerResult.idx;
+
       body.customer_phoneNumber = createCustomerResult.customer_phoneNumber;
       body.customer_name = createCustomerResult.customer_name;
+      body.customer_idx = createCustomerResult.idx;
 
       // 파일 보관함 db 생성
-      const createFileStoreResult = await createFileStore(body, {
-        transaction: t,
-      });
-
+      const createFileStoreResult = await createFileStore(body, t);
       if (!createFileStoreResult.success) {
         next(createFileStoreResult.err);
         return;
       }
 
-      await db.consulting.create(body, { transaction: t });
-      await t.commit();
-      return res.send({ success: 200 });
+      // 이미지나 파일이 없을 때
+      if (!files.img && !files.concept) {
+        createConsultingAndIncrement(body);
+
+        return;
+      }
+      // 이미지나 파일이 있을 때
+
+      const imgUrlString = selectUrl(files.img);
+      const conceptUrlString = selectUrl(files.concept);
+      body.floor_plan = JSON.stringify(imgUrlString);
+      body.hope_concept = JSON.stringify(conceptUrlString);
+      createConsultingAndIncrement(body);
+
+      return;
     } catch (err) {
-      console.log(err);
       await t.rollback();
       next(err);
     }

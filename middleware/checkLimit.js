@@ -16,7 +16,7 @@ const checkCustomerCount = async (company_idx, data) => {
   };
 };
 
-const checkFormLimit = async (reqData, data) => {
+const check = async (reqData, data) => {
   try {
     const findCompanyByLink = await db.formLink.findOne({
       where: { form_link: reqData },
@@ -47,8 +47,10 @@ const checkFormLimit = async (reqData, data) => {
 
 module.exports = {
   checkFormLimit: async (req, res, next) => {
-    const { success, findCompanyData, findPlanResult, message } =
-      await checkFormLimit(req.body.form_link, 'form_link_count');
+    const { success, findCompanyData, findPlanResult, message } = await check(
+      req.body.form_link,
+      'form_link_count'
+    );
 
     if (!success) {
       return res.send({ success: 400, message });
@@ -56,7 +58,9 @@ module.exports = {
 
     if (
       findCompanyData.form_link_count ==
-      limitPlan[findPlanResult.plan].form_link_count
+        limitPlan[findPlanResult.plan].form_link_count &&
+      req.files.img &&
+      req.files.concept
     ) {
       try {
         req.files.img.forEach((data) => {
@@ -79,6 +83,14 @@ module.exports = {
         console.log(err);
       }
 
+      return res.send({
+        success: 400,
+        message: '이달 상담 신청 건수가 초과하였습니다.',
+      });
+    } else if (
+      findCompanyData.form_link_count ==
+      limitPlan[findPlanResult.plan].form_link_count
+    ) {
       return res.send({
         success: 400,
         message: '이달 상담 신청 건수가 초과하였습니다.',
