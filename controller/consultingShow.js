@@ -66,14 +66,88 @@ module.exports = {
         include: [
           {
             model: db.consulting,
-            omitNull: true,
+
+            attributes: [
+              'choice',
+              'customer_email',
+              'application_route',
+              'building_type',
+              'rooms_count',
+              'bathrooms_count',
+              'completion_year',
+              'floor_plan',
+              'hope_Date',
+              'predicted_living',
+              'budget',
+              'destruction',
+              'expand',
+              'window',
+              'carpentry',
+              'paint',
+              'papering',
+              'bathroom',
+              'bathroom_option',
+              'floor',
+              'tile',
+              'electricity_lighting',
+              'kitchen',
+              'kitchen_option',
+              'furniture',
+              'facility',
+              'film',
+              'art_wall',
+              'elv',
+              'etc',
+              'hope_concept',
+              'contact_time',
+              'etc_question',
+
+              [
+                db.sequelize.fn(
+                  'date_format',
+                  db.sequelize.col('consultings.createdAt'),
+                  '%Y.%m.%d'
+                ),
+                'createdAt',
+              ],
+            ],
           },
           {
             model: db.timeLine,
+            attributes: [
+              'status',
+              'memo',
+
+              [
+                db.sequelize.fn(
+                  'date_format',
+                  db.sequelize.col('consultingTimeLines.createdAt'),
+                  '%Y.%m.%d'
+                ),
+                'createdAt',
+              ],
+            ],
           },
         ],
-        omitNull: true,
-
+        attributes: [
+          'idx',
+          'customer_name',
+          'customer_phoneNumber',
+          'address',
+          'detail_address',
+          'room_size',
+          'room_size_kind',
+          'contract_possibility',
+          'contact_person',
+          [
+            db.sequelize.fn(
+              'date_format',
+              db.sequelize.col('customer.createdAt'),
+              '%Y.%m.%d'
+            ),
+            'createdAt',
+          ],
+        ],
         order: [[db.consulting, 'createdAt', 'DESC']],
       });
 
