@@ -5,7 +5,10 @@ const {
 } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { downFile } = require('../lib/aws/fileupload').ufile;
-const { kakaoPush } = require('../lib/functions');
+const {
+  TeamkakaoPushNewForm,
+  customerkakaoPushNewForm,
+} = require('../lib/kakaoPush');
 const changeToSearch = (body) => {
   const searchingPhoneNumber = body.customer_phoneNumber.replace(/-/g, '');
   const searchingAddress = `${body.address.replace(
@@ -46,16 +49,33 @@ module.exports = {
           );
           res.send({ success: 200 });
 
-          // 카카오 푸쉬 보내기
-          // await kakaoPush(
-          //   bodyData.customer_phoneNumber.replace(/-/g, ''),
-          //   'customFom',
-          //   `[${bodyData.company_name}]
-          // ${bodyData.customer_name} 고객님,
-          // ${bodyData.title} 접수가 완료되었습니다.
-          // 감사합니다.`,
-          //   `http://orderchecktest.s3-website.ap-northeast-2.amazonaws.com/`
-          // );
+          // 고객 카카오 푸쉬 보내기
+          await customerkakaoPushNewForm(
+            bodyData.customer_phoneNumber,
+            bodyData.company_name,
+            bodyData.customer_name,
+            bodyData.title
+          );
+
+          // 팀원 카카오 푸쉬 보내기
+          const getMembers = await db.userCompany.findAll({
+            where: { company_idx: bodyData.company_idx },
+            include: [
+              {
+                model: db.user,
+                attributes: ['user_phone'],
+              },
+            ],
+            attributes: ['user_idx'],
+          });
+          getMembers.forEach(async (data) => {
+            await TeamkakaoPushNewForm(
+              data.user.user_phone,
+              bodyData.title,
+              bodyData.customer_name,
+              bodyData.customer_phoneNumber
+            );
+          });
         } catch (err) {
           await t.rollback();
           next(err);

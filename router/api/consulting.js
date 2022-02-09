@@ -54,7 +54,7 @@ router.patch('/integrated/user', loginCheck, doIntegratedUser);
 router.get('/calculate/:customer_idx', loginCheck, showCalculate);
 
 // 회사별 팀원 리스트 보기
-router.get('/member/:company_idx', loginCheck, showCompanyMembers);
+router.get('/member', loginCheck, showCompanyMembers);
 
 // 컨설팅 상세정보
 router.get('/detail/:customer_idx', loginCheck, showDetailConsulting);
