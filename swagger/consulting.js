@@ -423,31 +423,35 @@
  *         '400':
  *           description: 실패
  * /api/consulting/filter:
- *   get:
- *      security:
+ *   post:
+ *     security:
  *       - bearerAuth: []
- *      tags:
+ *     tags:
  *       -  consult get info
- *      summary: consult filter
- *      parameters:
- *         - in: query
- *           name: date
- *           schema:
- *             type: string
- *           example: 2022.02.01 - 2022.02.14
- *         - in: query
- *           name: active
- *           schema:
- *             type: string
- *           example: 0,1
- *         - in: query
- *           name: contract_possibility
- *           schema:
- *             type: string
- *           example: 0,1
- *      responses:
- *         '200':
- *            description: 성공
- *         '400':
- *           description: 실패
+ *     summary: consulting filter하기
+ *     requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              date:
+ *                type: string
+ *              active:
+ *                type: array
+ *              contract_possibility:
+ *                type: array
+ *              userId:
+ *                type: array
+ *            example:
+ *               date: "2022.02.04 - 2022.02.10"
+ *               active: [0,1]
+ *               contract_possibility: [0,1]
+ *               userId: [null,2,3,5,6]
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+
  */

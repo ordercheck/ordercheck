@@ -31,9 +31,8 @@ const {
   checkCustomerLimit,
 } = require('../../middleware/checkLimit');
 // *****************************filter*********************************
-// date필터링
-router.get('/filter', loginCheck, Filter);
-// 상담 상태 필터링
+// 상담 필터링
+router.post('/filter', loginCheck, Filter);
 
 // *****************************show*********************************
 // 고객 연동하기에서 고객들을 보여주기

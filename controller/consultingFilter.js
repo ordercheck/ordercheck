@@ -4,8 +4,7 @@ const db = require('../model/db');
 const { Op } = require('sequelize');
 // 받은 params를 sequelize or형태에 맞게 만들어주는 함수
 const makeArrforFilter = (data, status) => {
-  let countArr = data.split(',');
-  countArr = countArr.map((el) => {
+  const countArr = data.map((el) => {
     el = { [status]: el };
     return el;
   });
@@ -14,16 +13,13 @@ const makeArrforFilter = (data, status) => {
 module.exports = {
   Filter: async (req, res, next) => {
     let {
-      query: { date, active, contract_possibility },
+      body: { date, active, contract_possibility, userId },
       company_idx,
     } = req;
+
     let firstDate;
     let secondDate;
-    let countArr = [{ active: '0' }, { active: '1' }];
-    let countPossibility = [
-      { contract_possibility: '0' },
-      { contract_possibility: '1' },
-    ];
+
     if (date) {
       const changeDateResult = changeDate(date);
       firstDate = changeDateResult.firstDate;
@@ -40,12 +36,31 @@ module.exports = {
       );
     }
 
+    // if (userId) {
+    //   contractPerson = makeArrforFilter(userId, (status = 'contact_person'));
+
+    //   const result = await db.customer.findAll({
+    //     where: {
+    //       company_idx,
+    //       createdAt: { [Op.between]: [firstDate, secondDate] },
+    //       [Op.or]: countArr,
+    //       [Op.or]: countPossibility,
+    //       [Op.or]: contractPerson,
+    //     },
+    //   });
+    //   return res.send({ result });
+    // }
+
     const result = await db.customer.findAll({
       where: {
         company_idx,
         createdAt: { [Op.between]: [firstDate, secondDate] },
-        [Op.or]: countArr,
-        [Op.or]: countPossibility,
+        active: {
+          [Op.or]: active,
+        },
+        contract_possibility: {
+          [Op.or]: contract_possibility,
+        },
       },
     });
     return res.send({ result });
