@@ -4,8 +4,10 @@ const db = require('../model/db');
 const { Op } = require('sequelize');
 module.exports = {
   showTotalConsultingDefault: async (req, res, next) => {
+    // 현제페이지, 전체아이템 개수, 넘버.
+
     let {
-      params: { limit, page },
+      params: { limit, page, firstId },
       company_idx,
     } = req;
     limit = parseInt(limit);
@@ -13,18 +15,46 @@ module.exports = {
     try {
       const totalData = await db.customer.count({ where: { company_idx } });
       const start = (page - 1) * limit;
-      const result = await db.customer.findAll({
+      let customerData = await db.customer.findAll({
         where: { company_idx },
+        attributes: [
+          ['idx', 'userId'],
+          'customer_name',
+          'customer_phoneNumber',
+          'address',
+          'detail_address',
+          'active',
+          'contract_possibility',
+          'contact_person',
+          [
+            db.sequelize.fn(
+              'date_format',
+              db.sequelize.col('createdAt'),
+              '%Y.%m.%d'
+            ),
+            'createdAt',
+          ],
+        ],
+        order: [['createdAt', 'DESC']],
         offset: start,
         limit,
+        raw: true,
       });
 
-      if (result.length == 0) {
-        return res.send({ success: 400 });
+      if (customerData.length == 0) {
+        return res.send({ success: 400, message: '고객이 없습니다.' });
       }
+
+      customerData = customerData.map((data) => {
+        data.No = firstId++;
+        data.fullAddress = `${data.address} ${data.detail_address}`;
+        return data;
+      });
+
+      console.log(customerData);
       return res.send({
         success: 200,
-        result,
+        customerData,
         totalPage: Math.ceil(totalData / limit),
       });
     } catch (err) {

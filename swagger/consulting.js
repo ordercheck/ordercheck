@@ -53,7 +53,7 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/consulting/customer/list/{limit}/{page}:
+ * /api/consulting/customer/list/{limit}/{page}/{firstId}:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -67,6 +67,10 @@
  *             type: integer
  *         - in: path
  *           name: page
+ *           schema:
+ *             type: integer
+ *         - in: path
+ *           name: firstId
  *           schema:
  *             type: integer
  *      responses:
