@@ -77,6 +77,7 @@ module.exports = {
       return res.send({
         success: 200,
         customerData,
+        totalUser: totalData,
         page,
         totalPage: Math.ceil(totalData / limit),
       });
