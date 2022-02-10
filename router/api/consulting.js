@@ -62,7 +62,7 @@ router.get('/detail/:customer_idx', loginCheck, showDetailConsulting);
 
 // 회사별 전체 상담내용 리스트(default)
 router.get(
-  '/customer/list/:limit/:page/:firstId',
+  '/customer/list/:limit/:page',
   loginCheck,
   showTotalConsultingDefault
 );
