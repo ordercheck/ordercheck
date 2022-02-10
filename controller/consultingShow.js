@@ -5,15 +5,18 @@ const { Op } = require('sequelize');
 module.exports = {
   showTotalConsultingDefault: async (req, res, next) => {
     let {
-      params: { limit, page, firstId },
+      params: { limit, page },
       query: { No, Name, Address, Date },
       company_idx,
     } = req;
-    limit = parseInt(limit);
 
-    try {
-      const totalData = await db.customer.count({ where: { company_idx } });
-      const start = (page - 1) * limit;
+    limit = parseInt(limit);
+    page = parseInt(page);
+
+    const totalData = await db.customer.count({ where: { company_idx } });
+    const start = (page - 1) * limit;
+
+    const getCustomerData = async () => {
       let customerData = await db.customer.findAll({
         where: { company_idx },
         attributes: [
@@ -40,13 +43,11 @@ module.exports = {
         raw: true,
       });
 
-      if (customerData.length == 0) {
-        return res.send({ success: 400, message: '고객이 없습니다.' });
-      }
-
       // userId, fullAddress 추가
+      let No = page * limit - (limit - 1);
       customerData = customerData.map((data) => {
-        data.No = firstId++;
+        data.No = No;
+        No++;
         data.customer_phoneNumber = data.customer_phoneNumber.replace(
           /-/g,
           '.'
@@ -54,10 +55,29 @@ module.exports = {
         data.fullAddress = `${data.address} ${data.detail_address}`;
         return data;
       });
+      return customerData;
+    };
 
+    try {
+      let customerData = '';
+      if (!No && !Name && !Address && !Date) {
+        customerData = await getCustomerData();
+
+        if (customerData.length == 0) {
+          return res.send({ success: 400, message: '고객이 없습니다.' });
+        }
+      }
+      if (No) {
+        customerData = await getCustomerData();
+
+        if (customerData.length == 0) {
+          return res.send({ success: 400, message: '고객이 없습니다.' });
+        }
+      }
       return res.send({
         success: 200,
         customerData,
+        page,
         totalPage: Math.ceil(totalData / limit),
       });
     } catch (err) {

@@ -69,10 +69,6 @@
  *           name: page
  *           schema:
  *             type: integer
- *         - in: path
- *           name: firstId
- *           schema:
- *             type: integer
  *         - in: query
  *           name: No
  *           schema:
