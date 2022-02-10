@@ -84,23 +84,28 @@ module.exports = {
     }
   },
   searchCustomer: async (req, res, next) => {
-    const pureText = req.query.search.replace(/\W|\s/g, '');
-    const result = await db.customer.findAll({
-      where: {
-        [Op.or]: {
-          customer_name: {
-            [Op.like]: `%${pureText}%`,
-          },
-          searchingPhoneNumber: {
-            [Op.like]: `%${pureText}%`,
-          },
-          searchingAddress: {
-            [Op.like]: `%${pureText}%`,
+    // 인덱싱 필요
+    try {
+      const pureText = req.query.search.replace(/\W|\s/g, '');
+      const result = await db.customer.findAll({
+        where: {
+          [Op.or]: {
+            customer_name: {
+              [Op.like]: `%${pureText}%`,
+            },
+            searchingPhoneNumber: {
+              [Op.like]: `%${pureText}%`,
+            },
+            searchingAddress: {
+              [Op.like]: `%${pureText}%`,
+            },
           },
         },
-      },
-    });
-
-    return res.send(result);
+        limit: 10,
+      });
+      return res.send(result);
+    } catch (err) {
+      next(err);
+    }
   },
 };

@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { delFile } = require('../../lib/aws/fileupload').ufile;
-const { kakaoPush } = require('../../lib/functions');
-
+const db = require('../../model/db');
 // var AWS = require('aws-sdk');
 // AWS.config.update({
 //   accessKeyId: process.env.AWS_ACESSKEY_ID,
@@ -50,7 +49,43 @@ const { kakaoPush } = require('../../lib/functions');
 //   // });
 // });
 
-router.post('/', (req, res) => {
-  kakaoPush('01067196919');
+const axios = require('axios');
+router.post('/', async (req, res) => {
+  const message = `
+   [오더킹]
+김오더 고객님 간편상담 접수가
+완료되었습니다.
+감사합니다.
+
+접수 내용 확인:
+http://my.ordercheck.io/FEQF
+`;
+  const user_phone = '01030472952';
+  let result = await axios({
+    url: '/api/send/sms',
+    method: 'post', // POST method
+    headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
+    data: { user_phone, message },
+  });
+
+  // for (let i = 1028; i <= 3000; i++) {
+  //   try {
+  //     const result = await db.customer.create({
+  //       customer_name: i,
+  //       customer_phoneNumber: i,
+  //       address: i,
+  //       detail_address: i,
+  //       room_size: i,
+  //       room_size_kind: i,
+  //       active: i,
+  //       searchingAddress: i,
+  //       searchingPhoneNumber: i,
+  //       company_idx: 18,
+  //     });
+  //     console.log(result);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
 });
 module.exports = router;

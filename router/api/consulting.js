@@ -19,6 +19,7 @@ const {
   showIntegratedUser,
   showCalculate,
   showFilterResult,
+  sortRouter,
 } = require('../../controller/consultingShow');
 const {
   addConsultingForm,
@@ -36,12 +37,12 @@ const {
 } = require('../../middleware/checkLimit');
 // *****************************filter*********************************
 // date필터링
-router.get('/date/:user_idx/:date', loginCheck, dateFilter);
+router.get('/date/:date', loginCheck, dateFilter);
 // 상담 상태 필터링
-router.get('/active/:user_idx/:active', loginCheck, statusFilter);
+router.get('/active/:active', loginCheck, statusFilter);
 // 계약 가능성 필터링
 router.get(
-  '/contract-possibility/:user_idx/:contract_possibility',
+  '/contract-possibility/:contract_possibility',
   loginCheck,
   contractPossibilityFilter
 );
@@ -68,6 +69,9 @@ router.get(
 
 // 해당 회사 고객정보 보여주기
 // router.get('/customer/:form_link', loginCheck, showCustomers);
+
+// 유저 리스트 sorting
+// router.get('/sort', loginCheck, sortRouter);
 
 // filter결과 보여주기
 router.get('/filter', loginCheck, showFilterResult);

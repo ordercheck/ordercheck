@@ -59,7 +59,7 @@
  *       - bearerAuth: []
  *      tags:
  *       -  consult get info
- *      summary: consult 조회(default)
+ *      summary: consult 조회
  *      parameters:
  *         - in: path
  *           name: limit
@@ -73,6 +73,26 @@
  *           name: firstId
  *           schema:
  *             type: integer
+ *         - in: query
+ *           name: No
+ *           schema:
+ *             type: integer
+ *           example: 0
+ *         - in: query
+ *           name: Name
+ *           schema:
+ *             type: integer
+ *           example: 0
+ *         - in: query
+ *           name: Address
+ *           schema:
+ *             type: integer
+ *           example: 0
+ *         - in: query
+ *           name: Date
+ *           schema:
+ *             type: integer
+ *           example: 0
  *      responses:
  *         '200':
  *            description: 성공
@@ -429,44 +449,6 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/consulting/filter:
- *   get:
- *      security:
- *       - bearerAuth: []
- *      tags:
- *       -  consult get info
- *      summary: consult filter 결과 조회
- *      parameters:
- *         - in: query
- *           name: limit
- *           schema:
- *             type: integer
- *           example: 10
- *         - in: query
- *           name: page
- *           schema:
- *             type: integer
- *           example: 1
- *         - in: query
- *           name: date
- *           schema:
- *             type: string
- *           example: "2021.09.30 - 2021.09.30"
- *         - in: query
- *           name: active
- *           schema:
- *             type: string
- *           example: "0,1,2"
- *         - in: query
- *           name: contract_possibility
- *           schema:
- *             type: string
- *           example: "0,1,2"
- *      responses:
- *         '200':
- *            description: 성공
- *         '400':
- *           description: 실패
  * /api/consulting/form-link/list:
  *   get:
  *      security:

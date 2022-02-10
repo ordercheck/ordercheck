@@ -4,10 +4,9 @@ const db = require('../model/db');
 const { Op } = require('sequelize');
 module.exports = {
   showTotalConsultingDefault: async (req, res, next) => {
-    // 현제페이지, 전체아이템 개수, 넘버.
-
     let {
       params: { limit, page, firstId },
+      query: { No, Name, Address, Date },
       company_idx,
     } = req;
     limit = parseInt(limit);
@@ -45,13 +44,17 @@ module.exports = {
         return res.send({ success: 400, message: '고객이 없습니다.' });
       }
 
+      // userId, fullAddress 추가
       customerData = customerData.map((data) => {
         data.No = firstId++;
+        data.customer_phoneNumber = data.customer_phoneNumber.replace(
+          /-/g,
+          '.'
+        );
         data.fullAddress = `${data.address} ${data.detail_address}`;
         return data;
       });
 
-      console.log(customerData);
       return res.send({
         success: 200,
         customerData,
