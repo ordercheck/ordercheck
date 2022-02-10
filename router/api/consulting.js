@@ -5,12 +5,7 @@ const {
   multer_form_upload,
 } = require('../../lib/aws/aws');
 const loginCheck = require('../../middleware/auth');
-const {
-  dateFilter,
-  statusFilter,
-  contractPossibilityFilter,
-  searchCustomer,
-} = require('../../controller/consultingFilter');
+const { Filter, searchCustomer } = require('../../controller/consultingFilter');
 const {
   showTotalConsultingDefault,
   showCustomers,
@@ -37,15 +32,9 @@ const {
 } = require('../../middleware/checkLimit');
 // *****************************filter*********************************
 // date필터링
-router.get('/date/:date', loginCheck, dateFilter);
+router.get('/filter', loginCheck, Filter);
 // 상담 상태 필터링
-router.get('/active/:active', loginCheck, statusFilter);
-// 계약 가능성 필터링
-router.get(
-  '/contract-possibility/:contract_possibility',
-  loginCheck,
-  contractPossibilityFilter
-);
+
 // *****************************show*********************************
 // 고객 연동하기에서 고객들을 보여주기
 router.post('/integrated/user', loginCheck, showIntegratedUser);

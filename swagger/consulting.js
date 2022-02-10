@@ -94,60 +94,6 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/date/{date}:
- *   get:
- *      security:
- *       - bearerAuth: []
- *      tags:
- *       -  consult filter
- *      summary: consult date 필터 api
- *      parameters:
- *         - in: path
- *           name: date
- *           schema:
- *             type: string
- *           example: "2021.09.30 - 2021.09.30"
- *      responses:
- *         '200':
- *            description: 성공
- *         '400':
- *           description: 실패
- * /api/consulting/active/{active}:
- *   get:
- *      security:
- *       - bearerAuth: []
- *      tags:
- *       -  consult filter
- *      summary: consult 상담 상태 필터 api
- *      parameters:
- *         - in: path
- *           name: active
- *           schema:
- *             type: string
- *           example: 0,1,2
- *      responses:
- *         '200':
- *            description: 성공
- *         '400':
- *           description: 실패
- * /api/consulting/contract-possibility/{contract_possibility}:
- *   get:
- *      security:
- *       - bearerAuth: []
- *      tags:
- *       -  consult filter
- *      summary: consult 계약 가능성 필터 api
- *      parameters:
- *         - in: path
- *           name: contract_possibility
- *           schema:
- *             type: string
- *           example: 0,1,2
- *      responses:
- *         '200':
- *            description: 성공
- *         '400':
- *           description: 실패
  * /api/consulting/member:
  *   get:
  *      security:
@@ -471,6 +417,34 @@
  *           schema:
  *             type: string
  *           example: '김기태'
+ *      responses:
+ *         '200':
+ *            description: 성공
+ *         '400':
+ *           description: 실패
+ * /api/consulting/filter:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  consult get info
+ *      summary: consult filter
+ *      parameters:
+ *         - in: query
+ *           name: date
+ *           schema:
+ *             type: string
+ *           example: 2022.02.01 - 2022.02.14
+ *         - in: query
+ *           name: active
+ *           schema:
+ *             type: string
+ *           example: 0,1
+ *         - in: query
+ *           name: contract_possibility
+ *           schema:
+ *             type: string
+ *           example: 0,1
  *      responses:
  *         '200':
  *            description: 성공

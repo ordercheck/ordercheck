@@ -12,6 +12,44 @@ const makeArrforFilter = (data, status) => {
   return countArr;
 };
 module.exports = {
+  Filter: async (req, res, next) => {
+    let {
+      query: { date, active, contract_possibility },
+      company_idx,
+    } = req;
+    let firstDate;
+    let secondDate;
+    let countArr = [{ active: '0' }, { active: '1' }];
+    let countPossibility = [
+      { contract_possibility: '0' },
+      { contract_possibility: '1' },
+    ];
+    if (date) {
+      const changeDateResult = changeDate(date);
+      firstDate = changeDateResult.firstDate;
+      secondDate = changeDateResult.secondDate;
+    }
+    if (active) {
+      countArr = makeArrforFilter(active, (status = 'active'));
+    }
+
+    if (contract_possibility) {
+      countPossibility = makeArrforFilter(
+        contract_possibility,
+        (status = 'contract_possibility')
+      );
+    }
+
+    const result = await db.customer.findAll({
+      where: {
+        company_idx,
+        createdAt: { [Op.between]: [firstDate, secondDate] },
+        [Op.or]: countArr,
+        [Op.or]: countPossibility,
+      },
+    });
+    return res.send({ result });
+  },
   dateFilter: async (req, res, next) => {
     let {
       params: { date },
