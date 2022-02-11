@@ -47,12 +47,12 @@ module.exports = function (sequelize, DataTypes) {
 
     searchingAddress: {
       allowNull: false,
-      unique: true,
+
       type: DataTypes.STRING(100),
     },
     searchingPhoneNumber: {
       allowNull: false,
-      unique: true,
+
       type: DataTypes.STRING(100),
     },
     contract_possibility: {

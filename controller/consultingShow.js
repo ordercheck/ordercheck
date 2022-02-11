@@ -16,7 +16,7 @@ module.exports = {
     const totalData = await db.customer.count({ where: { company_idx } });
     const start = (page - 1) * limit;
 
-    const getCustomerData = async () => {
+    const getCustomerData = async (sort, NoNumber, addminus) => {
       let customerData = await db.customer.findAll({
         where: { company_idx },
         attributes: [
@@ -37,17 +37,19 @@ module.exports = {
             'createdAt',
           ],
         ],
-        order: [['createdAt', 'DESC']],
+        order: [['createdAt', sort]],
         offset: start,
         limit,
         raw: true,
       });
 
       // userId, fullAddress 추가
-      let No = page * limit - (limit - 1);
+      let No = NoNumber;
+
       customerData = customerData.map((data) => {
         data.No = No;
-        No++;
+        addminus == 'plus' ? No++ : No--;
+
         data.customer_phoneNumber = data.customer_phoneNumber.replace(
           /-/g,
           '.'
@@ -61,14 +63,27 @@ module.exports = {
     try {
       let customerData = '';
       if (!No && !Name && !Address && !Date) {
-        customerData = await getCustomerData();
+        customerData = await getCustomerData(
+          'DESC',
+          page * limit - (limit - 1),
+          'plus'
+        );
 
         if (customerData.length == 0) {
           return res.send({ success: 400, message: '고객이 없습니다.' });
         }
       }
       if (No) {
-        customerData = await getCustomerData();
+        let customerNumber = await db.customer.count({
+          where: { company_idx },
+        });
+        console.log(customerNumber);
+        if (No == 1) {
+          customerNumber = customerNumber - limit * page + limit;
+        }
+
+        console.log(customerNumber);
+        customerData = await getCustomerData('ASC', customerNumber, 'minus');
 
         if (customerData.length == 0) {
           return res.send({ success: 400, message: '고객이 없습니다.' });
