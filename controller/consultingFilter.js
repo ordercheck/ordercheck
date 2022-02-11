@@ -6,6 +6,7 @@ const {
 const { changeDate } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { Op } = require('sequelize');
+const { sortElements } = require('../lib/sort');
 const { customerAttributes } = require('../lib/attributes');
 // 0이 오름차순,1이 내림차순 (ASC는 오름차순)
 module.exports = {
@@ -59,64 +60,21 @@ module.exports = {
       intlimit,
       start
     ) => {
-      let customerNumber = intPage * intlimit - (intlimit - 1);
-      let sortField;
-      let sort;
-      let addminus;
       const countCustomersResultData = await countCustomers(
         activeData,
         contractData,
         contractPersonData
       );
 
-      if (!No && !Name && !Address && !Date) {
-        (sortField = 'createdAt'), (sort = 'DESC'), (addminus = 'plus');
-      }
-      if (No == 0) {
-        (sortField = 'createdAt'),
-          (sort = 'ASC'),
-          (customerNumber =
-            countCustomersResultData - intlimit * intPage + intlimit);
-        addminus = 'minus';
-      }
-      if (No == 1) {
-        (sortField = 'createdAt'), (sort = 'DESC'), (addminus = 'plus');
-      }
-
-      if (Name == 0) {
-        (sortField = 'customer_name'),
-          (sort = 'ASC'),
-          (customerNumber =
-            countCustomersResultData - intlimit * intPage + intlimit);
-        addminus = 'minus';
-      }
-
-      if (Name == 1) {
-        (sortField = 'customer_name'), (sort = 'DESC'), (addminus = 'plus');
-      }
-
-      if (Address == 0) {
-        (sortField = 'searchingAddress'),
-          (sort = 'ASC'),
-          (customerNumber =
-            countCustomersResultData - intlimit * intPage + intlimit);
-        addminus = 'minus';
-      }
-      if (Address == 1) {
-        (sortField = 'searchingAddress'), (sort = 'DESC'), (addminus = 'plus');
-      }
-      if (Date == 0) {
-        (sortField = 'createdAt'),
-          (sort = 'ASC'),
-          (customerNumber =
-            countCustomersResultData - intlimit * intPage + intlimit);
-        addminus = 'minus';
-      }
-
-      if (Date == 1) {
-        (sortField = 'createdAt'), (sort = 'DESC'), (addminus = 'plus');
-      }
-
+      const { customerNumber, sortField, sort, addminus } = sortElements(
+        No,
+        Name,
+        Address,
+        Date,
+        intPage,
+        intlimit,
+        countCustomersResultData
+      );
       let findUsersData = await db.customer.findAll({
         where: {
           company_idx,
@@ -207,58 +165,15 @@ module.exports = {
         },
       });
 
-      let customerNumber = intPage * intlimit - (intlimit - 1);
-      let sortField;
-      let sort;
-      let addminus;
-
-      if (!No && !Name && !Address && !Date) {
-        (sortField = 'createdAt'), (sort = 'DESC'), (addminus = 'plus');
-      }
-      if (No == 0) {
-        (sortField = 'createdAt'),
-          (sort = 'ASC'),
-          (customerNumber =
-            countCustomersResultData - intlimit * intPage + intlimit);
-        addminus = 'minus';
-      }
-      if (No == 1) {
-        (sortField = 'createdAt'), (sort = 'DESC'), (addminus = 'plus');
-      }
-
-      if (Name == 0) {
-        (sortField = 'customer_name'),
-          (sort = 'ASC'),
-          (customerNumber =
-            countCustomersResultData - intlimit * intPage + intlimit);
-        addminus = 'minus';
-      }
-
-      if (Name == 1) {
-        (sortField = 'customer_name'), (sort = 'DESC'), (addminus = 'plus');
-      }
-
-      if (Address == 0) {
-        (sortField = 'searchingAddress'),
-          (sort = 'ASC'),
-          (customerNumber =
-            countCustomersResultData - intlimit * intPage + intlimit);
-        addminus = 'minus';
-      }
-      if (Address == 1) {
-        (sortField = 'searchingAddress'), (sort = 'DESC'), (addminus = 'plus');
-      }
-      if (Date == 0) {
-        (sortField = 'createdAt'),
-          (sort = 'ASC'),
-          (customerNumber =
-            countCustomersResultData - intlimit * intPage + intlimit);
-        addminus = 'minus';
-      }
-
-      if (Date == 1) {
-        (sortField = 'createdAt'), (sort = 'DESC'), (addminus = 'plus');
-      }
+      const { customerNumber, sortField, sort, addminus } = sortElements(
+        No,
+        Name,
+        Address,
+        Date,
+        intPage,
+        intlimit,
+        countCustomersResultData
+      );
 
       let searchedUsers = await db.customer.findAll({
         where: {

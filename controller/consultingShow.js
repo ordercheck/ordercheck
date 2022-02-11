@@ -20,8 +20,8 @@ module.exports = {
       query: { No, Name, Address, Date },
       company_idx,
     } = req;
-
-    const { totalData, start, intlimit, intPage } = await checkPage(
+    const totalData = await db.customer.count({ where: { company_idx } });
+    const { start, intlimit, intPage } = await checkPage(
       limit,
       page,
       company_idx
@@ -171,10 +171,12 @@ module.exports = {
 
       consultResult = JSON.parse(consultResult);
 
+      // 상담신청 젤 위로 변경
       consultResult.consultings.forEach((data) => {
         data.status = 0;
         consultResult.consultingTimeLines.unshift(data);
       });
+      // 변경 후 필드 삭제
       delete consultResult.consultings;
       return res.send({ success: 200, consultResult });
     } catch (err) {

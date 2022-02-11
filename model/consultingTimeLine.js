@@ -9,8 +9,8 @@ module.exports = function (sequelize, DataTypes) {
 
     status: {
       allowNull: false,
-      defaultValue: '',
-      type: DataTypes.STRING(100),
+      defaultValue: 0,
+      type: DataTypes.INTEGER,
     },
     memo: {
       allowNull: false,
