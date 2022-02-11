@@ -407,7 +407,7 @@
  *       - bearerAuth: []
  *      tags:
  *       -  consult get info
- *      summary: consult 고객 통합검색
+ *      summary: consult 고객 통합검색 (0이 오름차순 1이 내림차순)
  *      parameters:
  *         - in: query
  *           name: search
@@ -453,7 +453,7 @@
  *       - bearerAuth: []
  *     tags:
  *       -  consult get info
- *     summary: consulting filter하기
+ *     summary: consulting filter하기 (0이 오름차순 1이 내림차순)
  *     parameters:
  *         - in: path
  *           name: limit
