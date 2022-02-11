@@ -209,7 +209,7 @@ module.exports = {
         v === null ? undefined : v
       );
       consultResult = JSON.parse(consultResult);
-      return res.send({ consultResult });
+      return res.send({ success: 200, consultResult });
     } catch (err) {
       next(err);
     }
