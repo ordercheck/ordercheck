@@ -49,7 +49,6 @@ module.exports = {
       customerData = customerData.map((data) => {
         data.No = No;
         addminus == 'plus' ? No++ : No--;
-
         data.customer_phoneNumber = data.customer_phoneNumber.replace(
           /-/g,
           '.'

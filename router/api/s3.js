@@ -60,7 +60,7 @@ router.post('/', async (req, res) => {
 접수 내용 확인:
 http://my.ordercheck.io/FEQF
 `;
-  const user_phone = '01030472952';
+  const user_phone = '01067196919';
   let result = await axios({
     url: '/api/send/sms',
     method: 'post', // POST method

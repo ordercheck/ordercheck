@@ -98,7 +98,7 @@ router.post('/join/check', async (req, res) => {
   const randInt = Math.random() * 1000;
   const message = `[인증번호:${parseInt(
     randInt
-  )}] 오더체크에서 보내는 인증번호입니다.\n오더체크와 편리한 고객응대를 시작해보세요.`;
+  )}] 오더체크 인증번호입니다.\n오더체크와 편리한 고객응대를 시작해보세요.`;
   let phoneCheck = await db.user
     .findAll({ where: { user_phone } })
     .then((r) => {
@@ -120,7 +120,7 @@ router.post('/join/check', async (req, res) => {
     url: '/api/send/sms',
     method: 'post', // POST method
     headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
-    data: { user_phone, message },
+    data: { user_phone, message, type: 'SMS' },
   });
 
   if (result.data.success == 200) {
@@ -135,13 +135,13 @@ router.post('/check/pw', async (req, res) => {
   const randInt = Math.random() * 1000;
   const message = `[인증번호: ${parseInt(
     randInt
-  )}] \n 오더체크에서 보내는 인증번호입니다.`;
+  )}] \n 오더체크 인증번호입니다.`;
   try {
     let result = await axios({
       url: '/api/send/sms',
       method: 'post', // POST method
       headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
-      data: { user_phone, message },
+      data: { user_phone, message, type: 'SMS' },
     });
     return res.send({ success: 200, number: parseInt(randInt) });
   } catch (err) {
@@ -379,8 +379,8 @@ router.post('/decode/token/data', async (req, res) => {
 });
 // sms 보내기
 router.post('/send/sms', async (req, res) => {
-  const { user_phone, message } = req.body;
-  let result = await _f.smsPush(user_phone, message);
+  const { user_phone, message, type } = req.body;
+  let result = await _f.smsPush(user_phone, message, type);
   return res.send(result);
 });
 // 중복된 핸드폰 번호 여부 확인
