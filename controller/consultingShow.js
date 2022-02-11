@@ -171,10 +171,10 @@ module.exports = {
 
       consultResult = JSON.parse(consultResult);
 
-      consultResult.consultingTimeLines.map((data) => {
-        console.log(data);
+      consultResult.consultings.forEach((data) => {
+        data.status = 0;
+        consultResult.consultingTimeLines.unshift(data);
       });
-      // unshift(consultResult.consultings);
       delete consultResult.consultings;
       return res.send({ success: 200, consultResult });
     } catch (err) {
