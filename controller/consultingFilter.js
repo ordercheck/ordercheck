@@ -1,7 +1,8 @@
-const { checkUserCompany, errorFunction } = require('../lib/apiFunctions');
+const { checkUserCompany, checkPage } = require('../lib/apiFunctions');
 const { changeDate } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { Op } = require('sequelize');
+const { customerAttributes } = require('../lib/attributes');
 // 받은 params를 sequelize or형태에 맞게 만들어주는 함수
 const makeArrforFilter = (data, status) => {
   const countArr = data.map((el) => {
@@ -14,22 +15,28 @@ module.exports = {
   Filter: async (req, res, next) => {
     let {
       body: { date, active, contract_possibility, userId, confirm },
+      params: { limit, page },
       company_idx,
     } = req;
 
     const { firstDate, secondDate } = changeDate(date);
 
+    const { start, intlimit, intPage } = await checkPage(
+      limit,
+      page,
+      company_idx
+    );
+
     let countArr = [0, 1];
     let countPossibility = [0, 1];
     let contractPerson = null;
 
-    const findCustomers = async (
-      data,
+    const countCustomers = async (
       activeData,
       contractData,
       contractPersonData
     ) => {
-      const result = await db.customer[data]({
+      const countCustomersResult = await db.customer.count({
         where: {
           company_idx,
           createdAt: { [Op.between]: [firstDate, secondDate] },
@@ -44,10 +51,40 @@ module.exports = {
           },
         },
       });
-
-      return result;
+      return { countCustomersResult };
     };
-
+    const findCustomers = async (
+      activeData,
+      contractData,
+      contractPersonData,
+      intlimit,
+      start
+    ) => {
+      const countCustomersResult = await countCustomers(
+        activeData,
+        contractData,
+        contractPersonData
+      );
+      const findUsersData = await db.customer.findAll({
+        where: {
+          company_idx,
+          createdAt: { [Op.between]: [firstDate, secondDate] },
+          active: {
+            [Op.or]: activeData,
+          },
+          contract_possibility: {
+            [Op.or]: contractData,
+          },
+          contact_person: {
+            [Op.or]: contractPersonData,
+          },
+        },
+        attributes: customerAttributes,
+        offset: start,
+        limit: intlimit,
+      });
+      return { countCustomersResult, findUsersData };
+    };
     if (active) {
       countArr = active;
     }
@@ -60,101 +97,44 @@ module.exports = {
       contractPerson = userId;
     }
 
-    const result = confirm
-      ? await findCustomers(
-          'findAll',
-          countArr,
-          countPossibility,
-          contractPerson
-        )
+    const result = !confirm
+      ? await countCustomers(countArr, countPossibility, contractPerson)
       : await findCustomers(
-          'count',
           countArr,
           countPossibility,
-          contractPerson
+          contractPerson,
+          intlimit,
+          start
         );
 
-    return res.send({ success: 200, findResult: result });
+    return res.send({
+      success: 200,
+      findResult: result.findUsersData,
+      totalUser: result.countCustomersResult,
+      Page: intPage,
+      totalPage: Math.ceil(result.countCustomersResult / limit),
+    });
   },
-  dateFilter: async (req, res, next) => {
-    let {
-      params: { date },
-      company_idx,
-    } = req;
-    try {
-      // const checkResult = await checkUserCompany(company_idx, user_idx);
-      // if (checkResult == false) {
-      //   return res.send({ success: 400 });
-      // }
-      const { firstDate, secondDate } = changeDate(date);
 
-      const result = await db.customer.count({
-        where: {
-          company_idx,
-          createdAt: { [Op.between]: [firstDate, secondDate] },
-        },
-      });
-      return res.send({ success: 200, result });
-    } catch (err) {
-      next(err);
-    }
-  },
-  statusFilter: async (req, res, next) => {
-    let {
-      params: { active },
-      company_idx,
-    } = req;
-    try {
-      // const checkResult = await checkUserCompany(company_idx, user_idx);
-      // if (checkResult == false) {
-      //   return res.send({ success: 400 });
-      // }
-      const countArr = makeArrforFilter(active, (status = 'active'));
-
-      const result = await db.customer.count({
-        where: {
-          company_idx,
-          [Op.or]: countArr,
-        },
-      });
-      return res.send({ success: 200, result });
-    } catch (err) {
-      next(err);
-    }
-  },
-  contractPossibilityFilter: async (req, res, next) => {
-    let {
-      params: { contract_possibility },
-      company_idx,
-    } = req;
-    try {
-      // const checkResult = await checkUserCompany(company_idx, user_idx);
-      // if (checkResult == false) {
-      //   return res.send({ success: 400 });
-      // }
-      const countArr = makeArrforFilter(
-        contract_possibility,
-        (status = 'contract_possibility')
-      );
-      const result = await db.customer.count({
-        where: {
-          company_idx,
-          [Op.or]: countArr,
-        },
-      });
-      return res.send({ success: 200, result });
-    } catch (err) {
-      next(err);
-    }
-  },
   searchCustomer: async (req, res, next) => {
+    let {
+      query: { search },
+      params: { limit, page },
+      company_idx,
+    } = req;
     try {
-      const pureText = req.query.search.replace(
+      const pureText = search.replace(
         /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
         ''
       );
-      console.log(pureText);
-      const result = await db.customer.findAll({
+
+      const { totalData, start, intlimit, intPage } = await checkPage(
+        limit,
+        page,
+        company_idx
+      );
+
+      const searchedUsers = await db.customer.findAll({
         where: {
           [Op.or]: {
             customer_name: {
@@ -168,26 +148,18 @@ module.exports = {
             },
           },
         },
-        attributes: [
-          ['idx', 'userId'],
-          'customer_name',
-          'customer_phoneNumber',
-          'address',
-          'detail_address',
-          'active',
-          'contract_possibility',
-          'contact_person',
-          [
-            db.sequelize.fn(
-              'date_format',
-              db.sequelize.col('createdAt'),
-              '%Y.%m.%d'
-            ),
-            'createdAt',
-          ],
-        ],
+        attributes: customerAttributes,
+
+        order: [['createdAt', 'DESC']],
+        offset: start,
+        limit: intlimit,
       });
-      return res.send({ success: 200, result });
+      return res.send({
+        success: 200,
+        searchedUsers,
+        page: intPage,
+        totalPage: Math.ceil(totalData / limit),
+      });
     } catch (err) {
       next(err);
     }

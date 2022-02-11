@@ -404,7 +404,7 @@
  *         '400':
  *           description: 실패
  *
- * /api/consulting/customer/search:
+ * /api/consulting/customer/search/{limit}/{page}::
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -417,18 +417,35 @@
  *           schema:
  *             type: string
  *           example: '김기태'
+ *         - in: path
+ *           name: limit
+ *           schema:
+ *             type: integer
+ *         - in: path
+ *           name: page
+ *           schema:
+ *             type: integer
  *      responses:
  *         '200':
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/filter:
+ * /api/consulting/filter/{limit}/{page}:
  *   post:
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       -  consult get info
  *     summary: consulting filter하기
+ *     parameters:
+ *         - in: path
+ *           name: limit
+ *           schema:
+ *             type: integer
+ *         - in: path
+ *           name: page
+ *           schema:
+ *             type: integer     
  *     requestBody:
  *      content:
  *        application/json:

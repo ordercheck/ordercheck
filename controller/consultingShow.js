@@ -1,7 +1,13 @@
-const { checkUserCompany, errorFunction } = require('../lib/apiFunctions');
+const { checkUserCompany, checkPage } = require('../lib/apiFunctions');
 const { changeDate } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { Op } = require('sequelize');
+const {
+  showDetailConsultingAttributes,
+  showDetailJoinConsultingAttributes,
+  showDetailMainConsultingAttributes,
+  showIntegratedUserAttributes,
+} = require('../lib/attributes');
 module.exports = {
   showTotalConsultingDefault: async (req, res, next) => {
     let {
@@ -10,36 +16,18 @@ module.exports = {
       company_idx,
     } = req;
 
-    limit = parseInt(limit);
-    page = parseInt(page);
-
-    const totalData = await db.customer.count({ where: { company_idx } });
-    const start = (page - 1) * limit;
-
+    const { totalData, start, intlimit, intPage } = await checkPage(
+      limit,
+      page,
+      company_idx
+    );
     const getCustomerData = async (sortField, sort, No, addminus) => {
       let customerData = await db.customer.findAll({
         where: { company_idx },
-        attributes: [
-          ['idx', 'userId'],
-          'customer_name',
-          'customer_phoneNumber',
-          'address',
-          'detail_address',
-          'active',
-          'contract_possibility',
-          'contact_person',
-          [
-            db.sequelize.fn(
-              'date_format',
-              db.sequelize.col('createdAt'),
-              '%Y.%m.%d'
-            ),
-            'createdAt',
-          ],
-        ],
+        attributes: customerAttributes,
         order: [[sortField, sort]],
         offset: start,
-        limit,
+        limit: intlimit,
         raw: true,
       });
 
@@ -147,7 +135,7 @@ module.exports = {
         success: 200,
         customerData,
         totalUser: totalData,
-        page,
+        page: intPage,
         totalPage: Math.ceil(totalData / limit),
       });
     } catch (err) {
@@ -190,87 +178,15 @@ module.exports = {
           {
             model: db.consulting,
 
-            attributes: [
-              'choice',
-              'customer_email',
-              'application_route',
-              'building_type',
-              'rooms_count',
-              'bathrooms_count',
-              'completion_year',
-              'floor_plan',
-              'hope_Date',
-              'predicted_living',
-              'budget',
-              'destruction',
-              'expand',
-              'window',
-              'carpentry',
-              'paint',
-              'papering',
-              'bathroom',
-              'bathroom_option',
-              'floor',
-              'tile',
-              'electricity_lighting',
-              'kitchen',
-              'kitchen_option',
-              'furniture',
-              'facility',
-              'film',
-              'art_wall',
-              'elv',
-              'etc',
-              'hope_concept',
-              'contact_time',
-              'etc_question',
-
-              [
-                db.sequelize.fn(
-                  'date_format',
-                  db.sequelize.col('consultings.createdAt'),
-                  '%Y.%m.%d'
-                ),
-                'createdAt',
-              ],
-            ],
+            attributes: showDetailConsultingAttributes,
           },
           {
             model: db.timeLine,
-            attributes: [
-              'status',
-              'memo',
-
-              [
-                db.sequelize.fn(
-                  'date_format',
-                  db.sequelize.col('consultingTimeLines.createdAt'),
-                  '%Y.%m.%d'
-                ),
-                'createdAt',
-              ],
-            ],
+            attributes: showDetailJoinConsultingAttributes,
           },
         ],
-        attributes: [
-          'idx',
-          'customer_name',
-          'customer_phoneNumber',
-          'address',
-          'detail_address',
-          'room_size',
-          'room_size_kind',
-          'contract_possibility',
-          'contact_person',
-          [
-            db.sequelize.fn(
-              'date_format',
-              db.sequelize.col('customer.createdAt'),
-              '%Y.%m.%d'
-            ),
-            'createdAt',
-          ],
-        ],
+        attributes: showDetailMainConsultingAttributes,
+
         order: [[db.consulting, 'createdAt', 'DESC']],
       });
 
@@ -354,14 +270,7 @@ module.exports = {
       // }
       const result = await db.customer.findAll({
         where: { customer_phoneNumber, company_idx },
-        attributes: [
-          'idx',
-          'customer_name',
-          'customer_phoneNumber',
-          'createdAt',
-          'address',
-          'detail_address',
-        ],
+        attributes: showIntegratedUserAttributes,
       });
       return res.send({ result });
     } catch (err) {
