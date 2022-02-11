@@ -16,7 +16,7 @@ module.exports = {
     const totalData = await db.customer.count({ where: { company_idx } });
     const start = (page - 1) * limit;
 
-    const getCustomerData = async (sort, NoNumber, addminus) => {
+    const getCustomerData = async (sortField, sort, NoNumber, addminus) => {
       let customerData = await db.customer.findAll({
         where: { company_idx },
         attributes: [
@@ -37,7 +37,7 @@ module.exports = {
             'createdAt',
           ],
         ],
-        order: [['createdAt', sort]],
+        order: [[sortField, sort]],
         offset: start,
         limit,
         raw: true,
@@ -62,10 +62,12 @@ module.exports = {
 
     try {
       let customerData = '';
+      let customerNumber = page * limit - (limit - 1);
       if (!No && !Name && !Address && !Date) {
         customerData = await getCustomerData(
+          'createdAt',
           'DESC',
-          page * limit - (limit - 1),
+          customerNumber,
           'plus'
         );
 
@@ -73,22 +75,77 @@ module.exports = {
           return res.send({ success: 400, message: '고객이 없습니다.' });
         }
       }
+
+      // 0이 오름차순,1이 내림차순 (ASC는 오름차순)
       if (No) {
-        let customerNumber = await db.customer.count({
-          where: { company_idx },
-        });
-        console.log(customerNumber);
-        if (No == 1) {
-          customerNumber = customerNumber - limit * page + limit;
+        if (No == 0) {
+          customerNumber = await db.customer.count({
+            where: { company_idx },
+          });
         }
 
-        console.log(customerNumber);
-        customerData = await getCustomerData('ASC', customerNumber, 'minus');
+        customerData = await getCustomerData(
+          'createdAt',
+          No == 0 ? 'ASC' : 'DESC',
+          No == 0 ? customerNumber - limit * page + limit : customerNumber,
+          No == 0 ? 'minus' : 'plus'
+        );
 
         if (customerData.length == 0) {
           return res.send({ success: 400, message: '고객이 없습니다.' });
         }
       }
+      if (Name) {
+        if (Name == 0) {
+          customerNumber = await db.customer.count({
+            where: { company_idx },
+          });
+        }
+        customerData = await getCustomerData(
+          'customer_name',
+          Name == 0 ? 'ASC' : 'DESC',
+          Name == 0 ? customerNumber - limit * page + limit : customerNumber,
+          Name == 0 ? 'minus' : 'plus'
+        );
+        if (customerData.length == 0) {
+          return res.send({ success: 400, message: '고객이 없습니다.' });
+        }
+      }
+
+      if (Address) {
+        if (Address == 0) {
+          customerNumber = await db.customer.count({
+            where: { company_idx },
+          });
+        }
+        customerData = await getCustomerData(
+          'searchingAddress',
+          Address == 0 ? 'ASC' : 'DESC',
+          Address == 0 ? customerNumber - limit * page + limit : customerNumber,
+          Address == 0 ? 'minus' : 'plus'
+        );
+        if (customerData.length == 0) {
+          return res.send({ success: 400, message: '고객이 없습니다.' });
+        }
+      }
+
+      if (Date) {
+        if (Date == 0) {
+          customerNumber = await db.customer.count({
+            where: { company_idx },
+          });
+        }
+        customerData = await getCustomerData(
+          'updatedAt',
+          Date == 0 ? 'ASC' : 'DESC',
+          Date == 0 ? customerNumber - limit * page + limit : customerNumber,
+          Date == 0 ? 'minus' : 'plus'
+        );
+        if (customerData.length == 0) {
+          return res.send({ success: 400, message: '고객이 없습니다.' });
+        }
+      }
+
       return res.send({
         success: 200,
         customerData,
