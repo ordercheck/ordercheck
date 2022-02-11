@@ -91,7 +91,7 @@ router.post(
 router.post('/customer', loginCheck, checkCustomerLimit, addCompanyCustomer);
 
 // 고객 통합 검색
-router.get('/customer/search/:limit/:page', loginCheck, searchCustomer);
+router.get('/customer/search/:limit/:page/:sort', loginCheck, searchCustomer);
 // 컨설팅 삭제
 router.delete('/', loginCheck, delConsulting);
 

@@ -404,7 +404,7 @@
  *         '400':
  *           description: 실패
  *
- * /api/consulting/customer/search/{limit}/{page}::
+ * /api/consulting/customer/search/{limit}/{page}:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -423,6 +423,10 @@
  *             type: integer
  *         - in: path
  *           name: page
+ *           schema:
+ *             type: integer
+ *         - in: path
+ *           name: sort
  *           schema:
  *             type: integer
  *      responses:
@@ -445,7 +449,27 @@
  *         - in: path
  *           name: page
  *           schema:
- *             type: integer     
+ *             type: integer    
+ *         - in: query
+ *           name: No
+ *           schema:
+ *             type: integer
+ *           example: 0
+ *         - in: query
+ *           name: Name
+ *           schema:
+ *             type: integer
+ *           example: 0
+ *         - in: query
+ *           name: Address
+ *           schema:
+ *             type: integer
+ *           example: 0
+ *         - in: query
+ *           name: Date
+ *           schema:
+ *             type: integer
+ *           example: 0 
  *     requestBody:
  *      content:
  *        application/json:

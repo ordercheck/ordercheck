@@ -11,6 +11,7 @@ const {
   showDetailJoinConsultingAttributes,
   showDetailMainConsultingAttributes,
   showIntegratedUserAttributes,
+  customerAttributes,
 } = require('../lib/attributes');
 module.exports = {
   showTotalConsultingDefault: async (req, res, next) => {
@@ -42,7 +43,7 @@ module.exports = {
 
     try {
       let customerData = '';
-      let customerNumber = page * limit - (limit - 1);
+      let customerNumber = intPage * intlimit - (intlimit - 1);
       if (!No && !Name && !Address && !Date) {
         customerData = await getCustomerData(
           'createdAt',
@@ -58,16 +59,10 @@ module.exports = {
 
       // 0이 오름차순,1이 내림차순 (ASC는 오름차순)
       if (No) {
-        if (No == 0) {
-          customerNumber = await db.customer.count({
-            where: { company_idx },
-          });
-        }
-
         customerData = await getCustomerData(
           'createdAt',
           No == 0 ? 'ASC' : 'DESC',
-          No == 0 ? customerNumber - limit * page + limit : customerNumber,
+          No == 0 ? totalData - intlimit * intPage + intlimit : customerNumber,
           No == 0 ? 'minus' : 'plus'
         );
 
@@ -76,15 +71,10 @@ module.exports = {
         }
       }
       if (Name) {
-        if (Name == 0) {
-          customerNumber = await db.customer.count({
-            where: { company_idx },
-          });
-        }
         customerData = await getCustomerData(
           'customer_name',
           Name == 0 ? 'ASC' : 'DESC',
-          Name == 0 ? customerNumber - limit * page + limit : customerNumber,
+          Name == 0 ? totalData - limit * page + limit : customerNumber,
           Name == 0 ? 'minus' : 'plus'
         );
         if (customerData.length == 0) {
@@ -93,15 +83,10 @@ module.exports = {
       }
 
       if (Address) {
-        if (Address == 0) {
-          customerNumber = await db.customer.count({
-            where: { company_idx },
-          });
-        }
         customerData = await getCustomerData(
           'searchingAddress',
           Address == 0 ? 'ASC' : 'DESC',
-          Address == 0 ? customerNumber - limit * page + limit : customerNumber,
+          Address == 0 ? totalData - limit * page + limit : customerNumber,
           Address == 0 ? 'minus' : 'plus'
         );
         if (customerData.length == 0) {
@@ -110,15 +95,10 @@ module.exports = {
       }
 
       if (Date) {
-        if (Date == 0) {
-          customerNumber = await db.customer.count({
-            where: { company_idx },
-          });
-        }
         customerData = await getCustomerData(
           'updatedAt',
           Date == 0 ? 'ASC' : 'DESC',
-          Date == 0 ? customerNumber - limit * page + limit : customerNumber,
+          Date == 0 ? totalData - limit * page + limit : customerNumber,
           Date == 0 ? 'minus' : 'plus'
         );
         if (customerData.length == 0) {

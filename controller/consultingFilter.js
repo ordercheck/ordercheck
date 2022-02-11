@@ -7,11 +7,12 @@ const { changeDate } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { Op } = require('sequelize');
 const { customerAttributes } = require('../lib/attributes');
-
+// 0이 오름차순,1이 내림차순 (ASC는 오름차순)
 module.exports = {
   Filter: async (req, res, next) => {
     let {
       body: { date, active, contract_possibility, userId, confirm },
+      query: { No, Name, Address, Date },
       params: { limit, page },
       company_idx,
     } = req;
@@ -33,7 +34,7 @@ module.exports = {
       contractData,
       contractPersonData
     ) => {
-      const countCustomersResult = await db.customer.count({
+      const { countCustomersResult } = await db.customer.count({
         where: {
           company_idx,
           createdAt: { [Op.between]: [firstDate, secondDate] },
@@ -58,11 +59,26 @@ module.exports = {
       intlimit,
       start
     ) => {
+      let customerNumber = intPage * intlimit - (intlimit - 1);
+      let sortField;
+      let sort;
+      let Number;
+      let addminus;
       const { countCustomersResult } = await countCustomers(
         activeData,
         contractData,
         contractPersonData
       );
+      if (!No && !Name && !Address && !Date) {
+        (sortField = 'createdAt'), (sort = 'DESC'), (addminus = 'plus');
+      }
+      if (No == 0) {
+        (sortField = 'createdAt'),
+          (sort = 'ASC'),
+          (Number = consultCountData - intlimit * intPage + intlimit);
+        addminus = 'minus';
+      }
+
       let findUsersData = await db.customer.findAll({
         where: {
           company_idx,
@@ -80,17 +96,13 @@ module.exports = {
         attributes: customerAttributes,
         offset: start,
         limit: intlimit,
-        order: [['createdAt', 'DESC']],
+        order: [[sortField, sort]],
         raw: true,
       });
 
-      findUsersData = addUserId(
-        findUsersData,
-        'plus',
-        page * limit - (limit - 1)
-      );
+      findUsersData = addUserId(findUsersData, addminus, customerNumber);
 
-      return { countCustomersResult, findUsersData };
+      return { countCustomersResultData, findUsersData };
     };
     if (active) {
       countArr = active;
@@ -104,7 +116,7 @@ module.exports = {
       contractPerson = userId;
     }
 
-    const { countCustomersResult, findUsersData } = !confirm
+    const { countCustomersResultData, findUsersData } = !confirm
       ? await countCustomers(countArr, countPossibility, contractPerson)
       : await findCustomers(
           countArr,
@@ -119,14 +131,14 @@ module.exports = {
       findResult: findUsersData,
       totalUser: countCustomersResult,
       Page: intPage,
-      totalPage: Math.ceil(countCustomersResult / limit),
+      totalPage: Math.ceil(countCustomersResultData / limit),
     });
   },
 
   searchCustomer: async (req, res, next) => {
     let {
       query: { search },
-      params: { limit, page },
+      params: { limit, page, sort },
       company_idx,
     } = req;
     try {
