@@ -148,9 +148,12 @@ module.exports = {
     }
   },
   searchCustomer: async (req, res, next) => {
-    // 인덱싱 필요
     try {
-      const pureText = req.query.search.replace(/\W|\s/g, '');
+      const pureText = req.query.search.replace(
+        /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
+        ''
+      );
+      console.log(pureText);
       const result = await db.customer.findAll({
         where: {
           [Op.or]: {
@@ -165,9 +168,26 @@ module.exports = {
             },
           },
         },
-        limit: 10,
+        attributes: [
+          ['idx', 'userId'],
+          'customer_name',
+          'customer_phoneNumber',
+          'address',
+          'detail_address',
+          'active',
+          'contract_possibility',
+          'contact_person',
+          [
+            db.sequelize.fn(
+              'date_format',
+              db.sequelize.col('createdAt'),
+              '%Y.%m.%d'
+            ),
+            'createdAt',
+          ],
+        ],
       });
-      return res.send(result);
+      return res.send({ success: 200, result });
     } catch (err) {
       next(err);
     }

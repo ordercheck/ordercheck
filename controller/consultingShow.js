@@ -16,7 +16,7 @@ module.exports = {
     const totalData = await db.customer.count({ where: { company_idx } });
     const start = (page - 1) * limit;
 
-    const getCustomerData = async (sortField, sort, NoNumber, addminus) => {
+    const getCustomerData = async (sortField, sort, No, addminus) => {
       let customerData = await db.customer.findAll({
         where: { company_idx },
         attributes: [
@@ -44,8 +44,6 @@ module.exports = {
       });
 
       // userId, fullAddress 추가
-      let No = NoNumber;
-
       customerData = customerData.map((data) => {
         data.No = No;
         addminus == 'plus' ? No++ : No--;

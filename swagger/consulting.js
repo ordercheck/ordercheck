@@ -59,7 +59,7 @@
  *       - bearerAuth: []
  *      tags:
  *       -  consult get info
- *      summary: consult 조회
+ *      summary: consult 조회 (0이 오름차순 1이 내림차순)
  *      parameters:
  *         - in: path
  *           name: limit
