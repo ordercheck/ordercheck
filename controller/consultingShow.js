@@ -171,7 +171,10 @@ module.exports = {
 
       consultResult = JSON.parse(consultResult);
 
-      consultResult.consultingTimeLines.unshift(consultResult.consultings);
+      consultResult.consultingTimeLines.map((data) => {
+        console.log(data);
+      });
+      // unshift(consultResult.consultings);
       delete consultResult.consultings;
       return res.send({ success: 200, consultResult });
     } catch (err) {
