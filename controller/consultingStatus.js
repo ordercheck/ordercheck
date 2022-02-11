@@ -8,6 +8,7 @@ const { downFile } = require('../lib/aws/fileupload').ufile;
 const {
   TeamkakaoPushNewForm,
   customerkakaoPushNewForm,
+  customerkakaoPushNewCal,
 } = require('../lib/kakaoPush');
 const changeToSearch = (body) => {
   const searchingPhoneNumber = body.customer_phoneNumber.replace(/-/g, '');
@@ -49,18 +50,21 @@ module.exports = {
           );
           res.send({ success: 200 });
 
+          // await customerkakaoPushNewCal(
+          //   bodyData.customer_phoneNumber,
+          //   bodyData.company_name,
+          //   bodyData.customer_name,
+          //   '23',
+          //   '견적서 확인'
+          // );
+
           // 고객 카카오 푸쉬 보내기
           // await customerkakaoPushNewForm(
-          //   // bodyData.customer_phoneNumber,
-          //   // bodyData.company_name,
-          //   // bodyData.customer_name,
-          //   // '접수 내용 확인',
-          //   // bodyData.title
-          //   '01030472952',
-          //   '오더킹',
-          //   '김오더',
+          //   bodyData.customer_phoneNumber,
+          //   bodyData.company_name,
+          //   bodyData.customer_name,
           //   '접수 내용 확인',
-          //   '간편 상담 접수'
+          //   bodyData.title
           // );
 
           // 팀원 카카오 푸쉬 보내기

@@ -7,12 +7,16 @@ const {
   getFileName,
 } = require('../lib/apiFunctions');
 const { Op } = require('sequelize');
+const {
+  createFormLinkAttributes,
+  searchFormLinkAttributes,
+} = require('../lib/attributes');
 module.exports = {
   createFormLink: async (req, res, next) => {
     try {
       req.body.form_link = _f.random5();
       req.body.company_idx = req.company_idx;
-      console.log(req.company_idx);
+
       const createResult = await db.formLink.create(req.body);
       return res.send({
         success: 200,
@@ -27,20 +31,7 @@ module.exports = {
     try {
       let formList = await db.formLink.findAll({
         where: { company_idx: req.company_idx },
-        attributes: [
-          ['idx', 'formId'],
-          'title',
-          'form_link',
-          'expression',
-          [
-            db.sequelize.fn(
-              'date_format',
-              db.sequelize.col('createdAt'),
-              '%Y.%m.%d'
-            ),
-            'createdAt',
-          ],
-        ],
+        attributes: createFormLinkAttributes,
 
         order: [['createdAt', 'DESC']],
         raw: true,
@@ -144,19 +135,7 @@ module.exports = {
             [Op.like]: `%${req.params.title}%`,
           },
         },
-        attributes: [
-          ['idx', 'formId'],
-          'title',
-
-          [
-            db.sequelize.fn(
-              'date_format',
-              db.sequelize.col('createdAt'),
-              '%Y.%m.%d'
-            ),
-            'createdAt',
-          ],
-        ],
+        attributes: searchFormLinkAttributes,
         order: [['createdAt', 'DESC']],
       });
 
