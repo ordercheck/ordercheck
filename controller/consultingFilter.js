@@ -1,16 +1,13 @@
-const { checkUserCompany, checkPage } = require('../lib/apiFunctions');
+const {
+  checkUserCompany,
+  checkPage,
+  addUserId,
+} = require('../lib/apiFunctions');
 const { changeDate } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { Op } = require('sequelize');
 const { customerAttributes } = require('../lib/attributes');
-// 받은 params를 sequelize or형태에 맞게 만들어주는 함수
-const makeArrforFilter = (data, status) => {
-  const countArr = data.map((el) => {
-    el = { [status]: el };
-    return el;
-  });
-  return countArr;
-};
+
 module.exports = {
   Filter: async (req, res, next) => {
     let {
@@ -51,6 +48,7 @@ module.exports = {
           },
         },
       });
+
       return { countCustomersResult };
     };
     const findCustomers = async (
@@ -60,12 +58,12 @@ module.exports = {
       intlimit,
       start
     ) => {
-      const countCustomersResult = await countCustomers(
+      const { countCustomersResult } = await countCustomers(
         activeData,
         contractData,
         contractPersonData
       );
-      const findUsersData = await db.customer.findAll({
+      let findUsersData = await db.customer.findAll({
         where: {
           company_idx,
           createdAt: { [Op.between]: [firstDate, secondDate] },
@@ -82,7 +80,16 @@ module.exports = {
         attributes: customerAttributes,
         offset: start,
         limit: intlimit,
+        order: [['createdAt', 'DESC']],
+        raw: true,
       });
+
+      findUsersData = addUserId(
+        findUsersData,
+        'plus',
+        page * limit - (limit - 1)
+      );
+
       return { countCustomersResult, findUsersData };
     };
     if (active) {
@@ -97,7 +104,7 @@ module.exports = {
       contractPerson = userId;
     }
 
-    const result = !confirm
+    const { countCustomersResult, findUsersData } = !confirm
       ? await countCustomers(countArr, countPossibility, contractPerson)
       : await findCustomers(
           countArr,
@@ -109,10 +116,10 @@ module.exports = {
 
     return res.send({
       success: 200,
-      findResult: result.findUsersData,
-      totalUser: result.countCustomersResult,
+      findResult: findUsersData,
+      totalUser: countCustomersResult,
       Page: intPage,
-      totalPage: Math.ceil(result.countCustomersResult / limit),
+      totalPage: Math.ceil(countCustomersResult / limit),
     });
   },
 
@@ -134,7 +141,7 @@ module.exports = {
         company_idx
       );
 
-      const searchedUsers = await db.customer.findAll({
+      let searchedUsers = await db.customer.findAll({
         where: {
           [Op.or]: {
             customer_name: {
@@ -149,11 +156,17 @@ module.exports = {
           },
         },
         attributes: customerAttributes,
-
         order: [['createdAt', 'DESC']],
         offset: start,
         limit: intlimit,
+        raw: true,
       });
+
+      searchedUsers = addUserId(
+        searchedUsers,
+        'plus',
+        intPage * intlimit - (intlimit - 1)
+      );
       return res.send({
         success: 200,
         searchedUsers,

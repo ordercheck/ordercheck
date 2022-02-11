@@ -1,4 +1,8 @@
-const { checkUserCompany, checkPage } = require('../lib/apiFunctions');
+const {
+  checkUserCompany,
+  checkPage,
+  addUserId,
+} = require('../lib/apiFunctions');
 const { changeDate } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { Op } = require('sequelize');
@@ -31,17 +35,8 @@ module.exports = {
         raw: true,
       });
 
-      // userId, fullAddress 추가
-      customerData = customerData.map((data) => {
-        data.No = No;
-        addminus == 'plus' ? No++ : No--;
-        data.customer_phoneNumber = data.customer_phoneNumber.replace(
-          /-/g,
-          '.'
-        );
-        data.fullAddress = `${data.address} ${data.detail_address}`;
-        return data;
-      });
+      customerData = addUserId(customerData, addminus, No);
+
       return customerData;
     };
 
