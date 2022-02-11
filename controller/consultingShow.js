@@ -168,7 +168,11 @@ module.exports = {
       consultResult = JSON.stringify(consultResult, (k, v) =>
         v === null ? undefined : v
       );
+
       consultResult = JSON.parse(consultResult);
+
+      consultResult.consultingTimeLines.push(consultResult.consultings);
+      delete consultResult.consultings;
       return res.send({ success: 200, consultResult });
     } catch (err) {
       next(err);
