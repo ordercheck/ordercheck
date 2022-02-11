@@ -246,7 +246,7 @@ module.exports = {
         }
       }
       findAllUser.unshift({
-        userId: 0,
+        userId: null,
         user: { user_name: '담당자 없음', user_profile: '' },
       });
 

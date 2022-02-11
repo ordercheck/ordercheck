@@ -13,57 +13,68 @@ const makeArrforFilter = (data, status) => {
 module.exports = {
   Filter: async (req, res, next) => {
     let {
-      body: { date, active, contract_possibility, userId },
+      body: { date, active, contract_possibility, userId, confirm },
       company_idx,
     } = req;
 
-    let firstDate;
-    let secondDate;
+    const { firstDate, secondDate } = changeDate(date);
 
-    if (date) {
-      const changeDateResult = changeDate(date);
-      firstDate = changeDateResult.firstDate;
-      secondDate = changeDateResult.secondDate;
-    }
+    let countArr = [0, 1];
+    let countPossibility = [0, 1];
+    let contractPerson = null;
+
+    const findCustomers = async (
+      data,
+      activeData,
+      contractData,
+      contractPersonData
+    ) => {
+      const result = await db.customer[data]({
+        where: {
+          company_idx,
+          createdAt: { [Op.between]: [firstDate, secondDate] },
+          active: {
+            [Op.or]: activeData,
+          },
+          contract_possibility: {
+            [Op.or]: contractData,
+          },
+          contact_person: {
+            [Op.or]: contractPersonData,
+          },
+        },
+      });
+
+      return result;
+    };
+
     if (active) {
-      countArr = makeArrforFilter(active, (status = 'active'));
+      countArr = active;
     }
 
     if (contract_possibility) {
-      countPossibility = makeArrforFilter(
-        contract_possibility,
-        (status = 'contract_possibility')
-      );
+      countPossibility = contract_possibility;
     }
 
-    // if (userId) {
-    //   contractPerson = makeArrforFilter(userId, (status = 'contact_person'));
+    if (userId) {
+      contractPerson = userId;
+    }
 
-    //   const result = await db.customer.findAll({
-    //     where: {
-    //       company_idx,
-    //       createdAt: { [Op.between]: [firstDate, secondDate] },
-    //       [Op.or]: countArr,
-    //       [Op.or]: countPossibility,
-    //       [Op.or]: contractPerson,
-    //     },
-    //   });
-    //   return res.send({ result });
-    // }
+    const result = confirm
+      ? await findCustomers(
+          'findAll',
+          countArr,
+          countPossibility,
+          contractPerson
+        )
+      : await findCustomers(
+          'count',
+          countArr,
+          countPossibility,
+          contractPerson
+        );
 
-    const result = await db.customer.findAll({
-      where: {
-        company_idx,
-        createdAt: { [Op.between]: [firstDate, secondDate] },
-        active: {
-          [Op.or]: active,
-        },
-        contract_possibility: {
-          [Op.or]: contract_possibility,
-        },
-      },
-    });
-    return res.send({ result });
+    return res.send({ success: 200, findResult: result });
   },
   dateFilter: async (req, res, next) => {
     let {

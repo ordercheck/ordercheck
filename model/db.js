@@ -16,7 +16,7 @@ sequelize = new Sequelize(
     dialect: 'mysql',
     // operatorsAliases: false,
     timezone: '+09:00', //한국 시간 셋팅
-    logging: true,
+    logging: false,
     define: {
       charset: 'utf8',
       collate: 'utf8_general_ci',

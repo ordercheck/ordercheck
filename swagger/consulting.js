@@ -443,11 +443,14 @@
  *                type: array
  *              userId:
  *                type: array
+ *              confirm:
+ *                type: boolean
  *            example:
  *               date: "2022.02.04 - 2022.02.10"
  *               active: [0,1]
  *               contract_possibility: [0,1]
  *               userId: [null,2,3,5,6]
+ *               confirm: false
  *     responses:
  *       '200':
  *         description: 성공
