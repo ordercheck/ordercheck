@@ -242,11 +242,11 @@
  *               memo:
  *                 type: string
  *               status:
- *                 type: string
+ *                 type: integer
  *             example:
  *               customer_idx: 1
  *               memo: test
- *               status: 상담중
+ *               status: 0
  *      responses:
  *         '200':
  *            description: 성공
@@ -376,14 +376,11 @@
  *          schema:
  *            type: object
  *            properties:
- *              form_link:
- *                type: string
  *              main_idx:
  *                type: integer
  *              target_idx:
  *                type: array
  *            example:
- *               form_link: "skldfkdjf"
  *               main_idx: 4
  *               target_idx: [1,2,3]
  *     responses:
@@ -417,16 +414,32 @@
  *           schema:
  *             type: string
  *           example: '김기태'
+ *         - in: query
+ *           name: No
+ *           schema:
+ *             type: integer
+ *           example: 0
+ *         - in: query
+ *           name: Name
+ *           schema:
+ *             type: integer
+ *           example: 0
+ *         - in: query
+ *           name: Address
+ *           schema:
+ *             type: integer
+ *           example: 0
+ *         - in: query
+ *           name: Date
+ *           schema:
+ *             type: integer
+ *           example: 0
  *         - in: path
  *           name: limit
  *           schema:
  *             type: integer
  *         - in: path
  *           name: page
- *           schema:
- *             type: integer
- *         - in: path
- *           name: sort
  *           schema:
  *             type: integer
  *      responses:

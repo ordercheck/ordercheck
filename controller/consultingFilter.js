@@ -34,7 +34,7 @@ module.exports = {
       contractData,
       contractPersonData
     ) => {
-      const { countCustomersResult } = await db.customer.count({
+      const countCustomersResult = await db.customer.count({
         where: {
           company_idx,
           createdAt: { [Op.between]: [firstDate, secondDate] },
@@ -50,7 +50,7 @@ module.exports = {
         },
       });
 
-      return { countCustomersResult };
+      return countCustomersResult;
     };
     const findCustomers = async (
       activeData,
@@ -62,21 +62,59 @@ module.exports = {
       let customerNumber = intPage * intlimit - (intlimit - 1);
       let sortField;
       let sort;
-      let Number;
       let addminus;
-      const { countCustomersResult } = await countCustomers(
+      const countCustomersResultData = await countCustomers(
         activeData,
         contractData,
         contractPersonData
       );
+
       if (!No && !Name && !Address && !Date) {
         (sortField = 'createdAt'), (sort = 'DESC'), (addminus = 'plus');
       }
       if (No == 0) {
         (sortField = 'createdAt'),
           (sort = 'ASC'),
-          (Number = consultCountData - intlimit * intPage + intlimit);
+          (customerNumber =
+            countCustomersResultData - intlimit * intPage + intlimit);
         addminus = 'minus';
+      }
+      if (No == 1) {
+        (sortField = 'createdAt'), (sort = 'DESC'), (addminus = 'plus');
+      }
+
+      if (Name == 0) {
+        (sortField = 'customer_name'),
+          (sort = 'ASC'),
+          (customerNumber =
+            countCustomersResultData - intlimit * intPage + intlimit);
+        addminus = 'minus';
+      }
+
+      if (Name == 1) {
+        (sortField = 'customer_name'), (sort = 'DESC'), (addminus = 'plus');
+      }
+
+      if (Address == 0) {
+        (sortField = 'searchingAddress'),
+          (sort = 'ASC'),
+          (customerNumber =
+            countCustomersResultData - intlimit * intPage + intlimit);
+        addminus = 'minus';
+      }
+      if (Address == 1) {
+        (sortField = 'searchingAddress'), (sort = 'DESC'), (addminus = 'plus');
+      }
+      if (Date == 0) {
+        (sortField = 'createdAt'),
+          (sort = 'ASC'),
+          (customerNumber =
+            countCustomersResultData - intlimit * intPage + intlimit);
+        addminus = 'minus';
+      }
+
+      if (Date == 1) {
+        (sortField = 'createdAt'), (sort = 'DESC'), (addminus = 'plus');
       }
 
       let findUsersData = await db.customer.findAll({
@@ -116,7 +154,7 @@ module.exports = {
       contractPerson = userId;
     }
 
-    const { countCustomersResultData, findUsersData } = !confirm
+    const logicResult = !confirm
       ? await countCustomers(countArr, countPossibility, contractPerson)
       : await findCustomers(
           countArr,
@@ -128,17 +166,17 @@ module.exports = {
 
     return res.send({
       success: 200,
-      findResult: findUsersData,
-      totalUser: countCustomersResult,
+      findResult: logicResult.findUsersData,
+      totalUser: logicResult.countCustomersResultData,
       Page: intPage,
-      totalPage: Math.ceil(countCustomersResultData / limit),
+      totalPage: Math.ceil(logicResult.countCustomersResultData / intlimit),
     });
   },
 
   searchCustomer: async (req, res, next) => {
     let {
-      query: { search },
-      params: { limit, page, sort },
+      query: { search, No, Name, Address, Date },
+      params: { limit, page },
       company_idx,
     } = req;
     try {
@@ -147,11 +185,80 @@ module.exports = {
         ''
       );
 
-      const { totalData, start, intlimit, intPage } = await checkPage(
+      const { start, intlimit, intPage } = await checkPage(
         limit,
         page,
         company_idx
       );
+
+      let countCustomersResultData = await db.customer.count({
+        where: {
+          [Op.or]: {
+            customer_name: {
+              [Op.like]: `%${pureText}%`,
+            },
+            searchingPhoneNumber: {
+              [Op.like]: `%${pureText}%`,
+            },
+            searchingAddress: {
+              [Op.like]: `%${pureText}%`,
+            },
+          },
+        },
+      });
+
+      let customerNumber = intPage * intlimit - (intlimit - 1);
+      let sortField;
+      let sort;
+      let addminus;
+
+      if (!No && !Name && !Address && !Date) {
+        (sortField = 'createdAt'), (sort = 'DESC'), (addminus = 'plus');
+      }
+      if (No == 0) {
+        (sortField = 'createdAt'),
+          (sort = 'ASC'),
+          (customerNumber =
+            countCustomersResultData - intlimit * intPage + intlimit);
+        addminus = 'minus';
+      }
+      if (No == 1) {
+        (sortField = 'createdAt'), (sort = 'DESC'), (addminus = 'plus');
+      }
+
+      if (Name == 0) {
+        (sortField = 'customer_name'),
+          (sort = 'ASC'),
+          (customerNumber =
+            countCustomersResultData - intlimit * intPage + intlimit);
+        addminus = 'minus';
+      }
+
+      if (Name == 1) {
+        (sortField = 'customer_name'), (sort = 'DESC'), (addminus = 'plus');
+      }
+
+      if (Address == 0) {
+        (sortField = 'searchingAddress'),
+          (sort = 'ASC'),
+          (customerNumber =
+            countCustomersResultData - intlimit * intPage + intlimit);
+        addminus = 'minus';
+      }
+      if (Address == 1) {
+        (sortField = 'searchingAddress'), (sort = 'DESC'), (addminus = 'plus');
+      }
+      if (Date == 0) {
+        (sortField = 'createdAt'),
+          (sort = 'ASC'),
+          (customerNumber =
+            countCustomersResultData - intlimit * intPage + intlimit);
+        addminus = 'minus';
+      }
+
+      if (Date == 1) {
+        (sortField = 'createdAt'), (sort = 'DESC'), (addminus = 'plus');
+      }
 
       let searchedUsers = await db.customer.findAll({
         where: {
@@ -168,22 +275,18 @@ module.exports = {
           },
         },
         attributes: customerAttributes,
-        order: [['createdAt', 'DESC']],
+        order: [[sortField, sort]],
         offset: start,
         limit: intlimit,
         raw: true,
       });
 
-      searchedUsers = addUserId(
-        searchedUsers,
-        'plus',
-        intPage * intlimit - (intlimit - 1)
-      );
+      searchedUsers = addUserId(searchedUsers, addminus, customerNumber);
       return res.send({
         success: 200,
         searchedUsers,
         page: intPage,
-        totalPage: Math.ceil(totalData / limit),
+        totalPage: Math.ceil(countCustomersResultData / limit),
       });
     } catch (err) {
       next(err);
