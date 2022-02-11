@@ -33,6 +33,10 @@ module.exports = {
       where: { customerFile_idx: req.params.customerFile_idx },
       attributes: [['idx', 'folder_idx'], 'folder_path', 'customerFile_idx'],
     });
+
+    if (!result) {
+      return res.send({ success: 400, message: '폴더가 없습니다' });
+    }
     return res.send({ success: 200, result });
   },
   addFolder: async (req, res, next) => {

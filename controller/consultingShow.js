@@ -171,7 +171,7 @@ module.exports = {
 
       consultResult = JSON.parse(consultResult);
 
-      consultResult.consultingTimeLines.push(consultResult.consultings);
+      consultResult.consultingTimeLines.unshift(consultResult.consultings);
       delete consultResult.consultings;
       return res.send({ success: 200, consultResult });
     } catch (err) {
