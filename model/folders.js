@@ -12,5 +12,10 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: '',
       type: DataTypes.STRING(100),
     },
+    root: {
+      allowNull: false,
+      defaultValue: true,
+      type: DataTypes.BOOLEAN,
+    },
   });
 };

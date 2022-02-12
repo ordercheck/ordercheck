@@ -30,7 +30,7 @@ module.exports = {
 
   getFolderPath: async (req, res, next) => {
     const result = await db.folders.findAll({
-      where: { customerFile_idx: req.params.customerFile_idx },
+      where: { customerFile_idx: req.params.customerFile_idx, root: true },
       attributes: [['idx', 'folder_idx'], 'folder_name', 'customerFile_idx'],
     });
 
@@ -39,8 +39,15 @@ module.exports = {
   addFolder: async (req, res, next) => {
     try {
       req.body.customerFile_idx = req.params.customerFile_idx;
+      if (req.body.folder_idx == 0) {
+        const createFolderResult = await db.folders.create(req.body);
+        return res.send({ succes: true, createFolderResult });
+      }
       const createFolderResult = await db.folders.create(req.body);
-      return res.send({ succes: true, createFolderResult });
+      req.body.idx = createFolderResult.idx;
+      req.body.isFolder = true;
+      await db.files.create(req.body);
+      return res.send({ succes: true, message: '폴더 생성 완료했습니다.' });
     } catch (err) {
       next(err);
     }

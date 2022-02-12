@@ -36,7 +36,7 @@
  *       - bearerAuth: []
  *     tags:
  *       -  FileStore
- *     summary: 폴더 생성하기
+ *     summary: 폴더 생성하기 (root폴더 = folder_idx:0, )
  *     requestBody:
  *      content:
  *        application/json:
@@ -45,8 +45,11 @@
  *            properties:
  *              folder_name:
  *                type: string
+ *              folder_idx:
+ *                type: integer
  *            example:
  *              folder_name: "test"
+ *              folder_idx: 0
  *     parameters:
  *         - in: path
  *           name: customerFile_idx

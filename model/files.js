@@ -17,5 +17,10 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: '',
       type: DataTypes.STRING(100),
     },
+    isFolder: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
+    },
   });
 };
