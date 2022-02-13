@@ -20,6 +20,7 @@ module.exports = {
       query: { No, Name, Address, Date },
       company_idx,
     } = req;
+
     const totalData = await db.customer.count({ where: { company_idx } });
     const { start, intlimit, intPage } = await checkPage(
       limit,
@@ -27,7 +28,7 @@ module.exports = {
       company_idx
     );
     const getCustomerData = async (sortField, sort, No, addminus) => {
-      let customerData = await db.customer.findAll({
+      const customerFindAndCount = await db.customer.findAndCountAll({
         where: { company_idx },
         attributes: customerAttributes,
         order: [[sortField, sort]],
@@ -35,83 +36,84 @@ module.exports = {
         limit: intlimit,
         raw: true,
       });
+      const customerData = addUserId(customerFindAndCount.rows, addminus, No);
 
-      customerData = addUserId(customerData, addminus, No);
-
-      return customerData;
+      return { customerFindAndCount, customerData };
     };
 
     try {
-      let customerData = '';
+      let getCustomerDataResult = '';
       let customerNumber = intPage * intlimit - (intlimit - 1);
       if (!No && !Name && !Address && !Date) {
-        customerData = await getCustomerData(
+        getCustomerDataResult = await getCustomerData(
           'createdAt',
           'DESC',
           customerNumber,
           'plus'
         );
 
-        if (customerData.length == 0) {
+        if (getCustomerDataResult.customerData == 0) {
           return res.send({ success: 400, message: '고객이 없습니다.' });
         }
       }
 
       // 0이 오름차순,1이 내림차순 (ASC는 오름차순)
       if (No) {
-        customerData = await getCustomerData(
+        getCustomerDataResult = await getCustomerData(
           'createdAt',
           No == 0 ? 'ASC' : 'DESC',
           No == 0 ? totalData - intlimit * intPage + intlimit : customerNumber,
           No == 0 ? 'minus' : 'plus'
         );
 
-        if (customerData.length == 0) {
+        if (getCustomerDataResult.customerData == 0) {
           return res.send({ success: 400, message: '고객이 없습니다.' });
         }
       }
       if (Name) {
-        customerData = await getCustomerData(
+        getCustomerDataResult = await getCustomerData(
           'customer_name',
           Name == 0 ? 'ASC' : 'DESC',
           Name == 0 ? totalData - limit * page + limit : customerNumber,
           Name == 0 ? 'minus' : 'plus'
         );
-        if (customerData.length == 0) {
+        if (getCustomerDataResult.customerData == 0) {
           return res.send({ success: 400, message: '고객이 없습니다.' });
         }
       }
 
       if (Address) {
-        customerData = await getCustomerData(
+        getCustomerDataResult = await getCustomerData(
           'searchingAddress',
           Address == 0 ? 'ASC' : 'DESC',
           Address == 0 ? totalData - limit * page + limit : customerNumber,
           Address == 0 ? 'minus' : 'plus'
         );
-        if (customerData.length == 0) {
+        if (getCustomerDataResult.customerData == 0) {
           return res.send({ success: 400, message: '고객이 없습니다.' });
         }
       }
 
       if (Date) {
-        customerData = await getCustomerData(
+        getCustomerDataResult = await getCustomerData(
           'updatedAt',
           Date == 0 ? 'ASC' : 'DESC',
           Date == 0 ? totalData - limit * page + limit : customerNumber,
           Date == 0 ? 'minus' : 'plus'
         );
-        if (customerData.length == 0) {
+        if (getCustomerDataResult.customerData == 0) {
           return res.send({ success: 400, message: '고객이 없습니다.' });
         }
       }
 
       return res.send({
         success: 200,
-        customerData,
+        customerData: getCustomerDataResult.customerData,
         totalUser: totalData,
         page: intPage,
-        totalPage: Math.ceil(totalData / limit),
+        totalPage: Math.ceil(
+          getCustomerDataResult.customerFindAndCount.count / limit
+        ),
       });
     } catch (err) {
       next(err);

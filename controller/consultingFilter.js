@@ -6,7 +6,7 @@ const {
 const { changeDate } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { Op } = require('sequelize');
-const { sortElements } = require('../lib/sort');
+const { sortElements, giveNumbering } = require('../lib/sort');
 const { customerAttributes } = require('../lib/attributes');
 // 0이 오름차순,1이 내림차순 (ASC는 오름차순)
 module.exports = {
@@ -60,45 +60,51 @@ module.exports = {
       intlimit,
       start
     ) => {
-      const countCustomersResultData = await countCustomers(
-        activeData,
-        contractData,
-        contractPersonData
-      );
-
-      const { customerNumber, sortField, sort, addminus } = sortElements(
+      const { sortField, sort, addminus } = sortElements(
         No,
         Name,
         Address,
-        Date,
+        Date
+      );
+
+      const findAndCountAllFilterdCustomers = await db.customer.findAndCountAll(
+        {
+          where: {
+            company_idx,
+            createdAt: { [Op.between]: [firstDate, secondDate] },
+            active: {
+              [Op.or]: activeData,
+            },
+            contract_possibility: {
+              [Op.or]: contractData,
+            },
+            contact_person: {
+              [Op.or]: contractPersonData,
+            },
+          },
+          attributes: customerAttributes,
+          offset: start,
+          limit: intlimit,
+          order: [[sortField, sort]],
+          raw: true,
+        }
+      );
+      const { customerNumber } = giveNumbering(
+        findAndCountAllFilterdCustomers.count,
         intPage,
         intlimit,
-        countCustomersResultData
+        No,
+        Name,
+        Address,
+        Date
       );
-      let findUsersData = await db.customer.findAll({
-        where: {
-          company_idx,
-          createdAt: { [Op.between]: [firstDate, secondDate] },
-          active: {
-            [Op.or]: activeData,
-          },
-          contract_possibility: {
-            [Op.or]: contractData,
-          },
-          contact_person: {
-            [Op.or]: contractPersonData,
-          },
-        },
-        attributes: customerAttributes,
-        offset: start,
-        limit: intlimit,
-        order: [[sortField, sort]],
-        raw: true,
-      });
+      const findFilteredUsersData = addUserId(
+        findAndCountAllFilterdCustomers.rows,
+        addminus,
+        customerNumber
+      );
 
-      findUsersData = addUserId(findUsersData, addminus, customerNumber);
-
-      return { countCustomersResultData, findUsersData };
+      return { findAndCountAllFilterdCustomers, findFilteredUsersData };
     };
     if (active) {
       countArr = active;
@@ -124,10 +130,12 @@ module.exports = {
 
     return res.send({
       success: 200,
-      findResult: logicResult.findUsersData,
-      totalUser: logicResult.countCustomersResultData,
+      findResult: logicResult.findFilteredUsersData,
+
       Page: intPage,
-      totalPage: Math.ceil(logicResult.countCustomersResultData / intlimit),
+      totalPage: Math.ceil(
+        logicResult.findAndCountAllFilterdCustomers.count / intlimit
+      ),
     });
   },
 
@@ -149,33 +157,14 @@ module.exports = {
         company_idx
       );
 
-      let countCustomersResultData = await db.customer.count({
-        where: {
-          [Op.or]: {
-            customer_name: {
-              [Op.like]: `%${pureText}%`,
-            },
-            searchingPhoneNumber: {
-              [Op.like]: `%${pureText}%`,
-            },
-            searchingAddress: {
-              [Op.like]: `%${pureText}%`,
-            },
-          },
-        },
-      });
-
-      const { customerNumber, sortField, sort, addminus } = sortElements(
+      const { sortField, sort, addminus } = sortElements(
         No,
         Name,
         Address,
-        Date,
-        intPage,
-        intlimit,
-        countCustomersResultData
+        Date
       );
 
-      let searchedUsers = await db.customer.findAll({
+      const searchedCountAndFindAll = await db.customer.findAndCountAll({
         where: {
           [Op.or]: {
             customer_name: {
@@ -195,13 +184,26 @@ module.exports = {
         limit: intlimit,
         raw: true,
       });
+      const { customerNumber } = giveNumbering(
+        searchedCountAndFindAll.count,
+        intPage,
+        intlimit,
+        No,
+        Name,
+        Address,
+        Date
+      );
 
-      searchedUsers = addUserId(searchedUsers, addminus, customerNumber);
+      const searchedUsers = addUserId(
+        searchedCountAndFindAll.rows,
+        addminus,
+        customerNumber
+      );
       return res.send({
         success: 200,
         searchedUsers,
         page: intPage,
-        totalPage: Math.ceil(countCustomersResultData / limit),
+        totalPage: Math.ceil(searchedCountAndFindAll.count / intlimit),
       });
     } catch (err) {
       next(err);
