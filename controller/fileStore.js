@@ -40,7 +40,7 @@ module.exports = {
     try {
       req.body.customerFile_idx = req.params.customerFile_idx;
       req.body.uuid = random5();
-      if (req.body.folder_idx == 0) {
+      if (req.body.root) {
         const createFolderResult = await db.folders.create(req.body);
         return res.send({ succes: true, createFolderResult });
       }
@@ -84,7 +84,7 @@ module.exports = {
     }
   },
   deleteFile: async (req, res, next) => {
-    const { idx, uuid, isfolder } = req.body;
+    const { uuid, isfolder } = req.body;
     const t = await db.sequelize.transaction();
     try {
       // 폴더가 아닐 때
@@ -96,18 +96,18 @@ module.exports = {
       // 폴더일때
 
       const findFolderIdx = await db.files.findAll({
-        where: { folder_idx: idx, isFolder: true },
+        where: { folder_uuid: uuid, isFolder: true },
         raw: true,
         attributes: ['idx'],
       });
-      const deleteArr = [idx];
+      const deleteArr = [uuid];
       findFolderIdx.forEach((data) => {
-        deleteArr.push(data.idx);
+        deleteArr.push(data.folder_uuid);
       });
 
       await db.folders.destroy(
         {
-          where: { idx: deleteArr },
+          where: { folder_uuid: deleteArr },
         },
         { transaction: t }
       );

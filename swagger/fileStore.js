@@ -36,7 +36,7 @@
  *       - bearerAuth: []
  *     tags:
  *       -  FileStore
- *     summary: 폴더 생성하기 (root폴더 = folder_idx:0, )
+ *     summary: 폴더 생성하기
  *     requestBody:
  *      content:
  *        application/json:
@@ -45,11 +45,14 @@
  *            properties:
  *              title:
  *                type: string
- *              folder_idx:
- *                type: integer
+ *              uuid:
+ *                type: string
+ *              root:
+ *                type: boolean
  *            example:
  *              title: "test"
- *              folder_idx: 0
+ *              uuid: "SJDI"
+ *              root: true
  *     parameters:
  *         - in: path
  *           name: customerFile_idx
@@ -73,12 +76,12 @@
  *          schema:
  *            type: object
  *            properties:
- *              folder_idx:
+ *              uuid:
  *                type: string
  *              file:
  *                type: string
  *            example:
- *              folder_idx: 1
+ *              uuid: "DJFI"
  *              file: "file"
  *     parameters:
  *         - in: path
@@ -103,10 +106,10 @@
  *          schema:
  *            type: object
  *            properties:
- *              folder_idx:
+ *              uuid:
  *                type: string
  *            example:
- *              folder_idx: 1
+ *              uuid: "FJEIF"
  *     parameters:
  *         - in: path
  *           name: customerFile_idx
@@ -163,14 +166,11 @@
  *          schema:
  *            type: object
  *            properties:
- *              idx:
- *                type: integer
  *              isfolder:
  *                type: boolean
  *              uuid:
  *                type: string
  *            example:
- *              idx: 1
  *              isfolder: true
  *              uuid: FEJE
  *     responses:
