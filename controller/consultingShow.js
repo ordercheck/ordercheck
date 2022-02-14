@@ -186,7 +186,7 @@ module.exports = {
         data.status = 0;
         data.customer_name = consultResult.customer_name;
         data.customer_phoneNumber = consultResult.customer_phoneNumber;
-        data.fullAddress = `${consultResult.address} ${consultResult.detail_address}`;
+        data.customer_fullAddress = `${consultResult.address} ${consultResult.detail_address}`;
 
         consultResult.consultingTimeLines.unshift(data);
       });
