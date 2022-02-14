@@ -82,6 +82,12 @@ module.exports = {
               [Op.or]: contractPersonData,
             },
           },
+          include: [
+            {
+              model: db.user,
+              attributes: ['idx', 'user_name'],
+            },
+          ],
           attributes: customerAttributes,
           offset: start,
           limit: intlimit,
@@ -179,6 +185,12 @@ module.exports = {
             },
           },
         },
+        include: [
+          {
+            model: db.user,
+            attributes: ['idx', 'user_name'],
+          },
+        ],
         attributes: customerAttributes,
         order: [[sortField, sort]],
         offset: start,

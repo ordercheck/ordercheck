@@ -3,14 +3,16 @@ const router = express.Router();
 const loginCheck = require('../../middleware/auth');
 const {
   sendEmail,
-  joinToCompany,
+  joinToCompanyByRegist,
   showStandbyUser,
   joinStandbyUser,
+  joinToCompanyByLogin,
 } = require('../../controller/invite');
 
 // update Company
 router.post('/email', loginCheck, sendEmail);
-router.post('/join/company', joinToCompany);
+router.post('/join/company/regist', joinToCompanyByRegist);
+router.post('/join/company/login', joinToCompanyByLogin);
 router.get('/standby', loginCheck, showStandbyUser);
 router.post('/join/do', loginCheck, joinStandbyUser);
 module.exports = router;

@@ -29,16 +29,22 @@ module.exports = {
       company_idx
     );
     const getCustomerData = async (sortField, sort, No, addminus) => {
-      const customerFindAndCount = await db.customer.findAndCountAll({
+      let customerFindAndCount = await db.customer.findAndCountAll({
         where: { company_idx },
+        include: [
+          {
+            model: db.user,
+            attributes: ['idx', 'user_name'],
+          },
+        ],
         attributes: customerAttributes,
         order: [[sortField, sort]],
         offset: start,
         limit: intlimit,
         raw: true,
       });
-      const customerData = addUserId(customerFindAndCount.rows, addminus, No);
 
+      const customerData = addUserId(customerFindAndCount.rows, addminus, No);
       return { customerFindAndCount, customerData };
     };
 
@@ -178,6 +184,11 @@ module.exports = {
         order: [[db.consulting, 'createdAt', 'DESC']],
       });
 
+      //  고객이 없을 때
+      if (!consultResult) {
+        return next({ message: '고객이 없습니다' });
+      }
+
       // forEach를 위해 JSON형태로 변경
       consultResult = consultResult.toJSON();
 
@@ -214,7 +225,7 @@ module.exports = {
         include: [
           {
             model: db.user,
-            attributes: ['user_name', 'user_name', 'user_profile'],
+            attributes: ['user_name', 'user_profile'],
           },
         ],
         attributes: [['user_idx', 'userId']],

@@ -41,7 +41,7 @@ module.exports = {
       next(err);
     }
   },
-  joinToCompany: async (req, res, next) => {
+  joinToCompanyByRegist: async (req, res, next) => {
     try {
       const { company_subdomain } = req.body;
       const { createUserResult, success, message } = await joinFunction(
@@ -65,10 +65,7 @@ module.exports = {
       const randomCompany = await createRandomCompany(createUserResult.idx);
       // master 권한 주기
       await giveMasterAuth(createUserResult.idx, randomCompany.idx);
-      await db.config.create({
-        user_idx: createUserResult.idx,
-        company_idx: findCompany.idx,
-      });
+
       // 무료 플랜 만들기
       await createFreePlan(randomCompany.idx);
 
@@ -77,7 +74,35 @@ module.exports = {
       next(err);
     }
   },
+  joinToCompanyByLogin: async () => {
+    const { user_phone, user_password, company_subdomain } = req.body;
 
+    let check = await db.user.findOne({ where: { user_phone } });
+    if (!check) {
+      return res.send({ success: 400, message: '비밀번호 혹은 전화번호 오류' });
+    }
+
+    const compareResult = await bcrypt.compare(
+      user_password,
+      check.user_password
+    );
+    if (!compareResult) {
+      return res.send({
+        success: 400,
+        message: '비밀번호 혹은 전화번호 오류',
+      });
+    }
+    const findCompany = await db.company.findOne({
+      where: { company_subdomain },
+    });
+    await includeUserToCompany({
+      user_idx: check.idx,
+      company_idx: findCompany.company_idx,
+      active: 0,
+    });
+
+    res.send({ success: 200 });
+  },
   showStandbyUser: async (req, res, next) => {
     const standbyUser = await db.userCompany.findAll({
       where: { company_idx: req.company_idx, active: 0 },
@@ -88,8 +113,12 @@ module.exports = {
   joinStandbyUser: async (req, res, next) => {
     await db.userCompany.update(
       { active: 1 },
-      { where: { idx: req.body.user_idx } }
+      { where: { user_idx: req.body.user_idx, company_idx: req.company_idx } }
     );
+    await db.create.create({
+      user_idx: req.body.user_idx,
+      company_idx: req.company_idx,
+    });
     return res.send({ success: 200 });
   },
 };
