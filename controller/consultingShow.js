@@ -173,6 +173,8 @@ module.exports = {
         order: [[db.consulting, 'createdAt', 'DESC']],
       });
 
+      consultResult = consultResult.toJSON();
+
       // 상담신청 젤 위로 변경
       consultResult.consultings.forEach((data) => {
         data.tempType = data.tempType.tempType;
@@ -182,6 +184,10 @@ module.exports = {
           data.hope_concept = JSON.parse(data.hope_concept);
         }
         data.status = 0;
+        data.customer_name = consultResult.customer_name;
+        data.customer_phoneNumber = consultResult.customer_phoneNumber;
+        data.fullAddress = `${consultResult.address} ${consultResult.detail_address}`;
+
         consultResult.consultingTimeLines.unshift(data);
       });
       // 변경 후 필드 삭제
