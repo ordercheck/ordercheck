@@ -126,8 +126,10 @@ module.exports = {
         return;
       }
 
-      // 이미지나 파일이 없을 때
+      // 이미지나 파일이 없을 때  간편 Form
       if (!files.img && !files.concept) {
+        body.choice = JSON.stringify(body.choice);
+
         createConsultingAndIncrement(body);
 
         return;
@@ -138,6 +140,19 @@ module.exports = {
       const conceptUrlString = selectUrl(files.concept);
       body.floor_plan = JSON.stringify(imgUrlString);
       body.hope_concept = JSON.stringify(conceptUrlString);
+      body.expand = JSON.stringify(body.expand);
+      body.carpentry = JSON.stringify(body.carpentry);
+      body.paint = JSON.stringify(body.paint);
+      body.bathroom_option = JSON.stringify(body.bathroom_option);
+      body.floor = JSON.stringify(body.floor);
+      body.tile = JSON.stringify(body.tile);
+      body.electricity_lighting = JSON.stringify(body.electricity_lighting);
+      body.kitchen_option = JSON.stringify(body.kitchen_option);
+      body.furniture = JSON.stringify(body.furniture);
+      body.facility = JSON.stringify(body.facility);
+      body.film = JSON.stringify(body.film);
+      body.etc = JSON.stringify(body.etc);
+
       createConsultingAndIncrement(body);
 
       return;

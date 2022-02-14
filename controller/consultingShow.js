@@ -13,7 +13,7 @@ const {
   showIntegratedUserAttributes,
   customerAttributes,
 } = require('../lib/attributes');
-const attributes = require('../lib/attributes');
+
 module.exports = {
   showTotalConsultingDefault: async (req, res, next) => {
     let {
@@ -172,7 +172,7 @@ module.exports = {
         attributes: showDetailMainConsultingAttributes,
         order: [[db.consulting, 'createdAt', 'DESC']],
       });
-
+      // forEach를 위해 JSON형태로 변경
       consultResult = consultResult.toJSON();
 
       // 상담신청 젤 위로 변경
@@ -183,7 +183,6 @@ module.exports = {
           data.floor_plan = JSON.parse(data.floor_plan);
           data.hope_concept = JSON.parse(data.hope_concept);
         }
-
         consultResult.consultingTimeLines.unshift(data);
       });
       // 변경 후 필드 삭제

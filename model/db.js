@@ -66,6 +66,8 @@ db.folders.belongsTo(db.customerFile, {
 db.folders.hasMany(db.files, { foreignKey: 'folder_idx' });
 db.files.belongsTo(db.folders, {
   foreignKey: 'folder_idx',
+  onDelete: 'cascade',
+  hooks: true,
 });
 
 // user와 timeLine

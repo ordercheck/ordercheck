@@ -189,7 +189,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(100),
     },
     status: {
-      allowNull: false,
+      allowNull: true,
       default: 0,
       type: DataTypes.INTEGER,
     },

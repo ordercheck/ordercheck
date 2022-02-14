@@ -150,4 +150,29 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/file/store/file:
+ *   delete:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       -  FileStore
+ *     summary: 파일 삭제하기
+ *     requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              file_idx:
+ *                type: integer
+ *              isfolder:
+ *                type: boolean
+ *            example:
+ *              folder_idx: 1
+ *              isfolder: true
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

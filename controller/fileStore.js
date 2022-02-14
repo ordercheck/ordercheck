@@ -83,4 +83,17 @@ module.exports = {
       next(err);
     }
   },
+  deleteFile: async (req, res, next) => {
+    const { folder_idx: idx, isfolder } = req.body;
+    try {
+      if (!isfolder) {
+        await db.files.destroy({
+          where: { idx },
+        });
+      }
+      await db.folders.destroy({ where: { idx } });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
