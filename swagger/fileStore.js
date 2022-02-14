@@ -43,12 +43,12 @@
  *          schema:
  *            type: object
  *            properties:
- *              folder_name:
+ *              title:
  *                type: string
  *              folder_idx:
  *                type: integer
  *            example:
- *              folder_name: "test"
+ *              title: "test"
  *              folder_idx: 0
  *     parameters:
  *         - in: path
@@ -130,14 +130,14 @@
  *          schema:
  *            type: object
  *            properties:
- *              folder_idx:
+ *              uuid:
  *                type: integer
  *              title:
  *                type: string
  *              root:
  *                type: boolean
  *            example:
- *              folder_idx: 1
+ *              uuid: SJFD
  *              title: "test2"
  *              root: true
  *     parameters:
@@ -167,9 +167,12 @@
  *                type: integer
  *              isfolder:
  *                type: boolean
+ *              uuid:
+ *                type: string
  *            example:
  *              idx: 1
  *              isfolder: true
+ *              uuid: FEJE
  *     responses:
  *       '200':
  *         description: 성공

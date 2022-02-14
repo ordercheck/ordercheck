@@ -1,6 +1,6 @@
 const db = require('../model/db');
 const { getFileName } = require('../lib/apiFunctions');
-const _f = require('../lib/functions');
+const { random5 } = require('../lib/functions');
 
 // 폴더 찾는 함수
 const findFolder = async (req) => {
@@ -31,7 +31,7 @@ module.exports = {
   getFolderPath: async (req, res, next) => {
     const result = await db.folders.findAll({
       where: { customerFile_idx: req.params.customerFile_idx, root: true },
-      attributes: [['idx', 'folder_idx'], 'folder_name', 'customerFile_idx'],
+      attributes: [['idx', 'folder_idx'], 'title', 'customerFile_idx', 'uuid'],
     });
 
     return res.send({ success: 200, result });
@@ -39,16 +39,15 @@ module.exports = {
   addFolder: async (req, res, next) => {
     try {
       req.body.customerFile_idx = req.params.customerFile_idx;
+      req.body.uuid = random5();
       if (req.body.folder_idx == 0) {
         const createFolderResult = await db.folders.create(req.body);
         return res.send({ succes: true, createFolderResult });
       }
       req.body.root = false;
       const createFolderResult = await db.folders.create(req.body);
-      req.body.idx = createFolderResult.idx;
       req.body.isFolder = true;
-
-      req.body.file_name = req.body.folder_name;
+      req.body.title = req.body.title;
       await db.files.create(req.body);
       return res.send({ succes: true, createFolderResult });
     } catch (err) {
@@ -59,13 +58,12 @@ module.exports = {
     const data = {};
     const createFile = async (fileData) => {
       data.file_url = fileData.location;
-      const [, file_name] = fileData.key.split('/');
-      data.file_name = file_name;
+      const [, title] = fileData.key.split('/');
+      data.title = title;
+      data.folder_uuid = req.body.uuid;
       return await db.files.create(data);
     };
     try {
-      const findFolderResult = await findFolder(req);
-      data.folder_idx = findFolderResult.idx;
       const createFileResult = req.file.transforms
         ? await createFile(req.file.transforms[0])
         : await createFile(req.file);
@@ -77,9 +75,8 @@ module.exports = {
   },
   showFiles: async (req, res, next) => {
     try {
-      const findFolderResult = await findFolder(req);
       const findFilesResult = await db.files.findAll({
-        where: { folder_idx: findFolderResult.idx },
+        where: { folder_uuid: req.body.uuid },
       });
       return res.send({ succes: 200, findFilesResult });
     } catch (err) {
@@ -87,7 +84,7 @@ module.exports = {
     }
   },
   deleteFile: async (req, res, next) => {
-    const { idx, isfolder } = req.body;
+    const { idx, uuid, isfolder } = req.body;
     const t = await db.sequelize.transaction();
     try {
       // 폴더가 아닐 때
@@ -117,7 +114,7 @@ module.exports = {
 
       await db.files.destroy(
         {
-          where: { idx },
+          where: { uuid },
         },
         { transaction: t }
       );
@@ -131,23 +128,20 @@ module.exports = {
   changeFileTitle: async (req, res, next) => {
     try {
       const {
-        body: { folder_idx, title, root },
+        body: { uuid, title, root },
         params: { customerFile_idx },
       } = req;
       const updateFolder = async () => {
         await db.folders.update(
-          { folder_name: title },
-          { where: { idx: folder_idx, customerFile_idx } }
+          { title },
+          { where: { uuid, customerFile_idx } }
         );
       };
       if (root) {
         await updateFolder();
       } else {
         await updateFolder();
-        await db.files.update(
-          { file_name: title },
-          { where: { idx: folder_idx } }
-        );
+        await db.files.update({ title: title }, { where: { uuid } });
       }
       return res.send({ success: 200 });
     } catch (err) {
