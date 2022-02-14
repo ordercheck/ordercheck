@@ -188,5 +188,10 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
+    status: {
+      allowNull: false,
+      default: 0,
+      type: DataTypes.INTEGER,
+    },
   });
 };

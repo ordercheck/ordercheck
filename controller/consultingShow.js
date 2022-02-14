@@ -184,7 +184,6 @@ module.exports = {
           data.hope_concept = JSON.parse(data.hope_concept);
         }
 
-        data.status = 0;
         consultResult.consultingTimeLines.unshift(data);
       });
       // 변경 후 필드 삭제
