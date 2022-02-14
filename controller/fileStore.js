@@ -43,6 +43,7 @@ module.exports = {
         const createFolderResult = await db.folders.create(req.body);
         return res.send({ succes: true, createFolderResult });
       }
+      req.body.root = false;
       const createFolderResult = await db.folders.create(req.body);
       req.body.idx = createFolderResult.idx;
       req.body.isFolder = true;

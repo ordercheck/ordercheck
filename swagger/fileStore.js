@@ -131,14 +131,11 @@
  *            type: object
  *            properties:
  *              folder_idx:
- *                type: array
+ *                type: integer
  *              title:
  *                type: string
- *              before_title:
- *                type: string
  *            example:
- *              folder_idx: [1,2,3,4]
- *              before_title : "test"
+ *              folder_idx: 1
  *              title: "test2"
  *     parameters:
  *         - in: path

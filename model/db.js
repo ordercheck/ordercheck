@@ -64,10 +64,10 @@ db.folders.belongsTo(db.customerFile, {
 });
 
 // folders와 files
-db.folders.hasMany(db.files, { foreignKey: 'folder_idx' });
+db.folders.hasMany(db.files, { foreignKey: 'folder_idx', onDelete: 'cascade' });
 db.files.belongsTo(db.folders, {
   foreignKey: 'folder_idx',
-
+  onDelete: 'cascade',
   hooks: true,
 });
 
