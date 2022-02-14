@@ -264,7 +264,7 @@ module.exports = {
       // }
 
       await db.customer.update(
-        { active: body.status },
+        { status: body.status },
         { where: { idx: body.customer_idx } },
         { transaction: t }
       );

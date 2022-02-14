@@ -12,7 +12,7 @@ const { customerAttributes } = require('../lib/attributes');
 module.exports = {
   Filter: async (req, res, next) => {
     let {
-      body: { date, active, contract_possibility, userId, confirm },
+      body: { date, status, contract_possibility, userId, confirm },
       query: { No, Name, Address, Date },
       params: { limit, page },
       company_idx,
@@ -31,7 +31,7 @@ module.exports = {
     let contractPerson = null;
 
     const countCustomers = async (
-      activeData,
+      statusData,
       contractData,
       contractPersonData
     ) => {
@@ -39,8 +39,8 @@ module.exports = {
         where: {
           company_idx,
           createdAt: { [Op.between]: [firstDate, secondDate] },
-          active: {
-            [Op.or]: activeData,
+          status: {
+            [Op.or]: statusData,
           },
           contract_possibility: {
             [Op.or]: contractData,
@@ -54,7 +54,7 @@ module.exports = {
       return countCustomersResult;
     };
     const findCustomers = async (
-      activeData,
+      statusData,
       contractData,
       contractPersonData,
       intlimit,
@@ -72,8 +72,8 @@ module.exports = {
           where: {
             company_idx,
             createdAt: { [Op.between]: [firstDate, secondDate] },
-            active: {
-              [Op.or]: activeData,
+            status: {
+              [Op.or]: statusData,
             },
             contract_possibility: {
               [Op.or]: contractData,
@@ -106,8 +106,8 @@ module.exports = {
 
       return { findAndCountAllFilterdCustomers, findFilteredUsersData };
     };
-    if (active) {
-      countArr = active;
+    if (status) {
+      countArr = status;
     }
 
     if (contract_possibility) {

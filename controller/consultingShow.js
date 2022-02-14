@@ -193,7 +193,6 @@ module.exports = {
       });
       // 변경 후 필드 삭제
       delete consultResult.consultings;
-      delete consultResult.contact_person;
 
       return res.send({ success: 200, consultResult });
     } catch (err) {
@@ -292,7 +291,7 @@ module.exports = {
       type,
       offset,
       limit,
-      activeArrResult,
+      statusArrResult,
       possibilityArrResult,
       firstDate,
       secondDate
@@ -302,7 +301,7 @@ module.exports = {
           where: {
             company_idx,
             createdAt: { [Op.between]: [firstDate, secondDate] },
-            active: { [Op.in]: activeArrResult },
+            status: { [Op.in]: statusArrResult },
             contract_possibility: { [Op.in]: possibilityArrResult },
           },
           offset,
@@ -325,8 +324,8 @@ module.exports = {
       // 날짜변환
       const { firstDate, secondDate } = changeDate(date);
       // 주어진 데이터를 Arr형태로 변경
-      const activeArrResult = req.query.active
-        ? req.query.active.split(',')
+      const statusArrResult = req.query.status
+        ? req.query.status.split(',')
         : [0, 1, 2];
       const possibilityArrResult = req.query.contract_possibility
         ? req.query.contract_possibility.split(',')
@@ -336,7 +335,7 @@ module.exports = {
         'count',
         null,
         null,
-        activeArrResult,
+        statusArrResult,
         possibilityArrResult,
         firstDate,
         secondDate
@@ -347,7 +346,7 @@ module.exports = {
         'findAll',
         start,
         limit,
-        activeArrResult,
+        statusArrResult,
         possibilityArrResult,
         firstDate,
         secondDate

@@ -55,7 +55,7 @@ module.exports = {
       const findCompany = await db.company.findOne({
         where: { company_subdomain },
       });
-      // userCompany 만들기 active는 0
+      // userCompany 만들기 active 0
       await includeUserToCompany({
         user_idx: createUserResult.idx,
         company_idx: findCompany.idx,
