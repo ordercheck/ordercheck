@@ -47,7 +47,7 @@ module.exports = {
       req.body.idx = createFolderResult.idx;
       req.body.isFolder = true;
       await db.files.create(req.body);
-      return res.send({ succes: true, message: '폴더 생성 완료했습니다.' });
+      return res.send({ succes: true, createFolderResult });
     } catch (err) {
       next(err);
     }
