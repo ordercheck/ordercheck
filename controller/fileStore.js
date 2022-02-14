@@ -87,7 +87,7 @@ module.exports = {
     }
   },
   deleteFile: async (req, res, next) => {
-    const { folder_idx, isfolder } = req.body;
+    const { idx, isfolder } = req.body;
     const t = await db.sequelize.transaction();
     try {
       // 폴더가 아닐 때
@@ -99,11 +99,11 @@ module.exports = {
       // 폴더일때
 
       const findFolderIdx = await db.files.findAll({
-        where: { folder_idx, isFolder: true },
+        where: { folder_idx: idx, isFolder: true },
         raw: true,
         attributes: ['idx'],
       });
-      const deleteArr = [folder_idx];
+      const deleteArr = [idx];
       findFolderIdx.forEach((data) => {
         deleteArr.push(data.idx);
       });
@@ -117,7 +117,7 @@ module.exports = {
 
       await db.files.destroy(
         {
-          where: { idx: folder_idx },
+          where: { idx },
         },
         { transaction: t }
       );

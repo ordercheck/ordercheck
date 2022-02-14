@@ -156,19 +156,19 @@
  *       - bearerAuth: []
  *     tags:
  *       -  FileStore
- *     summary: 파일 삭제하기
+ *     summary: 파일,폴더 삭제하기
  *     requestBody:
  *      content:
  *        application/json:
  *          schema:
  *            type: object
  *            properties:
- *              file_idx:
+ *              idx:
  *                type: integer
  *              isfolder:
  *                type: boolean
  *            example:
- *              folder_idx: 1
+ *              idx: 1
  *              isfolder: true
  *     responses:
  *       '200':
