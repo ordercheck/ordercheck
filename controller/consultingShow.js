@@ -2,6 +2,7 @@ const {
   checkUserCompany,
   checkPage,
   addUserId,
+  changeToJSON,
 } = require('../lib/apiFunctions');
 const { changeDate } = require('../lib/apiFunctions');
 const db = require('../model/db');
@@ -42,7 +43,7 @@ module.exports = {
         offset: start,
         limit: intlimit,
       });
-      customerFindAndCount = JSON.parse(JSON.stringify(customerFindAndCount));
+      customerFindAndCount = changeToJSON(customerFindAndCount);
       const customerData = addUserId(customerFindAndCount.rows, addminus, No);
       return { customerFindAndCount, customerData };
     };
@@ -178,7 +179,6 @@ module.exports = {
             attributes: ['idx', 'user_name'],
           },
         ],
-
         attributes: showDetailMainConsultingAttributes,
         order: [[db.consulting, 'createdAt', 'DESC']],
       });

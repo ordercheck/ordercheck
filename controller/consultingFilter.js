@@ -2,6 +2,7 @@ const {
   checkUserCompany,
   checkPage,
   addUserId,
+  changeToJSON,
 } = require('../lib/apiFunctions');
 const { changeDate } = require('../lib/apiFunctions');
 const db = require('../model/db');
@@ -93,8 +94,8 @@ module.exports = {
         order: [[sortField, sort]],
       });
 
-      findAndCountAllFilterdCustomers = JSON.parse(
-        JSON.stringify(findAndCountAllFilterdCustomers)
+      findAndCountAllFilterdCustomers = changeToJSON(
+        findAndCountAllFilterdCustomers
       );
 
       const { customerNumber } = giveNumbering(
@@ -199,9 +200,8 @@ module.exports = {
         limit: intlimit,
       });
 
-      searchedCountAndFindAll = JSON.parse(
-        JSON.stringify(searchedCountAndFindAll)
-      );
+      searchedCountAndFindAll = changeToJSON(searchedCountAndFindAll);
+
       const { customerNumber } = giveNumbering(
         searchedCountAndFindAll.count,
         intPage,
