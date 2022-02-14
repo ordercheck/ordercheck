@@ -13,6 +13,7 @@ const {
   showIntegratedUserAttributes,
   customerAttributes,
 } = require('../lib/attributes');
+const attributes = require('../lib/attributes');
 module.exports = {
   showTotalConsultingDefault: async (req, res, next) => {
     let {
@@ -154,8 +155,14 @@ module.exports = {
         include: [
           {
             model: db.consulting,
-
             attributes: showDetailConsultingAttributes,
+            include: [
+              {
+                model: db.formLink,
+                as: 'tempType',
+                attributes: ['tempType'],
+              },
+            ],
           },
           {
             model: db.timeLine,
@@ -163,7 +170,6 @@ module.exports = {
           },
         ],
         attributes: showDetailMainConsultingAttributes,
-
         order: [[db.consulting, 'createdAt', 'DESC']],
       });
 
@@ -175,8 +181,11 @@ module.exports = {
 
       // 상담신청 젤 위로 변경
       consultResult.consultings.forEach((data) => {
-        if (data.floor_plan) {
-          // data.floor_plan =
+        data.tempType = data.tempType.tempType;
+
+        if (data.floor_plan || data.hope_concept) {
+          data.floor_plan = JSON.parse(data.floor_plan);
+          data.hope_concept = JSON.parse(data.hope_concept);
         }
         data.status = 0;
         consultResult.consultingTimeLines.unshift(data);

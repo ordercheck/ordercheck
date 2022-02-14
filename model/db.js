@@ -81,9 +81,11 @@ db.calculate.belongsTo(db.customer, {
 
 // consulting과 formLink
 db.consulting.belongsTo(db.formLink, {
+  as: 'tempType',
   foreignKey: 'form_link',
   targetKey: 'form_link',
 });
+
 // formOpen과 user
 db.formOpen.belongsTo(db.user, {
   foreignKey: 'user_idx',
