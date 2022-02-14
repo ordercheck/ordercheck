@@ -173,12 +173,6 @@ module.exports = {
         order: [[db.consulting, 'createdAt', 'DESC']],
       });
 
-      consultResult = JSON.stringify(consultResult, (k, v) =>
-        v === null ? undefined : v
-      );
-
-      consultResult = JSON.parse(consultResult);
-
       // 상담신청 젤 위로 변경
       consultResult.consultings.forEach((data) => {
         data.tempType = data.tempType.tempType;
