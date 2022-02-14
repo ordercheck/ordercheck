@@ -41,9 +41,8 @@ module.exports = {
         order: [[sortField, sort]],
         offset: start,
         limit: intlimit,
-        raw: true,
       });
-
+      customerFindAndCount = JSON.parse(JSON.stringify(customerFindAndCount));
       const customerData = addUserId(customerFindAndCount.rows, addminus, No);
       return { customerFindAndCount, customerData };
     };

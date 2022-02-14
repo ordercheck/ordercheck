@@ -67,34 +67,36 @@ module.exports = {
         Date
       );
 
-      const findAndCountAllFilterdCustomers = await db.customer.findAndCountAll(
-        {
-          where: {
-            company_idx,
-            createdAt: { [Op.between]: [firstDate, secondDate] },
-            status: {
-              [Op.or]: statusData,
-            },
-            contract_possibility: {
-              [Op.or]: contractData,
-            },
-            contact_person: {
-              [Op.or]: contractPersonData,
-            },
+      let findAndCountAllFilterdCustomers = await db.customer.findAndCountAll({
+        where: {
+          company_idx,
+          createdAt: { [Op.between]: [firstDate, secondDate] },
+          status: {
+            [Op.or]: statusData,
           },
-          include: [
-            {
-              model: db.user,
-              attributes: ['idx', 'user_name'],
-            },
-          ],
-          attributes: customerAttributes,
-          offset: start,
-          limit: intlimit,
-          order: [[sortField, sort]],
-          raw: true,
-        }
+          contract_possibility: {
+            [Op.or]: contractData,
+          },
+          contact_person: {
+            [Op.or]: contractPersonData,
+          },
+        },
+        include: [
+          {
+            model: db.user,
+            attributes: ['idx', 'user_name'],
+          },
+        ],
+        attributes: customerAttributes,
+        offset: start,
+        limit: intlimit,
+        order: [[sortField, sort]],
+      });
+
+      findAndCountAllFilterdCustomers = JSON.parse(
+        JSON.stringify(findAndCountAllFilterdCustomers)
       );
+
       const { customerNumber } = giveNumbering(
         findAndCountAllFilterdCustomers.count,
         intPage,
@@ -171,7 +173,7 @@ module.exports = {
         Date
       );
 
-      const searchedCountAndFindAll = await db.customer.findAndCountAll({
+      let searchedCountAndFindAll = await db.customer.findAndCountAll({
         where: {
           [Op.or]: {
             customer_name: {
@@ -195,8 +197,11 @@ module.exports = {
         order: [[sortField, sort]],
         offset: start,
         limit: intlimit,
-        raw: true,
       });
+
+      searchedCountAndFindAll = JSON.parse(
+        JSON.stringify(searchedCountAndFindAll)
+      );
       const { customerNumber } = giveNumbering(
         searchedCountAndFindAll.count,
         intPage,
