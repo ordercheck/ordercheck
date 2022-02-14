@@ -47,6 +47,8 @@ module.exports = {
       const createFolderResult = await db.folders.create(req.body);
       req.body.idx = createFolderResult.idx;
       req.body.isFolder = true;
+
+      req.body.file_name = req.body.folder_name;
       await db.files.create(req.body);
       return res.send({ succes: true, createFolderResult });
     } catch (err) {
@@ -85,14 +87,69 @@ module.exports = {
     }
   },
   deleteFile: async (req, res, next) => {
-    const { folder_idx: idx, isfolder } = req.body;
+    const { folder_idx, isfolder } = req.body;
+    const t = await db.sequelize.transaction();
     try {
+      // 폴더가 아닐 때
       if (!isfolder) {
         await db.files.destroy({
           where: { idx },
         });
       }
-      await db.folders.destroy({ where: { idx } });
+      // 폴더일때
+
+      const findFolderIdx = await db.files.findAll({
+        where: { folder_idx, isFolder: true },
+        raw: true,
+        attributes: ['idx'],
+      });
+      const deleteArr = [folder_idx];
+      findFolderIdx.forEach((data) => {
+        deleteArr.push(data.idx);
+      });
+
+      await db.folders.destroy(
+        {
+          where: { idx: deleteArr },
+        },
+        { transaction: t }
+      );
+
+      await db.files.destroy(
+        {
+          where: { idx: folder_idx },
+        },
+        { transaction: t }
+      );
+      await t.commit();
+      return res.send({ success: 200, message: '삭제 완료' });
+    } catch (err) {
+      await t.rollback();
+      next(err);
+    }
+  },
+  changeFileTitle: async (req, res, next) => {
+    try {
+      const {
+        body: { folder_idx, title, root },
+        params: { customerFile_idx },
+      } = req;
+      const updateFolder = async () => {
+        await db.folders.update(
+          { folder_name: title },
+          { where: { idx: folder_idx, customerFile_idx } }
+        );
+      };
+      if (root) {
+        await updateFolder();
+      } else {
+        await updateFolder();
+        await db.files.update(
+          { file_name: title },
+          { where: { idx: folder_idx } }
+        );
+      }
+      return res.send({ success: 200 });
     } catch (err) {
       next(err);
     }

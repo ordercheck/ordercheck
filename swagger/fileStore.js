@@ -117,7 +117,7 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/file/store/update/title:
+ * /api/file/store/update/title/{customerFile_idx}:
  *   patch:
  *     security:
  *       - bearerAuth: []
@@ -134,9 +134,12 @@
  *                type: integer
  *              title:
  *                type: string
+ *              root:
+ *                type: boolean
  *            example:
  *              folder_idx: 1
  *              title: "test2"
+ *              root: true
  *     parameters:
  *         - in: path
  *           name: customerFile_idx

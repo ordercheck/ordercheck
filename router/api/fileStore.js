@@ -7,6 +7,7 @@ const {
   addFile,
   showFiles,
   deleteFile,
+  changeFileTitle,
 } = require('../../controller/fileStore');
 const { multer_file_store_upload } = require('../../lib/aws/aws');
 const loginCheck = require('../../middleware/auth');
@@ -20,6 +21,7 @@ router.post(
   addFile
 );
 
+router.patch('/update/title/:customerFile_idx', loginCheck, changeFileTitle);
 router.post('/:customerFile_idx', loginCheck, showFiles);
 router.delete('/file', loginCheck, deleteFile);
 
