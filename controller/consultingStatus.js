@@ -274,8 +274,8 @@ module.exports = {
         { transaction: t }
       );
 
-      const timeLineResult = await db.timeLine.create(body, { transaction: t });
-
+      await db.timeLine.create(body, { transaction: t });
+      await t.commit();
       let consultResult = await db.customer.findOne({
         where: { idx: body.customer_idx },
         include: [
@@ -314,7 +314,7 @@ module.exports = {
       });
       // 변경 후 필드 삭제
       delete consultResult.consultings;
-      await t.commit();
+
       return res.send({ success: 200, consultResult });
     } catch (err) {
       await t.rollback();

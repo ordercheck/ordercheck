@@ -95,6 +95,7 @@ module.exports = {
   },
   deleteFile: async (req, res, next) => {
     const { uuid, isfolder } = req.body;
+
     const t = await db.sequelize.transaction();
     try {
       // 폴더가 아닐 때
@@ -104,14 +105,14 @@ module.exports = {
         });
       }
       // 폴더일때
-
-      const findFolderIdx = await db.files.findAll({
-        where: { path: { [Op.in]: uuid }, isFolder: true },
+      console.log(uuid);
+      const findFolderUuid = await db.folders.findAll({
+        where: { path: { [Op.like]: `%${uuid}%` } },
+        attributes: ['path'],
         raw: true,
-        attributes: ['folder_uuid'],
       });
       // const deleteArr = [uuid];
-      console.log(findFolderIdx);
+      console.log(findFolderUuid);
       // findFolderIdx.forEach((data) => {
       //   deleteArr.push(data.folder_uuid);
       // });
