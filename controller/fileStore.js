@@ -105,32 +105,32 @@ module.exports = {
         });
       }
       // 폴더일때
-      console.log(uuid);
+
       const findFolderUuid = await db.folders.findAll({
         where: { path: { [Op.like]: `%${uuid}%` } },
-        attributes: ['path'],
+        attributes: ['idx', 'path'],
         raw: true,
       });
-      // const deleteArr = [uuid];
-      console.log(findFolderUuid);
-      // findFolderIdx.forEach((data) => {
-      //   deleteArr.push(data.folder_uuid);
-      // });
 
-      // await db.folders.destroy(
-      //   {
-      //     where: { uuid: deleteArr },
-      //   },
-      //   { transaction: t }
-      // );
+      const deleteArr = [];
+      findFolderUuid.forEach((data) => {
+        deleteArr.push(data.idx);
+      });
 
-      // await db.files.destroy(
-      //   {
-      //     where: { folder_uuid: uuid },
-      //   },
-      //   { transaction: t }
-      // );
-      // await t.commit();
+      await db.folders.destroy(
+        {
+          where: { idx: deleteArr },
+        },
+        { transaction: t }
+      );
+
+      await db.files.destroy(
+        {
+          where: { folder_uuid: uuid },
+        },
+        { transaction: t }
+      );
+      await t.commit();
       return res.send({ success: 200, message: '삭제 완료' });
     } catch (err) {
       await t.rollback();
