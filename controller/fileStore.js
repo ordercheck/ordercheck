@@ -1,7 +1,7 @@
 const db = require('../model/db');
 const { getFileName } = require('../lib/apiFunctions');
 const { random5 } = require('../lib/functions');
-
+const { Op } = require('sequelize');
 // 폴더 찾는 함수
 const findFolder = async (req) => {
   return await db.folders.findByPk(req.body.folder_idx, {
@@ -106,30 +106,30 @@ module.exports = {
       // 폴더일때
 
       const findFolderIdx = await db.files.findAll({
-        where: { folder_uuid: uuid, isFolder: true },
+        where: { path: { [Op.in]: uuid }, isFolder: true },
         raw: true,
         attributes: ['folder_uuid'],
       });
-      const deleteArr = [uuid];
+      // const deleteArr = [uuid];
+      console.log(findFolderIdx);
+      // findFolderIdx.forEach((data) => {
+      //   deleteArr.push(data.folder_uuid);
+      // });
 
-      findFolderIdx.forEach((data) => {
-        deleteArr.push(data.folder_uuid);
-      });
+      // await db.folders.destroy(
+      //   {
+      //     where: { uuid: deleteArr },
+      //   },
+      //   { transaction: t }
+      // );
 
-      await db.folders.destroy(
-        {
-          where: { uuid: deleteArr },
-        },
-        { transaction: t }
-      );
-
-      await db.files.destroy(
-        {
-          where: { folder_uuid: uuid },
-        },
-        { transaction: t }
-      );
-      await t.commit();
+      // await db.files.destroy(
+      //   {
+      //     where: { folder_uuid: uuid },
+      //   },
+      //   { transaction: t }
+      // );
+      // await t.commit();
       return res.send({ success: 200, message: '삭제 완료' });
     } catch (err) {
       await t.rollback();

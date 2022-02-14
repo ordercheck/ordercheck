@@ -4,6 +4,11 @@ const {
   createFileStore,
 } = require('../lib/apiFunctions');
 const db = require('../model/db');
+const {
+  showDetailConsultingAttributes,
+  showDetailJoinConsultingAttributes,
+  showDetailMainConsultingAttributes,
+} = require('../lib/attributes');
 const { downFile } = require('../lib/aws/fileupload').ufile;
 const {
   TeamkakaoPushNewForm,
@@ -268,13 +273,49 @@ module.exports = {
         { where: { idx: body.customer_idx } },
         { transaction: t }
       );
-      const updateCustomer = await db.customer.findOne(
-        { status: body.status },
-        { where: { idx: body.customer_idx } }
-      );
+
       const timeLineResult = await db.timeLine.create(body, { transaction: t });
+
+      let consultResult = await db.customer.findOne({
+        where: { idx: body.customer_idx },
+        include: [
+          {
+            model: db.consulting,
+            attributes: showDetailConsultingAttributes,
+            include: [
+              {
+                model: db.formLink,
+                as: 'tempType',
+                attributes: ['tempType'],
+              },
+            ],
+          },
+          {
+            model: db.timeLine,
+            attributes: showDetailJoinConsultingAttributes,
+          },
+          {
+            model: db.user,
+            attributes: ['idx', 'user_name'],
+          },
+        ],
+        attributes: showDetailMainConsultingAttributes,
+        order: [[db.consulting, 'createdAt', 'DESC']],
+      });
+      consultResult = consultResult.toJSON();
+      consultResult.consultings.forEach((data) => {
+        data.tempType = data.tempType.tempType;
+
+        if (data.floor_plan || data.hope_concept) {
+          data.floor_plan = JSON.parse(data.floor_plan);
+          data.hope_concept = JSON.parse(data.hope_concept);
+        }
+        consultResult.consultingTimeLines.unshift(data);
+      });
+      // 변경 후 필드 삭제
+      delete consultResult.consultings;
       await t.commit();
-      return res.send({ success: 200, updateCustomer, timeLineResult });
+      return res.send({ success: 200, consultResult });
     } catch (err) {
       await t.rollback();
       next(err);
