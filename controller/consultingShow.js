@@ -168,10 +168,16 @@ module.exports = {
             model: db.timeLine,
             attributes: showDetailJoinConsultingAttributes,
           },
+          {
+            model: db.user,
+            attributes: ['idx', 'user_name'],
+          },
         ],
+
         attributes: showDetailMainConsultingAttributes,
         order: [[db.consulting, 'createdAt', 'DESC']],
       });
+
       // forEach를 위해 JSON형태로 변경
       consultResult = consultResult.toJSON();
 
@@ -187,6 +193,7 @@ module.exports = {
       });
       // 변경 후 필드 삭제
       delete consultResult.consultings;
+      delete consultResult.contact_person;
 
       return res.send({ success: 200, consultResult });
     } catch (err) {

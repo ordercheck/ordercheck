@@ -128,8 +128,9 @@ module.exports = {
 
       // 이미지나 파일이 없을 때  간편 Form
       if (!files.img && !files.concept) {
-        body.choice = JSON.stringify(body.choice);
+        // body.choice = JSON.stringify(body.choice);
 
+        body.choice = JSON.parse(body.choice).join(', ');
         createConsultingAndIncrement(body);
 
         return;
@@ -140,18 +141,21 @@ module.exports = {
       const conceptUrlString = selectUrl(files.concept);
       body.floor_plan = JSON.stringify(imgUrlString);
       body.hope_concept = JSON.stringify(conceptUrlString);
-      body.expand = JSON.stringify(body.expand);
-      body.carpentry = JSON.stringify(body.carpentry);
-      body.paint = JSON.stringify(body.paint);
-      body.bathroom_option = JSON.stringify(body.bathroom_option);
-      body.floor = JSON.stringify(body.floor);
-      body.tile = JSON.stringify(body.tile);
-      body.electricity_lighting = JSON.stringify(body.electricity_lighting);
-      body.kitchen_option = JSON.stringify(body.kitchen_option);
-      body.furniture = JSON.stringify(body.furniture);
-      body.facility = JSON.stringify(body.facility);
-      body.film = JSON.stringify(body.film);
-      body.etc = JSON.stringify(body.etc);
+      body.choice = JSON.parse(body.choice).join(', ');
+      body.expand = JSON.parse(body.expand).join(', ');
+      body.carpentry = JSON.parse(body.carpentry).join(', ');
+      body.paint = JSON.parse(body.paint).join(', ');
+      body.bathroom_option = JSON.parse(body.bathroom_option).join(', ');
+      body.floor = JSON.parse(body.floor).join(', ');
+      body.tile = JSON.parse(body.tile).join(', ');
+      body.electricity_lighting = JSON.parse(body.electricity_lighting).join(
+        ', '
+      );
+      body.kitchen_option = JSON.parse(body.kitchen_option).join(', ');
+      body.furniture = JSON.parse(body.furniture).join(', ');
+      body.facility = JSON.parse(body.facility).join(', ');
+      body.film = JSON.parse(body.film).join(', ');
+      body.etc = JSON.parse(body.etc).join(', ');
 
       createConsultingAndIncrement(body);
 
@@ -199,11 +203,9 @@ module.exports = {
       //   return res.send({ success: 400 });
       // }
       // 유저의 권환을 체크
-      if (checkResult.authority == 1) {
-        await db.consulting.destroy({ where: { idx } });
-        return res.send({ success: 200 });
-      }
-      return res.send({ success: 400 });
+
+      await db.consulting.destroy({ where: { idx } });
+      return res.send({ success: 200 });
     } catch (err) {
       next(err);
       return res.send({ success: 500, message: err.message });
