@@ -268,9 +268,13 @@ module.exports = {
         { where: { idx: body.customer_idx } },
         { transaction: t }
       );
-      await db.timeLine.create(body, { transaction: t });
+      const updateCustomer = await db.customer.findOne(
+        { status: body.status },
+        { where: { idx: body.customer_idx } }
+      );
+      const timeLineResult = await db.timeLine.create(body, { transaction: t });
       await t.commit();
-      return res.send({ success: 200 });
+      return res.send({ success: 200, updateCustomer, timeLineResult });
     } catch (err) {
       await t.rollback();
       next(err);

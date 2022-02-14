@@ -41,13 +41,23 @@ module.exports = {
       req.body.customerFile_idx = req.params.customerFile_idx;
       req.body.uuid = random5();
       if (req.body.root) {
+        req.body.path = req.body.uuid;
         const createFolderResult = await db.folders.create(req.body);
         return res.send({ succes: true, createFolderResult });
       }
       req.body.root = false;
+
+      const findResult = await db.folders.findOne(
+        { where: { uuid: req.body.folder_uuid } },
+        { attributes: ['path'] }
+      );
+
+      req.body.path = `${findResult.path},${req.body.uuid}`;
+
       const createFolderResult = await db.folders.create(req.body);
       req.body.isFolder = true;
       req.body.title = req.body.title;
+      req.body.folder_uuid = req.body.uuid;
       await db.files.create(req.body);
       return res.send({ succes: true, createFolderResult });
     } catch (err) {
@@ -90,7 +100,7 @@ module.exports = {
       // 폴더가 아닐 때
       if (!isfolder) {
         await db.files.destroy({
-          where: { idx },
+          where: { folder_uuid: uuid },
         });
       }
       // 폴더일때
@@ -98,23 +108,24 @@ module.exports = {
       const findFolderIdx = await db.files.findAll({
         where: { folder_uuid: uuid, isFolder: true },
         raw: true,
-        attributes: ['idx'],
+        attributes: ['folder_uuid'],
       });
       const deleteArr = [uuid];
+
       findFolderIdx.forEach((data) => {
         deleteArr.push(data.folder_uuid);
       });
 
       await db.folders.destroy(
         {
-          where: { folder_uuid: deleteArr },
+          where: { uuid: deleteArr },
         },
         { transaction: t }
       );
 
       await db.files.destroy(
         {
-          where: { uuid },
+          where: { folder_uuid: uuid },
         },
         { transaction: t }
       );
