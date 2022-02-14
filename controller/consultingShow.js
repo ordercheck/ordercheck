@@ -183,15 +183,13 @@ module.exports = {
           data.floor_plan = JSON.parse(data.floor_plan);
           data.hope_concept = JSON.parse(data.hope_concept);
         }
-        data.status = 0;
-        data.customer_name = consultResult.customer_name;
-        data.customer_phoneNumber = consultResult.customer_phoneNumber;
-        data.customer_fullAddress = `${consultResult.address} ${consultResult.detail_address}`;
 
+        data.status = 0;
         consultResult.consultingTimeLines.unshift(data);
       });
       // 변경 후 필드 삭제
       delete consultResult.consultings;
+
       return res.send({ success: 200, consultResult });
     } catch (err) {
       next(err);

@@ -6,10 +6,20 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
+
+    customer_name: { allowNull: true, type: DataTypes.STRING(100) },
+    customer_phoneNumber: { allowNull: true, type: DataTypes.STRING(100) },
+    address: { allowNull: true, type: DataTypes.STRING(100) },
+    detail_address: { allowNull: true, type: DataTypes.STRING(100) },
+
     choice: {
       allowNull: true,
-
       type: DataTypes.STRING(100),
+    },
+
+    room_size: {
+      allowNull: true,
+      type: DataTypes.INTEGER,
     },
 
     customer_email: {

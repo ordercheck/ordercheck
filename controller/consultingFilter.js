@@ -131,10 +131,11 @@ module.exports = {
     return res.send({
       success: 200,
       findResult: logicResult.findFilteredUsersData,
-
       Page: intPage,
       totalPage: Math.ceil(
-        logicResult.findAndCountAllFilterdCustomers.count / intlimit
+        confirm
+          ? logicResult.findAndCountAllFilterdCustomers.count / intlimit
+          : logicResult / intlimit
       ),
     });
   },
