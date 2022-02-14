@@ -64,8 +64,11 @@ module.exports = {
       // 랜덤 회사 만들기
       const randomCompany = await createRandomCompany(createUserResult.idx);
       // master 권한 주기
-
       await giveMasterAuth(createUserResult.idx, randomCompany.idx);
+      await db.config.create({
+        user_idx: createUserResult.idx,
+        company_idx: findCompany.idx,
+      });
       // 무료 플랜 만들기
       await createFreePlan(randomCompany.idx);
 
