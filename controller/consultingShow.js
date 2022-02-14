@@ -175,6 +175,9 @@ module.exports = {
 
       // 상담신청 젤 위로 변경
       consultResult.consultings.forEach((data) => {
+        if (data.floor_plan) {
+          // data.floor_plan =
+        }
         data.status = 0;
         consultResult.consultingTimeLines.unshift(data);
       });
