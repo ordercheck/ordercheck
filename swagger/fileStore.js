@@ -137,12 +137,12 @@
  *                type: integer
  *              title:
  *                type: string
- *              root:
+ *              isFile:
  *                type: boolean
  *            example:
  *              uuid: SJFD
  *              title: "test2"
- *              root: true
+ *              isFile: true
  *     parameters:
  *         - in: path
  *           name: customerFile_idx

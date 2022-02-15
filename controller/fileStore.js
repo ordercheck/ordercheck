@@ -2,7 +2,7 @@ const db = require('../model/db');
 const { getFileName } = require('../lib/apiFunctions');
 const { random5 } = require('../lib/functions');
 const { Op } = require('sequelize');
-
+const { s3_copy, s3_delete } = require('../lib/aws/aws');
 module.exports = {
   getUserList: async (req, res, next) => {
     try {
@@ -146,7 +146,7 @@ module.exports = {
 
       await db.files.destroy(
         {
-          where: { folder_uuid: uuid },
+          where: { uuid },
         },
         { transaction: t }
       );
@@ -160,20 +160,45 @@ module.exports = {
   changeFileTitle: async (req, res, next) => {
     try {
       const {
-        body: { uuid, title, root },
+        body: { uuid, title, isFile },
         params: { customerFile_idx },
       } = req;
-      const updateFolder = async () => {
+
+      // 폴더일 경우
+      if (isFile) {
         await db.folders.update(
           { title },
           { where: { uuid, customerFile_idx } }
         );
-      };
-      if (root) {
-        await updateFolder();
+
+        const findFoldersResult = await db.folders.findOne({
+          where: { uuid, customerFile_idx },
+          attributes: ['root'],
+        });
+        if (!findFoldersResult.root) {
+          await db.files.update({ title: title }, { where: { uuid } });
+        }
       } else {
-        await updateFolder();
-        await db.files.update({ title: title }, { where: { uuid } });
+        const findFilesResult = await db.files.findOne({ where: { uuid } });
+        let params = {
+          Bucket: 'ordercheck',
+          CopySource: `ordercheck/fileStore/${findFilesResult.title}`,
+          Key: `fileStore/${title}`,
+          ACL: 'public-read',
+        };
+        s3_copy(params);
+        await db.files.update(
+          {
+            title,
+            file_url: `${process.env.S3_BASE_URL}fileStore/${title}`,
+          },
+          { where: { uuid } }
+        );
+        params = {
+          Bucket: 'ordercheck',
+          Delimiter: `/fileStore/${findFilesResult.title}`,
+        };
+        s3_delete(params);
       }
       return res.send({ success: 200 });
     } catch (err) {
