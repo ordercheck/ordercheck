@@ -3,6 +3,7 @@ const {
   checkPage,
   addUserId,
   changeToJSON,
+  getDetailCustomerInfo,
 } = require('../lib/apiFunctions');
 const { changeDate } = require('../lib/apiFunctions');
 const db = require('../model/db');
@@ -153,56 +154,15 @@ module.exports = {
     const { customer_idx } = req.params;
 
     try {
-      let consultResult = await db.customer.findOne({
-        where: {
-          idx: customer_idx,
-          company_idx,
-        },
-        include: [
-          {
-            model: db.consulting,
-            attributes: showDetailConsultingAttributes,
-            include: [
-              {
-                model: db.formLink,
-                as: 'tempType',
-                attributes: ['tempType'],
-              },
-            ],
-          },
-          {
-            model: db.timeLine,
-            attributes: showDetailJoinConsultingAttributes,
-          },
-          {
-            model: db.user,
-            attributes: ['idx', 'user_name'],
-          },
-        ],
-        attributes: showDetailMainConsultingAttributes,
-        order: [[db.consulting, 'createdAt', 'DESC']],
+      const consultResult = await getDetailCustomerInfo({
+        idx: customer_idx,
+        company_idx,
       });
 
       //  고객이 없을 때
       if (!consultResult) {
         return next({ message: '고객이 없습니다' });
       }
-
-      // forEach를 위해 JSON형태로 변경
-      consultResult = consultResult.toJSON();
-
-      // 상담신청 젤 위로 변경
-      consultResult.consultings.forEach((data) => {
-        data.tempType = data.tempType.tempType;
-
-        if (data.floor_plan || data.hope_concept) {
-          data.floor_plan = JSON.parse(data.floor_plan);
-          data.hope_concept = JSON.parse(data.hope_concept);
-        }
-        consultResult.consultingTimeLines.unshift(data);
-      });
-      // 변경 후 필드 삭제
-      delete consultResult.consultings;
 
       return res.send({ success: 200, consultResult });
     } catch (err) {

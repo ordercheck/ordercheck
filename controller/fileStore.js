@@ -2,12 +2,6 @@ const db = require('../model/db');
 const { getFileName } = require('../lib/apiFunctions');
 const { random5 } = require('../lib/functions');
 const { Op } = require('sequelize');
-// 폴더 찾는 함수
-const findFolder = async (req) => {
-  return await db.folders.findByPk(req.body.folder_idx, {
-    attributes: ['idx'],
-  });
-};
 
 module.exports = {
   getUserList: async (req, res, next) => {
@@ -37,30 +31,34 @@ module.exports = {
     return res.send({ success: 200, result });
   },
   addFolder: async (req, res, next) => {
+    const t = await db.sequelize.transaction();
     try {
       req.body.customerFile_idx = req.params.customerFile_idx;
-      req.body.uuid = random5();
+      const newUuid = random5();
       if (req.body.root) {
-        req.body.path = req.body.uuid;
         const createFolderResult = await db.folders.create(req.body);
         return res.send({ succes: true, createFolderResult });
       }
       req.body.root = false;
 
       const findResult = await db.folders.findOne(
-        { where: { uuid: req.body.folder_uuid } },
+        { where: { uuid: req.body.uuid } },
         { attributes: ['path'] }
       );
 
-      req.body.path = `${findResult.path},${req.body.uuid}`;
-
-      const createFolderResult = await db.folders.create(req.body);
+      req.body.path = `${findResult.path}, ${newUuid}`;
+      req.body.uuid = newUuid;
+      const createFolderResult = await db.folders.create(req.body, {
+        transaction: t,
+      });
       req.body.isFolder = true;
       req.body.title = req.body.title;
-      req.body.folder_uuid = req.body.uuid;
-      await db.files.create(req.body);
+      req.body.folder_uuid = newUuid;
+      await db.files.create(req.body, { transaction: t });
+      await t.commit();
       return res.send({ succes: true, createFolderResult });
     } catch (err) {
+      await t.rollback();
       next(err);
     }
   },
@@ -68,7 +66,9 @@ module.exports = {
     const data = {};
     const createFile = async (fileData) => {
       data.file_url = fileData.location;
-      const [, title] = fileData.key.split('/');
+
+      const title = getFileName(fileData.key);
+
       data.title = title;
       data.folder_uuid = req.body.uuid;
       return await db.files.create(data);
