@@ -169,7 +169,7 @@
  *         - in: path
  *           name: uuid
  *           schema:
- *             type: integer
+ *             type: string
  *           example: SKFEO
  *     responses:
  *       '200':
