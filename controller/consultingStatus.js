@@ -53,14 +53,6 @@ module.exports = {
           );
           res.send({ success: 200 });
 
-          // await customerkakaoPushNewCal(
-          //   bodyData.customer_phoneNumber,
-          //   bodyData.company_name,
-          //   bodyData.customer_name,
-          //   '23',
-          //   '견적서 확인'
-          // );
-
           // 고객 카카오 푸쉬 보내기
           // await customerkakaoPushNewForm(
           //   bodyData.customer_phoneNumber,
@@ -176,17 +168,10 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      // 관리자가 회사소속인지 체크
-      // const checkResult = await checkUserCompany(company_idx, user_idx);
-      // if (checkResult == false) {
-      //   return res.send({ success: 400 });
-      // }
       // 유저의 권환을 체크
-      if (checkResult.authority == 1) {
-        await db.consulting.update({ contact_person }, { where: { idx } });
-        return res.send({ success: 200 });
-      }
-      return res.send({ success: 400 });
+
+      await db.consulting.update({ contact_person }, { where: { idx } });
+      return res.send({ success: 200 });
     } catch (err) {
       next(err);
     }
@@ -293,7 +278,7 @@ module.exports = {
     try {
       // 몇차 인지 체크
       const findCalculate = await db.calculate.count({
-        where: { customer_idx: req.body.customer_idx },
+        where: { customer_idx: body.customer_idx },
       });
 
       // 견적서 차수 +1씩 올리기
@@ -320,7 +305,24 @@ module.exports = {
           .split('T')[0]
           .replace(/-/g, '.'),
       };
-      return res.send({ success: 200, findResult });
+      res.send({ success: 200, findResult });
+
+      const findUser = await db.customer.findByPk(body.customer_idx, {
+        include: [
+          {
+            model: db.company,
+            attributes: ['company_name'],
+          },
+        ],
+      });
+
+      // await customerkakaoPushNewCal(
+      //   findUser.customer_phoneNumber,
+      //   findUser.company.company_name,
+      //   findUser.customer_name,
+      //   findCalculate,
+      //   '견적서 확인'
+      // );
     } catch (err) {
       next(err);
     }
@@ -340,12 +342,7 @@ module.exports = {
     const { body } = req;
 
     try {
-      // const checkResult = await checkUserCompany(body.company_idx, user_idx);
-      // if (checkResult == false) {
-      //   return res.send({ success: 400 });
-      // }
       // 대표 상담폼과 병합
-
       body.target_idx.forEach(async (data) => {
         try {
           await db.consulting.update(

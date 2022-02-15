@@ -106,26 +106,22 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/member/set:
+ * /api/consulting/member/set/{customer_idx}/{contract_person}:
  *   post:
  *      security:
  *       - bearerAuth: []
  *      tags:
  *       -  consult
- *      summary: 원 consulting 담당자 설정
- *      requestBody:
- *       content:
- *         application/json:
+ *      summary: consulting 담당자 설정
+ *      parameters:
+ *         - in: path
+ *           name: customer_idx
  *           schema:
- *             type: object
- *             properties:
- *               idx:
- *                 type: int
- *               contact_person:
- *                 type: int
- *             example:
- *               idx: 2
- *               contact_person: 6
+ *             type: integer
+ *         - in: path
+ *           name: contract_person
+ *           schema:
+ *             type: integer
  *      responses:
  *         '200':
  *            description: 성공

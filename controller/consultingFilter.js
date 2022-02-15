@@ -18,7 +18,7 @@ module.exports = {
       params: { limit, page },
       company_idx,
     } = req;
-
+    company_idx = 18;
     const { firstDate, secondDate } = changeDate(date);
 
     const { start, intlimit, intPage } = await checkPage(
@@ -139,7 +139,7 @@ module.exports = {
 
     return res.send({
       success: 200,
-      findResult: logicResult.findFilteredUsersData,
+      findResult: confirm ? logicResult.findFilteredUsersData : logicResult,
       Page: intPage,
       totalPage: Math.ceil(
         confirm
