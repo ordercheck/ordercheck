@@ -135,11 +135,6 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      // 유저회사 정보를 체크
-      // const checkResult = await checkUserCompany(company_idx, user_idx);
-      // if (checkResult == false) {
-      //   return res.send({ success: 400 });
-      // }
       const result = await db.customer.findAll({
         where: { form_link },
         group: ['customer_phoneNumber'],

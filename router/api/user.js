@@ -42,6 +42,7 @@ const {
 } = require('../../lib/functions');
 const functions = require('../../lib/functions');
 const { checkCard } = require('../../model/db');
+const attributes = require('../../lib/attributes');
 
 let global_uidx = 0;
 
@@ -74,6 +75,17 @@ router.post('/login', async (req, res, next) => {
   let findUserCompany = await db.userCompany.findOne({
     where: { user_idx: check.idx },
   });
+  //  userCompany를 찾아 없으면 무료 플랜으로 전환
+  if (!findUserCompany) {
+    const findCompany = await db.company.findOne(
+      { huidx: check.idx },
+      { attributes: ['idx'] }
+    );
+    findUserCompany = await db.userCompany.create({
+      where: { user_idx: check.idx, company_idx: findCompany.idx },
+    });
+  }
+
   if (check) {
     const compareResult = await bcrypt.compare(
       user_password,
@@ -241,9 +253,7 @@ router.post('/company/check', async (req, res) => {
         user_data.user_name,
         user_data.user_phone,
         user_data.user_email,
-        nextMerchant_uid,
-        login_data.user_idx,
-        login_data.company_idx
+        nextMerchant_uid
       );
       plan_data.merchant_uid = nextMerchant_uid;
       await db.plan.update(plan_data, {

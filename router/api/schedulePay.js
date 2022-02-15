@@ -35,19 +35,17 @@ router.post('/', async (req, res) => {
 
       const newMerchant_uid = uuid();
 
-      const scheduleResult = await schedulePay(
+      await schedulePay(
         afterMonth,
         getResult.customer_uid,
         getResult.amount,
         getResult.buyer_name,
         getResult.buyer_tel,
         getResult.buyer_email,
-        newMerchant_uid,
-        getResult.user_idx,
-        getResult.company_idx
+        newMerchant_uid
       );
 
-      const result = await db.plan.update(
+      await db.plan.update(
         { merchant_uid: newMerchant_uid },
         {
           where: { merchant_uid },
@@ -59,6 +57,10 @@ router.post('/', async (req, res) => {
     // 정기결제 실패했을 때
     if (status == 'failed') {
       try {
+        const findPlanResult = await db.plan.findOne(
+          { where: { merchant_uid } },
+          { attributes: ['company_idx'] }
+        );
         await db.plan.update(
           {
             plan: 'FREE',
@@ -73,12 +75,9 @@ router.post('/', async (req, res) => {
           { where: { merchant_uid } }
         );
         await db.userCompany.destroy({
-          where: { company_idx: getResult.company_idx },
+          where: { company_idx: findPlanResult.company_idx },
         });
-        await db.userCompany.create({
-          user_idx: getResult.user_idx,
-          company_idx: getResult.company_idx,
-        });
+
         return res.send({ success: 200, message: '플랜 비활성화 성공' });
       } catch (err) {
         return res.send({ success: 400, message: err.message });
