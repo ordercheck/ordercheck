@@ -69,11 +69,10 @@ module.exports = {
     const data = {};
     const createFile = async (fileData) => {
       data.file_url = fileData.location;
-
       const title = getFileName(fileData.key);
-
       data.title = title;
       data.folder_uuid = req.body.uuid;
+      data.uuid = random5();
       return await db.files.create(data);
     };
     try {
@@ -119,7 +118,7 @@ module.exports = {
       // 폴더가 아닐 때
       if (!isfolder) {
         await db.files.destroy({
-          where: { folder_uuid: uuid },
+          where: { uuid },
         });
       }
       // 폴더일때

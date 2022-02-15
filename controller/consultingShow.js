@@ -215,6 +215,8 @@ module.exports = {
           'file_url',
           'file_name',
           'predicted_price',
+          'sharedDate',
+          'status',
           [
             db.sequelize.fn(
               'date_format',
