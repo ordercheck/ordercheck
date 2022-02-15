@@ -90,7 +90,14 @@ module.exports = {
     try {
       let findFilesResult = await db.files.findAll({
         where: { folder_uuid: req.body.uuid },
-        attributes: ['idx', 'file_url', 'title', 'isFolder', 'folder_uuid'],
+        attributes: [
+          'idx',
+          'file_url',
+          'title',
+          'isFolder',
+          'folder_uuid',
+          'uuid',
+        ],
       });
 
       findFilesResult = JSON.parse(

@@ -167,13 +167,7 @@ module.exports = {
   showCompanyMembers: async (req, res, next) => {
     const { user_idx, company_idx } = req;
 
-    // userId, 프로필사진, 이름
     try {
-      // const checkResult = await checkUserCompany(company_idx, user_idx);
-      // if (checkResult == false) {
-      //   return res.send({ success: 400 });
-      // }
-
       const findAllUser = await db.userCompany.findAll({
         where: { company_idx },
         include: [
@@ -212,13 +206,27 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      // const checkResult = await checkUserCompany(company_idx, user_idx);
-      // if (checkResult == false) {
-      //   return res.send({ success: 400 });
-      // }
-      const result = await db.calculate.findAll({ where: { customer_idx } });
+      const findResult = await db.calculate.findAll({
+        where: { customer_idx },
+        order: [['createdAt', 'DESC']],
+        attributes: [
+          'idx',
+          'title',
+          'file_url',
+          'file_name',
+          'predicted_price',
+          [
+            db.sequelize.fn(
+              'date_format',
+              db.sequelize.col('createdAt'),
+              '%Y.%m.%d'
+            ),
+            'createdAt',
+          ],
+        ],
+      });
 
-      return res.send({ success: 200, result });
+      return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
     }

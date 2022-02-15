@@ -36,6 +36,12 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(100),
     },
 
+    main: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
+    },
+
     status: {
       allowNull: false,
       defaultValue: false,
