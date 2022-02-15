@@ -76,7 +76,11 @@ router.post(
 );
 
 // 컨설팅 담당자 설정하기
-router.post('/member/set', loginCheck, setConsultingContactMember);
+router.post(
+  '/member/set/:customer_idx/:contract_person',
+  loginCheck,
+  setConsultingContactMember
+);
 
 // 견적서 다운로드
 router.post('/calculate/down', loginCheck, downCalculate);

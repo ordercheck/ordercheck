@@ -7,7 +7,9 @@ module.exports = {
     try {
       let userProfile = await db.sequelize
         .query(
-          `SELECT user.idx, personal_code, user_phone, user_email, user_name, plan FROM user LEFT JOIN userCompany ON user.idx = userCompany.user_idx 
+          `SELECT user.idx, personal_code, user_phone, user_email, user_name, plan, 
+          date_format(user.createdAt, '%Y.%m.%d') as createdAt
+         FROM user LEFT JOIN userCompany ON user.idx = userCompany.user_idx 
           LEFT JOIN plan ON userCompany.company_idx = plan.company_idx
           WHERE user.idx = ${req.user_idx}`
         )

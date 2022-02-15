@@ -163,7 +163,7 @@ module.exports = {
 
   setConsultingContactMember: async (req, res, next) => {
     const {
-      body: { idx, contact_person },
+      params: { idx, contact_person },
       user_idx,
       company_idx,
     } = req;
