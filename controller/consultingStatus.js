@@ -269,7 +269,7 @@ module.exports = {
       params: { customer_idx },
     } = req;
 
-    await checkDetailCustomerUpdateField(
+    const consultResult = await checkDetailCustomerUpdateField(
       customer_idx,
       room_size_kind,
       room_size,
