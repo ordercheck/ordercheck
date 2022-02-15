@@ -112,12 +112,12 @@ module.exports = {
     }
   },
   deleteFile: async (req, res, next) => {
-    const { uuid, isfolder } = req.body;
+    const { uuid, isfolder } = req.params;
 
     const t = await db.sequelize.transaction();
     try {
       // 폴더가 아닐 때
-      if (!isfolder) {
+      if (isfolder == 0) {
         await db.files.destroy({
           where: { uuid },
         });

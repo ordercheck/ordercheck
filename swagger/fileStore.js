@@ -153,26 +153,24 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/file/store/file:
+ * /api/file/store/file/{isfolder}/{uuid}:
  *   delete:
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       -  FileStore
- *     summary: 파일,폴더 삭제하기
- *     requestBody:
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              isfolder:
- *                type: boolean
- *              uuid:
- *                type: string
- *            example:
- *              isfolder: true
- *              uuid: FEJE
+ *     summary: 파일,폴더 삭제하기 (folder면 isfolder 1 아니면 0)
+ *     parameters:
+ *         - in: path
+ *           name: isfolder
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *         - in: path
+ *           name: uuid
+ *           schema:
+ *             type: integer
+ *           example: SKFEO
  *     responses:
  *       '200':
  *         description: 성공
