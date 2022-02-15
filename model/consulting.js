@@ -54,7 +54,6 @@ module.exports = function (sequelize, DataTypes) {
     },
     floor_plan: {
       allowNull: true,
-
       type: DataTypes.TEXT(),
     },
     hope_Date: {

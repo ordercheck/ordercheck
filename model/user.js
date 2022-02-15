@@ -15,7 +15,7 @@ module.exports = function (sequelize, DataTypes) {
     user_profile: {
       allowNull: false,
       defaultValue: '',
-      type: DataTypes.TEXT,
+      type: DataTypes.TEXT(),
     },
 
     user_phone: {

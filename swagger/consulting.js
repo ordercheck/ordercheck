@@ -224,27 +224,48 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/status:
+ * /api/consulting/status/{customer_idx}:
  *   patch:
  *      security:
  *       - bearerAuth: []
  *      tags:
  *       -  consult
  *      summary: 상담 상태 변경 및 메모
+ *      parameters:
+ *         - in: path
+ *           name: customer_idx
+ *           schema:
+ *             type: integer
  *      requestBody:
  *       content:
  *         application/json:
  *           schema:
  *             type: object
  *             properties:
- *               customer_idx:
+ *               contract_possibility:
  *                 type: integer
+ *               contact_person:
+ *                 type: integer
+ *               detail_address:
+ *                 type: string
+ *               address:
+ *                 type: string 
+ *               customer_phoneNumber:
+ *                 type: string 
+ *               customer_name: 
+ *                 type: string 
  *               memo:
  *                 type: string
  *               status:
  *                 type: integer
+ *          
  *             example:
- *               customer_idx: 1
+ *               contract_possibility: 2
+ *               contact_person: 1
+ *               detail_address: "금동구"
+ *               address: "서울광역시"
+ *               customer_phoneNumber: "010-6719-6919"
+ *               customer_name: "김기태"
  *               memo: test
  *               status: 0
  *      responses:

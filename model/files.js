@@ -10,7 +10,7 @@ module.exports = function (sequelize, DataTypes) {
     file_url: {
       allowNull: true,
       defaultValue: '',
-      type: DataTypes.STRING(100),
+      type: DataTypes.TEXT(),
     },
     title: {
       allowNull: true,

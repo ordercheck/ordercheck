@@ -66,7 +66,7 @@ router.get('/filter', loginCheck, showFilterResult);
 
 // *****************************changeStatus*********************************
 // 컨설팅 상태 수정 및 메모
-router.patch('/status', loginCheck, patchConsultingStatus);
+router.patch('/status/:customer_idx', loginCheck, patchConsultingStatus);
 // 견적서 등록
 router.post(
   '/calculate',

@@ -255,35 +255,85 @@ module.exports = {
     }
   },
   patchConsultingStatus: async (req, res, next) => {
-    const { body, user_idx, company_idx } = req;
+    const {
+      body: {
+        contract_possibility,
+        contact_person,
+        detail_address,
+        address,
+        customer_phoneNumber,
+        customer_name,
+        memo,
+        status,
+      },
+      params: { customer_idx },
+    } = req;
+
     const t = await db.sequelize.transaction();
+    const upadateData = async (updateData, transactionData) => {
+      try {
+        await db.customer.update(
+          updateData,
+          { where: { idx: customer_idx } },
+          transactionData
+        );
+      } catch (err) {
+        next(err);
+      }
+    };
 
-    try {
-      // 관리자가 회사소속인지 체크
-      // const checkResult = await checkUserCompany(body.company_idx, user_idx);
-      // if (checkResult == false) {
-      //   return res.send({ success: 400 });
-      // }
-
-      await db.customer.update(
-        { status: body.status },
-        { where: { idx: body.customer_idx } },
-        { transaction: t }
-      );
-
-      await db.timeLine.create(body, { transaction: t });
-      await t.commit();
-
-      const consultResult = await getDetailCustomerInfo({
-        idx: body.customer_idx,
-      });
-
-      return res.send({ success: 200, consultResult });
-    } catch (err) {
-      await t.rollback();
-      next(err);
-      return res.send({ success: 500, message: err.message });
+    if (memo || status) {
+      try {
+        upadateData({ status }, { transaction: t });
+        await db.timeLine.create(req.body, { transaction: t });
+        await t.commit();
+      } catch (err) {
+        await t.rollback();
+        next(err);
+      }
     }
+
+    if (customer_name) {
+      try {
+        upadateData({ customer_name });
+      } catch (err) {
+        next(err);
+        return res.send({ success: 500, message: err.message });
+      }
+    }
+
+    if (customer_phoneNumber) {
+      try {
+        upadateData({ customer_phoneNumber });
+      } catch (err) {
+        next(err);
+        return res.send({ success: 500, message: err.message });
+      }
+    }
+
+    if (address || detail_address) {
+      try {
+        upadateData(req.body);
+      } catch (err) {
+        next(err);
+        return res.send({ success: 500, message: err.message });
+      }
+    }
+
+    if (address || detail_address) {
+      try {
+        upadateData(req.body);
+      } catch (err) {
+        next(err);
+        return res.send({ success: 500, message: err.message });
+      }
+    }
+
+    const consultResult = await getDetailCustomerInfo({
+      idx: customer_idx,
+    });
+
+    return res.send({ success: 200, consultResult });
   },
 
   addCalculate: async (req, res, next) => {

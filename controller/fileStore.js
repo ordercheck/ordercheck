@@ -47,13 +47,14 @@ module.exports = {
       );
 
       req.body.path = `${findResult.path}, ${newUuid}`;
+      req.body.folder_uuid = req.body.uuid;
       req.body.uuid = newUuid;
       const createFolderResult = await db.folders.create(req.body, {
         transaction: t,
       });
       req.body.isFolder = true;
       req.body.title = req.body.title;
-      req.body.folder_uuid = newUuid;
+
       await db.files.create(req.body, { transaction: t });
       await t.commit();
       return res.send({ succes: true, createFolderResult });
