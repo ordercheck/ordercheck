@@ -36,6 +36,7 @@ module.exports = {
       req.body.customerFile_idx = req.params.customerFile_idx;
       const newUuid = random5();
       if (req.body.root) {
+        req.body.uuid = newUuid;
         req.body.path = newUuid;
         const createFolderResult = await db.folders.create(req.body);
         return res.send({ succes: true, createFolderResult });
@@ -53,7 +54,7 @@ module.exports = {
       const createFolderResult = await db.folders.create(req.body, {
         transaction: t,
       });
-      req.body.uuid = createFolderResult.uuid;
+
       req.body.isFolder = true;
       req.body.title = req.body.title;
 

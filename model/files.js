@@ -20,5 +20,11 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+    uuid: {
+      allowNull: true,
+      defaultValue: '',
+      unique: true,
+      type: DataTypes.STRING(100),
+    },
   });
 };
