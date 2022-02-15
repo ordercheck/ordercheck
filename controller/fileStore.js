@@ -53,7 +53,7 @@ module.exports = {
       const createFolderResult = await db.folders.create(req.body, {
         transaction: t,
       });
-
+      req.body.uuid = createFolderResult.uuid;
       req.body.isFolder = true;
       req.body.title = req.body.title;
 
