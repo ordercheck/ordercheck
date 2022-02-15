@@ -2,7 +2,7 @@ const {
   checkUserCompany,
   getFileName,
   createFileStore,
-  getDetailCustomerInfo,
+
   check,
 } = require('../lib/apiFunctions');
 const db = require('../model/db');
@@ -269,7 +269,7 @@ module.exports = {
       params: { customer_idx },
     } = req;
 
-    const checkDetailResult = await checkDetailCustomerUpdateField(
+    const consultResult = await checkDetailCustomerUpdateField(
       customer_idx,
       room_size_kind,
       room_size,
@@ -283,19 +283,8 @@ module.exports = {
       status,
       next
     );
-    if (checkDetailResult) {
-      const consultResult = await getDetailCustomerInfo(
-        {
-          idx: customer_idx,
-        },
-        next
-      );
-      if (!consultResult) {
-        return;
-      }
-      console.log(consultResult);
-      return res.send({ success: 200, consultResult });
-    }
+
+    return res.send({ success: 200, consultResult });
   },
 
   addCalculate: async (req, res, next) => {
