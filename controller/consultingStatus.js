@@ -3,9 +3,10 @@ const {
   getFileName,
   createFileStore,
   getDetailCustomerInfo,
+  check,
 } = require('../lib/apiFunctions');
 const db = require('../model/db');
-
+const { checkDetailCustomerUpdateField } = require('../lib/checkData');
 const { downFile } = require('../lib/aws/fileupload').ufile;
 const {
   TeamkakaoPushNewForm,
@@ -188,7 +189,6 @@ module.exports = {
       return res.send({ success: 400 });
     } catch (err) {
       next(err);
-      return res.send({ success: 500, message: err.message });
     }
   },
 
@@ -210,7 +210,6 @@ module.exports = {
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
-      return res.send({ success: 500, message: err.message });
     }
   },
   addCompanyCustomer: async (req, res, next) => {
@@ -251,12 +250,13 @@ module.exports = {
     } catch (err) {
       await t.rollback();
       next(err);
-      return res.send({ success: 500, message: err.message });
     }
   },
   patchConsultingStatus: async (req, res, next) => {
     const {
       body: {
+        room_size_kind,
+        room_size,
         contract_possibility,
         contact_person,
         detail_address,
@@ -269,69 +269,30 @@ module.exports = {
       params: { customer_idx },
     } = req;
 
-    const t = await db.sequelize.transaction();
-    const upadateData = async (updateData, transactionData) => {
-      try {
-        await db.customer.update(
-          updateData,
-          { where: { idx: customer_idx } },
-          transactionData
-        );
-      } catch (err) {
-        next(err);
-      }
-    };
+    await checkDetailCustomerUpdateField(
+      customer_idx,
+      room_size_kind,
+      room_size,
+      contract_possibility,
+      contact_person,
+      detail_address,
+      address,
+      customer_phoneNumber,
+      customer_name,
+      memo,
+      status,
+      next
+    );
 
-    if (memo || status) {
-      try {
-        upadateData({ status }, { transaction: t });
-        await db.timeLine.create(req.body, { transaction: t });
-        await t.commit();
-      } catch (err) {
-        await t.rollback();
-        next(err);
-      }
+    const consultResult = await getDetailCustomerInfo(
+      {
+        idx: customer_idx,
+      },
+      next
+    );
+    if (!consultResult) {
+      return;
     }
-
-    if (customer_name) {
-      try {
-        upadateData({ customer_name });
-      } catch (err) {
-        next(err);
-        return res.send({ success: 500, message: err.message });
-      }
-    }
-
-    if (customer_phoneNumber) {
-      try {
-        upadateData({ customer_phoneNumber });
-      } catch (err) {
-        next(err);
-        return res.send({ success: 500, message: err.message });
-      }
-    }
-
-    if (address || detail_address) {
-      try {
-        upadateData(req.body);
-      } catch (err) {
-        next(err);
-        return res.send({ success: 500, message: err.message });
-      }
-    }
-
-    if (address || detail_address) {
-      try {
-        upadateData(req.body);
-      } catch (err) {
-        next(err);
-        return res.send({ success: 500, message: err.message });
-      }
-    }
-
-    const consultResult = await getDetailCustomerInfo({
-      idx: customer_idx,
-    });
 
     return res.send({ success: 200, consultResult });
   },
@@ -367,7 +328,6 @@ module.exports = {
       return res.send({ success: 200, url_Idx: result.idx });
     } catch (err) {
       next(err);
-      return res.send({ success: 500, message: err.message });
     }
   },
   downCalculate: async (req, res, next) => {
@@ -419,7 +379,6 @@ module.exports = {
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
-      return res.send({ success: 500, message: err.message });
     }
   },
 };

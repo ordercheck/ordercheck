@@ -7,7 +7,7 @@ const {
 const { changeDate } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { Op } = require('sequelize');
-const { sortElements, giveNumbering } = require('../lib/sort');
+const { sortElements, giveNumbering } = require('../lib/checkData');
 const { customerAttributes } = require('../lib/attributes');
 // 0이 오름차순,1이 내림차순 (ASC는 오름차순)
 module.exports = {

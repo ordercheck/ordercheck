@@ -258,8 +258,13 @@
  *                 type: string
  *               status:
  *                 type: integer
- *          
+ *               room_size:
+ *                 type: integer 
+ *               room_size_kind:
+ *                 type: integer
  *             example:
+ *               room_size_kind: 1
+ *               room_size: 24
  *               contract_possibility: 2
  *               contact_person: 1
  *               detail_address: "금동구"

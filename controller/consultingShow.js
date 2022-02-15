@@ -149,16 +149,16 @@ module.exports = {
     const { customer_idx } = req.params;
 
     try {
-      const consultResult = await getDetailCustomerInfo({
-        idx: customer_idx,
-        company_idx,
-      });
-
-      //  고객이 없을 때
+      const consultResult = await getDetailCustomerInfo(
+        {
+          idx: customer_idx,
+          company_idx,
+        },
+        next
+      );
       if (!consultResult) {
-        return next({ message: '고객이 없습니다' });
+        return;
       }
-
       return res.send({ success: 200, consultResult });
     } catch (err) {
       next(err);

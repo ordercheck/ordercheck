@@ -9,12 +9,10 @@ module.exports = function (sequelize, DataTypes) {
 
     file_url: {
       allowNull: true,
-      defaultValue: '',
       type: DataTypes.TEXT(),
     },
     title: {
       allowNull: true,
-      defaultValue: '',
       type: DataTypes.STRING(100),
     },
     isFolder: {

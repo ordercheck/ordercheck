@@ -36,6 +36,7 @@ module.exports = {
       req.body.customerFile_idx = req.params.customerFile_idx;
       const newUuid = random5();
       if (req.body.root) {
+        req.body.path = newUuid;
         const createFolderResult = await db.folders.create(req.body);
         return res.send({ succes: true, createFolderResult });
       }
@@ -46,12 +47,13 @@ module.exports = {
         { attributes: ['path'] }
       );
 
-      req.body.path = `${findResult.path}, ${newUuid}`;
+      req.body.path = `${findResult.path}/${newUuid}`;
       req.body.folder_uuid = req.body.uuid;
       req.body.uuid = newUuid;
       const createFolderResult = await db.folders.create(req.body, {
         transaction: t,
       });
+
       req.body.isFolder = true;
       req.body.title = req.body.title;
 
@@ -86,9 +88,17 @@ module.exports = {
   },
   showFiles: async (req, res, next) => {
     try {
-      const findFilesResult = await db.files.findAll({
+      let findFilesResult = await db.files.findAll({
         where: { folder_uuid: req.body.uuid },
+        attributes: ['idx', 'file_url', 'title', 'isFolder', 'folder_uuid'],
       });
+
+      findFilesResult = JSON.parse(
+        JSON.stringify(findFilesResult, (key, value) => {
+          if (value !== null) return value;
+        })
+      );
+
       return res.send({ succes: 200, findFilesResult });
     } catch (err) {
       next(err);
