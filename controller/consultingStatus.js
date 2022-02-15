@@ -299,18 +299,13 @@ module.exports = {
     }
     try {
       // 몇차 인지 체크
-      const findCalculate = await db.calculate.findOne({
+      const findCalculate = await db.calculate.count({
         where: { customer_idx: req.body.customer_idx },
-        order: [['createdAt', 'DESC']],
-        attributes: ['calculateNumber'],
       });
 
       // 견적서 차수 +1씩 올리기
-      if (findCalculate) {
-        let splitCalculateResult = findCalculate.calculateNumber.split('차');
-        splitCalculateResult[0] = parseInt(splitCalculateResult[0]) + 1;
-        splitCalculateResult = splitCalculateResult.join('차');
-        body.calculateNumber = splitCalculateResult;
+      if (findCalculate !== 0) {
+        body.calculateNumber = `${findCalculate}차 견적서`;
       }
 
       const file_name = getFileName(file.key);
