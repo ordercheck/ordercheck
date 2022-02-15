@@ -293,7 +293,7 @@ module.exports = {
     if (!consultResult) {
       return;
     }
-
+    console.log(consultResult);
     return res.send({ success: 200, consultResult });
   },
 
