@@ -288,15 +288,8 @@ module.exports = {
   },
 
   addCalculate: async (req, res, next) => {
-    const { body, file, user_idx, company_idx } = req;
-    if (!file) {
-      try {
-        const result = await db.calculate.create(body);
-        return res.send({ success: 200, url_Idx: result.idx });
-      } catch (err) {
-        next(err);
-      }
-    }
+    const { body, file } = req;
+
     try {
       // 몇차 인지 체크
       const findCalculate = await db.calculate.count({
@@ -314,7 +307,20 @@ module.exports = {
 
       const calculateCreateResult = await db.calculate.create(body);
 
-      return res.send({ success: 200 });
+      const findResult = {
+        idx: calculateCreateResult.idx,
+        title: calculateCreateResult.title,
+        file_url: calculateCreateResult.file_url,
+        file_name: calculateCreateResult.file_name,
+        predicted_price: calculateCreateResult.predicted_price,
+        sharedDate: calculateCreateResult.sharedDate,
+        status: calculateCreateResult.status,
+        createdAt: new Date(calculateCreateResult.createdAt)
+          .toISOString()
+          .split('T')[0]
+          .replace(/-/g, '.'),
+      };
+      return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
     }

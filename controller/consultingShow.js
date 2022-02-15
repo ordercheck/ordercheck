@@ -9,11 +9,9 @@ const { changeDate } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { Op } = require('sequelize');
 const {
-  showDetailConsultingAttributes,
-  showDetailJoinConsultingAttributes,
-  showDetailMainConsultingAttributes,
   showIntegratedUserAttributes,
   customerAttributes,
+  showCalculateAttributes,
 } = require('../lib/attributes');
 
 module.exports = {
@@ -209,23 +207,7 @@ module.exports = {
       const findResult = await db.calculate.findAll({
         where: { customer_idx },
         order: [['createdAt', 'DESC']],
-        attributes: [
-          'idx',
-          'title',
-          'file_url',
-          'file_name',
-          'predicted_price',
-          'sharedDate',
-          'status',
-          [
-            db.sequelize.fn(
-              'date_format',
-              db.sequelize.col('createdAt'),
-              '%Y.%m.%d'
-            ),
-            'createdAt',
-          ],
-        ],
+        attributes: showCalculateAttributes,
       });
 
       return res.send({ success: 200, findResult });
@@ -239,10 +221,6 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      // const checkResult = await checkUserCompany(company_idx, user_idx);
-      // if (checkResult == false) {
-      //   return res.send({ success: 400 });
-      // }
       const result = await db.customer.findAll({
         where: { customer_phoneNumber, company_idx },
         attributes: showIntegratedUserAttributes,
@@ -257,10 +235,7 @@ module.exports = {
       query: { date, limit, page },
       company_idx,
     } = req;
-    // const checkResult = await checkUserCompany(company_idx, user_idx);
-    // if (checkResult == false) {
-    //   return res.send({ success: 400 });
-    // }
+
     // 주어진 조건으로 데이터를 찾기
     const findData = async (
       type,
