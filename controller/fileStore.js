@@ -119,7 +119,7 @@ module.exports = {
 
       const findFolderUuid = await db.folders.findAll({
         where: { path: { [Op.like]: `%${uuid}%` } },
-        attributes: ['idx', 'path'],
+        attributes: ['idx'],
         raw: true,
       });
 

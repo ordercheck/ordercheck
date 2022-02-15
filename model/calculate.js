@@ -7,12 +7,12 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
     },
 
-    pdf_data: {
+    file_url: {
       allowNull: true,
 
       type: DataTypes.STRING(100),
     },
-    pdf_name: {
+    file_name: {
       allowNull: true,
 
       type: DataTypes.STRING(100),

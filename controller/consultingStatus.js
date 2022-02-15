@@ -301,13 +301,6 @@ module.exports = {
     const { body, file, user_idx, company_idx } = req;
     if (!file) {
       try {
-        // 관리자가 회사소속인지 체크
-        // const checkResult = await checkUserCompany(body.company_idx, user_idx);
-        // if (checkResult == false) {
-        //   return res.send({ success: 400 });
-        // }
-
-        body.pdf_name = file.originalname;
         const result = await db.calculate.create(body);
         return res.send({ success: 200, url_Idx: result.idx });
       } catch (err) {
@@ -315,13 +308,7 @@ module.exports = {
       }
     }
     try {
-      // 관리자가 회사소속인지 체크
-      // const checkResult = await checkUserCompany(body.company_idx, user_idx);
-      // if (checkResult == false) {
-      //   return res.send({ success: 400 });
-      // }
-      // pdf s3 저장
-      getFileName(file.key);
+      const file_name = getFileName(file.key);
       body.pdf_name = file_name;
       body.pdf_data = req.file.location;
       const result = await db.calculate.create(body);

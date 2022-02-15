@@ -61,7 +61,7 @@ module.exports = {
         );
 
         if (getCustomerDataResult.customerData == 0) {
-          return res.send({ success: 400, message: '고객이 없습니다.' });
+          return next({ message: '고객이 없습니다.' });
         }
       }
 
@@ -75,7 +75,7 @@ module.exports = {
         );
 
         if (getCustomerDataResult.customerData == 0) {
-          return res.send({ success: 400, message: '고객이 없습니다.' });
+          return next({ message: '고객이 없습니다.' });
         }
       }
       if (Name) {
@@ -86,7 +86,7 @@ module.exports = {
           Name == 0 ? 'minus' : 'plus'
         );
         if (getCustomerDataResult.customerData == 0) {
-          return res.send({ success: 400, message: '고객이 없습니다.' });
+          return next({ message: '고객이 없습니다.' });
         }
       }
 
@@ -98,7 +98,7 @@ module.exports = {
           Address == 0 ? 'minus' : 'plus'
         );
         if (getCustomerDataResult.customerData == 0) {
-          return res.send({ success: 400, message: '고객이 없습니다.' });
+          return next({ message: '고객이 없습니다.' });
         }
       }
 
@@ -110,7 +110,7 @@ module.exports = {
           Date == 0 ? 'minus' : 'plus'
         );
         if (getCustomerDataResult.customerData == 0) {
-          return res.send({ success: 400, message: '고객이 없습니다.' });
+          return next({ message: '고객이 없습니다.' });
         }
       }
 
@@ -275,10 +275,7 @@ module.exports = {
         });
         return result;
       } catch (err) {
-        console.log(err);
-        const Err = err.message;
-
-        await db.err.create({ err: Err });
+        next(err);
       }
     };
     // 페이징을 위한 int처리
