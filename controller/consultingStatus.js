@@ -269,7 +269,7 @@ module.exports = {
       params: { customer_idx },
     } = req;
 
-    await checkDetailCustomerUpdateField(
+    const checkDetailResult = await checkDetailCustomerUpdateField(
       customer_idx,
       room_size_kind,
       room_size,
@@ -283,18 +283,19 @@ module.exports = {
       status,
       next
     );
-
-    const consultResult = await getDetailCustomerInfo(
-      {
-        idx: customer_idx,
-      },
-      next
-    );
-    if (!consultResult) {
-      return;
+    if (checkDetailResult) {
+      const consultResult = await getDetailCustomerInfo(
+        {
+          idx: customer_idx,
+        },
+        next
+      );
+      if (!consultResult) {
+        return;
+      }
+      console.log(consultResult);
+      return res.send({ success: 200, consultResult });
     }
-    console.log(consultResult);
-    return res.send({ success: 200, consultResult });
   },
 
   addCalculate: async (req, res, next) => {
