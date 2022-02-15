@@ -38,17 +38,18 @@ module.exports = {
       if (req.body.root) {
         req.body.uuid = newUuid;
         req.body.path = newUuid;
+
         const createFolderResult = await db.folders.create(req.body);
         return res.send({ succes: true, createFolderResult });
       }
       req.body.root = false;
-
       const findResult = await db.folders.findOne(
         { where: { uuid: req.body.uuid } },
         { attributes: ['path'] }
       );
 
       req.body.path = `${findResult.path}/${newUuid}`;
+
       req.body.folder_uuid = req.body.uuid;
       req.body.uuid = newUuid;
       const createFolderResult = await db.folders.create(req.body, {
@@ -74,6 +75,7 @@ module.exports = {
       data.title = title;
       data.folder_uuid = req.body.uuid;
       data.uuid = random5();
+
       return await db.files.create(data);
     };
     try {
@@ -178,4 +180,5 @@ module.exports = {
       next(err);
     }
   },
+  searchFileStore: async (req, res, next) => {},
 };

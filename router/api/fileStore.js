@@ -8,6 +8,7 @@ const {
   showFiles,
   deleteFile,
   changeFileTitle,
+  searchFileStore,
 } = require('../../controller/fileStore');
 
 const { multer_file_store_upload } = require('../../lib/aws/aws');
@@ -21,9 +22,9 @@ router.post(
   multer_file_store_upload().single('file'),
   addFile
 );
-
 router.patch('/update/title/:customerFile_idx', loginCheck, changeFileTitle);
 router.post('/:customerFile_idx', loginCheck, showFiles);
 router.delete('/file/:isfolder/:uuid', loginCheck, deleteFile);
+router.get('/search', loginCheck, searchFileStore);
 
 module.exports = router;

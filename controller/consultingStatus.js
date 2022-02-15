@@ -152,7 +152,7 @@ module.exports = {
       body.film = JSON.parse(body.film).join(', ');
       body.etc = JSON.parse(body.etc).join(', ');
 
-      createConsultingAndIncrement(body);
+      await createConsultingAndIncrement(body);
 
       return;
     } catch (err) {
@@ -322,6 +322,7 @@ module.exports = {
       //   findCalculate,
       //   '견적서 확인'
       // );
+      return;
     } catch (err) {
       next(err);
     }

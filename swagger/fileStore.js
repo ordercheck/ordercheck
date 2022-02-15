@@ -176,4 +176,22 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/file/store/search:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       -  FileStore
+ *     summary: 고객명, 연락처, 폴더.파일명으로 검색
+ *     parameters:
+ *         - in: query
+ *           name: search
+ *           schema:
+ *             type: string
+ *           example: "Title"
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */
