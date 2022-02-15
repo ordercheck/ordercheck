@@ -309,8 +309,8 @@ module.exports = {
     }
     try {
       const file_name = getFileName(file.key);
-      body.pdf_name = file_name;
-      body.pdf_data = req.file.location;
+      body.file_name = file_name;
+      body.file_url = req.file.location;
       const result = await db.calculate.create(body);
       return res.send({ success: 200, url_Idx: result.idx });
     } catch (err) {
