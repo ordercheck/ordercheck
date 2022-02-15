@@ -163,14 +163,13 @@ module.exports = {
 
   setConsultingContactMember: async (req, res, next) => {
     const {
-      params: { idx, contact_person },
-      user_idx,
-      company_idx,
+      params: { customer_idx, contact_person },
     } = req;
     try {
-      // 유저의 권환을 체크
-
-      await db.consulting.update({ contact_person }, { where: { idx } });
+      await db.consulting.update(
+        { contact_person },
+        { where: { idx: customer_idx } }
+      );
       return res.send({ success: 200 });
     } catch (err) {
       next(err);

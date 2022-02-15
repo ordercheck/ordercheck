@@ -27,8 +27,8 @@ module.exports = {
       company_idx
     );
 
-    let countArr = [0, 1];
-    let countPossibility = [0, 1];
+    let countArr = [0, 1, 2, 3, 4];
+    let countPossibility = [0, 1, 2, 3];
     let contractPerson = null;
 
     const countCustomers = async (
