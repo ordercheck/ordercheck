@@ -2,7 +2,8 @@ const db = require('../model/db');
 const { getFileName } = require('../lib/apiFunctions');
 const { random5 } = require('../lib/functions');
 const { Op } = require('sequelize');
-const { s3_copy, s3_delete } = require('../lib/aws/aws');
+const { s3_copy } = require('../lib/aws/aws');
+const { delFile } = require('../lib/aws/fileupload').ufile;
 module.exports = {
   getUserList: async (req, res, next) => {
     try {
@@ -179,26 +180,33 @@ module.exports = {
           await db.files.update({ title: title }, { where: { uuid } });
         }
       } else {
-        const findFilesResult = await db.files.findOne({ where: { uuid } });
+        const findFilesResult = await db.files.findOne({
+          where: { uuid },
+          raw: true,
+        });
         let params = {
           Bucket: 'ordercheck',
           CopySource: `ordercheck/fileStore/${findFilesResult.title}`,
           Key: `fileStore/${title}`,
           ACL: 'public-read',
         };
+
+        const file_url = findFilesResult.file_url.replace(
+          `${findFilesResult.title}`,
+          `${title}`
+        );
+
         s3_copy(params);
+
         await db.files.update(
           {
             title,
-            file_url: `${process.env.S3_BASE_URL}fileStore/${title}`,
+            file_url,
           },
           { where: { uuid } }
         );
-        params = {
-          Bucket: 'ordercheck',
-          Delimiter: `/fileStore/${findFilesResult.title}`,
-        };
-        s3_delete(params);
+
+        delFile(findFilesResult.title, 'ordercheck/fileStore');
       }
       return res.send({ success: 200 });
     } catch (err) {

@@ -6,7 +6,12 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-
+    uuid: {
+      allowNull: true,
+      defaultValue: '',
+      unique: true,
+      type: DataTypes.STRING(100),
+    },
     file_url: {
       allowNull: true,
       type: DataTypes.TEXT(),
