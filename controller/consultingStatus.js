@@ -308,11 +308,19 @@ module.exports = {
       }
     }
     try {
+      // 몇차 인지 체크
+      const calculateNumber = await db.calculate.findOne({
+        where: { customer_idx: req.body.customer_idx },
+        attributes: ['calculateNumber'],
+      });
+
       const file_name = getFileName(file.key);
       body.file_name = file_name;
       body.file_url = req.file.location;
-      const result = await db.calculate.create(body);
-      return res.send({ success: 200, url_Idx: result.idx });
+
+      const calculateCreateResult = await db.calculate.create(body);
+
+      return res.send({ success: 200 });
     } catch (err) {
       next(err);
     }
