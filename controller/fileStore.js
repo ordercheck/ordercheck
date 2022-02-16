@@ -194,12 +194,12 @@ module.exports = {
   changeFileTitle: async (req, res, next) => {
     try {
       const {
-        body: { uuid, title, isFile },
+        body: { uuid, title, isFolder },
         params: { customerFile_idx },
       } = req;
 
       // 폴더일 경우
-      if (isFile) {
+      if (isFolder) {
         await db.folders.update(
           { title },
           { where: { uuid, customerFile_idx } }

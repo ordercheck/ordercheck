@@ -141,12 +141,12 @@
  *                type: integer
  *              title:
  *                type: string
- *              isFile:
+ *              isFolder:
  *                type: boolean
  *            example:
  *              uuid: SJFD
  *              title: "test2"
- *              isFile: true
+ *              isFolder: true
  *     parameters:
  *         - in: path
  *           name: customerFile_idx
