@@ -126,8 +126,14 @@ module.exports = {
         })
       );
 
-      findFilesResult.forEach((data) => {
-        console.log(data.path);
+      findFilesResult.forEach(async (data) => {
+        const splitPath = data.path.split('/');
+
+        const findFolderResult = await db.folders.findAll({
+          where: { uuid: { [Op.in]: splitPath } },
+          attributes: ['title'],
+          raw: true,
+        });
       });
 
       return res.send({ succes: 200, findFilesResult });

@@ -202,7 +202,6 @@ module.exports = {
     }
   },
   showCalculate: async (req, res, next) => {
-    console.log('견적서 호출');
     const {
       params: { customer_idx },
       user_idx,
@@ -214,7 +213,7 @@ module.exports = {
         order: [['createdAt', 'DESC']],
         attributes: showCalculateAttributes,
       });
-      console.log(findResult);
+
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
