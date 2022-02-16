@@ -80,7 +80,7 @@ module.exports = {
       const findUserResult = await db.user.findByPk(req.user_idx, {
         attributes: ['user_name'],
       });
-      data.file_path = req.query.path;
+      data.path = req.query.path;
       data.upload_people = findUserResult.user_name;
       data.file_url = fileData.location;
       const title = getFileName(fileData.key);
@@ -112,6 +112,7 @@ module.exports = {
           'isFolder',
           'folder_uuid',
           'uuid',
+          'path',
         ],
       });
 
@@ -245,7 +246,10 @@ module.exports = {
           { where: { uuid } }
         );
 
-        delFile(findFilesResult.title, 'ordercheck/fileStore');
+        delFile(
+          findFilesResult.title,
+          `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}`
+        );
       }
       return res.send({ success: 200 });
     } catch (err) {
