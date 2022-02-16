@@ -18,15 +18,13 @@ module.exports = {
       company_idx,
     } = req;
 
-    if (userId.length == 0) {
+    if (userId && userId.length == 0) {
       return res.send({
         success: 200,
         findResult: confirm ? [] : 0,
       });
     }
-
     const { firstDate, secondDate } = changeDate(date);
-
     const { start, intlimit, intPage } = await checkPage(
       limit,
       page,
@@ -35,8 +33,7 @@ module.exports = {
 
     let countArr = [0, 1, 2, 3, 4];
     let countPossibility = [0, 1, 2, 3];
-    let contractPerson = null;
-
+    let contractPerson;
     const countCustomers = async (
       statusData,
       contractData,
