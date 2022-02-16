@@ -18,7 +18,8 @@ module.exports = {
       company_idx,
     } = req;
 
-    if (userId && userId.length == 0) {
+    // userId가 빈 배열일 때
+    if ((userId && userId.length == 0) || date == '') {
       return res.send({
         success: 200,
         findResult: confirm ? [] : 0,
