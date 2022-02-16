@@ -26,13 +26,6 @@ module.exports = {
   getFolderPath: async (req, res, next) => {
     const result = await db.folders.findAll({
       where: { customerFile_idx: req.params.customerFile_idx, root: true },
-      attributes: [
-        ['idx', 'folder_idx'],
-        'title',
-        'customerFile_idx',
-        'uuid',
-        'path',
-      ],
     });
 
     return res.send({ success: 200, result });
