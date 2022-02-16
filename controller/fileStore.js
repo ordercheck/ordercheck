@@ -106,6 +106,17 @@ module.exports = {
           'folder_uuid',
           'uuid',
           'path',
+          'file_size',
+          'upload_people',
+          'file_size',
+          [
+            db.sequelize.fn(
+              'date_format',
+              db.sequelize.col('createdAt'),
+              '%Y.%m.%d'
+            ),
+            'createdAt',
+          ],
         ],
       });
 
@@ -114,6 +125,10 @@ module.exports = {
           if (value !== null) return value;
         })
       );
+
+      findFilesResult.forEach((data) => {
+        console.log(data.path);
+      });
 
       return res.send({ succes: 200, findFilesResult });
     } catch (err) {

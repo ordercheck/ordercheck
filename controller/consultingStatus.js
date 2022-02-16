@@ -164,11 +164,11 @@ module.exports = {
 
   setConsultingContactMember: async (req, res, next) => {
     const {
-      params: { customer_idx, contact_person },
+      params: { customer_idx, contract_person },
     } = req;
     try {
       await db.consulting.update(
-        { contact_person },
+        { contact_person: contract_person },
         { where: { idx: customer_idx } }
       );
 
