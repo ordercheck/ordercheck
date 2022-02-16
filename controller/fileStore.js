@@ -238,17 +238,18 @@ module.exports = {
           where: { uuid },
           raw: true,
         });
+
         let params = {
           Bucket: 'ordercheck',
-          CopySource: `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}/${findFilesResult.title}`,
+          CopySource: encodeURI(
+            `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}/${findFilesResult.title}`
+          ),
           Key: `fileStore/${req.params.customerFile_idx}/${req.query.path}/${title}`,
           ACL: 'public-read',
         };
-
-        const file_url = findFilesResult.file_url.replace(
-          `${findFilesResult.title}`,
-          `${title}`
-        );
+        let urlArr = findFilesResult.file_url.split('/');
+        urlArr[urlArr.length - 1] = title;
+        const file_url = urlArr.join('/');
 
         s3_copy(params);
 
