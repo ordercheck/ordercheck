@@ -18,6 +18,13 @@ module.exports = {
       company_idx,
     } = req;
 
+    if (userId.length == 0) {
+      return res.send({
+        success: 200,
+        findResult: confirm ? [] : 0,
+      });
+    }
+
     const { firstDate, secondDate } = changeDate(date);
 
     const { start, intlimit, intPage } = await checkPage(
@@ -81,6 +88,7 @@ module.exports = {
         Address,
         Date
       );
+
       if (!contractPersonData) {
         let findAndCountAllFilterdCustomers = await db.customer.findAndCountAll(
           {
@@ -184,6 +192,7 @@ module.exports = {
 
     if (userId) {
       userId[userId.indexOf(0)] = null;
+
       contractPerson = userId;
     }
 
