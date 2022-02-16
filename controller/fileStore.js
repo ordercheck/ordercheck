@@ -192,7 +192,7 @@ module.exports = {
         Delete: { Objects: [] },
       };
       s3_get(params, (err, data) => {
-        if ((data.Contents = [])) {
+        if (data.Contents.length == 0) {
           return;
         }
         data.Contents.forEach((data) => {
