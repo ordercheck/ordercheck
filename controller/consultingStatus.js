@@ -185,19 +185,14 @@ module.exports = {
 
   delConsulting: async (req, res, next) => {
     const {
-      body: { idx },
+      params: { customer_idx },
       user_idx,
       company_idx,
     } = req;
     try {
-      // 관리자가 회사소속인지 체크
-      // const checkResult = await checkUserCompany(company_idx, user_idx);
-      // if (checkResult == false) {
-      //   return res.send({ success: 400 });
-      // }
-      // 유저의 권환을 체크
-
-      await db.consulting.destroy({ where: { idx } });
+      await db.consulting.destroy({
+        where: { idx: customer_idx, company_idx },
+      });
       return res.send({ success: 200 });
     } catch (err) {
       next(err);

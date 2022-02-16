@@ -127,26 +127,13 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting:
+ * /api/consulting/{customer_idx}:
  *   delete:
  *      security:
  *       - bearerAuth: []
  *      tags:
  *       -  consult
- *      summary: consulting 목록 삭제
- *      requestBody:
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               idx:
- *                 type: int
- *               form_link:
- *                 type: string
- *             example:
- *               idx: 2
- *               form_link: "sdfsdd"
+ *      summary: 고객 삭제
  *      responses:
  *         '200':
  *            description: 성공
