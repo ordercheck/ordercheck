@@ -188,6 +188,7 @@ module.exports = {
     }
 
     if (userId) {
+      userId[userId.indexOf(0)] = null;
       contractPerson = userId;
     }
 
