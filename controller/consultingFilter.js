@@ -18,7 +18,7 @@ module.exports = {
       params: { limit, page },
       company_idx,
     } = req;
-    company_idx = 18;
+
     const { firstDate, secondDate } = changeDate(date);
 
     const { start, intlimit, intPage } = await checkPage(
