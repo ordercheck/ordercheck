@@ -167,7 +167,7 @@ module.exports = {
       params: { customer_idx, contract_person },
     } = req;
     try {
-      await db.consulting.update(
+      await db.customer.update(
         { contact_person: contract_person },
         { where: { idx: customer_idx } }
       );
