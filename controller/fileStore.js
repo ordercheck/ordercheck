@@ -76,7 +76,6 @@ module.exports = {
   },
   addFile: async (req, res, next) => {
     const data = {};
-
     const createFile = async (fileData) => {
       const findUserResult = await db.user.findByPk(req.user_idx, {
         attributes: ['user_name'],
@@ -132,12 +131,21 @@ module.exports = {
     try {
       // 폴더가 아닐 때
       if (isfolder == 0) {
+        const findFileResult = await db.files.findOne(
+          { where: { uuid } },
+          { attributes: ['title'] }
+        );
+        console.log(findFileResult.title);
+        console.log(`ordercheck/fileStore/${req.params.path}`);
+        delFile(
+          findFileResult.title,
+          `ordercheck/fileStore/${req.params.path}`
+        );
         await db.files.destroy({
           where: { uuid },
         });
       }
       // 폴더일때
-
       const findFolderUuid = await db.folders.findAll({
         where: { path: { [Op.like]: `%${uuid}%` } },
         attributes: ['idx'],

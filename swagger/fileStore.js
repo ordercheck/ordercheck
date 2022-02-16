@@ -157,7 +157,7 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/file/store/file/{isfolder}/{uuid}:
+ * /api/file/store/file/{isfolder}/{uuid}/{path}:
  *   delete:
  *     security:
  *       - bearerAuth: []
@@ -175,6 +175,11 @@
  *           schema:
  *             type: string
  *           example: SKFEO
+ *         - in: path
+ *           name: path
+ *           schema:
+ *             type: string
+ *           example: SKFEO/SFEF
  *     responses:
  *       '200':
  *         description: 성공
