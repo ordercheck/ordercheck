@@ -25,5 +25,13 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+    upload_people: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
+    file_size: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
   });
 };

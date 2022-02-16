@@ -70,13 +70,18 @@ module.exports = {
   },
   addFile: async (req, res, next) => {
     const data = {};
+
     const createFile = async (fileData) => {
+      const findUserResult = await db.user.findByPk(req.user_idx, {
+        attributes: ['user_name'],
+      });
+      data.upload_people = findUserResult.user_name;
       data.file_url = fileData.location;
       const title = getFileName(fileData.key);
       data.title = title;
+      data.file_size = fileData.size / 1e6;
       data.folder_uuid = req.body.uuid;
       data.uuid = random5();
-
       return await db.files.create(data);
     };
     try {
