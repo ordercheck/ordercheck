@@ -33,5 +33,9 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
+    file_path: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
   });
 };

@@ -17,14 +17,14 @@ router.get('/customer/list', loginCheck, getUserList);
 router.get('/folder/:customerFile_idx', loginCheck, getFolderPath);
 router.post('/folder/:customerFile_idx', loginCheck, addFolder);
 router.post(
-  '/upload/:customerFile_idx/:path',
+  '/upload/:customerFile_idx',
   loginCheck,
   multer_file_store_upload().single('file'),
   addFile
 );
 router.patch('/update/title/:customerFile_idx', loginCheck, changeFileTitle);
 router.post('/:customerFile_idx', loginCheck, showFiles);
-router.delete('/file/:isfolder/:uuid/:path', loginCheck, deleteFile);
+router.delete('/file/:isfolder/:uuid', loginCheck, deleteFile);
 router.get('/search', loginCheck, searchFileStore);
 
 module.exports = router;

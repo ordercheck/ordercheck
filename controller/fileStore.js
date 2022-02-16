@@ -2,7 +2,7 @@ const db = require('../model/db');
 const { getFileName } = require('../lib/apiFunctions');
 const { random5 } = require('../lib/functions');
 const { Op } = require('sequelize');
-const { s3_copy } = require('../lib/aws/aws');
+const { s3_copy, s3_get, s3_delete_objects } = require('../lib/aws/aws');
 const { delFile } = require('../lib/aws/fileupload').ufile;
 module.exports = {
   getUserList: async (req, res, next) => {
@@ -80,6 +80,7 @@ module.exports = {
       const findUserResult = await db.user.findByPk(req.user_idx, {
         attributes: ['user_name'],
       });
+      data.file_path = req.query.path;
       data.upload_people = findUserResult.user_name;
       data.file_url = fileData.location;
       const title = getFileName(fileData.key);
@@ -87,6 +88,7 @@ module.exports = {
       data.file_size = fileData.size / 1e6;
       data.folder_uuid = req.body.uuid;
       data.uuid = random5();
+
       return await db.files.create(data);
     };
     try {
@@ -135,11 +137,9 @@ module.exports = {
           { where: { uuid } },
           { attributes: ['title'] }
         );
-        console.log(findFileResult.title);
-        console.log(`ordercheck/fileStore/${req.params.path}`);
         delFile(
           findFileResult.title,
-          `ordercheck/fileStore/${req.params.path}`
+          `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}`
         );
         await db.files.destroy({
           where: { uuid },
@@ -148,7 +148,7 @@ module.exports = {
       // 폴더일때
       const findFolderUuid = await db.folders.findAll({
         where: { path: { [Op.like]: `%${uuid}%` } },
-        attributes: ['idx'],
+        attributes: ['idx', 'path'],
         raw: true,
       });
 
@@ -171,7 +171,26 @@ module.exports = {
         { transaction: t }
       );
       await t.commit();
-      return res.send({ success: 200, message: '삭제 완료' });
+      res.send({ success: 200, message: '삭제 완료' });
+
+      // db정보 삭제 후 s3 삭제
+      var params = {
+        Bucket: 'ordercheck',
+        Prefix: `fileStore/${req.params.customerFile_idx}/${req.query.path}/`,
+      };
+      const deleteParams = {
+        Bucket: 'ordercheck',
+        Delete: { Objects: [] },
+      };
+      s3_get(params, (err, data) => {
+        data.Contents.forEach((data) => {
+          console.log(data);
+          deleteParams.Delete.Objects.push({ Key: data.Key });
+        });
+
+        s3_delete_objects(deleteParams);
+      });
+      return;
     } catch (err) {
       await t.rollback();
       next(err);
