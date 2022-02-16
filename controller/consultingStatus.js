@@ -202,15 +202,6 @@ module.exports = {
     const { body, user_idx, company_idx } = req;
     const t = await db.sequelize.transaction();
     try {
-      // 관리자가 회사소속인지 체크
-      // const checkResult = await checkUserCompany(
-      //   customerData.company_idx,
-      //   user_idx
-      // );
-      // if (checkResult == false) {
-      //   return res.send({ success: 400 });
-      // }
-
       // 검색용으로 변경
       const { searchingPhoneNumber, searchingAddress } = changeToSearch(body);
 
@@ -254,7 +245,7 @@ module.exports = {
       },
       params: { customer_idx },
     } = req;
-    console.log('들어오자마자', contract_possibility);
+
     const consultResult = await checkDetailCustomerUpdateField(
       customer_idx,
       room_size_kind,
