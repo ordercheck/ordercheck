@@ -63,12 +63,14 @@ db.folders.belongsTo(db.customerFile, {
 });
 
 // folders와 files
-
+db.folders.hasMany(db.files, {
+  foreignKey: 'folder_uuid',
+  sourceKey: 'uuid',
+  onDelete: 'cascade',
+});
 db.files.belongsTo(db.folders, {
   foreignKey: 'folder_uuid',
   targetKey: 'uuid',
-  onDelete: 'cascade',
-  hooks: true,
 });
 
 // user와 timeLine

@@ -249,5 +249,22 @@ module.exports = {
       next(err);
     }
   },
-  searchFileStore: async (req, res, next) => {},
+  searchFileStore: async (req, res, next) => {
+    const findCustomResult = await db.customerFile.findOne({
+      where: { customer_name: req.query.search },
+      include: [
+        {
+          model: db.folders,
+          include: [
+            {
+              model: db.files,
+            },
+          ],
+        },
+      ],
+
+      attributes: ['idx', 'customer_name', 'customer_phoneNumber'],
+    });
+    res.send(findCustomResult);
+  },
 };
