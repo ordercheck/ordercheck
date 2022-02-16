@@ -61,7 +61,7 @@ module.exports = {
             contract_possibility: {
               [Op.or]: contractData,
             },
-            contract_person: {
+            contact_person: {
               [Op.or]: contractPersonData,
             },
           },
@@ -140,7 +140,7 @@ module.exports = {
               contract_possibility: {
                 [Op.or]: contractData,
               },
-              contract_person: {
+              contact_person: {
                 [Op.or]: contractPersonData,
               },
             },
