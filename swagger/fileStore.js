@@ -63,7 +63,7 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/file/store/upload/{customerFile_idx}/{path}:
+ * /api/file/store/upload/{customerFile_idx}:
  *   post:
  *     security:
  *       - bearerAuth: []
@@ -88,7 +88,7 @@
  *           name: customerFile_idx
  *           schema:
  *             type: integer
- *         - in: path
+ *         - in: query
  *           name: path
  *           schema:
  *             type: string
