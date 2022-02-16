@@ -20,7 +20,6 @@ module.exports = function (sequelize, DataTypes) {
     },
     search_customer_phoneNumber: {
       allowNull: false,
-
       type: DataTypes.INTEGER,
     },
   });

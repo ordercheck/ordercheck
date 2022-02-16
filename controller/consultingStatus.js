@@ -2,6 +2,7 @@ const {
   checkUserCompany,
   getFileName,
   createFileStore,
+  getDetailCustomerInfo,
 
   check,
 } = require('../lib/apiFunctions');
@@ -170,7 +171,13 @@ module.exports = {
         { contact_person },
         { where: { idx: customer_idx } }
       );
-      return res.send({ success: 200 });
+
+      const consultResult = await getDetailCustomerInfo(
+        { idx: customer_idx, company_idx: req.company_idx },
+        next
+      );
+
+      return res.send({ success: 200, consultResult });
     } catch (err) {
       next(err);
     }
@@ -242,7 +249,7 @@ module.exports = {
         room_size_kind,
         room_size,
         contract_possibility,
-        contact_person,
+
         detail_address,
         address,
         customer_phoneNumber,
@@ -258,7 +265,7 @@ module.exports = {
       room_size_kind,
       room_size,
       contract_possibility,
-      contact_person,
+
       detail_address,
       address,
       customer_phoneNumber,
