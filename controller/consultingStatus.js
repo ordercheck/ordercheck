@@ -237,8 +237,6 @@ module.exports = {
     }
   },
   patchConsultingStatus: async (req, res, next) => {
-    console.log(req.body);
-    console.log(req.params);
     const {
       body: {
         room_size_kind,
