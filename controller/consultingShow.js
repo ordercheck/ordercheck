@@ -2,7 +2,6 @@ const {
   checkUserCompany,
   checkPage,
   addUserId,
-  changeToJSON,
   getDetailCustomerInfo,
 } = require('../lib/apiFunctions');
 const { changeDate } = require('../lib/apiFunctions');
@@ -41,8 +40,10 @@ module.exports = {
         order: [[sortField, sort]],
         offset: start,
         limit: intlimit,
+        raw: true,
+        nest: true,
       });
-      customerFindAndCount = changeToJSON(customerFindAndCount);
+
       const customerData = addUserId(customerFindAndCount.rows, addminus, No);
       return { customerFindAndCount, customerData };
     };

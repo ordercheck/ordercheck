@@ -2,7 +2,6 @@ const {
   checkUserCompany,
   checkPage,
   addUserId,
-  changeToJSON,
 } = require('../lib/apiFunctions');
 const { changeDate } = require('../lib/apiFunctions');
 const db = require('../model/db');
@@ -105,11 +104,9 @@ module.exports = {
             offset: start,
             limit: intlimit,
             order: [[sortField, sort]],
+            raw: true,
+            nest: true,
           }
-        );
-
-        findAndCountAllFilterdCustomers = changeToJSON(
-          findAndCountAllFilterdCustomers
         );
 
         const { customerNumber } = giveNumbering(
@@ -154,11 +151,9 @@ module.exports = {
             offset: start,
             limit: intlimit,
             order: [[sortField, sort]],
+            raw: true,
+            nest: true,
           }
-        );
-
-        findAndCountAllFilterdCustomers = changeToJSON(
-          findAndCountAllFilterdCustomers
         );
 
         const { customerNumber } = giveNumbering(
@@ -263,9 +258,9 @@ module.exports = {
         order: [[sortField, sort]],
         offset: start,
         limit: intlimit,
+        raw: true,
+        nest: true,
       });
-
-      searchedCountAndFindAll = changeToJSON(searchedCountAndFindAll);
 
       const { customerNumber } = giveNumbering(
         searchedCountAndFindAll.count,
