@@ -181,15 +181,18 @@ module.exports = {
 
       // 로그인 한 사람 고정
       for (let i = 0; i < findAllUser.length; i++) {
+        findAllUser[i].user_name = findAllUser[i].user.user_name;
+        findAllUser[i].user_profile = findAllUser[i].user.user_profile;
+        delete findAllUser[i].user;
         if (findAllUser[i].userId == user_idx) {
           findAllUser.unshift(findAllUser[i]);
           findAllUser.splice(i + 1, 1);
-          break;
         }
       }
       findAllUser.unshift({
         userId: null,
-        user: { user_name: '담당자 없음', user_profile: '' },
+        user_name: '담당자 없음',
+        user_profile: '',
       });
 
       return res.send({ success: 200, findAllUser });

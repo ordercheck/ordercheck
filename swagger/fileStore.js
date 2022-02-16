@@ -152,6 +152,10 @@
  *           name: customerFile_idx
  *           schema:
  *             type: integer
+ *         - in: query
+ *           name: path
+ *           schema:
+ *             type: string
  *     responses:
  *       '200':
  *         description: 성공

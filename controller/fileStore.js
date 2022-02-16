@@ -183,11 +183,12 @@ module.exports = {
         Delete: { Objects: [] },
       };
       s3_get(params, (err, data) => {
+        if ((data.Contents = [])) {
+          return;
+        }
         data.Contents.forEach((data) => {
-          console.log(data);
           deleteParams.Delete.Objects.push({ Key: data.Key });
         });
-
         s3_delete_objects(deleteParams);
       });
       return;
@@ -224,8 +225,8 @@ module.exports = {
         });
         let params = {
           Bucket: 'ordercheck',
-          CopySource: `ordercheck/fileStore/${findFilesResult.title}`,
-          Key: `fileStore/${title}`,
+          CopySource: `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}/${findFilesResult.title}`,
+          Key: `fileStore/${req.params.customerFile_idx}/${req.query.path}/${title}`,
           ACL: 'public-read',
         };
 
