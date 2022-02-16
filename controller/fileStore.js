@@ -111,7 +111,6 @@ module.exports = {
           'isFolder',
           'folder_uuid',
           'uuid',
-          'path',
         ],
       });
 
