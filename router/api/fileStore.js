@@ -17,7 +17,7 @@ router.get('/customer/list', loginCheck, getUserList);
 router.get('/folder/:customerFile_idx', loginCheck, getFolderPath);
 router.post('/folder/:customerFile_idx', loginCheck, addFolder);
 router.post(
-  '/upload/:customerFile_idx',
+  '/upload/:customerFile_idx/:path',
   loginCheck,
   multer_file_store_upload().single('file'),
   addFile
