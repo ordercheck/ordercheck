@@ -252,7 +252,7 @@ module.exports = {
       },
       params: { customer_idx },
     } = req;
-
+    console.log('들어오자마자', contract_possibility);
     const consultResult = await checkDetailCustomerUpdateField(
       customer_idx,
       room_size_kind,
