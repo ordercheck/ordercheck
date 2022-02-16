@@ -36,23 +36,38 @@ module.exports = {
       contractData,
       contractPersonData
     ) => {
-      const countCustomersResult = await db.customer.count({
-        where: {
-          company_idx,
-          createdAt: { [Op.between]: [firstDate, secondDate] },
-          status: {
-            [Op.or]: statusData,
+      if (!contractPersonData) {
+        const countCustomersResult = await db.customer.count({
+          where: {
+            company_idx,
+            createdAt: { [Op.between]: [firstDate, secondDate] },
+            status: {
+              [Op.or]: statusData,
+            },
+            contract_possibility: {
+              [Op.or]: contractData,
+            },
           },
-          contract_possibility: {
-            [Op.or]: contractData,
+        });
+        return countCustomersResult;
+      } else {
+        const countCustomersResult = await db.customer.count({
+          where: {
+            company_idx,
+            createdAt: { [Op.between]: [firstDate, secondDate] },
+            status: {
+              [Op.or]: statusData,
+            },
+            contract_possibility: {
+              [Op.or]: contractData,
+            },
+            contract_person: {
+              [Op.or]: contractPersonData,
+            },
           },
-          contact_person: {
-            [Op.or]: contractPersonData,
-          },
-        },
-      });
-
-      return countCustomersResult;
+        });
+        return countCustomersResult;
+      }
     };
     const findCustomers = async (
       statusData,
@@ -67,53 +82,102 @@ module.exports = {
         Address,
         Date
       );
-
-      let findAndCountAllFilterdCustomers = await db.customer.findAndCountAll({
-        where: {
-          company_idx,
-          createdAt: { [Op.between]: [firstDate, secondDate] },
-          status: {
-            [Op.or]: statusData,
-          },
-          contract_possibility: {
-            [Op.or]: contractData,
-          },
-          contact_person: {
-            [Op.or]: contractPersonData,
-          },
-        },
-        include: [
+      if (!contractPersonData) {
+        let findAndCountAllFilterdCustomers = await db.customer.findAndCountAll(
           {
-            model: db.user,
-            attributes: ['idx', 'user_name'],
-          },
-        ],
-        attributes: customerAttributes,
-        offset: start,
-        limit: intlimit,
-        order: [[sortField, sort]],
-      });
+            where: {
+              company_idx,
+              createdAt: { [Op.between]: [firstDate, secondDate] },
+              status: {
+                [Op.or]: statusData,
+              },
+              contract_possibility: {
+                [Op.or]: contractData,
+              },
+            },
+            include: [
+              {
+                model: db.user,
+                attributes: ['idx', 'user_name'],
+              },
+            ],
+            attributes: customerAttributes,
+            offset: start,
+            limit: intlimit,
+            order: [[sortField, sort]],
+          }
+        );
 
-      findAndCountAllFilterdCustomers = changeToJSON(
-        findAndCountAllFilterdCustomers
-      );
+        findAndCountAllFilterdCustomers = changeToJSON(
+          findAndCountAllFilterdCustomers
+        );
 
-      const { customerNumber } = giveNumbering(
-        findAndCountAllFilterdCustomers.count,
-        intPage,
-        intlimit,
-        No,
-        Name,
-        Address,
-        Date
-      );
-      const findFilteredUsersData = addUserId(
-        findAndCountAllFilterdCustomers.rows,
-        addminus,
-        customerNumber
-      );
+        const { customerNumber } = giveNumbering(
+          findAndCountAllFilterdCustomers.count,
+          intPage,
+          intlimit,
+          No,
+          Name,
+          Address,
+          Date
+        );
+        const findFilteredUsersData = addUserId(
+          findAndCountAllFilterdCustomers.rows,
+          addminus,
+          customerNumber
+        );
 
-      return { findAndCountAllFilterdCustomers, findFilteredUsersData };
+        return { findAndCountAllFilterdCustomers, findFilteredUsersData };
+      } else {
+        let findAndCountAllFilterdCustomers = await db.customer.findAndCountAll(
+          {
+            where: {
+              company_idx,
+              createdAt: { [Op.between]: [firstDate, secondDate] },
+              status: {
+                [Op.or]: statusData,
+              },
+              contract_possibility: {
+                [Op.or]: contractData,
+              },
+              contract_person: {
+                [Op.or]: contractPersonData,
+              },
+            },
+            include: [
+              {
+                model: db.user,
+                attributes: ['idx', 'user_name'],
+              },
+            ],
+            attributes: customerAttributes,
+            offset: start,
+            limit: intlimit,
+            order: [[sortField, sort]],
+          }
+        );
+
+        findAndCountAllFilterdCustomers = changeToJSON(
+          findAndCountAllFilterdCustomers
+        );
+
+        const { customerNumber } = giveNumbering(
+          findAndCountAllFilterdCustomers.count,
+          intPage,
+          intlimit,
+          No,
+          Name,
+          Address,
+          Date
+        );
+        const findFilteredUsersData = addUserId(
+          findAndCountAllFilterdCustomers.rows,
+          addminus,
+          customerNumber
+        );
+
+        return { findAndCountAllFilterdCustomers, findFilteredUsersData };
+      }
     };
     if (status) {
       countArr = status;
