@@ -250,21 +250,24 @@ module.exports = {
     }
   },
   searchFileStore: async (req, res, next) => {
-    const findCustomResult = await db.customerFile.findOne({
-      where: { customer_name: req.query.search },
-      include: [
-        {
-          model: db.folders,
-          include: [
-            {
-              model: db.files,
-            },
-          ],
-        },
-      ],
+    const pureText = req.query.search.replace(
+      /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
+      ''
+    );
 
-      attributes: ['idx', 'customer_name', 'customer_phoneNumber'],
+    const findCustomerResult = await db.customerFile.findAll({
+      where: {
+        [Op.or]: {
+          customer_name: {
+            [Op.like]: `%${pureText}%`,
+          },
+          customer_phoneNumber: {
+            [Op.like]: `%${pureText}%`,
+          },
+        },
+      },
     });
-    res.send(findCustomResult);
+
+    res.send({ findCustomerResult });
   },
 };
