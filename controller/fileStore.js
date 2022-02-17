@@ -348,7 +348,6 @@ module.exports = {
       return res.send({ succes: 200, getDetailResult });
     }
     // 파일일때
-
     const getFileResult = await db.files.findOne({
       where: { uuid },
       attributes: showDetailFileFolderAttributes,

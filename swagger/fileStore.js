@@ -212,7 +212,7 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/file/store/detail/{customerFile_idx}/{uuid}/{isFolder}:
+ * /api/file/store/detail/{customerFile_idx}/{uuid}/{isFolder}/{path}:
  *   get:
  *     security:
  *       - bearerAuth: []
@@ -235,6 +235,11 @@
  *           schema:
  *             type: string
  *           example: 1
+ *         - in: path
+ *           name: path
+ *           schema:
+ *             type: string
+ *           example: FJEO
  *     responses:
  *       '200':
  *         description: 성공
