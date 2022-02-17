@@ -266,7 +266,7 @@ module.exports = {
   addCalculate: async (req, res, next) => {
     const { body, file } = req;
 
-    const addCalculateLogic = () => {
+    const addCalculateLogic = async () => {
       // 몇차 인지 체크
       const findCalculate = await db.calculate.count({
         where: { customer_idx: body.customer_idx },
