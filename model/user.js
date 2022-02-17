@@ -54,5 +54,18 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: 1,
       type: DataTypes.INTEGER(4),
     },
+
+    use_agree: {
+      allowNull: true,
+      type: DataTypes.BOOLEAN,
+    },
+    private_agree: {
+      allowNull: true,
+      type: DataTypes.BOOLEAN,
+    },
+    marketing_agree: {
+      allowNull: true,
+      type: DataTypes.BOOLEAN,
+    },
   });
 };

@@ -200,13 +200,41 @@
  *       - bearerAuth: []
  *     tags:
  *       -  FileStore
- *     summary: 고객명, 연락처, 폴더.파일명으로 검색
+ *     summary: 고객명, 연락처, 폴더.파일명으로 검색 (개발중)
  *     parameters:
  *         - in: query
  *           name: search
  *           schema:
  *             type: string
  *           example: "Title"
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/file/store/detail/{customerFile_idx}/{uuid}/{isFolder}:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       -  FileStore
+ *     summary: file, folder detail정보 보기 (folder면 isfolder 1 아니면 0)
+ *     parameters:
+ *         - in: path
+ *           name: customerFile_idx
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *         - in: path
+ *           name: uuid
+ *           schema:
+ *             type: string
+ *           example: SJFIO
+ *         - in: path
+ *           name: isFolder
+ *           schema:
+ *             type: string
+ *           example: 1
  *     responses:
  *       '200':
  *         description: 성공

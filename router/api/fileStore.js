@@ -9,6 +9,7 @@ const {
   deleteFile,
   changeFileTitle,
   searchFileStore,
+  showDetailFileFolder,
 } = require('../../controller/fileStore');
 
 const { multer_file_store_upload } = require('../../lib/aws/aws');
@@ -28,6 +29,11 @@ router.delete(
   '/file/:customerFile_idx/:isfolder/:uuid',
   loginCheck,
   deleteFile
+);
+router.get(
+  '/detail/:customerFile_idx/:uuid/:isFolder',
+  loginCheck,
+  showDetailFileFolder
 );
 router.get('/search', loginCheck, searchFileStore);
 

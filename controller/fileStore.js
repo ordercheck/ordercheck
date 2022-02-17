@@ -106,17 +106,6 @@ module.exports = {
           'folder_uuid',
           'uuid',
           'path',
-          'file_size',
-          'upload_people',
-          'file_size',
-          [
-            db.sequelize.fn(
-              'date_format',
-              db.sequelize.col('createdAt'),
-              '%Y.%m.%d'
-            ),
-            'createdAt',
-          ],
         ],
       });
 
@@ -125,16 +114,6 @@ module.exports = {
           if (value !== null) return value;
         })
       );
-
-      findFilesResult.forEach(async (data) => {
-        const splitPath = data.path.split('/');
-
-        const findFolderResult = await db.folders.findAll({
-          where: { uuid: { [Op.in]: splitPath } },
-          attributes: ['title'],
-          raw: true,
-        });
-      });
 
       return res.send({ succes: 200, findFilesResult });
     } catch (err) {
@@ -297,5 +276,48 @@ module.exports = {
     });
 
     res.send({ findCustomerResult });
+  },
+  showDetailFileFolder: async (req, res, next) => {
+    const { customerFile_idx, uuid, isFolder } = req.params;
+
+    // 폴더일때
+    if (req.params.isFolder == 1) {
+    }
+    // 파일일때
+
+    const getFileResult = await db.files.findOne({
+      where: { uuid },
+
+      attributes: [
+        'title',
+        'upload_people',
+        'file_size',
+        'path',
+        [
+          db.sequelize.fn(
+            'date_format',
+            db.sequelize.col('createdAt'),
+            '%Y.%m.%d'
+          ),
+          'createdAt',
+        ],
+      ],
+    });
+
+    const pathArr = getFileResult.path.split('/');
+
+    const findTitleResult = await db.folders.findAll({
+      where: { uuid: { [Op.in]: pathArr } },
+      attributes: ['title'],
+      raw: true,
+      nest: true,
+    });
+
+    let path = '';
+    findTitleResult.forEach((data) => {
+      path += `${data.title} `;
+    });
+    console.log(path);
+    return res.send({ succes: 200, getFileResult });
   },
 };

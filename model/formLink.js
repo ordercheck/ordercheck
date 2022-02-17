@@ -29,7 +29,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
     },
     expression: {
-      defaultValue: 1,
+      defaultValue: 0,
       type: DataTypes.INTEGER,
     },
     copyCount: {
