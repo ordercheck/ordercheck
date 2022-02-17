@@ -265,6 +265,12 @@ module.exports = {
           findFilesResult.title,
           `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}`
         );
+
+        const updatedFileResult = await db.files.findOne({
+          where: { uuid },
+          raw: true,
+        });
+        return res.send({ success: 200, updatedFileResult });
       }
       return res.send({ success: 200 });
     } catch (err) {
