@@ -130,10 +130,20 @@ module.exports = {
           { where: { uuid } },
           { attributes: ['title'] }
         );
-        delFile(
-          findFileResult.title,
-          `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}`
-        );
+
+        // 폴더 안에 있을 때
+        if (req.query.path) {
+          delFile(
+            findFileResult.title,
+            `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}`
+          );
+        } else {
+          delFile(
+            findFileResult.title,
+            `ordercheck/fileStore/${req.params.customerFile_idx}`
+          );
+        }
+
         await db.files.destroy({
           where: { uuid },
         });
@@ -219,16 +229,28 @@ module.exports = {
 
         let params = {
           Bucket: 'ordercheck',
-          CopySource: encodeURI(
-            `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}/${findFilesResult.title}`
-          ),
-          Key: `fileStore/${req.params.customerFile_idx}/${req.query.path}/${title}`,
+
           ACL: 'public-read',
         };
-        let urlArr = findFilesResult.file_url.split('/');
-        urlArr[urlArr.length - 1] = title;
-        const file_url = urlArr.join('/');
 
+        // 파일 안일 경우
+        if (req.query.path) {
+          (params.CopySource = encodeURI(
+            `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}/${findFilesResult.title}`
+          )),
+            (params.Key = `fileStore/${req.params.customerFile_idx}/${req.query.path}/${title}`);
+        } else {
+          (params.CopySource = encodeURI(
+            `ordercheck/fileStore/${req.params.customerFile_idx}/${findFilesResult.title}`
+          )),
+            (params.Key = `fileStore/${req.params.customerFile_idx}/${title}`);
+        }
+        let urlArr = findFilesResult.file_url.split('/');
+        const titleAndExtend = urlArr[urlArr.length - 1].split('.');
+        titleAndExtend[0] = title;
+        urlArr[urlArr.length - 1] = titleAndExtend.join('.');
+        const file_url = urlArr.join('/');
+        console.log(file_url);
         s3_copy(params);
 
         await db.files.update(
