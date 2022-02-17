@@ -6,6 +6,7 @@ const { s3_copy, s3_get, s3_delete_objects } = require('../lib/aws/aws');
 const { delFile } = require('../lib/aws/fileupload').ufile;
 const { showDetailFileFolderAttributes } = require('../lib/attributes');
 const deleteFile = (title, req) => {
+  console.log('delete');
   if (req.query.path) {
     delFile(
       title,
@@ -256,14 +257,19 @@ module.exports = {
           ACL: 'public-read',
         };
 
-        //  params만들기
-        params = checkFile(req, params, findFilesResult.title, title);
-        console.log(params);
         let urlArr = findFilesResult.file_url.split('/');
         const titleAndExtend = urlArr[urlArr.length - 1].split('.');
         titleAndExtend[0] = title;
         urlArr[urlArr.length - 1] = titleAndExtend.join('.');
         const file_url = urlArr.join('/');
+
+        //  params만들기
+        params = checkFile(
+          req,
+          params,
+          findFilesResult.title,
+          titleAndExtend.join('.')
+        );
 
         s3_copy(params);
 
