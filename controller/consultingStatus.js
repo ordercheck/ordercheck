@@ -299,7 +299,8 @@ module.exports = {
 
     // 파일이 없을때
     if (!file) {
-      const findResult = addCalculateLogic();
+      const findResult = await addCalculateLogic();
+      console.log(findResult);
       res.send({ success: 200, findResult });
       return;
     }
@@ -307,7 +308,7 @@ module.exports = {
       const file_name = getFileName(file.key);
       body.file_name = file_name;
       body.file_url = req.file.location;
-      const findResult = addCalculateLogic();
+      const findResult = await addCalculateLogic();
       res.send({ success: 200, findResult });
       return;
       const findUser = await db.customer.findByPk(body.customer_idx, {
