@@ -3,12 +3,11 @@ const {
   getFileName,
   createFileStore,
   getDetailCustomerInfo,
-
   check,
 } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { checkDetailCustomerUpdateField } = require('../lib/checkData');
-const { downFile } = require('../lib/aws/fileupload').ufile;
+const { down_one_file } = require('../lib/aws/aws');
 const {
   TeamkakaoPushNewForm,
   customerkakaoPushNewForm,
@@ -322,14 +321,15 @@ module.exports = {
   },
   downCalculate: async (req, res, next) => {
     const params = {
-      Bucket: `ordercheck/fileStore/${req.body.path}`,
-      Key: req.body.title,
+      Bucket: `ordercheck`,
+      Key: `fileStore/${req.body.customerFile_idx}/${req.body.path}/${req.body.title}`,
     };
-    downFile(params, (err, url) => {
+
+    down_one_file(params, (err, url) => {
       if (err) {
-        res.send({ success: 400, message: err });
+        next(err);
       } else {
-        res.attachment(result.pdf_name);
+        res.attachment(req.body.title);
         return res.send(url.Body);
       }
     });

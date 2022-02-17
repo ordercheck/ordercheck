@@ -345,9 +345,12 @@
  *                 type: string
  *               path:
  *                 type: string
+ *               customerFile_idx:
+ *                 type: integer
  *             example:
  *               title: "title"
  *               path: "path"
+ *               customerFile_idx: 1
  *     responses:
  *       '200':
  *         description: 성공
