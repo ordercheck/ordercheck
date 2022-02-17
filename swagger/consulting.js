@@ -134,6 +134,12 @@
  *      tags:
  *       -  consult
  *      summary: 고객 삭제
+ *      parameters:
+ *         - in: path
+ *           name: customer_idx
+ *           schema:
+ *             type: integer
+ *           example: 3
  *      responses:
  *         '200':
  *            description: 성공

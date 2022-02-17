@@ -189,7 +189,7 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      await db.consulting.destroy({
+      await db.customer.destroy({
         where: { idx: customer_idx, company_idx },
       });
       return res.send({ success: 200 });
