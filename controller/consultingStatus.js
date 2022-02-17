@@ -265,9 +265,8 @@ module.exports = {
 
   addCalculate: async (req, res, next) => {
     const { body, file } = req;
-    console.log('이것은 파일', file);
-    console.log('이것은 바디', body);
-    try {
+
+    const addCalculateLogic = () => {
       // 몇차 인지 체크
       const findCalculate = await db.calculate.count({
         where: { customer_idx: body.customer_idx },
@@ -277,10 +276,6 @@ module.exports = {
       if (findCalculate !== 0) {
         body.calculateNumber = `${findCalculate}차 견적서`;
       }
-
-      const file_name = getFileName(file.key);
-      body.file_name = file_name;
-      body.file_url = req.file.location;
 
       const calculateCreateResult = await db.calculate.create(body);
 
@@ -299,8 +294,22 @@ module.exports = {
           .split('T')[0]
           .replace(/-/g, '.'),
       };
-      res.send({ success: 200, findResult });
+      return findResult;
+    };
 
+    // 파일이 없을때
+    if (!file) {
+      const findResult = addCalculateLogic();
+      res.send({ success: 200, findResult });
+      return;
+    }
+    try {
+      const file_name = getFileName(file.key);
+      body.file_name = file_name;
+      body.file_url = req.file.location;
+      const findResult = addCalculateLogic();
+      res.send({ success: 200, findResult });
+      return;
       const findUser = await db.customer.findByPk(body.customer_idx, {
         include: [
           {
