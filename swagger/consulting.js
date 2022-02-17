@@ -347,6 +347,29 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/consulting/calculate/main/{calculate_idx}/{customer_idx}:
+ *   patch:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *       -  consult calculate
+ *     summary: 대표 견적서 등록
+ *     parameters:
+ *         - in: path
+ *           name: calculate_idx
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *         - in: path
+ *           name: customer_idx
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *     responses:
+ *         '200':
+ *            description: 성공
+ *         '400':
+ *           description: 실패
  * /api/consulting/calculate/{customer_idx}:
  *   get:
  *      security:

@@ -365,7 +365,34 @@ module.exports = {
       next(err);
     }
   },
-
+  setMainCalculate: async (req, res, next) => {
+    const updateCalculateStatus = async (trueOrfalse, whereData) => {
+      await db.calculate.update(
+        {
+          isMain: trueOrfalse,
+        },
+        { where: { idx: whereData } }
+      );
+    };
+    try {
+      const { customer_idx, calculate_idx } = req.params;
+      // 이미 대표상태인 견적서 찾기
+      const findAllResult = await db.calculate.findOne({
+        where: { customer_idx, idx: calculate_idx, isMain: true },
+      });
+      // 이미 대표인 견적서가 없을 때 타겟 견적서 대표로 등록
+      if (!findAllResult) {
+        await updateCalculateStatus(true, calculate_idx);
+        return res.send({ success: 200 });
+      }
+      // 이미 대표인 견적서가 있을 때는 isMain false로 바꾼 후 타겟 견적서 대표로 등록
+      await updateCalculateStatus(false, findAllResult.idx);
+      await updateCalculateStatus(true, calculate_idx);
+      return res.send({ success: 200 });
+    } catch (err) {
+      next(err);
+    }
+  },
   downCalculate: async (req, res, next) => {
     const params = {
       Bucket: `ordercheck`,
