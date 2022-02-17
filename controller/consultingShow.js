@@ -11,6 +11,7 @@ const {
   showIntegratedUserAttributes,
   customerAttributes,
   showCalculateAttributes,
+  findSameUserAttributes,
 } = require('../lib/attributes');
 
 module.exports = {
@@ -160,20 +161,7 @@ module.exports = {
       }
       const findSameUser = await db.customer.findAll({
         where: { customer_phoneNumber: consultResult.customer_phoneNumber },
-        attributes: [
-          'idx',
-          'customer_name',
-          'address',
-          'detail_address',
-          [
-            db.sequelize.fn(
-              'date_format',
-              db.sequelize.col('customer.createdAt'),
-              '%Y.%m.%d'
-            ),
-            'createdAt',
-          ],
-        ],
+        attributes: findSameUserAttributes,
         raw: true,
         nest: true,
       });

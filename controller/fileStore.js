@@ -316,7 +316,9 @@ module.exports = {
   },
   showDetailFileFolder: async (req, res, next) => {
     const { customerFile_idx, uuid, isFolder } = req.params;
-
+    console.log(customerFile_idx);
+    console.log(uuid);
+    console.log(isFolder);
     // 폴더일때
     if (req.params.isFolder == 1) {
     }
@@ -341,6 +343,7 @@ module.exports = {
       path.push(data.title);
     });
     getFileResult.path = path.join(' | ');
+    console.log(getFileResult);
     return res.send({ succes: 200, getFileResult });
   },
 };
