@@ -4,7 +4,7 @@ const { random5 } = require('../lib/functions');
 const { Op } = require('sequelize');
 const { s3_copy, s3_get, s3_delete_objects } = require('../lib/aws/aws');
 const { delFile } = require('../lib/aws/fileupload').ufile;
-
+const { showDetailFileFolderAttributes } = require('../lib/attributes');
 const deleteFile = (title, req) => {
   if (req.query.path) {
     delFile(
@@ -104,24 +104,24 @@ module.exports = {
   },
   addFile: async (req, res, next) => {
     try {
-      if (req.uuid) {
-        data.folder_uuid = req.body.uuid;
+      if (req.body.uuid) {
+        req.body.folder_uuid = req.body.uuid;
       }
 
-      const data = {};
+      req.body.customerFile_idx = req.params.customerFile_idx;
       const findUserResult = await db.user.findByPk(req.user_idx, {
         attributes: ['user_name'],
       });
-      data.path = req.query.path;
-      data.upload_people = findUserResult.user_name;
-      data.file_url = req.file.location;
+      req.body.path = req.query.path;
+      req.body.upload_people = findUserResult.user_name;
+      req.body.file_url = req.file.location;
       const title = getFileName(req.file.key);
-      data.title = title;
-      data.file_size = req.file.size / 1e6;
+      req.body.title = title;
+      req.body.file_size = req.file.size / 1e6;
 
-      data.uuid = random5();
+      req.body.uuid = random5();
 
-      const createFileResult = await db.files.create(data);
+      const createFileResult = await db.files.create(req.body);
 
       return res.send({ success: 200, createFileResult });
     } catch (err) {
@@ -319,21 +319,7 @@ module.exports = {
 
     const getFileResult = await db.files.findOne({
       where: { uuid },
-
-      attributes: [
-        'title',
-        'upload_people',
-        'file_size',
-        'path',
-        [
-          db.sequelize.fn(
-            'date_format',
-            db.sequelize.col('createdAt'),
-            '%Y.%m.%d'
-          ),
-          'createdAt',
-        ],
-      ],
+      attributes: showDetailFileFolderAttributes,
     });
 
     const pathArr = getFileResult.path.split('/');

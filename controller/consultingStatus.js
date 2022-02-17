@@ -5,6 +5,7 @@ const {
   getDetailCustomerInfo,
   check,
 } = require('../lib/apiFunctions');
+const { patchCalculateAttributes } = require('../lib/attributes');
 const db = require('../model/db');
 const { checkDetailCustomerUpdateField } = require('../lib/checkData');
 const { down_one_file } = require('../lib/aws/aws');
@@ -100,6 +101,7 @@ module.exports = {
       });
 
       const { searchingAddress, searchingPhoneNumber } = changeToSearch(body);
+
       body.searchingAddress = searchingAddress;
       body.searchingPhoneNumber = searchingPhoneNumber;
       body.company_idx = formLinkCompany.company_idx;
@@ -341,25 +343,7 @@ module.exports = {
       const findCalculate = await db.calculate.findOne({
         where: {
           idx: req.params.calculate_idx,
-          attributes: [
-            'idx',
-            'title',
-            'file_url',
-            'file_name',
-            'predicted_price',
-            'sharedDate',
-            'calculateNumber',
-            'isMain',
-            'status',
-            [
-              db.sequelize.fn(
-                'date_format',
-                db.sequelize.col('createdAt'),
-                '%Y.%m.%d'
-              ),
-              'createdAt',
-            ],
-          ],
+          attributes: patchCalculateAttributes,
         },
       });
       return findCalculate;

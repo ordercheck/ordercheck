@@ -316,6 +316,37 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/consulting/calculate/{calculate_idx}:
+ *   patch:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *       -  consult calculate
+ *     summary: consulting 견적 업데이트
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               img:
+ *                 type: string
+ *               title:
+ *                 type: string
+ *               predicted_price:
+ *                 type: string
+ *               customer_idx:
+ *                 type: string
+ *             example:
+ *               img: 견적서file
+ *               title: '제1차 견적서'
+ *               predicted_price: '1,000,000'
+ *               customer_idx: '1'
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  * /api/consulting/calculate/{customer_idx}:
  *   get:
  *      security:

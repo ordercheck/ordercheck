@@ -18,8 +18,9 @@ module.exports = function (sequelize, DataTypes) {
       unique: true,
       type: DataTypes.STRING(100),
     },
-    search_customer_phoneNumber: {
+    searchingPhoneNumber: {
       allowNull: false,
+      unique: true,
       type: DataTypes.INTEGER,
     },
   });
