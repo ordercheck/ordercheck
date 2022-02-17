@@ -57,8 +57,19 @@ db.customerFile.belongsTo(db.company, {
 });
 
 // customerFile과 folders
-db.customerFile.hasMany(db.folders, { foreignKey: 'customerFile_idx' });
+db.customerFile.hasMany(db.folders, {
+  foreignKey: 'customerFile_idx',
+  onDelete: 'cascade',
+});
 db.folders.belongsTo(db.customerFile, {
+  foreignKey: 'customerFile_idx',
+});
+
+// customerFile과 files
+db.customerFile.hasMany(db.files, {
+  foreignKey: 'customerFile_idx',
+});
+db.files.belongsTo(db.customerFile, {
   foreignKey: 'customerFile_idx',
 });
 

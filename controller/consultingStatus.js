@@ -300,7 +300,6 @@ module.exports = {
     // 파일이 없을때
     if (!file) {
       const findResult = await addCalculateLogic();
-
       res.send({ success: 200, findResult });
       return;
     }
@@ -332,6 +331,57 @@ module.exports = {
       next(err);
     }
   },
+  patchCalculate: async (req, res, next) => {
+    const { body, file } = req;
+
+    const addCalculateLogic = async () => {
+      await db.calculate.update(body, {
+        where: { idx: req.params.calculate_idx },
+      });
+      const findCalculate = await db.calculate.findOne({
+        where: {
+          idx: req.params.calculate_idx,
+          attributes: [
+            'idx',
+            'title',
+            'file_url',
+            'file_name',
+            'predicted_price',
+            'sharedDate',
+            'calculateNumber',
+            'isMain',
+            'status',
+            [
+              db.sequelize.fn(
+                'date_format',
+                db.sequelize.col('createdAt'),
+                '%Y.%m.%d'
+              ),
+              'createdAt',
+            ],
+          ],
+        },
+      });
+      return findCalculate;
+    };
+
+    // 파일이 없을때
+    if (!file) {
+      const findResult = await addCalculateLogic();
+      res.send({ success: 200, findResult });
+      return;
+    }
+    try {
+      const file_name = getFileName(file.key);
+      body.file_name = file_name;
+      body.file_url = req.file.location;
+      const findResult = await addCalculateLogic();
+      return res.send({ success: 200, findResult });
+    } catch (err) {
+      next(err);
+    }
+  },
+
   downCalculate: async (req, res, next) => {
     const params = {
       Bucket: `ordercheck`,

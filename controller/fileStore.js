@@ -4,6 +4,34 @@ const { random5 } = require('../lib/functions');
 const { Op } = require('sequelize');
 const { s3_copy, s3_get, s3_delete_objects } = require('../lib/aws/aws');
 const { delFile } = require('../lib/aws/fileupload').ufile;
+
+const deleteFile = (title, req) => {
+  if (req.query.path) {
+    delFile(
+      title,
+      `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}`
+    );
+  } else {
+    delFile(title, `ordercheck/fileStore/${req.params.customerFile_idx}`);
+  }
+};
+
+const checkFile = (req, params, beforeTitle, newTitle) => {
+  // 파일 안일 경우
+  if (req.query.path) {
+    (params.CopySource = encodeURI(
+      `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}/${beforeTitle}`
+    )),
+      (params.Key = `fileStore/${req.params.customerFile_idx}/${req.query.path}/${newTitle}`);
+  } else {
+    (params.CopySource = encodeURI(
+      `ordercheck/fileStore/${req.params.customerFile_idx}/${beforeTitle}`
+    )),
+      (params.Key = `fileStore/${req.params.customerFile_idx}/${newTitle}`);
+  }
+  return params;
+};
+
 module.exports = {
   getUserList: async (req, res, next) => {
     try {
@@ -23,12 +51,19 @@ module.exports = {
     }
   },
 
-  getFolderPath: async (req, res, next) => {
-    const result = await db.folders.findAll({
+  showRootFoldersAndFiles: async (req, res, next) => {
+    const folders = await db.folders.findAll({
       where: { customerFile_idx: req.params.customerFile_idx, root: true },
     });
 
-    return res.send({ success: 200, result });
+    const files = await db.files.findAll({
+      where: {
+        customerFile_idx: req.params.customerFile_idx,
+        folder_uuid: null,
+      },
+    });
+
+    return res.send({ success: 200, folders, files });
   },
   addFolder: async (req, res, next) => {
     const t = await db.sequelize.transaction();
@@ -131,19 +166,8 @@ module.exports = {
           { attributes: ['title'] }
         );
 
-        // 폴더 안에 있을 때
-        if (req.query.path) {
-          delFile(
-            findFileResult.title,
-            `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}`
-          );
-        } else {
-          delFile(
-            findFileResult.title,
-            `ordercheck/fileStore/${req.params.customerFile_idx}`
-          );
-        }
-
+        // 파일삭제
+        deleteFile(findFileResult.title, req);
         await db.files.destroy({
           where: { uuid },
         });
@@ -229,28 +253,18 @@ module.exports = {
 
         let params = {
           Bucket: 'ordercheck',
-
           ACL: 'public-read',
         };
 
-        // 파일 안일 경우
-        if (req.query.path) {
-          (params.CopySource = encodeURI(
-            `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}/${findFilesResult.title}`
-          )),
-            (params.Key = `fileStore/${req.params.customerFile_idx}/${req.query.path}/${title}`);
-        } else {
-          (params.CopySource = encodeURI(
-            `ordercheck/fileStore/${req.params.customerFile_idx}/${findFilesResult.title}`
-          )),
-            (params.Key = `fileStore/${req.params.customerFile_idx}/${title}`);
-        }
+        //  params만들기
+        params = checkFile(req, params, findFilesResult.title, title);
+
         let urlArr = findFilesResult.file_url.split('/');
         const titleAndExtend = urlArr[urlArr.length - 1].split('.');
         titleAndExtend[0] = title;
         urlArr[urlArr.length - 1] = titleAndExtend.join('.');
         const file_url = urlArr.join('/');
-        console.log(file_url);
+
         s3_copy(params);
 
         await db.files.update(
@@ -260,11 +274,8 @@ module.exports = {
           },
           { where: { uuid } }
         );
-
-        delFile(
-          findFilesResult.title,
-          `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}`
-        );
+        // 파일삭제
+        deleteFile(findFilesResult.title, req);
 
         const updatedFileResult = await db.files.findOne({
           where: { uuid },

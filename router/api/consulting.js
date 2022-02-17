@@ -25,6 +25,7 @@ const {
   addCalculate,
   downCalculate,
   doIntegratedUser,
+  patchCalculate,
 } = require('../../controller/consultingStatus');
 const {
   checkFormLimit,
@@ -73,6 +74,14 @@ router.post(
   loginCheck,
   multer_calculate_upload().single('img'),
   addCalculate
+);
+
+// 견적서 수정
+router.patch(
+  '/calculate/:calculate_idx',
+  loginCheck,
+  multer_calculate_upload().single('img'),
+  patchCalculate
 );
 
 // 컨설팅 담당자 설정하기

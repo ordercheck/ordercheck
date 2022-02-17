@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {
   getUserList,
-  getFolderPath,
+  showRootFoldersAndFiles,
   addFolder,
   addFile,
   showFiles,
@@ -15,7 +15,7 @@ const {
 const { multer_file_store_upload } = require('../../lib/aws/aws');
 const loginCheck = require('../../middleware/auth');
 router.get('/customer/list', loginCheck, getUserList);
-router.get('/folder/:customerFile_idx', loginCheck, getFolderPath);
+router.get('/folder/:customerFile_idx', loginCheck, showRootFoldersAndFiles);
 router.post('/folder/:customerFile_idx', loginCheck, addFolder);
 router.post(
   '/upload/:customerFile_idx',
