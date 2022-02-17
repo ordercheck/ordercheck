@@ -453,4 +453,25 @@ router.post('/check/company-name', async (req, res) => {
   }
 });
 
+// 중복된 비밀번호 확인
+router.post('/check/password', async (req, res) => {
+  const { user_password, user_phone } = req.body;
+  try {
+    const findUserResult = await db.user.findOne({ where: { user_phone } });
+
+    const comparePasswordResult = await bcrypt.compare(
+      user_password,
+      findUserResult.user_password
+    );
+
+    if (comparePasswordResult) {
+      return res.send({ success: 200, message: '이전 비밀번호와 같습니다.' });
+    }
+    return res.send({ success: 400, message: '이전 비밀번호와 다릅니다.' });
+  } catch (err) {
+    const Err = err.message;
+    return res.send({ success: 500, Err });
+  }
+});
+
 module.exports = router;

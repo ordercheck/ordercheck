@@ -273,4 +273,27 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/check/password:
+ *   post:
+ *     tags:
+ *       - 비밀번호 수정
+ *     summary: 중복된 비밀번호 여부 확인
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_phone:
+ *                 type: string
+ *               user_password:
+ *                 type: string
+ *             example:
+ *               user_phone: "010-6719-6919"
+ *               user_password: 'user_password'
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */
