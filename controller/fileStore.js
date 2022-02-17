@@ -6,7 +6,6 @@ const { s3_copy, s3_get, s3_delete_objects } = require('../lib/aws/aws');
 const { delFile } = require('../lib/aws/fileupload').ufile;
 const { showDetailFileFolderAttributes } = require('../lib/attributes');
 const deleteFile = (title, req) => {
-  console.log('delete');
   if (req.query.path) {
     delFile(
       title,
@@ -275,7 +274,7 @@ module.exports = {
 
         await db.files.update(
           {
-            title,
+            title: titleAndExtend.join('.'),
             file_url,
           },
           { where: { uuid } }
