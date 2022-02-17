@@ -68,26 +68,25 @@ module.exports = {
     }
   },
   addFile: async (req, res, next) => {
-    const data = {};
-    const createFile = async (fileData) => {
+    try {
+      if (req.uuid) {
+        data.folder_uuid = req.body.uuid;
+      }
+
+      const data = {};
       const findUserResult = await db.user.findByPk(req.user_idx, {
         attributes: ['user_name'],
       });
       data.path = req.query.path;
       data.upload_people = findUserResult.user_name;
-      data.file_url = fileData.location;
-      const title = getFileName(fileData.key);
+      data.file_url = req.file.location;
+      const title = getFileName(req.file.key);
       data.title = title;
-      data.file_size = fileData.size / 1e6;
-      data.folder_uuid = req.body.uuid;
+      data.file_size = req.file.size / 1e6;
+
       data.uuid = random5();
 
-      return await db.files.create(data);
-    };
-    try {
-      const createFileResult = req.file.transforms
-        ? await createFile(req.file.transforms[0])
-        : await createFile(req.file);
+      const createFileResult = await db.files.create(data);
 
       return res.send({ success: 200, createFileResult });
     } catch (err) {
