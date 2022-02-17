@@ -367,7 +367,7 @@ module.exports = {
   },
   setMainCalculate: async (req, res, next) => {
     const updateCalculateStatus = async (trueOrfalse, whereData) => {
-      await db.calculate.update(
+      const updateResult = await db.calculate.update(
         {
           isMain: trueOrfalse,
         },
@@ -377,16 +377,18 @@ module.exports = {
     try {
       const { customer_idx, calculate_idx } = req.params;
       // 이미 대표상태인 견적서 찾기
-      const findAllResult = await db.calculate.findOne({
-        where: { customer_idx, idx: calculate_idx, isMain: true },
+      const findCalculateResult = await db.calculate.findOne({
+        where: { customer_idx, isMain: true },
       });
+
       // 이미 대표인 견적서가 없을 때 타겟 견적서 대표로 등록
-      if (!findAllResult) {
+      if (!findCalculateResult) {
         await updateCalculateStatus(true, calculate_idx);
         return res.send({ success: 200 });
       }
+
       // 이미 대표인 견적서가 있을 때는 isMain false로 바꾼 후 타겟 견적서 대표로 등록
-      await updateCalculateStatus(false, findAllResult.idx);
+      await updateCalculateStatus(false, findCalculateResult.idx);
       await updateCalculateStatus(true, calculate_idx);
       return res.send({ success: 200 });
     } catch (err) {

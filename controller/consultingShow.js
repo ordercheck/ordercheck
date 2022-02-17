@@ -208,13 +208,15 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      const findResult = await db.calculate.findAll({
+      let findResult = await db.calculate.findAll({
         where: { customer_idx },
         order: [['createdAt', 'DESC']],
         attributes: showCalculateAttributes,
       });
 
-      return res.send({ success: 200, findResult });
+      findResult = JSON.parse(JSON.stringify(findResult));
+
+      return res.send({ success: 200, MainCalculate, findResult });
     } catch (err) {
       next(err);
     }
