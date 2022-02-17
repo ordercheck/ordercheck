@@ -258,7 +258,7 @@ module.exports = {
 
         //  params만들기
         params = checkFile(req, params, findFilesResult.title, title);
-
+        console.log(params);
         let urlArr = findFilesResult.file_url.split('/');
         const titleAndExtend = urlArr[urlArr.length - 1].split('.');
         titleAndExtend[0] = title;
