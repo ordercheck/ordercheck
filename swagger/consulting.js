@@ -333,18 +333,21 @@
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       -  consult calculate
- *     summary: 견적서 pdf 다운로드
+ *       -  FileStore
+ *     summary: 파일 다운로드
  *     requestBody:
  *       content:
  *         application/json:
  *           schema:
  *             type: object
  *             properties:
- *               url_idx:
+ *               title:
+ *                 type: string
+ *               path:
  *                 type: string
  *             example:
- *               url_idx: 6
+ *               title: "title"
+ *               path: "path"
  *     responses:
  *       '200':
  *         description: 성공

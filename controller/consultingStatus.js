@@ -321,8 +321,11 @@ module.exports = {
     }
   },
   downCalculate: async (req, res, next) => {
-    const result = await db.calculate.findByPk(req.body.url_idx);
-    downFile(result.pdf_name, (err, url) => {
+    const params = {
+      Bucket: `ordercheck/fileStore/${req.body.path}`,
+      Key: req.body.title,
+    };
+    downFile(params, (err, url) => {
       if (err) {
         res.send({ success: 400, message: err });
       } else {
