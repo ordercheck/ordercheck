@@ -34,11 +34,11 @@ const checkFile = (req, params, beforeTitle, newTitle) => {
   }
   return params;
 };
-const getFolderPath = async (pathData, uuid) => {
-  const pathArr = pathData.path.split('/');
+const getFolderPath = async (pathData, customerFile_idx) => {
+  const pathArr = pathData.split('/');
 
   const findTitleResult = await db.folders.findAll({
-    where: { uuid: { [Op.in]: pathArr } },
+    where: { uuid: { [Op.in]: pathArr }, customerFile_idx },
     attributes: ['title'],
     raw: true,
     nest: true,
@@ -326,13 +326,16 @@ module.exports = {
     res.send({ findCustomerResult });
   },
   showDetailFileFolder: async (req, res, next) => {
-    const { customerFile_idx, uuid, isFolder } = req.params;
+    const {
+      params: { customerFile_idx, uuid, isFolder },
+      query: { path },
+    } = req;
 
     // 폴더일때
     if (isFolder == 1) {
       // 폴더 용량 구하기
       const findTitleResult = await db.files.findAll({
-        where: { folder_uuid: uuid },
+        where: { folder_uuid: uuid, customerFile_idx },
         attributes: ['file_size'],
         raw: true,
         nest: true,
@@ -342,22 +345,20 @@ module.exports = {
         addFileSize += Number(data.file_size);
       });
 
-      const getFolderResult = await db.folders.findOne({ where: { uuid } });
-      const getDetailResult = await getFolderPath(getFolderResult, uuid);
+      const getDetailResult = await getFolderPath(path, customerFile_idx);
       getDetailResult.file_size = addFileSize;
       return res.send({ succes: 200, getDetailResult });
     }
     // 파일일때
     const getFileResult = await db.files.findOne({
-      where: { uuid },
+      where: { uuid, customerFile_idx },
       attributes: showDetailFileFolderAttributes,
     });
     // 파일이 폴더 밖에 있을때
-    if (!getFileResult.path) {
+    if (!path) {
       return res.send({ succes: 200, getFileResult });
     }
-    const getDetailResult = await getFolderPath(getFileResult, uuid);
-
+    const getDetailResult = await getFolderPath(path, customerFile_idx);
     return res.send({ succes: 200, getDetailResult });
   },
 };
