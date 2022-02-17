@@ -300,7 +300,7 @@ module.exports = {
     // 파일이 없을때
     if (!file) {
       const findResult = await addCalculateLogic();
-      console.log(findResult);
+
       res.send({ success: 200, findResult });
       return;
     }

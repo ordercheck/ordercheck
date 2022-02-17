@@ -313,11 +313,11 @@ module.exports = {
       nest: true,
     });
 
-    let path = '';
+    const path = [];
     findTitleResult.forEach((data) => {
-      path += `${data.title} `;
+      path.push(data.title);
     });
-    console.log(path);
+    getFileResult.path = path.join(' | ');
     return res.send({ succes: 200, getFileResult });
   },
 };

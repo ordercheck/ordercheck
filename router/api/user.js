@@ -37,8 +37,8 @@ const db_config = require('../../lib/config/db_config');
 const { Expo } = require('expo-server-sdk');
 const {
   makeArray,
-  makeSpreadArray,
-  randomString9,
+
+  generateRandomCode,
 } = require('../../lib/functions');
 const functions = require('../../lib/functions');
 const { checkCard } = require('../../model/db');
@@ -107,10 +107,8 @@ router.post('/login', async (req, res, next) => {
 // 회원가입 체크 라우터
 router.post('/join/check', async (req, res) => {
   const { user_email, user_phone } = req.body;
-  const randInt = Math.random() * 1000;
-  const message = `[인증번호:${parseInt(
-    randInt
-  )}] 오더체크 인증번호입니다.\n오더체크와 편리한 고객응대를 시작해보세요.`;
+  const randomNumber = generateRandomCode(6);
+  const message = `[인증번호:${randomNumber}] 오더체크 인증번호입니다.\n오더체크와 편리한 고객응대를 시작해보세요.`;
   let phoneCheck = await db.user
     .findAll({ where: { user_phone } })
     .then((r) => {
@@ -136,7 +134,7 @@ router.post('/join/check', async (req, res) => {
   });
 
   if (result.data.success == 200) {
-    res.send({ success: 200, number: parseInt(randInt) });
+    res.send({ success: 200, number: randomNumber });
   } else {
     res.send({ success: 400, type: 'code' });
   }
@@ -144,18 +142,17 @@ router.post('/join/check', async (req, res) => {
 // 비밀번호 찾기 인증번호
 router.post('/check/pw', async (req, res) => {
   const { user_phone } = req.body;
-  const randInt = Math.random() * 1000;
-  const message = `[인증번호: ${parseInt(
-    randInt
-  )}] \n 오더체크 인증번호입니다.`;
+
+  const randomNumber = generateRandomCode(6);
+  const message = `[인증번호: ${randomNumber}] \n 오더체크 인증번호입니다.`;
   try {
-    let result = await axios({
+    await axios({
       url: '/api/send/sms',
       method: 'post', // POST method
       headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
       data: { user_phone, message, type: 'SMS' },
     });
-    return res.send({ success: 200, number: parseInt(randInt) });
+    return res.send({ success: 200, number: randomNumber });
   } catch (err) {
     return res.send({ success: 500, msg: err.message });
   }
