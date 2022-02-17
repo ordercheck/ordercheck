@@ -160,11 +160,17 @@ module.exports = {
         return;
       }
       const findSameUser = await db.customer.findAll({
-        where: { customer_phoneNumber: consultResult.customer_phoneNumber },
+        where: {
+          customer_phoneNumber: consultResult.customer_phoneNumber,
+          idx: {
+            [Op.not]: consultResult.idx,
+          },
+        },
         attributes: findSameUserAttributes,
         raw: true,
         nest: true,
       });
+
       consultResult.sameUser = findSameUser;
 
       return res.send({ success: 200, consultResult });
