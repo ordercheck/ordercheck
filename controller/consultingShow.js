@@ -225,7 +225,7 @@ module.exports = {
 
       findResult = JSON.parse(JSON.stringify(findResult));
 
-      return res.send({ success: 200, MainCalculate, findResult });
+      return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
     }

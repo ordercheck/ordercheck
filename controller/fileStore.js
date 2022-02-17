@@ -4,7 +4,10 @@ const { random5 } = require('../lib/functions');
 const { Op } = require('sequelize');
 const { s3_copy, s3_get, s3_delete_objects } = require('../lib/aws/aws');
 const { delFile } = require('../lib/aws/fileupload').ufile;
-const { showDetailFileFolderAttributes } = require('../lib/attributes');
+const {
+  showDetailFileFolderAttributes,
+  showFilesAttributes,
+} = require('../lib/attributes');
 const deleteFile = (title, req) => {
   if (req.query.path) {
     delFile(
@@ -132,15 +135,7 @@ module.exports = {
     try {
       let findFilesResult = await db.files.findAll({
         where: { folder_uuid: req.body.uuid },
-        attributes: [
-          'idx',
-          'file_url',
-          'title',
-          'isFolder',
-          'folder_uuid',
-          'uuid',
-          'path',
-        ],
+        attributes: showFilesAttributes,
       });
 
       findFilesResult = JSON.parse(

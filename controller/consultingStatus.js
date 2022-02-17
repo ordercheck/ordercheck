@@ -367,7 +367,7 @@ module.exports = {
   },
   setMainCalculate: async (req, res, next) => {
     const updateCalculateStatus = async (trueOrfalse, whereData) => {
-      const updateResult = await db.calculate.update(
+      await db.calculate.update(
         {
           isMain: trueOrfalse,
         },
