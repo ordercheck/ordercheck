@@ -265,7 +265,8 @@ module.exports = {
 
   addCalculate: async (req, res, next) => {
     const { body, file } = req;
-
+    console.log('이것은 파일', file);
+    console.log('이것은 바디', body);
     try {
       // 몇차 인지 체크
       const findCalculate = await db.calculate.count({
