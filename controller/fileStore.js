@@ -34,7 +34,23 @@ const checkFile = (req, params, beforeTitle, newTitle) => {
   }
   return params;
 };
+const getFolderPath = async (pathData, uuid) => {
+  const pathArr = pathData.path.split('/');
 
+  const findTitleResult = await db.folders.findAll({
+    where: { uuid: { [Op.in]: pathArr } },
+    attributes: ['title'],
+    raw: true,
+    nest: true,
+  });
+
+  const path = [];
+  findTitleResult.forEach((data) => {
+    path.push(data.title);
+  });
+  pathData.path = path.join(' | ');
+  return pathData;
+};
 module.exports = {
   getUserList: async (req, res, next) => {
     try {
@@ -311,11 +327,25 @@ module.exports = {
   },
   showDetailFileFolder: async (req, res, next) => {
     const { customerFile_idx, uuid, isFolder } = req.params;
-    console.log(customerFile_idx);
-    console.log(uuid);
-    console.log(isFolder);
+
     // 폴더일때
-    if (req.params.isFolder == 1) {
+    if (isFolder == 1) {
+      // 폴더 용량 구하기
+      const findTitleResult = await db.files.findAll({
+        where: { folder_uuid: uuid },
+        attributes: ['file_size'],
+        raw: true,
+        nest: true,
+      });
+      let addFileSize = 0;
+      findTitleResult.forEach((data) => {
+        addFileSize += Number(data.file_size);
+      });
+
+      const getFolderResult = await db.folders.findOne({ where: { uuid } });
+      const getDetailResult = await getFolderPath(getFolderResult, uuid);
+      getDetailResult.file_size = addFileSize;
+      return res.send({ succes: 200, getDetailResult });
     }
     // 파일일때
 
@@ -327,21 +357,8 @@ module.exports = {
     if (!getFileResult.path) {
       return res.send({ succes: 200, getFileResult });
     }
+    const getDetailResult = await getFolderPath(getFileResult, uuid);
 
-    const pathArr = getFileResult.path.split('/');
-
-    const findTitleResult = await db.folders.findAll({
-      where: { uuid: { [Op.in]: pathArr } },
-      attributes: ['title'],
-      raw: true,
-      nest: true,
-    });
-
-    const path = [];
-    findTitleResult.forEach((data) => {
-      path.push(data.title);
-    });
-    getFileResult.path = path.join(' | ');
-    return res.send({ succes: 200, getFileResult });
+    return res.send({ succes: 200, getDetailResult });
   },
 };
