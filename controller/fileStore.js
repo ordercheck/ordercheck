@@ -328,6 +328,10 @@ module.exports = {
       where: { uuid },
       attributes: showDetailFileFolderAttributes,
     });
+    // 파일이 폴더 밖에 있을때
+    if (!getFileResult.path) {
+      return res.send({ succes: 200, getFileResult });
+    }
 
     const pathArr = getFileResult.path.split('/');
 
@@ -343,7 +347,6 @@ module.exports = {
       path.push(data.title);
     });
     getFileResult.path = path.join(' | ');
-    console.log(getFileResult);
     return res.send({ succes: 200, getFileResult });
   },
 };
