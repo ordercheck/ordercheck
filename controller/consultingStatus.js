@@ -290,6 +290,8 @@ module.exports = {
         file_name: calculateCreateResult.file_name,
         predicted_price: calculateCreateResult.predicted_price,
         sharedDate: calculateCreateResult.sharedDate,
+        calculateNumber: calculateCreateResult.calculateNumber,
+        isMain: calculateCreateResult.isMain,
         status: calculateCreateResult.status,
         createdAt: new Date(calculateCreateResult.createdAt)
           .toISOString()
