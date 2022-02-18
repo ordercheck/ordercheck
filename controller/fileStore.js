@@ -350,6 +350,9 @@ module.exports = {
             `ordercheck/fileStore/${req.params.customerFile_idx}`
           );
         }
+
+        console.log(Bucket);
+        console.log(title);
         await copyAndDelete(params, Bucket, title);
 
         const updatedFileResult = await db.files.findOne({
