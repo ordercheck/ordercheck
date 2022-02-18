@@ -321,7 +321,6 @@ module.exports = {
           raw: true,
         });
 
-        console.log(findFilesResult.title);
         let params = {
           Bucket: 'ordercheck',
           ACL: 'public-read',
