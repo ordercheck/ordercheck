@@ -333,13 +333,6 @@ module.exports = {
           titleAndExtend.join('.')
         );
 
-        await db.files.update(
-          {
-            title: titleAndExtend.join('.'),
-            file_url,
-          },
-          { where: { uuid } }
-        );
         // 파일삭제
         let Bucket = '';
         if (req.query.path) {
@@ -353,6 +346,14 @@ module.exports = {
         }
 
         await copyAndDelete(params, Bucket, findFilesResult.title);
+
+        await db.files.update(
+          {
+            title: titleAndExtend.join('.'),
+            file_url,
+          },
+          { where: { uuid } }
+        );
 
         const updatedFileResult = await db.files.findOne({
           where: { uuid },
