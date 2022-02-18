@@ -453,9 +453,13 @@ module.exports = {
         }
       });
 
+      const findCustomerResult = await db.customer.findByPk(body.main_idx, {
+        attributes: ['customer_phoneNumber'],
+      });
+
       const findSameUser = await db.customer.findAll({
         where: {
-          customer_phoneNumber: consultResult.customer_phoneNumber,
+          customer_phoneNumber: findCustomerResult.customer_phoneNumber,
         },
         attributes: findSameUserAttributes,
         raw: true,

@@ -127,6 +127,8 @@ module.exports = {
       const findUserResult = await db.user.findByPk(req.user_idx, {
         attributes: ['user_name'],
       });
+
+      req.body.company_idx = req.company_idx;
       req.body.upload_people = findUserResult.user_name;
       req.body.customerFile_idx = req.params.customerFile_idx;
       const newUuid = random5();
