@@ -314,25 +314,6 @@ module.exports = {
       body.file_url = req.file.location;
       const findResult = await addCalculateLogic();
       return res.send({ success: 200, findResult });
-
-      const findUser = await db.customer.findByPk(body.customer_idx, {
-        include: [
-          {
-            model: db.company,
-            attributes: ['company_name'],
-          },
-        ],
-      });
-      const splitUrl = findResult.file_url.split('//');
-
-      await customerkakaoPushNewCal(
-        findUser.customer_phoneNumber,
-        findUser.company.company_name,
-        findUser.customer_name,
-        findResult.calculateNumber,
-        '견적서 확인',
-        splitUrl[1]
-      );
     } catch (err) {
       next(err);
     }
@@ -396,6 +377,7 @@ module.exports = {
       '견적서 확인',
       splitUrl[1]
     );
+    return res.send({ success: 200 });
   },
   setMainCalculate: async (req, res, next) => {
     const updateCalculateStatus = async (trueOrfalse, whereData) => {
