@@ -5,7 +5,10 @@ const {
   getDetailCustomerInfo,
   check,
 } = require('../lib/apiFunctions');
-const { patchCalculateAttributes } = require('../lib/attributes');
+const {
+  patchCalculateAttributes,
+  findSameUserAttributes,
+} = require('../lib/attributes');
 const db = require('../model/db');
 const { checkDetailCustomerUpdateField } = require('../lib/checkData');
 const { down_one_file } = require('../lib/aws/aws');
