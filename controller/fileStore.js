@@ -415,6 +415,8 @@ module.exports = {
         },
       },
       attributes: searchCustomersAttributes,
+      raw: true,
+      nest: true,
     });
 
     let findFoldersResult = await findFilesAndFolders(
@@ -437,12 +439,22 @@ module.exports = {
       findFilesResult = await searchUserFoldersFilesPath(findFilesResult);
     }
 
-    const findTotalResult = [];
-    findTotalResult.push({ findCustomerResult });
-    findTotalResult.push({ findFoldersResult });
-    findTotalResult.push({ findFilesResult });
+    const totalFindResult = [];
 
-    res.send({ findTotalResult });
+    findCustomerResult.forEach((data) => {
+      data.Type = 'Customer';
+      totalFindResult.push(data);
+    });
+
+    findFoldersResult.forEach((data) => {
+      data.Type = 'Folder';
+      totalFindResult.push(data);
+    });
+    findFilesResult.forEach((data) => {
+      data.Type = 'File';
+      totalFindResult.push(data);
+    });
+    res.send(totalFindResult);
   },
   showDetailFileFolder: async (req, res, next) => {
     const {
