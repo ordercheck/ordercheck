@@ -359,10 +359,13 @@ module.exports = {
           findFilesResult.title
         );
         if (copyResult) {
+          const newTitle = titleAndExtend.join('.');
+          const pureText = makePureText(newTitle);
           await db.files.update(
             {
-              title: titleAndExtend.join('.'),
-              file_url,
+              title: newTitle,
+              searchingTitle: pureText,
+              searchingTitle: file_url,
             },
             { where: { uuid } }
           );
@@ -406,10 +409,7 @@ module.exports = {
       return findFoldersResult;
     };
     // 그냥 text로 변환
-    const pureText = req.query.search.replace(
-      /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
-      ''
-    );
+    const pureText = makePureText(req.query.search);
 
     const findCustomerResult = await db.customerFile.findAll({
       where: {
