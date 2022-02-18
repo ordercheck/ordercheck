@@ -352,7 +352,11 @@ module.exports = {
   },
 
   shareCalculate: async (req, res, next) => {
-    const { customer_idx, calculate_idx } = req.params;
+    const {
+      params: { customer_idx, calculate_idx },
+
+      body: { calculateReload },
+    } = req;
     const customerFindResult = await db.customer.findByPk(customer_idx, {
       attributes: ['customer_phoneNumber'],
     });
