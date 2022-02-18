@@ -313,6 +313,7 @@ module.exports = {
           raw: true,
         });
 
+        console.log(findFilesResult.title);
         let params = {
           Bucket: 'ordercheck',
           ACL: 'public-read',
@@ -351,8 +352,8 @@ module.exports = {
           );
         }
 
-        console.log(Bucket);
         console.log(findFilesResult.title);
+
         await copyAndDelete(params, Bucket, title);
 
         const updatedFileResult = await db.files.findOne({
