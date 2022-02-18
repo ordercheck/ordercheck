@@ -341,22 +341,12 @@ module.exports = {
       attributes: ['file_name'],
     });
     // s3에서 삭제
-    delFile(
-      findCalculateResult.file_name,
-      'ordercheck/calculate',
-      async (err, data) => {
-        if (err) {
-          next(err);
-        }
-        if (data) {
-          await db.calculate.destroy({
-            where: { customer_idx, idx: calculate_idx },
-          });
+    delFile(findCalculateResult.file_name, 'ordercheck/calculate');
+    await db.calculate.destroy({
+      where: { customer_idx, idx: calculate_idx },
+    });
 
-          return res.send({ success: 200 });
-        }
-      }
-    );
+    return res.send({ success: 200 });
   },
   patchCalculate: async (req, res, next) => {
     const { body, file } = req;
