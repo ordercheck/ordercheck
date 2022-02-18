@@ -169,10 +169,6 @@ module.exports = {
   },
   addFile: async (req, res, next) => {
     try {
-      // 그냥 text로 변환
-      const pureText = makePureText(req.body.title);
-      console.log(pureText);
-      req.body.searchingTitle = pureText;
       // 회사 인덱스 저장
       req.body.company_idx = req.company_idx;
       if (req.body.uuid) {
@@ -186,6 +182,11 @@ module.exports = {
       req.body.upload_people = findUserResult.user_name;
       req.body.file_url = req.file.location;
       const title = getFileName(req.file.key);
+      // 그냥 text로 변환
+      const pureText = makePureText(title);
+
+      req.body.searchingTitle = pureText;
+
       req.body.title = title;
       req.body.file_size = req.file.size / 1e6;
 
