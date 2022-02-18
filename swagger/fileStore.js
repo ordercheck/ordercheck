@@ -12,7 +12,7 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/file/store/folder/{customerFile_idx}:
+ * /api/file/store/folder/{customerFile_idx}/{sort_field}/{sort}:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -25,6 +25,16 @@
  *           schema:
  *             type: integer
  *           example: 1
+ *         - in: path
+ *           name: sort_field
+ *           schema:
+ *             type: integer
+ *           example: 0
+ *         - in: path
+ *           name: sort
+ *           schema:
+ *             type: integer
+ *           example: 0
  *      responses:
  *         '200':
  *            description: 성공
@@ -200,7 +210,7 @@
  *       - bearerAuth: []
  *     tags:
  *       -  FileStore
- *     summary: 고객명, 연락처, 폴더.파일명으로 검색 (개발중)
+ *     summary: 고객명, 연락처, 폴더.파일명으로 검색
  *     parameters:
  *         - in: query
  *           name: search

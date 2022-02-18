@@ -101,13 +101,14 @@ module.exports = {
   },
 
   showRootFoldersAndFiles: async (req, res, next) => {
+    const { customerFile_idx, sort_field, sort } = req.params;
     const folders = await db.folders.findAll({
-      where: { customerFile_idx: req.params.customerFile_idx, root: true },
+      where: { customerFile_idx, root: true },
     });
 
     const files = await db.files.findAll({
       where: {
-        customerFile_idx: req.params.customerFile_idx,
+        customerFile_idx,
         folder_uuid: null,
       },
     });
@@ -335,6 +336,7 @@ module.exports = {
     }
   },
   searchFileStore: async (req, res, next) => {
+    // 파일 또는 폴더 찾기
     const findFilesAndFolders = async (
       fileOrFolder,
       pureText,
@@ -358,7 +360,7 @@ module.exports = {
       });
       return findFoldersResult;
     };
-
+    // 그냥 text로 변환
     const pureText = req.query.search.replace(
       /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
       ''
@@ -389,7 +391,7 @@ module.exports = {
       pureText,
       searchFileStoreFilesAttributes
     );
-
+    // path재설정
     if (findFoldersResult.length !== 0) {
       findFoldersResult = await searchUserFoldersFilesPath(findFoldersResult);
     }
