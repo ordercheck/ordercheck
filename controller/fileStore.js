@@ -359,8 +359,6 @@ module.exports = {
           raw: true,
         });
 
-        updatedFileResult.file_url = encodeURI(updatedFileResult.file_url);
-
         return res.send({ success: 200, updatedFileResult });
       }
       return res.send({ success: 200 });
