@@ -47,6 +47,7 @@ const deleteFile = async (title, req) => {
 };
 
 const checkFile = (req, params, beforeTitle, newTitle) => {
+  console.log(beforeTitle);
   // 파일 안일 경우
   if (req.query.path) {
     (params.CopySource = encodeURI(
@@ -328,7 +329,7 @@ module.exports = {
         params = checkFile(
           req,
           params,
-          encodeURI(findFilesResult.title),
+          findFilesResult.title,
           titleAndExtend.join('.')
         );
 
