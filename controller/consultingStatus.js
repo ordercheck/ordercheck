@@ -427,7 +427,7 @@ module.exports = {
 
     try {
       // 대표 상담폼과 병합
-      body.target_idx.forEach(async (data) => {
+      await body.target_idx.forEach(async (data) => {
         try {
           await db.consulting.update(
             {
@@ -438,6 +438,14 @@ module.exports = {
             }
           );
           await db.timeLine.update(
+            {
+              customer_idx: body.main_idx,
+            },
+            {
+              where: { customer_idx: data },
+            }
+          );
+          await db.calculate.update(
             {
               customer_idx: body.main_idx,
             },
