@@ -24,6 +24,7 @@ const {
   patchConsultingStatus,
   addCalculate,
   shareCalculate,
+  delCalculate,
   downCalculate,
   doIntegratedUser,
   patchCalculate,
@@ -83,6 +84,12 @@ router.post(
   loginCheck,
   multer_calculate_upload().single('img'),
   addCalculate
+);
+// 견적서 삭제
+router.post(
+  '/calculate/:customer_idx/:calculate_idx',
+  loginCheck,
+  delCalculate
 );
 
 // 견적서 수정

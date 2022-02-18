@@ -319,6 +319,29 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/consulting/calculate/{customer_idx}/{calculate_idx}:
+ *   delete:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *       -  consult calculate
+ *     summary: 견적서 삭제
+ *     parameters:
+ *         - in: path
+ *           name: customer_idx
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *         - in: path
+ *           name: calculate_idx
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  * /api/consulting/calculate/{calculate_idx}:
  *   patch:
  *     security:

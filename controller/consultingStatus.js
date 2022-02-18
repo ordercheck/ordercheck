@@ -334,6 +334,30 @@ module.exports = {
       next(err);
     }
   },
+  delCalculate: async (req, res, next) => {
+    const { customer_idx, calculate_idx } = req.params;
+    // 견적서 내용 찾기
+    const findCalculateResult = await db.calculate.findByPk(calculate_idx, {
+      attributes: ['file_name'],
+    });
+    // s3에서 삭제
+    delFile(
+      findCalculateResult.file_name,
+      'ordercheck/calculate',
+      async (err, data) => {
+        if (err) {
+          next(err);
+        }
+        if (data) {
+          await db.calculate.destroy({
+            where: { customer_idx, idx: calculate_idx },
+          });
+
+          return res.send({ success: 200 });
+        }
+      }
+    );
+  },
   patchCalculate: async (req, res, next) => {
     const { body, file } = req;
 
@@ -382,8 +406,6 @@ module.exports = {
         next(err);
       }
     }
-    // 파일이 없을때
-    const findResult = await addCalculateLogic();
 
     // file_name이 없을 때 (파일 삭제 되었을 때)
     if (!body.file_name) {
@@ -411,8 +433,9 @@ module.exports = {
         }
       );
     }
-    res.send({ success: 200, findResult });
-    return;
+    // 파일이 없을때
+    const findResult = await addCalculateLogic();
+    return res.send({ success: 200, findResult });
   },
 
   shareCalculate: async (req, res, next) => {
