@@ -352,7 +352,7 @@ module.exports = {
         }
 
         console.log(Bucket);
-        console.log(title);
+        console.log(findFilesResult.title);
         await copyAndDelete(params, Bucket, title);
 
         const updatedFileResult = await db.files.findOne({
