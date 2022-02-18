@@ -344,21 +344,22 @@ module.exports = {
       return findCalculate;
     };
 
+    // 파일이 있을때
+    if (file) {
+      try {
+        const file_name = getFileName(file.key);
+        body.file_name = file_name;
+        body.file_url = req.file.location;
+        const findResult = await addCalculateLogic();
+        return res.send({ success: 200, findResult });
+      } catch (err) {
+        next(err);
+      }
+    }
     // 파일이 없을때
-    if (!file) {
-      const findResult = await addCalculateLogic();
-      res.send({ success: 200, findResult });
-      return;
-    }
-    try {
-      const file_name = getFileName(file.key);
-      body.file_name = file_name;
-      body.file_url = req.file.location;
-      const findResult = await addCalculateLogic();
-      return res.send({ success: 200, findResult });
-    } catch (err) {
-      next(err);
-    }
+    const findResult = await addCalculateLogic();
+    res.send({ success: 200, findResult });
+    return;
   },
 
   shareCalculate: async (req, res, next) => {
