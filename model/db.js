@@ -194,6 +194,10 @@ db.user.hasOne(db.userCompany, {
   foreignKey: 'user_idx',
 });
 // config와 user
+db.user.hasMany(db.config, {
+  foreignKey: 'user_idx',
+});
+
 db.config.belongsTo(db.user, {
   foreignKey: 'user_idx',
 });

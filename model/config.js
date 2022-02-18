@@ -158,9 +158,11 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
-    user_idx: {
-      unique: true,
-      type: DataTypes.INTEGER,
+
+    calculateReload: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
     },
   });
 };
