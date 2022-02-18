@@ -344,9 +344,9 @@ module.exports = {
             `ordercheck/fileStore/${req.params.customerFile_idx}`
           );
         }
-        console.log('카피');
-        await copyAndDelete(params, Bucket, findFilesResult.title);
-        console.log('카피 완료');
+
+        const copyResult = copyAndDelete(params, Bucket, findFilesResult.title);
+        console.log(copyResult);
         await db.files.update(
           {
             title: titleAndExtend.join('.'),
@@ -354,7 +354,7 @@ module.exports = {
           },
           { where: { uuid } }
         );
-        console.log('업데이트 완료');
+
         const updatedFileResult = await db.files.findOne({
           where: { uuid },
           raw: true,
