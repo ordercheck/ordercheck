@@ -221,9 +221,7 @@ module.exports = {
       });
       body.customer_phoneNumber = createCustomerResult.customer_phoneNumber;
       body.customer_name = createCustomerResult.customer_name;
-      const { success, err } = await createFileStore(body, {
-        transaction: t,
-      });
+      const { success, err } = await createFileStore(body, t);
       if (!success) {
         next(err);
       }

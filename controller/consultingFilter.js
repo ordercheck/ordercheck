@@ -276,15 +276,16 @@ module.exports = {
         Date
       );
 
-      const searchedUsers = addUserId(
+      const customerData = addUserId(
         searchedCountAndFindAll.rows,
         addminus,
         customerNumber
       );
       return res.send({
         success: 200,
-        searchedUsers,
+        customerData,
         page: intPage,
+        totalUser: searchedCountAndFindAll.count,
         totalPage: Math.ceil(searchedCountAndFindAll.count / intlimit),
       });
     } catch (err) {
