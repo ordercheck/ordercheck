@@ -180,6 +180,9 @@ module.exports = {
         { idx: customer_idx, company_idx: req.company_idx },
         next
       );
+      if (!consultResult) {
+        return;
+      }
 
       return res.send({ success: 200, consultResult });
     } catch (err) {
