@@ -313,7 +313,7 @@ module.exports = {
       body.file_name = file_name;
       body.file_url = req.file.location;
       const findResult = await addCalculateLogic();
-      res.send({ success: 200, findResult });
+      return res.send({ success: 200, findResult });
 
       const findUser = await db.customer.findByPk(body.customer_idx, {
         include: [
@@ -323,16 +323,16 @@ module.exports = {
           },
         ],
       });
+      const splitUrl = findResult.file_url.split('//');
 
       await customerkakaoPushNewCal(
         findUser.customer_phoneNumber,
         findUser.company.company_name,
         findUser.customer_name,
-        findCalculate,
+        findResult.calculateNumber,
         '견적서 확인',
-        calculateCreateResult.file_url
+        splitUrl[1]
       );
-      return;
     } catch (err) {
       next(err);
     }
@@ -368,6 +368,34 @@ module.exports = {
     } catch (err) {
       next(err);
     }
+  },
+
+  shareCalculate: async (req, res, next) => {
+    const { customer_idx, calculate_idx } = req.params;
+    const customerFindResult = await db.customer.findOne({
+      where: { idx: customer_idx },
+      attributes: ['customer_phoneNumber'],
+    });
+
+    const companyFindResult = await db.company.findByPk(req.company_idx, {
+      attributes: ['company_name'],
+    });
+
+    const calculateFindResult = await db.calculate.findOne({
+      where: { idx: calculate_idx },
+      attributes: ['file_url', 'calculateNumber'],
+    });
+
+    const splitUrl = calculateFindResult.file_url.split('//');
+
+    await customerkakaoPushNewCal(
+      customerFindResult.customer_phoneNumber,
+      companyFindResult.company_name,
+      customerFindResult.customer_name,
+      calculateFindResult.calculateNumber,
+      '견적서 확인',
+      splitUrl[1]
+    );
   },
   setMainCalculate: async (req, res, next) => {
     const updateCalculateStatus = async (trueOrfalse, whereData) => {

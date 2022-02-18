@@ -15,7 +15,6 @@ module.exports = function (sequelize, DataTypes) {
     upload_people: {
       allowNull: true,
       defaultValue: '',
-      unique: true,
       type: DataTypes.STRING(100),
     },
     title: {

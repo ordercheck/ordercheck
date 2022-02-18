@@ -475,7 +475,6 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- *
  * /api/consulting/customer/search/{limit}/{page}:
  *   get:
  *      security:
@@ -580,6 +579,27 @@
  *               contract_possibility: [0,1]
  *               userId: [null,2,3,5,6]
  *               confirm: false
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/consulting/calculate/share/{customer_idx}/{calculate_idx}:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       -  consult get info
+ *     summary: 견적서 공유하기
+ *     parameters:
+ *         - in: path
+ *           name: customer_idx
+ *           schema:
+ *             type: integer
+ *         - in: path
+ *           name: calculate_idx
+ *           schema:
+ *             type: integer    
  *     responses:
  *       '200':
  *         description: 성공
