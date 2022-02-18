@@ -11,7 +11,6 @@ const { customerAttributes } = require('../lib/attributes');
 // 0이 오름차순,1이 내림차순 (ASC는 오름차순)
 module.exports = {
   Filter: async (req, res, next) => {
-    console.log('hi');
     let {
       body: { date, status, contract_possibility, userId, confirm },
       query: { No, Name, Address, Date },
