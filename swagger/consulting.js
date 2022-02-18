@@ -584,22 +584,29 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/consulting/calculate/share/{customer_idx}/{calculate_idx}:
- *   get:
+ * /api/consulting/calculate/share:
+ *   post:
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       -  consult get info
  *     summary: 견적서 공유하기
- *     parameters:
- *         - in: path
- *           name: customer_idx
- *           schema:
- *             type: integer
- *         - in: path
- *           name: calculate_idx
- *           schema:
- *             type: integer    
+ *     requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              customer_idx:
+ *                type: integer
+ *              calculate_idx:
+ *                type: integer
+ *              calculateReload:
+ *                type: boolean
+ *            example:
+ *               customer_idx: 4
+ *               calculate_idx: 3 
+ *               calculateReload: true
  *     responses:
  *       '200':
  *         description: 성공

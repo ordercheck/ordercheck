@@ -45,11 +45,7 @@ router.patch('/integrated/user', loginCheck, doIntegratedUser);
 // 해당 상담 견적서 보여주기
 router.get('/calculate/:customer_idx', loginCheck, showCalculate);
 
-router.get(
-  '/calculate/share/:customer_idx/:calculate_idx',
-  loginCheck,
-  shareCalculate
-);
+router.post('/calculate/share', loginCheck, shareCalculate);
 
 // 회사별 팀원 리스트 보기
 router.get('/member', loginCheck, showCompanyMembers);
