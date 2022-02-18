@@ -3,7 +3,7 @@ const {
   checkPage,
   addUserId,
 } = require('../lib/apiFunctions');
-const { changeDate } = require('../lib/apiFunctions');
+const { changeDate, makePureText } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { Op } = require('sequelize');
 const { sortElements, giveNumbering } = require('../lib/checkData');
@@ -223,10 +223,7 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      const pureText = search.replace(
-        /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
-        ''
-      );
+      const pureText = makePureText(search);
 
       const { start, intlimit, intPage } = await checkPage(
         limit,

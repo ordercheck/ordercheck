@@ -1,5 +1,5 @@
 const db = require('../model/db');
-const { getFileName } = require('../lib/apiFunctions');
+const { getFileName, makePureText } = require('../lib/apiFunctions');
 const { random5 } = require('../lib/functions');
 const { Op } = require('sequelize');
 const { copyAndDelete, s3_get, s3_delete_objects } = require('../lib/aws/aws');
@@ -124,10 +124,7 @@ module.exports = {
   },
   addFolder: async (req, res, next) => {
     // 그냥 text로 변환
-    const pureText = req.body.title.replace(
-      /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
-      ''
-    );
+    const pureText = makePureText(req.body.title);
 
     const t = await db.sequelize.transaction();
     try {
@@ -173,10 +170,7 @@ module.exports = {
   addFile: async (req, res, next) => {
     try {
       // 그냥 text로 변환
-      const pureText = req.body.title.replace(
-        /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
-        ''
-      );
+      const pureText = makePureText(req.body.title);
       req.body.searchingTitle = pureText;
       // 회사 인덱스 저장
       req.body.company_idx = req.company_idx;
