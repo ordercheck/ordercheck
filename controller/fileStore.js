@@ -389,14 +389,12 @@ module.exports = {
     const findFilesAndFolders = async (
       fileOrFolder,
       pureText,
-      attributesData
+      attributesData,
+      whereData
     ) => {
       const findFoldersResult = await fileOrFolder.findAll({
-        where: {
-          searchingTitle: {
-            [Op.like]: `%${pureText}%`,
-          },
-        },
+        where: whereData,
+
         include: [
           {
             model: db.customerFile,
@@ -431,13 +429,24 @@ module.exports = {
     let findFoldersResult = await findFilesAndFolders(
       db.folders,
       pureText,
-      searchFileStoreFoldersAttributes
+      searchFileStoreFoldersAttributes,
+      {
+        searchingTitle: {
+          [Op.like]: `%${pureText}%`,
+        },
+      }
     );
 
     let findFilesResult = await findFilesAndFolders(
       db.files,
       pureText,
-      searchFileStoreFilesAttributes
+      searchFileStoreFilesAttributes,
+      {
+        searchingTitle: {
+          [Op.like]: `%${pureText}%`,
+          isFolder: false,
+        },
+      }
     );
     // path재설정
     if (findFoldersResult.length !== 0) {
