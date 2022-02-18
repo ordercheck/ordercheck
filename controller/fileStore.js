@@ -48,7 +48,9 @@ const getFolderPath = async (pathData, customerFile_idx) => {
   findTitleResult.forEach((data) => {
     path.push(data.title);
   });
-  pathData.path = path.join(' | ');
+
+  pathData = path.join(' | ');
+
   return pathData;
 };
 module.exports = {
@@ -321,7 +323,37 @@ module.exports = {
           },
         },
       },
-      attributes: ['customer_name', 'customer_phoneNumber'],
+      attributes: [
+        'customer_name',
+        'customer_phoneNumber',
+        [
+          db.sequelize.fn(
+            'date_format',
+            db.sequelize.col('createdAt'),
+            '%Y.%m.%d'
+          ),
+          'createdAt',
+        ],
+      ],
+    });
+
+    const findFoldersResult = await db.folders.findAll({
+      where: {
+        title: {
+          [Op.like]: `%${pureText}%`,
+        },
+        attributes: [
+          'path',
+          [
+            db.sequelize.fn(
+              'date_format',
+              db.sequelize.col('createdAt'),
+              '%Y.%m.%d'
+            ),
+            'createdAt',
+          ],
+        ],
+      },
     });
 
     const findFilesResult = await db.files.findAll({
@@ -329,11 +361,21 @@ module.exports = {
         title: {
           [Op.like]: `%${pureText}%`,
         },
+        attributes: [
+          'path',
+          [
+            db.sequelize.fn(
+              'date_format',
+              db.sequelize.col('createdAt'),
+              '%Y.%m.%d'
+            ),
+            'createdAt',
+          ],
+        ],
       },
     });
 
-    console.log(findFilesResult);
-    res.send({ findCustomerResult, findFilesResult });
+    res.send({ findCustomerResult, findFoldersResult, findFilesResult });
   },
   showDetailFileFolder: async (req, res, next) => {
     const {
