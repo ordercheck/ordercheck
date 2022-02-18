@@ -354,7 +354,6 @@ module.exports = {
   shareCalculate: async (req, res, next) => {
     const {
       params: { customer_idx, calculate_idx },
-
       body: { calculateReload },
     } = req;
     const customerFindResult = await db.customer.findByPk(customer_idx, {
@@ -368,6 +367,7 @@ module.exports = {
     const calculateFindResult = await db.calculate.findByPk(calculate_idx, {
       attributes: ['file_url', 'calculateNumber'],
     });
+    // 동의 여부 확인 후 업데이트
 
     const splitUrl = calculateFindResult.file_url.split('//');
 
@@ -379,6 +379,7 @@ module.exports = {
       '견적서 확인',
       splitUrl[1]
     );
+
     return res.send({ success: 200 });
   },
   setMainCalculate: async (req, res, next) => {
