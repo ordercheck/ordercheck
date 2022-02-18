@@ -345,7 +345,11 @@ module.exports = {
           );
         }
 
-        const copyResult = copyAndDelete(params, Bucket, findFilesResult.title);
+        const copyResult = await copyAndDelete(
+          params,
+          Bucket,
+          findFilesResult.title
+        );
         console.log(copyResult);
         await db.files.update(
           {
