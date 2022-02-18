@@ -352,9 +352,7 @@ module.exports = {
           );
         }
 
-        console.log(findFilesResult.title);
-
-        await copyAndDelete(params, Bucket, title);
+        await copyAndDelete(params, Bucket, findFilesResult.title);
 
         const updatedFileResult = await db.files.findOne({
           where: { uuid },
