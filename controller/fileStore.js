@@ -171,6 +171,7 @@ module.exports = {
     try {
       // 그냥 text로 변환
       const pureText = makePureText(req.body.title);
+      console.log(pureText);
       req.body.searchingTitle = pureText;
       // 회사 인덱스 저장
       req.body.company_idx = req.company_idx;
