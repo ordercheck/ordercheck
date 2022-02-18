@@ -325,12 +325,12 @@ module.exports = {
       await db.calculate.update(body, {
         where: { idx: req.params.calculate_idx },
       });
-      const findCalculate = await db.calculate.findOne({
-        where: {
-          idx: req.params.calculate_idx,
+      const findCalculate = await db.calculate.findByPk(
+        req.params.calculate_idx,
+        {
           attributes: patchCalculateAttributes,
-        },
-      });
+        }
+      );
       return findCalculate;
     };
 
@@ -353,8 +353,7 @@ module.exports = {
 
   shareCalculate: async (req, res, next) => {
     const { customer_idx, calculate_idx } = req.params;
-    const customerFindResult = await db.customer.findOne({
-      where: { idx: customer_idx },
+    const customerFindResult = await db.customer.findByPk(customer_idx, {
       attributes: ['customer_phoneNumber'],
     });
 
@@ -362,8 +361,7 @@ module.exports = {
       attributes: ['company_name'],
     });
 
-    const calculateFindResult = await db.calculate.findOne({
-      where: { idx: calculate_idx },
+    const calculateFindResult = await db.calculate.findByPk(calculate_idx, {
       attributes: ['file_url', 'calculateNumber'],
     });
 

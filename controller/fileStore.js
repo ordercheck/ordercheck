@@ -328,7 +328,7 @@ module.exports = {
           findFilesResult.title,
           titleAndExtend.join('.')
         );
-
+        console.log(params);
         s3_copy(params);
 
         await db.files.update(
