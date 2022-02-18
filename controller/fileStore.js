@@ -410,7 +410,9 @@ module.exports = {
     if (!path) {
       return res.send({ succes: 200, getFileResult });
     }
-    const getDetailResult = await getFolderPath(path, customerFile_idx);
-    return res.send({ succes: 200, getDetailResult });
+    const getTitleRootResult = await getFolderPath(path, customerFile_idx);
+    getFileResult.path = getTitleRootResult;
+
+    return res.send({ succes: 200, getFileResult });
   },
 };
