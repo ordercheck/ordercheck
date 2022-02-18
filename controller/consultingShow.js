@@ -159,16 +159,6 @@ module.exports = {
       if (!consultResult) {
         return;
       }
-      const findSameUser = await db.customer.findAll({
-        where: {
-          customer_phoneNumber: consultResult.customer_phoneNumber,
-        },
-        attributes: findSameUserAttributes,
-        raw: true,
-        nest: true,
-      });
-
-      consultResult.sameUser = findSameUser;
 
       return res.send({ success: 200, consultResult });
     } catch (err) {

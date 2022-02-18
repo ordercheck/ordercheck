@@ -353,6 +353,7 @@ module.exports = {
       attributes: [
         'title',
         'path',
+        'customerFile_idx',
         [
           db.sequelize.fn(
             'date_format',
@@ -381,6 +382,7 @@ module.exports = {
       attributes: [
         'title',
         'path',
+        'customerFile_idx',
         [
           db.sequelize.fn(
             'date_format',
@@ -394,14 +396,22 @@ module.exports = {
       nest: true,
     });
 
-    findFilesResult.forEach((data) => {
+    const newPathResult = findFilesResult.map(async (data) => {
       if (!data.path) {
-        console.log(data);
-
-        findFilesResult.path = data.customerFile.customer_name;
+        data.path = data.customerFile.customer_name;
+      } else {
+        const newFormUrl = await getFolderPath(
+          data.path,
+          data.customerFile_idx
+        );
+        console.log(newFormUrl);
       }
+
+      // delete data.customerFile;
+      return data;
     });
-    res.send({ findCustomerResult, findFoldersResult, findFilesResult });
+
+    res.send({ findCustomerResult, findFoldersResult, newPathResult });
   },
   showDetailFileFolder: async (req, res, next) => {
     const {
