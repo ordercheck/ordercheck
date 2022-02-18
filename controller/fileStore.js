@@ -323,6 +323,7 @@ module.exports = {
         urlArr[urlArr.length - 1] = titleAndExtend.join('.');
         const file_url = urlArr.join('/');
 
+        console.log(findFilesResult.title);
         //  params만들기
         params = checkFile(
           req,
