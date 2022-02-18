@@ -11,7 +11,6 @@ const {
   showIntegratedUserAttributes,
   customerAttributes,
   showCalculateAttributes,
-  findSameUserAttributes,
 } = require('../lib/attributes');
 
 module.exports = {

@@ -9,6 +9,29 @@ const {
   showFilesAttributes,
 } = require('../lib/attributes');
 const { customerFile } = require('../model/db');
+
+const searchUserFoldersFilesPath = async (findFilesResult) => {
+  const newPathResult = await Promise.all(
+    findFilesResult.map(async (data) => {
+      if (!data.path) {
+        data.path = data.customerFile.customer_name;
+      } else {
+        const newFormUrl = await getFolderPath(
+          data.path,
+          data.customerFile_idx,
+          ' > '
+        );
+        data.path = `${data.customerFile.customer_name} > ${newFormUrl}`;
+      }
+
+      delete data.customerFile;
+      delete data.customerFile_idx;
+      return data;
+    })
+  );
+  return newPathResult;
+};
+
 const deleteFile = (title, req) => {
   if (req.query.path) {
     delFile(
@@ -35,7 +58,7 @@ const checkFile = (req, params, beforeTitle, newTitle) => {
   }
   return params;
 };
-const getFolderPath = async (pathData, customerFile_idx) => {
+const getFolderPath = async (pathData, customerFile_idx, joinData) => {
   const pathArr = pathData.split('/');
 
   const findTitleResult = await db.folders.findAll({
@@ -50,7 +73,7 @@ const getFolderPath = async (pathData, customerFile_idx) => {
     path.push(data.title);
   });
 
-  pathData = path.join(' | ');
+  pathData = path.join(joinData);
 
   return pathData;
 };
@@ -379,6 +402,7 @@ module.exports = {
           attributes: ['customer_name'],
         },
       ],
+
       attributes: [
         'title',
         'path',
@@ -395,23 +419,11 @@ module.exports = {
       raw: true,
       nest: true,
     });
-
-    const newPathResult = findFilesResult.map(async (data) => {
-      if (!data.path) {
-        data.path = data.customerFile.customer_name;
-      } else {
-        const newFormUrl = await getFolderPath(
-          data.path,
-          data.customerFile_idx
-        );
-        console.log(newFormUrl);
-      }
-
-      // delete data.customerFile;
-      return data;
-    });
-
-    res.send({ findCustomerResult, findFoldersResult, newPathResult });
+    const searchFoldersResult = await searchUserFoldersFilesPath(
+      findFoldersResult
+    );
+    const searchFilesResult = await searchUserFoldersFilesPath(findFilesResult);
+    res.send({ findCustomerResult, searchFoldersResult, searchFilesResult });
   },
   showDetailFileFolder: async (req, res, next) => {
     const {
@@ -433,7 +445,11 @@ module.exports = {
         addFileSize += Number(data.file_size);
       });
 
-      const getDetailResult = await getFolderPath(path, customerFile_idx);
+      const getDetailResult = await getFolderPath(
+        path,
+        customerFile_idx,
+        ' | '
+      );
       getDetailResult.file_size = addFileSize;
       return res.send({ succes: 200, getDetailResult });
     }
@@ -446,7 +462,11 @@ module.exports = {
     if (!path) {
       return res.send({ succes: 200, getFileResult });
     }
-    const getTitleRootResult = await getFolderPath(path, customerFile_idx);
+    const getTitleRootResult = await getFolderPath(
+      path,
+      customerFile_idx,
+      ' | '
+    );
     getFileResult.path = getTitleRootResult;
 
     return res.send({ succes: 200, getFileResult });
