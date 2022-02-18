@@ -417,6 +417,25 @@ module.exports = {
         raw: true,
         nest: true,
       });
+
+      const findFolderResult = await db.folders.findOne({
+        where: { uuid, customerFile_idx },
+        attributes: [
+          'title',
+          [
+            db.sequelize.fn(
+              'date_format',
+              db.sequelize.col('createdAt'),
+              '%Y.%m.%d'
+            ),
+            'createdAt',
+          ],
+        ],
+
+        raw: true,
+        nest: true,
+      });
+
       let addFileSize = 0;
       findTitleResult.forEach((data) => {
         addFileSize += Number(data.file_size);
@@ -427,8 +446,11 @@ module.exports = {
         customerFile_idx,
         ' | '
       );
-      getDetailResult.file_size = addFileSize;
-      return res.send({ succes: 200, getDetailResult });
+
+      findFolderResult.path = getDetailResult;
+      findFolderResult.folder_size = addFileSize;
+
+      return res.send({ succes: 200, findFolderResult });
     }
     // 파일일때
     const getFileResult = await db.files.findOne({
