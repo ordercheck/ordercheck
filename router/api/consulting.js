@@ -72,7 +72,7 @@ router.get(
 // router.get('/sort', loginCheck, sortRouter);
 
 // filter결과 보여주기
-router.get('/filter', loginCheck, showFilterResult);
+// router.get('/filter', loginCheck, showFilterResult);
 
 // *****************************changeStatus*********************************
 // 컨설팅 상태 수정 및 메모
