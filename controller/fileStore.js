@@ -35,7 +35,7 @@ const searchUserFoldersFilesPath = async (findFilesResult) => {
   return newPathResult;
 };
 
-const deleteFile = (title, req) => {
+const deleteFile = async (title, req) => {
   if (req.query.path) {
     delFile(
       title,
@@ -330,8 +330,8 @@ module.exports = {
           encodeURI(findFilesResult.title),
           titleAndExtend.join('.')
         );
-        console.log(params);
-        s3_copy(params);
+
+        await s3_copy(params);
 
         await db.files.update(
           {
@@ -341,7 +341,7 @@ module.exports = {
           { where: { uuid } }
         );
         // 파일삭제
-        deleteFile(findFilesResult.title, req);
+        await deleteFile(findFilesResult.title, req);
 
         const updatedFileResult = await db.files.findOne({
           where: { uuid },
