@@ -12,6 +12,12 @@ module.exports = function (sequelize, DataTypes) {
       unique: true,
       type: DataTypes.STRING(100),
     },
+    upload_people: {
+      allowNull: true,
+      defaultValue: '',
+      unique: true,
+      type: DataTypes.STRING(100),
+    },
     title: {
       allowNull: true,
       defaultValue: '',

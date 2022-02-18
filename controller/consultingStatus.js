@@ -314,7 +314,7 @@ module.exports = {
       body.file_url = req.file.location;
       const findResult = await addCalculateLogic();
       res.send({ success: 200, findResult });
-      return;
+
       const findUser = await db.customer.findByPk(body.customer_idx, {
         include: [
           {
@@ -324,13 +324,14 @@ module.exports = {
         ],
       });
 
-      // await customerkakaoPushNewCal(
-      //   findUser.customer_phoneNumber,
-      //   findUser.company.company_name,
-      //   findUser.customer_name,
-      //   findCalculate,
-      //   '견적서 확인'
-      // );
+      await customerkakaoPushNewCal(
+        findUser.customer_phoneNumber,
+        findUser.company.company_name,
+        findUser.customer_name,
+        findCalculate,
+        '견적서 확인',
+        calculateCreateResult.file_url
+      );
       return;
     } catch (err) {
       next(err);

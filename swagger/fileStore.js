@@ -107,7 +107,7 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/file/store/{customerFile_idx}:
+ * /api/file/store/{customerFile_idx}/{sort_field}/{sort}:
  *   post:
  *     security:
  *       - bearerAuth: []
@@ -129,6 +129,16 @@
  *           name: customerFile_idx
  *           schema:
  *             type: integer
+ *         - in: path
+ *           name: sort_field
+ *           schema:
+ *             type: integer
+ *           example: 0
+ *         - in: path
+ *           name: sort
+ *           schema:
+ *             type: integer
+ *           example: 0
  *     responses:
  *       '200':
  *         description: 성공

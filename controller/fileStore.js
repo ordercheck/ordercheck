@@ -7,13 +7,12 @@ const { delFile } = require('../lib/aws/fileupload').ufile;
 const {
   showDetailFileFolderAttributes,
   showFilesAttributes,
-
   searchCustomersAttributes,
   searchFileStoreFoldersAttributes,
   searchFileStoreFilesAttributes,
 } = require('../lib/attributes');
 const { customerFile } = require('../model/db');
-
+const { fileStoreSort } = require('../lib/checkData');
 const searchUserFoldersFilesPath = async (findFilesResult) => {
   const newPathResult = await Promise.all(
     findFilesResult.map(async (data) => {
@@ -101,7 +100,13 @@ module.exports = {
   },
 
   showRootFoldersAndFiles: async (req, res, next) => {
-    const { customerFile_idx, sort_field, sort } = req.params;
+    let { customerFile_idx, sort_field, sort } = req.params;
+
+    const checkResult = fileStoreSort(sort_field, sort);
+
+    sort_field = checkResult.sort_field;
+    sort = checkResult.sort;
+
     const folders = await db.folders.findAll({
       where: { customerFile_idx, root: true },
     });
@@ -111,6 +116,7 @@ module.exports = {
         customerFile_idx,
         folder_uuid: null,
       },
+      order: [[sort_field, sort]],
     });
 
     return res.send({ success: 200, folders, files });
@@ -118,12 +124,15 @@ module.exports = {
   addFolder: async (req, res, next) => {
     const t = await db.sequelize.transaction();
     try {
+      const findUserResult = await db.user.findByPk(req.user_idx, {
+        attributes: ['user_name'],
+      });
+      req.body.upload_people = findUserResult.user_name;
       req.body.customerFile_idx = req.params.customerFile_idx;
       const newUuid = random5();
       if (req.body.root) {
         req.body.uuid = newUuid;
         req.body.path = newUuid;
-
         const createFolderResult = await db.folders.create(req.body);
         return res.send({ succes: true, createFolderResult });
       }
@@ -154,10 +163,11 @@ module.exports = {
   },
   addFile: async (req, res, next) => {
     try {
+      // 회사 인덱스 저장
+      req.body.company_idx = req.company_idx;
       if (req.body.uuid) {
         req.body.folder_uuid = req.body.uuid;
       }
-
       req.body.customerFile_idx = req.params.customerFile_idx;
       const findUserResult = await db.user.findByPk(req.user_idx, {
         attributes: ['user_name'],
@@ -180,6 +190,13 @@ module.exports = {
   },
   showFiles: async (req, res, next) => {
     try {
+      let { customerFile_idx, sort_field, sort } = req.params;
+
+      const checkResult = fileStoreSort(sort_field, sort);
+
+      sort_field = checkResult.sort_field;
+      sort = checkResult.sort;
+
       let findFilesResult = await db.files.findAll({
         where: { folder_uuid: req.body.uuid },
         attributes: showFilesAttributes,
@@ -422,6 +439,7 @@ module.exports = {
         where: { uuid, customerFile_idx },
         attributes: [
           'title',
+          'upload_people',
           [
             db.sequelize.fn(
               'date_format',
