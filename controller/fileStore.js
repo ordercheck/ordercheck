@@ -360,12 +360,14 @@ module.exports = {
         );
         if (copyResult) {
           const newTitle = titleAndExtend.join('.');
+
           const pureText = makePureText(newTitle);
+
           await db.files.update(
             {
               title: newTitle,
               searchingTitle: pureText,
-              searchingTitle: file_url,
+              file_url,
             },
             { where: { uuid } }
           );
