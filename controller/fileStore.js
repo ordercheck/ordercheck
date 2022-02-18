@@ -28,7 +28,7 @@ const searchUserFoldersFilesPath = async (findFilesResult) => {
       }
 
       delete data.customerFile;
-      delete data.customerFile_idx;
+
       return data;
     })
   );
