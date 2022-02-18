@@ -5,13 +5,19 @@ const {
   getDetailCustomerInfo,
   check,
 } = require('../lib/apiFunctions');
+var moment = require('moment');
+require('moment-timezone');
+moment.tz.setDefault('Asia/Seoul');
+
 const {
   patchCalculateAttributes,
   findSameUserAttributes,
+  showCalculateAttributes,
 } = require('../lib/attributes');
 const db = require('../model/db');
 const { checkDetailCustomerUpdateField } = require('../lib/checkData');
 const { down_one_file } = require('../lib/aws/aws');
+const { delFile } = require('../lib/aws/fileupload').ufile;
 const {
   TeamkakaoPushNewForm,
   customerkakaoPushNewForm,
@@ -348,16 +354,63 @@ module.exports = {
     if (file) {
       try {
         const file_name = getFileName(file.key);
-        body.file_name = file_name;
-        body.file_url = req.file.location;
-        const findResult = await addCalculateLogic();
-        return res.send({ success: 200, findResult });
+
+        const findCalculateResult = await db.calculate.findByPk(
+          req.params.calculate_idx,
+          {
+            attributes: ['file_name'],
+          }
+        );
+        // s3에서 삭제
+        delFile(
+          findCalculateResult.file_name,
+          'ordercheck/calculate',
+          async (err, data) => {
+            if (err) {
+              next(err);
+            }
+            if (data) {
+              body.file_name = file_name;
+              body.file_url = req.file.location;
+              const findResult = await addCalculateLogic();
+
+              return res.send({ success: 200, findResult });
+            }
+          }
+        );
       } catch (err) {
         next(err);
       }
     }
     // 파일이 없을때
     const findResult = await addCalculateLogic();
+
+    // file_name이 없을 때 (파일 삭제 되었을 때)
+    if (!body.file_name) {
+      const findCalculateResult = await db.calculate.findByPk(
+        req.params.calculate_idx,
+        {
+          attributes: ['file_name'],
+        }
+      );
+      const findCalculate = await db.calculate.findByPk(
+        req.params.calculate_idx,
+        {
+          attributes: patchCalculateAttributes,
+        }
+      );
+      // s3에서 삭제
+      delFile(
+        findCalculateResult.file_name,
+        'ordercheck/calculate',
+        (err, data) => {
+          if (err) {
+            next(err);
+          }
+          return res.send({ success: 200, findCalculate });
+        }
+      );
+    }
     res.send({ success: 200, findResult });
     return;
   },
@@ -396,7 +449,15 @@ module.exports = {
       splitUrl[1]
     );
 
-    return res.send({ success: 200 });
+    const sharedDate = moment().format('YYYY.MM.DD');
+    await db.calculate.update(
+      { sharedDate },
+      { where: { customer_idx, calculate_idx } }
+    );
+    const updateCalculateResult = await db.calculate.findByPk(calculate_idx, {
+      attributes: showCalculateAttributes,
+    });
+    return res.send({ success: 200, updateCalculateResult });
   },
   setMainCalculate: async (req, res, next) => {
     const updateCalculateStatus = async (trueOrfalse, whereData) => {
