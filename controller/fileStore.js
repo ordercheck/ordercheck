@@ -8,6 +8,7 @@ const {
   showDetailFileFolderAttributes,
   showFilesAttributes,
 } = require('../lib/attributes');
+const { customerFile } = require('../model/db');
 const deleteFile = (title, req) => {
   if (req.query.path) {
     delFile(
@@ -342,18 +343,27 @@ module.exports = {
         title: {
           [Op.like]: `%${pureText}%`,
         },
-        attributes: [
-          'path',
-          [
-            db.sequelize.fn(
-              'date_format',
-              db.sequelize.col('createdAt'),
-              '%Y.%m.%d'
-            ),
-            'createdAt',
-          ],
-        ],
       },
+      include: [
+        {
+          model: db.customerFile,
+          attributes: ['customer_name'],
+        },
+      ],
+      attributes: [
+        'title',
+        'path',
+        [
+          db.sequelize.fn(
+            'date_format',
+            db.sequelize.col('folders.createdAt'),
+            '%Y.%m.%d'
+          ),
+          'createdAt',
+        ],
+      ],
+      raw: true,
+      nest: true,
     });
 
     const findFilesResult = await db.files.findAll({
@@ -361,20 +371,36 @@ module.exports = {
         title: {
           [Op.like]: `%${pureText}%`,
         },
-        attributes: [
-          'path',
-          [
-            db.sequelize.fn(
-              'date_format',
-              db.sequelize.col('createdAt'),
-              '%Y.%m.%d'
-            ),
-            'createdAt',
-          ],
-        ],
       },
+      include: [
+        {
+          model: db.customerFile,
+          attributes: ['customer_name'],
+        },
+      ],
+      attributes: [
+        'title',
+        'path',
+        [
+          db.sequelize.fn(
+            'date_format',
+            db.sequelize.col('files.createdAt'),
+            '%Y.%m.%d'
+          ),
+          'createdAt',
+        ],
+      ],
+      raw: true,
+      nest: true,
     });
 
+    findFilesResult.forEach((data) => {
+      if (!data.path) {
+        console.log(data);
+
+        findFilesResult.path = data.customerFile.customer_name;
+      }
+    });
     res.send({ findCustomerResult, findFoldersResult, findFilesResult });
   },
   showDetailFileFolder: async (req, res, next) => {
