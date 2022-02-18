@@ -123,12 +123,18 @@ module.exports = {
     return res.send({ success: 200, folders, files });
   },
   addFolder: async (req, res, next) => {
+    // 그냥 text로 변환
+    const pureText = req.body.title.replace(
+      /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
+      ''
+    );
+
     const t = await db.sequelize.transaction();
     try {
       const findUserResult = await db.user.findByPk(req.user_idx, {
         attributes: ['user_name'],
       });
-
+      req.body.searchingTitle = pureText;
       req.body.company_idx = req.company_idx;
       req.body.upload_people = findUserResult.user_name;
       req.body.customerFile_idx = req.params.customerFile_idx;
@@ -166,6 +172,12 @@ module.exports = {
   },
   addFile: async (req, res, next) => {
     try {
+      // 그냥 text로 변환
+      const pureText = req.body.title.replace(
+        /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
+        ''
+      );
+      req.body.searchingTitle = pureText;
       // 회사 인덱스 저장
       req.body.company_idx = req.company_idx;
       if (req.body.uuid) {
@@ -381,7 +393,7 @@ module.exports = {
     ) => {
       const findFoldersResult = await fileOrFolder.findAll({
         where: {
-          title: {
+          searchingTitle: {
             [Op.like]: `%${pureText}%`,
           },
         },
@@ -439,8 +451,8 @@ module.exports = {
       findFilesResult = await searchUserFoldersFilesPath(findFilesResult);
     }
 
+    // 배열로 하나로 묶기
     const totalFindResult = [];
-
     findCustomerResult.forEach((data) => {
       data.Type = 'Customer';
       totalFindResult.push(data);

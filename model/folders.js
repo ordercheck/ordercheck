@@ -32,5 +32,10 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: true,
       type: DataTypes.BOOLEAN,
     },
+    searchingTitle: {
+      allowNull: true,
+      defaultValue: '',
+      type: DataTypes.STRING(100),
+    },
   });
 };
