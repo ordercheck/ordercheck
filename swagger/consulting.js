@@ -170,6 +170,8 @@
  *                 type: string
  *               contact_person:
  *                 type: integer
+ *               room_size_kind:
+ *                 type: integer
  *             example:
  *               address: "경기도 광명"
  *               detail_address: "일직동"
@@ -177,6 +179,7 @@
  *               customer_name: "김기태"
  *               customer_phoneNumber: "010-6719-6919"
  *               contact_person: 4
+ *               room_size_kind: 0
  *     responses:
  *       '200':
  *         description: 성공

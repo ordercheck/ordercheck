@@ -227,6 +227,15 @@ module.exports = {
       }
       db.company.increment({ customer_count: 1 }, { where: { idx: user_idx } });
       await t.commit();
+      await db.customer.findByPk(createCustomerResult.idx, {
+        attributes: [
+          'idx',
+          'address',
+          'customer_name',
+          'customer_phoneNumber',
+          'detail_address',
+        ],
+      });
 
       return res.send({ success: 200 });
     } catch (err) {
