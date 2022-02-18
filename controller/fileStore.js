@@ -7,6 +7,10 @@ const { delFile } = require('../lib/aws/fileupload').ufile;
 const {
   showDetailFileFolderAttributes,
   showFilesAttributes,
+
+  searchCustomersAttributes,
+  searchFileStoreFoldersAttributes,
+  searchFileStoreFilesAttributes,
 } = require('../lib/attributes');
 const { customerFile } = require('../model/db');
 
@@ -331,6 +335,30 @@ module.exports = {
     }
   },
   searchFileStore: async (req, res, next) => {
+    const findFilesAndFolders = async (
+      fileOrFolder,
+      pureText,
+      attributesData
+    ) => {
+      const findFoldersResult = await fileOrFolder.findAll({
+        where: {
+          title: {
+            [Op.like]: `%${pureText}%`,
+          },
+        },
+        include: [
+          {
+            model: db.customerFile,
+            attributes: ['customer_name'],
+          },
+        ],
+        attributes: attributesData,
+        raw: true,
+        nest: true,
+      });
+      return findFoldersResult;
+    };
+
     const pureText = req.query.search.replace(
       /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
       ''
@@ -347,83 +375,30 @@ module.exports = {
           },
         },
       },
-      attributes: [
-        'customer_name',
-        'customer_phoneNumber',
-        [
-          db.sequelize.fn(
-            'date_format',
-            db.sequelize.col('createdAt'),
-            '%Y.%m.%d'
-          ),
-          'createdAt',
-        ],
-      ],
+      attributes: searchCustomersAttributes,
     });
 
-    const findFoldersResult = await db.folders.findAll({
-      where: {
-        title: {
-          [Op.like]: `%${pureText}%`,
-        },
-      },
-      include: [
-        {
-          model: db.customerFile,
-          attributes: ['customer_name'],
-        },
-      ],
-      attributes: [
-        'title',
-        'path',
-        'customerFile_idx',
-        [
-          db.sequelize.fn(
-            'date_format',
-            db.sequelize.col('folders.createdAt'),
-            '%Y.%m.%d'
-          ),
-          'createdAt',
-        ],
-      ],
-      raw: true,
-      nest: true,
-    });
-
-    const findFilesResult = await db.files.findAll({
-      where: {
-        title: {
-          [Op.like]: `%${pureText}%`,
-        },
-      },
-      include: [
-        {
-          model: db.customerFile,
-          attributes: ['customer_name'],
-        },
-      ],
-
-      attributes: [
-        'title',
-        'path',
-        'customerFile_idx',
-        [
-          db.sequelize.fn(
-            'date_format',
-            db.sequelize.col('files.createdAt'),
-            '%Y.%m.%d'
-          ),
-          'createdAt',
-        ],
-      ],
-      raw: true,
-      nest: true,
-    });
-    const searchFoldersResult = await searchUserFoldersFilesPath(
-      findFoldersResult
+    let findFoldersResult = await findFilesAndFolders(
+      db.folders,
+      pureText,
+      searchFileStoreFoldersAttributes
     );
-    const searchFilesResult = await searchUserFoldersFilesPath(findFilesResult);
-    res.send({ findCustomerResult, searchFoldersResult, searchFilesResult });
+
+    let findFilesResult = await findFilesAndFolders(
+      db.files,
+      pureText,
+      searchFileStoreFilesAttributes
+    );
+
+    if (findFoldersResult.length !== 0) {
+      findFoldersResult = await searchUserFoldersFilesPath(findFoldersResult);
+    }
+
+    if (findFilesResult.length !== 0) {
+      findFilesResult = await searchUserFoldersFilesPath(findFilesResult);
+    }
+
+    res.send({ findCustomerResult, findFoldersResult, findFilesResult });
   },
   showDetailFileFolder: async (req, res, next) => {
     const {
