@@ -367,8 +367,13 @@ module.exports = {
     const calculateFindResult = await db.calculate.findByPk(calculate_idx, {
       attributes: ['file_url', 'calculateNumber'],
     });
-    // 동의 여부 확인 후 업데이트
-
+    // 견적서 다시보기 동의여부
+    if (calculateReload !== '') {
+      await db.config.update(
+        { calculateReload },
+        { where: { user_idx: req.user_idx, company_idx: req.company_idx } }
+      );
+    }
     const splitUrl = calculateFindResult.file_url.split('//');
 
     await customerkakaoPushNewCal(

@@ -437,7 +437,12 @@ module.exports = {
       findFilesResult = await searchUserFoldersFilesPath(findFilesResult);
     }
 
-    res.send({ findCustomerResult, findFoldersResult, findFilesResult });
+    const findTotalResult = [];
+    findTotalResult.push({ findCustomerResult });
+    findTotalResult.push({ findFoldersResult });
+    findTotalResult.push({ findFilesResult });
+
+    res.send({ findTotalResult });
   },
   showDetailFileFolder: async (req, res, next) => {
     const {
