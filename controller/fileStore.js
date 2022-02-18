@@ -316,14 +316,24 @@ module.exports = {
           customer_name: {
             [Op.like]: `%${pureText}%`,
           },
-          customer_phoneNumber: {
+          searchingPhoneNumber: {
             [Op.like]: `%${pureText}%`,
           },
         },
       },
+      attributes: ['customer_name', 'customer_phoneNumber'],
     });
 
-    res.send({ findCustomerResult });
+    const findFilesResult = await db.files.findAll({
+      where: {
+        title: {
+          [Op.like]: `%${pureText}%`,
+        },
+      },
+    });
+
+    console.log(findFilesResult);
+    res.send({ findCustomerResult, findFilesResult });
   },
   showDetailFileFolder: async (req, res, next) => {
     const {
