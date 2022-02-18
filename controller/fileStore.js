@@ -350,21 +350,22 @@ module.exports = {
           Bucket,
           findFilesResult.title
         );
-        console.log(copyResult);
-        await db.files.update(
-          {
-            title: titleAndExtend.join('.'),
-            file_url,
-          },
-          { where: { uuid } }
-        );
+        if (copyResult) {
+          await db.files.update(
+            {
+              title: titleAndExtend.join('.'),
+              file_url,
+            },
+            { where: { uuid } }
+          );
 
-        const updatedFileResult = await db.files.findOne({
-          where: { uuid },
-          raw: true,
-        });
+          const updatedFileResult = await db.files.findOne({
+            where: { uuid },
+            raw: true,
+          });
 
-        return res.send({ success: 200, updatedFileResult });
+          return res.send({ success: 200, updatedFileResult });
+        }
       }
       return res.send({ success: 200 });
     } catch (err) {
