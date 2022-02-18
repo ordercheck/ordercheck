@@ -2,7 +2,7 @@ const db = require('../model/db');
 const { getFileName } = require('../lib/apiFunctions');
 const { random5 } = require('../lib/functions');
 const { Op } = require('sequelize');
-const { s3_copy, s3_get, s3_delete_objects } = require('../lib/aws/aws');
+const { copyAndDelete, s3_get, s3_delete_objects } = require('../lib/aws/aws');
 const { delFile } = require('../lib/aws/fileupload').ufile;
 const {
   showDetailFileFolderAttributes,
@@ -331,8 +331,6 @@ module.exports = {
           titleAndExtend.join('.')
         );
 
-        await s3_copy(params);
-
         await db.files.update(
           {
             title: titleAndExtend.join('.'),
@@ -341,7 +339,17 @@ module.exports = {
           { where: { uuid } }
         );
         // 파일삭제
-        await deleteFile(findFilesResult.title, req);
+        let Bucket = '';
+        if (req.query.path) {
+          Bucket = encodeURI(
+            `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}`
+          );
+        } else {
+          Bucket = encodeURI(
+            `ordercheck/fileStore/${req.params.customerFile_idx}`
+          );
+        }
+        await copyAndDelete(params, Bucket, title);
 
         const updatedFileResult = await db.files.findOne({
           where: { uuid },
