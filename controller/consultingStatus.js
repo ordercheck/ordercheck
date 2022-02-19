@@ -382,7 +382,7 @@ module.exports = {
         delFile(findCalculateResult.file_name, 'ordercheck/calculate');
         body.file_name = file_name;
         body.file_url = req.file.location;
-        console.log(body);
+
         const findResult = await addCalculateLogic(body);
 
         return res.send({ success: 200, findResult });
@@ -402,16 +402,11 @@ module.exports = {
       // s3에서 삭제
       delFile(findFilename.file_name, 'ordercheck/calculate');
 
-      const updateData = { ...body, file_name: null, file_url: null };
-      await db.calculate.update(updateData, {
-        where: { idx: req.params.calculate_idx },
-      });
-      const findCalculateResult = await db.calculate.findByPk(
-        req.params.calculate_idx,
-        {
-          attributes: patchCalculateAttributes,
-        }
-      );
+      body.file_name = null;
+      body.file_url = null;
+      const findCalculateResult = await addCalculateLogic(body);
+
+      return res.send({ success: 200, findCalculateResult });
     }
     // 파일이 없을때
     const findResult = await addCalculateLogic();
