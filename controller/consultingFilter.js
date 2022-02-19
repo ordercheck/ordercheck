@@ -241,6 +241,7 @@ module.exports = {
       let searchedCountAndFindAll = await db.customer.findAndCountAll({
         where: {
           [Op.or]: {
+            company_idx,
             customer_name: {
               [Op.like]: `%${pureText}%`,
             },
