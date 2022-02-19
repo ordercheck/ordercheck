@@ -404,18 +404,18 @@ module.exports = {
     if (!body.file_name) {
       body.file_name == null;
       body.url == null;
-      const findCalculateResult = await db.calculate.findByPk(
-        req.params.calculate_idx,
-        {
-          attributes: ['file_name'],
-        }
+
+      const findCalculateResult = await db.calculate.update(
+        { body },
+        { where: { idx: req.params.calculate_idx } }
       );
-      const findCalculate = await db.calculate.findByPk(
+      const findCalculateResult = await db.calculate.findByPk(
         req.params.calculate_idx,
         {
           attributes: patchCalculateAttributes,
         }
       );
+
       // s3에서 삭제
       delFile(
         findCalculateResult.file_name,
@@ -424,7 +424,7 @@ module.exports = {
           if (err) {
             next(err);
           }
-          return res.send({ success: 200, findCalculate });
+          return res.send({ success: 200, findCalculateResult });
         }
       );
     }
