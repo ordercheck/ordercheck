@@ -354,8 +354,8 @@ module.exports = {
   patchCalculate: async (req, res, next) => {
     const { body, file } = req;
 
-    const addCalculateLogic = async () => {
-      await db.calculate.update(body, {
+    const addCalculateLogic = async (bodyData) => {
+      await db.calculate.update(bodyData, {
         where: { idx: req.params.calculate_idx },
       });
       const findCalculate = await db.calculate.findByPk(
@@ -383,7 +383,7 @@ module.exports = {
         body.file_name = file_name;
         body.file_url = req.file.location;
         console.log(body);
-        const findResult = await addCalculateLogic();
+        const findResult = await addCalculateLogic(body);
 
         return res.send({ success: 200, findResult });
       } catch (err) {
@@ -400,12 +400,8 @@ module.exports = {
         }
       );
       // s3에서 삭제
-      delFile(findFilename.file_name, 'ordercheck/calculate', (err, data) => {
-        if (err) {
-          next(err);
-        }
-        return res.send({ success: 200, findCalculateResult });
-      });
+      delFile(findFilename.file_name, 'ordercheck/calculate');
+
       const updateData = { ...body, file_name: null, file_url: null };
       await db.calculate.update(updateData, {
         where: { idx: req.params.calculate_idx },
