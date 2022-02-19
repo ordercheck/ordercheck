@@ -402,18 +402,6 @@ module.exports = {
 
     // file_name이 없을 때 (파일 삭제 되었을 때)
     if (!body.file_name) {
-      const updateData = { ...body, file_name: null, file_url: null };
-
-      await db.calculate.update(updateData, {
-        where: { idx: req.params.calculate_idx },
-      });
-      const findCalculateResult = await db.calculate.findByPk(
-        req.params.calculate_idx,
-        {
-          attributes: patchCalculateAttributes,
-        }
-      );
-
       // s3에서 삭제
       delFile(
         findCalculateResult.file_name,
@@ -423,6 +411,16 @@ module.exports = {
             next(err);
           }
           return res.send({ success: 200, findCalculateResult });
+        }
+      );
+      const updateData = { ...body, file_name: null, file_url: null };
+      await db.calculate.update(updateData, {
+        where: { idx: req.params.calculate_idx },
+      });
+      const findCalculateResult = await db.calculate.findByPk(
+        req.params.calculate_idx,
+        {
+          attributes: patchCalculateAttributes,
         }
       );
     }
