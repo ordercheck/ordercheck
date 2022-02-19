@@ -403,8 +403,8 @@ module.exports = {
     // file_name이 없을 때 (파일 삭제 되었을 때)
     if (!body.file_name) {
       body.file_name == null;
-      body.url == null;
-
+      body.file_url == null;
+      console.log(body);
       await db.calculate.update(
         { body },
         { where: { idx: req.params.calculate_idx } }
