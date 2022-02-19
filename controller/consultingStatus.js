@@ -389,6 +389,7 @@ module.exports = {
             if (data) {
               body.file_name = file_name;
               body.file_url = req.file.location;
+              console.log(body);
               const findResult = await addCalculateLogic();
 
               return res.send({ success: 200, findResult });
