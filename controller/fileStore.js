@@ -442,9 +442,9 @@ module.exports = {
       pureText,
       searchFileStoreFilesAttributes,
       {
+        isFolder: false,
         searchingTitle: {
           [Op.like]: `%${pureText}%`,
-          isFolder: false,
         },
       }
     );
