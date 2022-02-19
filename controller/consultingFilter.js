@@ -240,8 +240,8 @@ module.exports = {
 
       let searchedCountAndFindAll = await db.customer.findAndCountAll({
         where: {
+          company_idx,
           [Op.or]: {
-            company_idx,
             customer_name: {
               [Op.like]: `%${pureText}%`,
             },
