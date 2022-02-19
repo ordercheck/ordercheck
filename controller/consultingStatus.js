@@ -452,10 +452,10 @@ module.exports = {
       { sharedDate },
       { where: { customer_idx, idx: calculate_idx } }
     );
-    const updateCalculateResult = await db.calculate.findByPk(calculate_idx, {
+    const findResult = await db.calculate.findByPk(calculate_idx, {
       attributes: showCalculateAttributes,
     });
-    return res.send({ success: 200, updateCalculateResult });
+    return res.send({ success: 200, findResult });
   },
   setMainCalculate: async (req, res, next) => {
     const updateCalculateStatus = async (trueOrfalse, whereData) => {
