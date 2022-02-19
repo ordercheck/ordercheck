@@ -223,6 +223,7 @@ module.exports = {
       company_idx,
     } = req;
     try {
+      console.log(search);
       const pureText = makePureText(search);
 
       const { start, intlimit, intPage } = await checkPage(

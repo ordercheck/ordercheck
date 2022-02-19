@@ -381,7 +381,7 @@ module.exports = {
         // s3에서 삭제
         delFile(findCalculateResult.file_name, 'ordercheck/calculate');
         body.file_name = file_name;
-        body.file_url = req.file.location;
+        body.file_url = file.location;
 
         const findResult = await addCalculateLogic(body);
 
@@ -408,7 +408,7 @@ module.exports = {
 
       return res.send({ success: 200, findCalculateResult });
     }
-    // 파일이 없을때
+    // 파일이 변함 없을 때
     const findResult = await addCalculateLogic();
     return res.send({ success: 200, findResult });
   },
