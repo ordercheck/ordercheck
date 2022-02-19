@@ -223,8 +223,6 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      console.log('이것은 서치', search);
-      console.log('이것은 No', No);
       const pureText = makePureText(search);
 
       const { start, intlimit, intPage } = await checkPage(

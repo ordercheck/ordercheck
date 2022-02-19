@@ -404,9 +404,9 @@ module.exports = {
 
       body.file_name = null;
       body.file_url = null;
-      const findCalculateResult = await addCalculateLogic(body);
+      const findResult = await addCalculateLogic(body);
 
-      return res.send({ success: 200, findCalculateResult });
+      return res.send({ success: 200, findResult });
     }
     // 파일이 변함 없을 때
     const findResult = await addCalculateLogic();
