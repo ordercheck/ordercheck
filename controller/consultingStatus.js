@@ -213,7 +213,9 @@ module.exports = {
   },
   addCompanyCustomer: async (req, res, next) => {
     const { body, user_idx, company_idx } = req;
-    console.log(body);
+    if ((body.contact_person = '')) {
+      body.contact_person = null;
+    }
     const t = await db.sequelize.transaction();
     try {
       // 검색용으로 변경
