@@ -213,7 +213,7 @@ module.exports = {
   },
   addCompanyCustomer: async (req, res, next) => {
     const { body, user_idx, company_idx } = req;
-    if ((body.contact_person = '')) {
+    if (body.contact_person == '') {
       body.contact_person = null;
     }
     const t = await db.sequelize.transaction();
