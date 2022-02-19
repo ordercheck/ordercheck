@@ -379,23 +379,13 @@ module.exports = {
           }
         );
         // s3에서 삭제
-        delFile(
-          findCalculateResult.file_name,
-          'ordercheck/calculate',
-          async (err, data) => {
-            if (err) {
-              next(err);
-            }
-            if (data) {
-              body.file_name = file_name;
-              body.file_url = req.file.location;
-              console.log(body);
-              const findResult = await addCalculateLogic();
+        delFile(findCalculateResult.file_name, 'ordercheck/calculate');
+        body.file_name = file_name;
+        body.file_url = req.file.location;
+        console.log(body);
+        const findResult = await addCalculateLogic();
 
-              return res.send({ success: 200, findResult });
-            }
-          }
-        );
+        return res.send({ success: 200, findResult });
       } catch (err) {
         next(err);
       }
