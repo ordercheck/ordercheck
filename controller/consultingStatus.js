@@ -450,7 +450,7 @@ module.exports = {
     const sharedDate = moment().format('YYYY.MM.DD');
     await db.calculate.update(
       { sharedDate },
-      { where: { customer_idx, calculate_idx } }
+      { where: { customer_idx, idx: calculate_idx } }
     );
     const updateCalculateResult = await db.calculate.findByPk(calculate_idx, {
       attributes: showCalculateAttributes,
