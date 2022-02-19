@@ -47,7 +47,6 @@ const deleteFile = async (title, req) => {
 };
 
 const checkFile = (req, params, beforeTitle, newTitle) => {
-  console.log(beforeTitle);
   // 파일 안일 경우
   if (req.query.path) {
     (params.CopySource = encodeURI(
@@ -303,8 +302,10 @@ module.exports = {
 
       // 폴더일 경우
       if (isFolder) {
+        const pureTitle = makePureText(title);
+
         await db.folders.update(
-          { title },
+          { title, searchingTitle: pureTitle },
           { where: { uuid, customerFile_idx } }
         );
 
