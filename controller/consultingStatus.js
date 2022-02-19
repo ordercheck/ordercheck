@@ -405,7 +405,7 @@ module.exports = {
       body.file_name == null;
       body.url == null;
 
-      const findCalculateResult = await db.calculate.update(
+      await db.calculate.update(
         { body },
         { where: { idx: req.params.calculate_idx } }
       );
