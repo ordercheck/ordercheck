@@ -436,7 +436,10 @@ module.exports = {
         { where: { user_idx: req.user_idx, company_idx: req.company_idx } }
       );
     }
-    const splitUrl = calculateFindResult.file_url.split('//');
+
+    const fileUrl = !calculateFindResult.file_url
+      ? `orderchecktest.s3-website.ap-northeast-2.amazonaws.com/signin`
+      : calculateFindResult.file_url.split('//')[1];
 
     await customerkakaoPushNewCal(
       customerFindResult.customer_phoneNumber,
@@ -444,7 +447,7 @@ module.exports = {
       customerFindResult.customer_name,
       calculateFindResult.calculateNumber,
       '견적서 확인',
-      splitUrl[1]
+      fileUrl
     );
 
     const sharedDate = moment().format('YYYY.MM.DD');
