@@ -402,7 +402,7 @@ module.exports = {
 
     // file_name이 없을 때 (파일 삭제 되었을 때)
     if (!body.file_name) {
-      console.log(body);
+      body.file_name == null;
       const findCalculateResult = await db.calculate.findByPk(
         req.params.calculate_idx,
         {
