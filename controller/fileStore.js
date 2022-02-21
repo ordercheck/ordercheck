@@ -42,6 +42,7 @@ const deleteFileToS3 = async (title, req) => {
       `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}`
     );
   } else {
+    console.log('no path');
     delFile(title, `ordercheck/fileStore/${req.params.customerFile_idx}`);
   }
 };
@@ -224,7 +225,7 @@ module.exports = {
     }
   },
   deleteFile: async (req, res, next) => {
-    const { uuid, isfolder, customerFile_idx } = req.params;
+    const { uuid, isfolder } = req.params;
 
     const t = await db.sequelize.transaction();
     try {
