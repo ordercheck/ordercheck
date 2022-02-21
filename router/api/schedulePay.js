@@ -18,9 +18,11 @@ router.post('/', async (req, res) => {
     ) {
       return res.send({ success: 400 });
     }
-    console.log('가져온 결과', getResult);
+
     // 계속 스케줄을 할 때
     if (status == 'paid') {
+      // payType 체크 (month, year)
+
       await db.pay.create({
         imp_uid,
         user_name: getResult.buyer_name,

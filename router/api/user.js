@@ -250,7 +250,8 @@ router.post('/company/check', async (req, res) => {
         user_data.user_name,
         user_data.user_phone,
         user_data.user_email,
-        nextMerchant_uid
+        nextMerchant_uid,
+        plan_data.pay_type
       );
       plan_data.merchant_uid = nextMerchant_uid;
       await db.plan.update(plan_data, {
@@ -335,6 +336,7 @@ router.post('/create/token/data', async (req, res) => {
   try {
     // 카드를 등록하는 경우
     if (req.body.card_number) {
+      // 랜덤 string + 카드 뒤에 4자리
       const customer_uid = `${_f.random5()}${card_number.slice(-4)}`;
       req.body.customer_uid = customer_uid;
       const cardAddResult = await addCard(
@@ -348,6 +350,7 @@ router.post('/create/token/data', async (req, res) => {
 
       // 카드 등록 실패
       if (!cardAddResult.success) {
+        console.log('카드등록 실패');
         return res.send({ success: 400, message: cardAddResult.message });
       }
       const merchant_uid = _f.random5();

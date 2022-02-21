@@ -180,7 +180,7 @@ module.exports = {
         raw: true,
         nest: true,
       });
-
+      console.log(findAllUser);
       // 로그인 한 사람 고정
       for (let i = 0; i < findAllUser.length; i++) {
         findAllUser[i].user_name = findAllUser[i].user.user_name;
@@ -196,7 +196,7 @@ module.exports = {
         user_name: '담당자 없음',
         user_profile: '',
       });
-
+      console.log('담당자 없음', findAllUser);
       return res.send({ success: 200, findAllUser });
     } catch (err) {
       next(err);

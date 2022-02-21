@@ -65,6 +65,11 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
     },
 
+    pay_type: {
+      allowNull: true,
+      type: DataTypes.BOOLEAN,
+    },
+
     active: {
       allowNull: false,
       defaultValue: 1,
