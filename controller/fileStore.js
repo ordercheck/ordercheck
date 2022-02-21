@@ -235,6 +235,7 @@ module.exports = {
           { attributes: ['title', 'path'] }
         );
         // 폴더 안에 없을 때
+
         if (req.query.path) {
           deleteFile(
             findFileResult.title,
@@ -249,6 +250,7 @@ module.exports = {
             where: { uuid },
           });
         }
+        res.send({ success: 200, message: '삭제 완료' });
       }
       // 폴더일때
       const findFolderUuid = await db.folders.findAll({
