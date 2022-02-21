@@ -195,7 +195,7 @@ module.exports = {
   delConsulting: async (req, res, next) => {
     const {
       params: { customer_idx },
-      user_idx,
+
       company_idx,
     } = req;
     try {

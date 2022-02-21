@@ -94,6 +94,7 @@ module.exports = {
           'customer_phoneNumber',
           'customer_name',
         ],
+        order: [['customer_name', 'ASC']],
       });
 
       return res.send({ success: 200, findAllCustomers });
