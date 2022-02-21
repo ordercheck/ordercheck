@@ -224,8 +224,8 @@ module.exports = {
     }
   },
   deleteFile: async (req, res, next) => {
-    const { uuid, isfolder } = req.params;
-    console.log(req.query);
+    const { uuid, isfolder, customerFile_idx } = req.params;
+    console.log(customerFile_idx);
     const t = await db.sequelize.transaction();
     try {
       // 폴더가 아닐 때
@@ -234,12 +234,21 @@ module.exports = {
           { where: { uuid } },
           { attributes: ['title', 'path'] }
         );
-
-        // 파일삭제
-        deleteFile(findFileResult.title, req);
-        await db.files.destroy({
-          where: { uuid },
-        });
+        // 폴더 안에 없을 때
+        if (!req.query.path) {
+          delFile(findFileResult.title, `ordercheck/${customerFile_idx}`);
+          await db.files.destroy({
+            where: { uuid },
+          });
+        } else {
+          deleteFile(
+            findFileResult.title,
+            `ordercheck/${customerFile_idx}/${req.query.path}`
+          );
+          await db.files.destroy({
+            where: { uuid },
+          });
+        }
       }
       // 폴더일때
       const findFolderUuid = await db.folders.findAll({
