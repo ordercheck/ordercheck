@@ -328,7 +328,7 @@ module.exports = {
           where: { uuid },
           raw: true,
         });
-        console.log('폴더', findFilesResult);
+
         let params = {
           Bucket: 'ordercheck',
           ACL: 'public-read',
