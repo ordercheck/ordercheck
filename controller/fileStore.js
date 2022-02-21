@@ -225,14 +225,14 @@ module.exports = {
   },
   deleteFile: async (req, res, next) => {
     const { uuid, isfolder } = req.params;
-
+    console.log(req.query);
     const t = await db.sequelize.transaction();
     try {
       // 폴더가 아닐 때
       if (isfolder == 0) {
         const findFileResult = await db.files.findOne(
           { where: { uuid } },
-          { attributes: ['title'] }
+          { attributes: ['title', 'path'] }
         );
 
         // 파일삭제
