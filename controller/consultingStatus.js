@@ -295,7 +295,7 @@ module.exports = {
         order: [['createdAt', 'DESC']],
         attributes: ['calculateNumber'],
       });
-
+      console.log(findCalculate);
       // 견적서 차수 +1씩 올리기
       if (findCalculate !== 0) {
         let splitCalculateResult = findCalculate.calculateNumber.split('차');
