@@ -59,7 +59,7 @@ const swaggerDefinition = {
          "address":"주소",
          "detail_address":"상세주소", 
          "building_type":"시공선택", 
-         "size":34, 
+         "room_size":34, 
          "rooms_count":3,
           "bathrooms_count":1, 
           "completion_year":"준공 연도", 

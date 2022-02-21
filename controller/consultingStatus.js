@@ -134,11 +134,8 @@ module.exports = {
 
       // 이미지나 파일이 없을 때  간편 Form
       if (!files.img && !files.concept) {
-        // body.choice = JSON.stringify(body.choice);
-
         body.choice = JSON.parse(body.choice).join(', ');
         createConsultingAndIncrement(body);
-
         return;
       }
       // 이미지나 파일이 있을 때
@@ -147,7 +144,6 @@ module.exports = {
       const conceptUrlString = selectUrl(files.concept);
       body.floor_plan = JSON.stringify(imgUrlString);
       body.hope_concept = JSON.stringify(conceptUrlString);
-      body.choice = JSON.parse(body.choice).join(', ');
       body.expand = JSON.parse(body.expand).join(', ');
       body.carpentry = JSON.parse(body.carpentry).join(', ');
       body.paint = JSON.parse(body.paint).join(', ');
@@ -293,13 +289,19 @@ module.exports = {
 
     const addCalculateLogic = async () => {
       // 몇차 인지 체크
-      const findCalculate = await db.calculate.count({
-        where: { customer_idx: body.customer_idx },
+
+      const findCalculate = await db.calculate.findOne({
+        where: { customer_idx: req.body.customer_idx },
+        order: [['createdAt', 'DESC']],
+        attributes: ['calculateNumber'],
       });
 
       // 견적서 차수 +1씩 올리기
       if (findCalculate !== 0) {
-        body.calculateNumber = `${findCalculate}차 견적서`;
+        let splitCalculateResult = findCalculate.calculateNumber.split('차');
+        splitCalculateResult[0] = parseInt(splitCalculateResult[0]) + 1;
+        splitCalculateResult = splitCalculateResult.join('차');
+        body.calculateNumber = splitCalculateResult;
       }
 
       const calculateCreateResult = await db.calculate.create(body);

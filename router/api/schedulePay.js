@@ -11,18 +11,8 @@ router.post('/', async (req, res) => {
   try {
     const { imp_uid, merchant_uid, status } = req.body;
     const getResult = await getPayment(imp_uid);
-    if (
-      getResult.amount == 1000 ||
-      status == 'cancelled' ||
-      !getResult.buyer_email
-    ) {
-      return res.send({ success: 400 });
-    }
 
-    // 계속 스케줄을 할 때
-    if (status == 'paid') {
-      // payType 체크 (month, year)
-
+    const doSchedule = async (pay_type_data) => {
       await db.pay.create({
         imp_uid,
         user_name: getResult.buyer_name,
@@ -30,15 +20,23 @@ router.post('/', async (req, res) => {
         user_email: getResult.buyer_email,
         customer_uid: getResult.customer_uid,
       });
-      const now = new Date();
-      let afterMonth = new Date(now.setMonth(now.getMonth() + 1));
 
-      afterMonth = afterMonth.getTime() / 1000;
+      let payDate;
+      // if (pay_type_data == 'month') {
+      //   const now = new Date();
+      //   let afterMonth = new Date(now.setMonth(now.getMonth() + 1));
+      //   payDate = afterMonth.getTime() / 1000;
+      // }else{
+      //   const now = new Date();
+      //   let afterMonth = new Date(now.setMonth(now.getMonth() + 1));
+      //   payDate = afterMonth.getTime() / 1000;
+
+      // }
 
       const newMerchant_uid = uuid();
 
       await schedulePay(
-        afterMonth,
+        payDate,
         getResult.customer_uid,
         getResult.amount,
         getResult.buyer_name,
@@ -53,6 +51,23 @@ router.post('/', async (req, res) => {
           where: { merchant_uid },
         }
       );
+    };
+
+    if (
+      getResult.amount == 1000 ||
+      status == 'cancelled' ||
+      !getResult.buyer_email
+    ) {
+      return res.send({ success: 400 });
+    }
+
+    // 계속 스케줄을 할 때
+    if (status == 'paid') {
+      // payType 체크 (month, year)
+
+      if (getResult.pay_type == 'month') {
+        await doSchedule('month');
+      }
 
       return res.send({ success: 200 });
     }

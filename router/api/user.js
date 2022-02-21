@@ -360,6 +360,7 @@ router.post('/create/token/data', async (req, res) => {
         merchant_uid
       );
       if (!success) {
+        console.log('카드 결제 실패');
         return res.send({ success: 400, message });
       }
 
