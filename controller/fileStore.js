@@ -243,7 +243,7 @@ module.exports = {
           await db.files.destroy({
             where: { uuid },
           });
-        } else {
+        } else if (req.query.path) {
           deleteFile(
             findFileResult.title,
             `ordercheck/fileStore/${customerFile_idx}/${req.query.path}`
