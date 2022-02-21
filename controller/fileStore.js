@@ -241,7 +241,7 @@ module.exports = {
             where: { uuid },
           });
         } else {
-          console.log('path있을때');
+          console.log(req.query);
           deleteFile(
             findFileResult.title,
             `ordercheck/${customerFile_idx}/${req.query.path}`
