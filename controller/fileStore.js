@@ -236,18 +236,16 @@ module.exports = {
         );
         // 폴더 안에 없을 때
 
-        if (req.query.path) {
-          console.log('패스 있음');
-          deleteFile(
-            findFileResult.title,
-            `ordercheck/${customerFile_idx}/${req.query.path}`
-          );
+        if (req.query.path == 'undefined') {
+          delFile(findFileResult.title, `ordercheck/${customerFile_idx}`);
           await db.files.destroy({
             where: { uuid },
           });
         } else {
-          console.log('패스 없음');
-          delFile(findFileResult.title, `ordercheck/${customerFile_idx}`);
+          deleteFile(
+            findFileResult.title,
+            `ordercheck/${customerFile_idx}/${req.query.path}`
+          );
           await db.files.destroy({
             where: { uuid },
           });
