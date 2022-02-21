@@ -21,7 +21,7 @@ module.exports = function (sequelize, DataTypes) {
     searchingPhoneNumber: {
       allowNull: false,
       unique: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(100),
     },
   });
 };

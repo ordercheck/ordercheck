@@ -216,6 +216,7 @@ module.exports = {
     if (body.contact_person == '') {
       body.contact_person = null;
     }
+    console.log(body);
     const t = await db.sequelize.transaction();
     try {
       // 검색용으로 변경
