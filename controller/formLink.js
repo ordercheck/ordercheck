@@ -51,16 +51,27 @@ module.exports = {
   createThumbNail: async (req, res, next) => {
     try {
       const { formId } = req.params;
-      // 파일 이름 가져오기
-      const file_name = getFileName(req.file.transforms[0].key);
 
-      await db.formLink.update(
-        {
-          thumbNail: req.file.transforms[0].location,
-          thumbNail_title: file_name,
-        },
-        { where: { idx: formId } }
-      );
+      const changeFormLinkUrl = async () => {
+        const file_name = getFileName(req.file.transforms[0].key);
+        await db.formLink.update(
+          {
+            thumbNail: req.file.transforms[0].location,
+            thumbNail_title: file_name,
+          },
+          { where: { idx: formId } }
+        );
+      };
+      const findFormLinkResult = await db.formLink.findByPk(formId, {
+        attributes: ['thumbNail_title'],
+      });
+      if (findFormLinkResult.thumbNail_title) {
+        delFile(findFormLinkResult.thumbNail_title, 'ordercheck/formThumbNail');
+        changeFormLinkUrl();
+      } else {
+        changeFormLinkUrl();
+      }
+
       const { formDetail } = await findWhiteFormDetail(req.company_idx, formId);
       return res.send({ success: 200, formDetail });
     } catch (err) {
@@ -109,6 +120,10 @@ module.exports = {
   },
   delFormLink: async (req, res, next) => {
     try {
+      const findFormLinkResult = await db.formLink.findByPk(req.params.formId, {
+        attributes: ['thumbNail_title'],
+      });
+      delFile(findFormLinkResult.thumbNail_title, 'ordercheck/formThumbNail');
       await db.formLink.destroy({ where: { idx: req.params.formId } });
       return res.send({ success: 200, message: '삭제 성공' });
     } catch (err) {
@@ -188,16 +203,9 @@ module.exports = {
       }
 
       // s3에서 file이름으로 이미지 삭제 진행
-      delFile(
-        findThumbNailTitle.thumbNail_title,
-        'ordercheck/formThumbNail',
-        (err, data) => {
-          if (err) {
-            next(err);
-          }
-          return res.send({ success: 200, message: '썸네일 삭제 ' });
-        }
-      );
+      delFile(findThumbNailTitle.thumbNail_title, 'ordercheck/formThumbNail');
+
+      return res.send({ success: 200, message: '썸네일 삭제 ' });
     } catch (err) {
       next(err);
     }

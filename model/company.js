@@ -34,13 +34,12 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(100),
     },
     business_number: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
       type: DataTypes.STRING(100),
     },
     business_enrollment: {
-      allowNull: false,
-      defaultValue: '',
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
     form_link_count: {
@@ -52,6 +51,16 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false,
       defaultValue: 0,
       type: DataTypes.INTEGER,
+    },
+    company_logo: {
+      allowNull: true,
+
+      type: DataTypes.TEXT(),
+    },
+    company_logo_title: {
+      allowNull: true,
+
+      type: DataTypes.STRING(100),
     },
     active: {
       allowNull: false,

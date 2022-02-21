@@ -1,7 +1,8 @@
 const db = require('../model/db');
 const { makeSpreadArray } = require('../lib/functions');
 const { sequelize } = require('../model/db');
-const { errorFunction } = require('../lib/apiFunctions');
+const { getFileName } = require('../lib/apiFunctions');
+const { delFile } = require('../lib/aws/fileupload').ufile;
 module.exports = {
   getUserProfile: async (req, res) => {
     try {
@@ -37,6 +38,42 @@ module.exports = {
         });
 
       return res.send({ success: 200, companyProfile: companyProfile[0] });
+    } catch (err) {
+      next(err);
+    }
+  },
+  changeCompanyLogo: async (req, res, next) => {
+    const { company_idx, user_idx, body, file } = req;
+    const updateCompanyLogo = async (logoUrlData, logoTitleData) => {
+      await db.company.update(
+        {
+          company_logo: logoUrlData,
+          company_logo_title: logoTitleData,
+        },
+        { where: { idx: company_idx } }
+      );
+    };
+    try {
+      const findCompanyResult = await db.company.findByPk(company_idx, {
+        attributes: ['company_logo_title'],
+      });
+      // 로고를 새로 업로드 하는 경우
+      if (!findCompanyResult.company_logo_title) {
+        const file_name = getFileName(file.transforms[0].key);
+        await updateCompanyLogo(file.transforms[0].location, file_name);
+      }
+      // 로고를 삭제하는 경우
+      if (!file) {
+        delFile(findCompanyResult.company_logo_title, 'ordercheck/logo');
+        await updateCompanyLogo(null, null);
+      }
+      // 로고를 바꾸는 경우
+      if (findCompanyResult.company_logo_title) {
+        delFile(findCompanyResult.company_logo_title, 'ordercheck/logo');
+        const file_name = getFileName(file.transforms[0].key);
+        await updateCompanyLogo(file.transforms[0].location, file_name);
+      }
+      return res.send({ success: 200 });
     } catch (err) {
       next(err);
     }
