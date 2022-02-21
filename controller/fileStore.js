@@ -237,6 +237,7 @@ module.exports = {
         // 폴더 안에 없을 때
 
         if (req.query.path) {
+          console.log('패스 있음');
           deleteFile(
             findFileResult.title,
             `ordercheck/${customerFile_idx}/${req.query.path}`
@@ -245,6 +246,7 @@ module.exports = {
             where: { uuid },
           });
         } else {
+          console.log('패스 없음');
           delFile(findFileResult.title, `ordercheck/${customerFile_idx}`);
           await db.files.destroy({
             where: { uuid },
