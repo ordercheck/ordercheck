@@ -285,12 +285,17 @@ module.exports = {
   },
 
   addCalculate: async (req, res, next) => {
-    const { body, file } = req;
-
+    const {
+      params: { customer_idx },
+      company_idx,
+      body,
+      file,
+    } = req;
+    body.customer_idx = customer_idx;
     const addCalculateLogic = async () => {
       // 몇차 인지 체크
       const findCalculate = await db.calculate.findOne({
-        where: { customer_idx: req.body.customer_idx },
+        where: { customer_idx },
         order: [['createdAt', 'DESC']],
         attributes: ['calculateNumber'],
       });
@@ -333,7 +338,7 @@ module.exports = {
     try {
       const file_name = getFileName(file.key);
       body.file_name = file_name;
-      body.file_url = req.file.location;
+      body.file_url = file.location;
       const findResult = await addCalculateLogic();
       return res.send({ success: 200, findResult });
     } catch (err) {
@@ -347,7 +352,10 @@ module.exports = {
       attributes: ['file_name'],
     });
     // s3에서 삭제
-    delFile(findCalculateResult.file_name, 'ordercheck/calculate');
+    delFile(
+      findCalculateResult.file_name,
+      `ordercheck/calculate/${customer_idx}`
+    );
     await db.calculate.destroy({
       where: { customer_idx, idx: calculate_idx },
     });
@@ -355,18 +363,19 @@ module.exports = {
     return res.send({ success: 200 });
   },
   patchCalculate: async (req, res, next) => {
-    const { body, file } = req;
+    const {
+      body,
+      file,
+      params: { calculate_idx },
+    } = req;
 
     const addCalculateLogic = async (bodyData) => {
       await db.calculate.update(bodyData, {
-        where: { idx: req.params.calculate_idx },
+        where: { idx: calculate_idx },
       });
-      const findCalculate = await db.calculate.findByPk(
-        req.params.calculate_idx,
-        {
-          attributes: patchCalculateAttributes,
-        }
-      );
+      const findCalculate = await db.calculate.findByPk(calculate_idx, {
+        attributes: patchCalculateAttributes,
+      });
       return findCalculate;
     };
 
@@ -375,14 +384,14 @@ module.exports = {
       try {
         const file_name = getFileName(file.key);
 
-        const findCalculateResult = await db.calculate.findByPk(
-          req.params.calculate_idx,
-          {
-            attributes: ['file_name'],
-          }
-        );
+        const findCalculateResult = await db.calculate.findByPk(calculate_idx, {
+          attributes: ['file_name'],
+        });
         // s3에서 삭제
-        delFile(findCalculateResult.file_name, 'ordercheck/calculate');
+        delFile(
+          findCalculateResult.file_name,
+          `ordercheck/calculate/${body.customer_idx}`
+        );
         body.file_name = file_name;
         body.file_url = file.location;
 
@@ -403,7 +412,10 @@ module.exports = {
         }
       );
       // s3에서 삭제
-      delFile(findFilename.file_name, 'ordercheck/calculate');
+      delFile(
+        findFilename.file_name,
+        `ordercheck/calculate/${body.customer_idx}`
+      );
 
       body.file_name = null;
       body.file_url = null;
