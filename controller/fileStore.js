@@ -411,6 +411,7 @@ module.exports = {
 
     const findCustomerResult = await db.customerFile.findAll({
       where: {
+        company_idx: req.company_idx,
         [Op.or]: {
           customer_name: {
             [Op.like]: `%${pureText}%`,
