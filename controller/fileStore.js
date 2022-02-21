@@ -335,12 +335,12 @@ module.exports = {
         };
 
         const urlArr = findFilesResult.file_url.split('/');
-        console.log(urlArr);
-        const titleExtend = urlArr[urlArr.length - 1].split('.');
-        urlArr[0] == `${title}.${titleExtend[titleExtend - 1]}`;
 
-        const file_url = urlArr.join('/');
-        console.log(file_url);
+        const titleExtend = urlArr[urlArr.length - 1].split('.');
+
+        const newTitle = `${title}.${titleExtend[titleExtend.length - 1]}`;
+
+        const file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${newTitle}`;
         //  params만들기
         params = checkFile(req, params, findFilesResult.title, file_url);
 
@@ -356,14 +356,8 @@ module.exports = {
           );
         }
 
-        const copyResult = await copyAndDelete(
-          params,
-          Bucket,
-          findFilesResult.title
-        );
+        const copyResult = await copyAndDelete(params, Bucket, newTitle);
         if (copyResult) {
-          const newTitle = titleAndExtend.join('.');
-
           const pureText = makePureText(newTitle);
 
           await db.files.update(
