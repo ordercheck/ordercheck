@@ -35,7 +35,7 @@ const searchUserFoldersFilesPath = async (findFilesResult) => {
   return newPathResult;
 };
 
-const deleteFile = async (title, req) => {
+const deleteFileToS3 = async (title, req) => {
   if (req.query.path) {
     delFile(
       title,
@@ -235,23 +235,12 @@ module.exports = {
           { attributes: ['title', 'path'] }
         );
         // 폴더 안에 없을 때
-        if (!req.query.path) {
-          delFile(
-            findFileResult.title,
-            `ordercheck/fileStore/${customerFile_idx}`
-          );
-          await db.files.destroy({
-            where: { uuid },
-          });
-        } else if (req.query.path) {
-          deleteFile(
-            findFileResult.title,
-            `ordercheck/fileStore/${customerFile_idx}/${req.query.path}`
-          );
-          await db.files.destroy({
-            where: { uuid },
-          });
-        }
+
+        deleteFileToS3(findFileResult.title, req);
+        await db.files.destroy({
+          where: { uuid },
+        });
+
         return res.send({ success: 200, message: '삭제 완료' });
       }
       // 폴더일때
