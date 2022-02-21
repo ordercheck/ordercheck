@@ -335,18 +335,14 @@ module.exports = {
         };
 
         const urlArr = findFilesResult.file_url.split('/');
+        console.log(urlArr);
         const titleExtend = urlArr[urlArr.length - 1].split('.');
         urlArr[0] == `${title}.${titleExtend[titleExtend - 1]}`;
 
         const file_url = urlArr.join('/');
-
+        console.log(file_url);
         //  params만들기
-        params = checkFile(
-          req,
-          params,
-          findFilesResult.title,
-          titleAndExtend.join('.')
-        );
+        params = checkFile(req, params, findFilesResult.title, file_url);
 
         // 파일삭제
         let Bucket = '';
