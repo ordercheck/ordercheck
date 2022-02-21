@@ -183,7 +183,8 @@ module.exports = {
       req.body.path = req.query.path;
       req.body.upload_people = findUserResult.user_name;
       req.body.file_url = req.file.location;
-      const title = getFileName(req.file.key);
+      let title = getFileName(req.file.key);
+      title = title.normalize('NFC');
       // 그냥 text로 변환
       const pureText = makePureText(title);
 
