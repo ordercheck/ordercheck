@@ -334,7 +334,7 @@ module.exports = {
         };
 
         let urlArr = findFilesResult.file_url.split('/');
-        console.log(urlArr);
+
         const titleAndExtend = urlArr[urlArr.length - 1].split('.');
         console.log(titleAndExtend);
         titleAndExtend[0] = title;
