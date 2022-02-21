@@ -13,6 +13,7 @@ const {
   searchFormLink,
   updateForm,
   deleteThumbNail,
+  updateFormTitle,
 } = require('../../controller/formLink');
 
 // formlink 만들기
@@ -37,6 +38,8 @@ router.post('/duplicate/:formId', loginCheck, duplicateForm);
 
 // form 제목 화이트라벨 업데이트
 router.patch('/update', loginCheck, updateForm);
+// form 제목 변경
+router.patch('/update/title', loginCheck, updateFormTitle);
 
 // form 삭제하기
 router.delete('/:formId', loginCheck, delFormLink);

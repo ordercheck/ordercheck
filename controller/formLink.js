@@ -210,4 +210,22 @@ module.exports = {
       next(err);
     }
   },
+  updateFormTitle: async (req, res, next) => {
+    const {
+      body: { formId, title },
+      company_idx,
+    } = req;
+    try {
+      await db.formLink.update(
+        {
+          title,
+        },
+        { where: { idx: formId } }
+      );
+      const { formDetail } = await findWhiteFormDetail(company_idx, formId);
+      return res.send({ success: 200, formDetail });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

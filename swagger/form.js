@@ -168,4 +168,29 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/form/link/update/title:
+ *   patch:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       -  Form
+ *     summary: form 제목 변경
+ *     requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              formId:
+ *                type: string
+ *              title:
+ *                type: string
+ *            example:
+ *              formId: "form idx"
+ *              title: "title"
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */
