@@ -295,16 +295,18 @@ module.exports = {
         order: [['createdAt', 'DESC']],
         attributes: ['calculateNumber'],
       });
-      console.log(findCalculate);
-      // 견적서 차수 +1씩 올리기
-      if (findCalculate !== 0) {
+      let calculateCreateResult;
+      if (!findCalculate) {
+        calculateCreateResult = await db.calculate.create(body);
+      } else {
+        // 견적서 차수 +1씩 올리기
         let splitCalculateResult = findCalculate.calculateNumber.split('차');
         splitCalculateResult[0] = parseInt(splitCalculateResult[0]) + 1;
         splitCalculateResult = splitCalculateResult.join('차');
         body.calculateNumber = splitCalculateResult;
-      }
 
-      const calculateCreateResult = await db.calculate.create(body);
+        calculateCreateResult = await db.calculate.create(body);
+      }
 
       const findResult = {
         idx: calculateCreateResult.idx,
