@@ -310,7 +310,6 @@ module.exports = {
       // 폴더일 경우
       if (isFolder) {
         const pureTitle = makePureText(title);
-
         await db.folders.update(
           { title, searchingTitle: pureTitle },
           { where: { uuid, customerFile_idx } }
@@ -339,7 +338,7 @@ module.exports = {
         titleAndExtend[0] = title;
         urlArr[urlArr.length - 1] = titleAndExtend.join('.');
         const file_url = urlArr.join('/');
-
+        console.log(file_url);
         //  params만들기
         params = checkFile(
           req,
