@@ -334,16 +334,12 @@ module.exports = {
           ACL: 'public-read',
         };
 
-        const urlObj = url.parse(findFilesResult.file_url, true);
-        let urlArr = findFilesResult.file_url.split('/');
-        console.log(urlArr);
-        const titleAndExtend = urlArr[urlArr.length - 1].split('.');
+        const urlArr = findFilesResult.file_url.split('/');
+        const titleExtend = urlArr[urlArr.length - 1].split('.');
+        urlArr[0] == `${title}.${titleExtend[titleExtend - 1]}`;
 
-        titleAndExtend[0] = title;
         urlArr[urlArr.length - 1] = titleAndExtend.join('.');
         const file_url = urlArr.join('/');
-
-        console.log(urlObj);
 
         //  params만들기
         params = checkFile(
