@@ -212,7 +212,7 @@ module.exports = {
     if (body.contact_person == '') {
       body.contact_person = null;
     }
-    console.log(body);
+
     const t = await db.sequelize.transaction();
     try {
       // 검색용으로 변경
@@ -289,7 +289,6 @@ module.exports = {
 
     const addCalculateLogic = async () => {
       // 몇차 인지 체크
-
       const findCalculate = await db.calculate.findOne({
         where: { customer_idx: req.body.customer_idx },
         order: [['createdAt', 'DESC']],
@@ -304,7 +303,6 @@ module.exports = {
         splitCalculateResult[0] = parseInt(splitCalculateResult[0]) + 1;
         splitCalculateResult = splitCalculateResult.join('차');
         body.calculateNumber = splitCalculateResult;
-
         calculateCreateResult = await db.calculate.create(body);
       }
 
@@ -445,7 +443,7 @@ module.exports = {
     const fileUrl = !calculateFindResult.file_url
       ? `orderchecktest.s3-website.ap-northeast-2.amazonaws.com/signin`
       : calculateFindResult.file_url.split('//')[1];
-
+    console.log(customerFindResult);
     await customerkakaoPushNewCal(
       customerFindResult.customer_phoneNumber,
       companyFindResult.company_name,

@@ -2,7 +2,7 @@ const db = require('../model/db');
 const { payNow, refund } = require('../lib/payFunction');
 const _f = require('../lib/functions');
 module.exports = {
-  enrollmentCard: async () => {
+  enrollmentCard: async (req, res, next) => {
     const {
       card_number,
       expiry,
