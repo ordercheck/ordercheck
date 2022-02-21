@@ -288,7 +288,7 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/calculate:
+ * /api/consulting/calculate/{customer_idx}/:
  *   post:
  *     security:
  *      - bearerAuth: []
@@ -307,13 +307,10 @@
  *                 type: string
  *               predicted_price:
  *                 type: string
- *               customer_idx:
- *                 type: string
  *             example:
  *               img: 견적서file
  *               title: '제1차 견적서'
  *               predicted_price: '1,000,000'
- *               customer_idx: '1'
  *     responses:
  *       '200':
  *         description: 성공

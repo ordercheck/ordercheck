@@ -87,7 +87,7 @@ router.delete(
 
 // 견적서 등록
 router.post(
-  '/calculate',
+  '/calculate/:customer_idx',
   loginCheck,
   multer_calculate_upload().single('img'),
   addCalculate
