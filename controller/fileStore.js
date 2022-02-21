@@ -252,7 +252,7 @@ module.exports = {
             where: { uuid },
           });
         }
-        res.send({ success: 200, message: '삭제 완료' });
+        return res.send({ success: 200, message: '삭제 완료' });
       }
       // 폴더일때
       const findFolderUuid = await db.folders.findAll({
