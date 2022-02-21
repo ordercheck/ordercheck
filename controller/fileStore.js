@@ -36,6 +36,7 @@ const searchUserFoldersFilesPath = async (findFilesResult) => {
 };
 
 const deleteFileToS3 = async (title, req) => {
+  console.log(req.query);
   if (req.query.path) {
     console.log('패스 있음');
     delFile(
