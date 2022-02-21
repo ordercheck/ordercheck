@@ -235,16 +235,18 @@ module.exports = {
           { attributes: ['title', 'path'] }
         );
         // 폴더 안에 없을 때
-
         if (req.query.path == 'undefined') {
-          delFile(findFileResult.title, `ordercheck/${customerFile_idx}`);
+          delFile(
+            findFileResult.title,
+            `ordercheck/fileStore/${customerFile_idx}`
+          );
           await db.files.destroy({
             where: { uuid },
           });
         } else {
           deleteFile(
             findFileResult.title,
-            `ordercheck/${customerFile_idx}/${req.query.path}`
+            `ordercheck/fileStore/${customerFile_idx}/${req.query.path}`
           );
           await db.files.destroy({
             where: { uuid },
