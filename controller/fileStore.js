@@ -342,7 +342,7 @@ module.exports = {
 
         const file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${newTitle}`;
         //  params만들기
-        params = checkFile(req, params, findFilesResult.title, file_url);
+        params = checkFile(req, params, findFilesResult.title, newTitle);
 
         // 파일삭제
         let Bucket = '';
@@ -356,7 +356,11 @@ module.exports = {
           );
         }
 
-        const copyResult = await copyAndDelete(params, Bucket, newTitle);
+        const copyResult = await copyAndDelete(
+          params,
+          Bucket,
+          findFilesResult.title
+        );
         if (copyResult) {
           const pureText = makePureText(newTitle);
 
