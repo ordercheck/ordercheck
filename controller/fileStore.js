@@ -301,7 +301,6 @@ module.exports = {
     }
   },
   changeFileTitle: async (req, res, next) => {
-    console.log(req);
     try {
       const {
         body: { uuid, title, isFolder },
@@ -329,7 +328,7 @@ module.exports = {
           where: { uuid },
           raw: true,
         });
-
+        console.log('폴더', findFilesResult);
         let params = {
           Bucket: 'ordercheck',
           ACL: 'public-read',
