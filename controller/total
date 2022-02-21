@@ -1,13 +1,32 @@
 const db = require('../model/db');
 const axios = require('axios');
 const _f = require('../lib/functions');
+const { searchedCountAndFindAll } = require('../');
 module.exports = {
   totalSearch: async (req, res, next) => {
-    let result = await axios({
-      url: '/api/consulting/customer/search/',
-      method: 'post', // POST method
-      headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
-      data: { user_phone, message, type: 'SMS' },
+    const { company_idx } = req;
+    let searchedCountAndFindAll = await db.customer.findAndCountAll({
+      where: {
+        company_idx,
+        [Op.or]: {
+          customer_name: {
+            [Op.like]: `%${pureText}%`,
+          },
+          searchingPhoneNumber: {
+            [Op.like]: `%${pureText}%`,
+          },
+          searchingAddress: {
+            [Op.like]: `%${pureText}%`,
+          },
+        },
+      },
+      include: [
+        {
+          model: db.user,
+          attributes: ['idx', 'user_name'],
+        },
+      ],
+      attributes: customerAttributes,
     });
   },
 };
