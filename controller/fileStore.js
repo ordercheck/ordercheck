@@ -225,7 +225,7 @@ module.exports = {
   },
   deleteFile: async (req, res, next) => {
     const { uuid, isfolder, customerFile_idx } = req.params;
-    console.log(customerFile_idx);
+
     const t = await db.sequelize.transaction();
     try {
       // 폴더가 아닐 때
@@ -241,6 +241,7 @@ module.exports = {
             where: { uuid },
           });
         } else {
+          console.log('path있을때');
           deleteFile(
             findFileResult.title,
             `ordercheck/${customerFile_idx}/${req.query.path}`
