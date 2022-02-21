@@ -301,6 +301,7 @@ module.exports = {
     }
   },
   changeFileTitle: async (req, res, next) => {
+    console.log(req);
     try {
       const {
         body: { uuid, title, isFolder },
