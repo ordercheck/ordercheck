@@ -438,7 +438,7 @@ module.exports = {
 
     let findFilesResult = await findFilesAndFolders(
       db.files,
-      pureText,
+
       searchFileStoreFilesAttributes,
       {
         company_idx: req.company_idx,

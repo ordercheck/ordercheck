@@ -81,6 +81,14 @@ db.files.belongsTo(db.user, {
   foreignKey: 'company_idx',
 });
 
+// company와 folders
+db.company.hasMany(db.folders, {
+  foreignKey: 'company_idx',
+});
+db.folders.belongsTo(db.company, {
+  foreignKey: 'company_idx',
+});
+
 // folders와 files
 db.folders.hasMany(db.files, {
   foreignKey: 'folder_uuid',
