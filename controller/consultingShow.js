@@ -180,7 +180,7 @@ module.exports = {
         raw: true,
         nest: true,
       });
-      console.log(findAllUser);
+
       // 로그인 한 사람 고정
       for (let i = 0; i < findAllUser.length; i++) {
         findAllUser[i].user_name = findAllUser[i].user.user_name;

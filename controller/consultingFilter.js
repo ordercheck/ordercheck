@@ -13,7 +13,7 @@ module.exports = {
   Filter: async (req, res, next) => {
     let {
       body: { date, status, contract_possibility, userId, confirm },
-      query: { No, Name, Address, Date },
+      query: { No, Name, Address, Date, PhoneNumber },
       params: { limit, page },
       company_idx,
     } = req;
@@ -84,7 +84,8 @@ module.exports = {
         No,
         Name,
         Address,
-        Date
+        Date,
+        PhoneNumber
       );
 
       if (!contractPersonData) {
@@ -122,8 +123,10 @@ module.exports = {
           No,
           Name,
           Address,
-          Date
+          Date,
+          PhoneNumber
         );
+
         const findFilteredUsersData = addUserId(
           findAndCountAllFilterdCustomers.rows,
           addminus,
@@ -169,8 +172,10 @@ module.exports = {
           No,
           Name,
           Address,
-          Date
+          Date,
+          PhoneNumber
         );
+
         const findFilteredUsersData = addUserId(
           findAndCountAllFilterdCustomers.rows,
           addminus,
@@ -218,7 +223,7 @@ module.exports = {
 
   searchCustomer: async (req, res, next) => {
     let {
-      query: { search, No, Name, Address, Date },
+      query: { search, No, Name, Address, Date, PhoneNumber },
       params: { limit, page },
       company_idx,
     } = req;
@@ -235,7 +240,8 @@ module.exports = {
         No,
         Name,
         Address,
-        Date
+        Date,
+        PhoneNumber
       );
 
       let searchedCountAndFindAll = await db.customer.findAndCountAll({
@@ -274,7 +280,8 @@ module.exports = {
         No,
         Name,
         Address,
-        Date
+        Date,
+        PhoneNumber
       );
 
       const customerData = addUserId(

@@ -542,6 +542,11 @@
  *           name: page
  *           schema:
  *             type: integer
+ *         - in: query
+ *           name: PhoneNumber
+ *           schema:
+ *             type: integer
+ *           example: 0 
  *      responses:
  *         '200':
  *            description: 성공
@@ -580,6 +585,11 @@
  *           example: 0
  *         - in: query
  *           name: Date
+ *           schema:
+ *             type: integer
+ *           example: 0 
+ *         - in: query
+ *           name: PhoneNumber
  *           schema:
  *             type: integer
  *           example: 0 
