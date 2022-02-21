@@ -208,7 +208,6 @@ module.exports = {
     }
   },
   addCompanyCustomer: async (req, res, next) => {
-    console.log('고객등록 요청');
     const { body, user_idx, company_idx } = req;
     if (body.contact_person == '') {
       body.contact_person = null;
