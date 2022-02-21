@@ -65,9 +65,7 @@ const createToken = async (data) => {
 // 로그인 라우터
 router.post('/login', async (req, res, next) => {
   const { user_phone, user_password } = req.body;
-  // let user_password_crypt = functions.cryptFunction(0,user_password,'')
-  // let user_password_decode = functions.cryptFunction(1,'',user_password_crypt)
-  // console.log(user_password_decode)
+
   let check = await db.user.findOne({ where: { user_phone } });
   if (!check) {
     return res.send({ success: 400, message: '비밀번호 혹은 전화번호 오류' });
@@ -350,7 +348,6 @@ router.post('/create/token/data', async (req, res) => {
 
       // 카드 등록 실패
       if (!cardAddResult.success) {
-        console.log('카드등록 실패');
         return res.send({ success: 400, message: cardAddResult.message });
       }
       const merchant_uid = _f.random5();
@@ -360,7 +357,6 @@ router.post('/create/token/data', async (req, res) => {
         merchant_uid
       );
       if (!success) {
-        console.log('카드 결제 실패');
         return res.send({ success: 400, message });
       }
 

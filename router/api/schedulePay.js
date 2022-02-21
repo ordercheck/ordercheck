@@ -22,16 +22,15 @@ router.post('/', async (req, res) => {
       });
 
       let payDate;
-      // if (pay_type_data == 'month') {
-      //   const now = new Date();
-      //   let afterMonth = new Date(now.setMonth(now.getMonth() + 1));
-      //   payDate = afterMonth.getTime() / 1000;
-      // }else{
-      //   const now = new Date();
-      //   let afterMonth = new Date(now.setMonth(now.getMonth() + 1));
-      //   payDate = afterMonth.getTime() / 1000;
-
-      // }
+      if (pay_type_data == 'month') {
+        const now = new Date();
+        let afterMonth = new Date(now.setMonth(now.getMonth() + 1));
+        payDate = afterMonth.getTime() / 1000;
+      } else {
+        const now = new Date();
+        let afterMonth = new Date(now.setFullYear(now.getFullYear() + 1));
+        payDate = afterMonth.getTime() / 1000;
+      }
 
       const newMerchant_uid = uuid();
 
@@ -65,9 +64,9 @@ router.post('/', async (req, res) => {
     if (status == 'paid') {
       // payType 체크 (month, year)
 
-      if (getResult.pay_type == 'month') {
-        await doSchedule('month');
-      }
+      getResult.pay_type == 'month'
+        ? await doSchedule('month')
+        : await doSchedule('year');
 
       return res.send({ success: 200 });
     }
