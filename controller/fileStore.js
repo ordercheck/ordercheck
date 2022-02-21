@@ -36,13 +36,14 @@ const searchUserFoldersFilesPath = async (findFilesResult) => {
 };
 
 const deleteFileToS3 = async (title, req) => {
-  console.log(req.query.path);
   if (req.query.path) {
+    console.log('패스 있음');
     delFile(
       title,
       `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}`
     );
   } else {
+    console.log('패스 없음');
     delFile(title, `ordercheck/fileStore/${req.params.customerFile_idx}`);
   }
 };
