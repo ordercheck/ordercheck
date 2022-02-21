@@ -334,11 +334,13 @@ module.exports = {
         };
 
         let urlArr = findFilesResult.file_url.split('/');
+        console.log(urlArr);
         const titleAndExtend = urlArr[urlArr.length - 1].split('.');
+        console.log(titleAndExtend);
         titleAndExtend[0] = title;
         urlArr[urlArr.length - 1] = titleAndExtend.join('.');
         const file_url = urlArr.join('/');
-        console.log(file_url);
+
         //  params만들기
         params = checkFile(
           req,
