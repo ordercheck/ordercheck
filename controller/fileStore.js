@@ -338,7 +338,6 @@ module.exports = {
         const titleExtend = urlArr[urlArr.length - 1].split('.');
         urlArr[0] == `${title}.${titleExtend[titleExtend - 1]}`;
 
-        urlArr[urlArr.length - 1] = titleAndExtend.join('.');
         const file_url = urlArr.join('/');
 
         //  params만들기
