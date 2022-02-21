@@ -162,7 +162,9 @@
  *                 type: string
  *               detail_address:
  *                 type: string
- *               size:
+ *               room_size:
+ *                 type: integer
+ *               room_size_kind:
  *                 type: integer
  *               customer_name:
  *                 type: string
@@ -170,12 +172,10 @@
  *                 type: string
  *               contact_person:
  *                 type: integer
- *               room_size_kind:
- *                 type: integer
  *             example:
  *               address: "경기도 광명"
  *               detail_address: "일직동"
- *               size: 7
+ *               room_size: 7
  *               customer_name: "김기태"
  *               customer_phoneNumber: "010-6719-6919"
  *               contact_person: 4
