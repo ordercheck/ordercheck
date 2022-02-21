@@ -185,9 +185,9 @@ module.exports = {
       req.body.upload_people = findUserResult.user_name;
       req.body.file_url = req.file.location;
       let title = getFileName(req.file.key);
-      title = title.normalize('NFC');
+
       // 그냥 text로 변환
-      const pureText = makePureText(title);
+      const pureText = makePureText(title.normalize('NFC'));
 
       req.body.searchingTitle = pureText;
 
