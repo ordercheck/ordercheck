@@ -32,6 +32,11 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: 0,
       type: DataTypes.INTEGER,
     },
+    searchingTitle: {
+      allowNull: false,
+      unique: true,
+      type: DataTypes.STRING(100),
+    },
     copyCount: {
       defaultValue: 0,
       type: DataTypes.INTEGER,

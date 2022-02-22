@@ -1,7 +1,7 @@
 const db = require('../model/db');
 const axios = require('axios');
 const _f = require('../lib/functions');
-const { makePureText } = require('../lib/apiFunctions');
+const { makePureText, searchFileandFolder } = require('../lib/apiFunctions');
 const { customerAttributes } = require('../lib/attributes');
 module.exports = {
   totalSearch: async (req, res, next) => {
@@ -13,7 +13,7 @@ module.exports = {
     const pureText = makePureText(search);
 
     // customer search
-    let searchedCountAndFindAll = await db.customer.findAndCountAll({
+    let searchCustomer = await db.customer.findAll({
       where: {
         company_idx,
         [Op.or]: {
@@ -37,5 +37,7 @@ module.exports = {
       attributes: customerAttributes,
     });
     // fileStore search
+
+    const searchFileStore = await searchFileandFolder(req, pureText);
   },
 };

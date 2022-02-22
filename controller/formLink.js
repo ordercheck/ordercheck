@@ -5,6 +5,7 @@ const {
   errorFunction,
   findWhiteFormDetail,
   getFileName,
+  makePureText,
 } = require('../lib/apiFunctions');
 const axios = require('axios');
 const { Op } = require('sequelize');
@@ -15,9 +16,10 @@ const {
 module.exports = {
   createFormLink: async (req, res, next) => {
     try {
+      const pureText = makePureText(req.body.title);
       req.body.form_link = _f.random5();
       req.body.company_idx = req.company_idx;
-
+      req.body.searchingTitle = pureText;
       const createResult = await db.formLink.create(req.body);
       return res.send({
         success: 200,
@@ -145,16 +147,8 @@ module.exports = {
   },
   searchFormLink: async (req, res, next) => {
     try {
-      const searchResult = await db.formLink.findAll({
-        where: {
-          title: {
-            [Op.like]: `%${req.params.title}%`,
-          },
-        },
-        attributes: searchFormLinkAttributes,
-        order: [['createdAt', 'DESC']],
-      });
-
+      const pureText = makePureText(req.params.title);
+      const searchResult = await searchFormLink(pureText);
       return res.send({ success: 200, searchResult });
     } catch (err) {
       next(err);
@@ -164,10 +158,13 @@ module.exports = {
     const { title, whiteLabelChecked, formId, expression } = req.body;
     try {
       // 프런트에서 준 최신 업데이트 정보로 formLink 수정
+      const searchingTitle = makePureText(title);
+
       await db.formLink.update(
         {
           title,
           expression,
+          searchingTitle,
         },
         { where: { idx: formId } }
       );
@@ -216,9 +213,11 @@ module.exports = {
       body: { formId, title },
     } = req;
     try {
+      const searchingTitle = makePureText(title);
       await db.formLink.update(
         {
           title,
+          searchingTitle,
         },
         { where: { idx: formId } }
       );
