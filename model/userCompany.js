@@ -18,8 +18,8 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(100),
     },
     deleted: {
-      allowNull: false,
-      defaultValue: false,
+      allowNull: true,
+
       type: DataTypes.STRING(100),
     },
   });
