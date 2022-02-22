@@ -76,7 +76,7 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: true,
       type: DataTypes.BOOLEAN,
     },
-    calculate_down_: {
+    calculate_down: {
       allowNull: false,
       defaultValue: true,
       type: DataTypes.BOOLEAN,

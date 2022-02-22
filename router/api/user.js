@@ -196,9 +196,7 @@ router.post('/join/do', async (req, res) => {
 
     const loginToken = await createToken({
       user_idx: createUserResult.idx,
-      company_idx: randomCompany.idx,
     });
-
     return res.send({ success: 200, loginToken });
   } else {
     res.send({ success: 400 });

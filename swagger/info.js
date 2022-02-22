@@ -184,4 +184,131 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/config/company/template/:
+ *   post:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  config
+ *      summary: 권한 템플릿 등록하기
+ *      requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               template_name:
+ *                 type: string
+ *               change_company_info:
+ *                 type: boolean
+ *               member_approval:
+ *                 type: boolean
+ *               member_del:
+ *                 type: boolean
+ *               member_detail_edit:
+ *                 type: boolean
+ *               member_invite:
+ *                 type: boolean
+ *               create_auth_template:
+ *                 type: boolean
+ *               edit_auth_template:
+ *                 type: boolean
+ *               del_auth_template:
+ *                 type: boolean
+ *               add_new_customer:
+ *                 type: boolean
+ *               customer_info_edit:
+ *                 type: boolean
+ *               integrate_customer:
+ *                 type: boolean
+ *               customer_del:
+ *                 type: boolean
+ *               calculate_upload_share:
+ *                 type: boolean
+ *               calculate_down:
+ *                 type: boolean
+ *               calculate_del:
+ *                 type: boolean
+ *               file_upload:
+ *                 type: boolean
+ *               file_down:
+ *                 type: boolean
+ *               file_del:
+ *                 type: boolean
+ *               create_form:
+ *                 type: boolean
+ *               edit_form:
+ *                 type: boolean
+ *               del_form:
+ *                 type: boolean
+ *               change_auth_open:
+ *                 type: boolean
+ *               change_whilte_label:
+ *                 type: boolean
+ *               send_message:
+ *                 type: boolean
+ *               create_chat_room:
+ *                 type: boolean
+ *               del_chat_room:
+ *                 type: boolean
+ *               set_comment_template:
+ *                 type: boolean
+ *               set_chat:
+ *                 type: boolean
+ *               stat_access:
+ *                 type: boolean
+ *             example:
+ *               template_name: "템플릿 이름"
+ *               change_company_info: "회사정보편집"
+ *               member_approval: "팀원승인"
+ *               member_del: "팀원 삭제"
+ *               member_detail_edit: "팀원 상세 편집"
+ *               member_invite: "SMS/이메일로 초대"
+ *               create_auth_template: "템플릿 생성"
+ *               edit_auth_template: "템플릿 수정"
+ *               del_auth_template: "템플릿 삭제"
+ *               add_new_customer: "신규 고객 등록"
+ *               customer_info_edit: "기본정보 수정"
+ *               integrate_customer: "고객 연동"
+ *               customer_del: "고객 삭제"
+ *               calculate_upload_share: "견적 업로드 및 공유"
+ *               calculate_down: "견적 다운로드"
+ *               calculate_del: "견적 삭제"
+ *               file_upload: "파일 업로드"
+ *               file_down: "파일 다운로드"
+ *               file_del: "파일 삭제"
+ *               create_form: "신청폼 생성"
+ *               edit_form: "신청폼 수정"
+ *               del_form: "신청폼 삭제"
+ *               change_auth_open: "열람 권한 변경"
+ *               change_whilte_label: "화이트 라벨링 변경"
+ *               send_message: "메세지 보내기"
+ *               create_chat_room: "채팅방 생성"
+ *               del_chat_room: "채팅방 삭제"
+ *               set_comment_template: "자주 쓰는 답변 템플릿 설정"
+ *               set_chat: "채팅 운영 및 안내 설정"
+ *               stat_access: "접근 가능"
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/config/company/template/{templateId}:
+ *   delete:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  config
+ *      summary: 권한 템플릿 삭제하기
+ *      parameters:
+ *         - in: path
+ *           name: templateId
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

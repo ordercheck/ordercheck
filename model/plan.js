@@ -60,6 +60,24 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+
+    whiteLabelPrice: {
+      allowNull: true,
+
+      type: DataTypes.STRING(100),
+    },
+
+    chatPrice: {
+      allowNull: true,
+
+      type: DataTypes.STRING(100),
+    },
+    analysticPrice: {
+      allowNull: true,
+
+      type: DataTypes.STRING(100),
+    },
+
     merchant_uid: {
       allowNull: true,
       type: DataTypes.BOOLEAN,

@@ -232,4 +232,45 @@ module.exports = {
     });
     return res.send({ success: 200, findResult });
   },
+  addTemplate: async (req, res, next) => {
+    const { company_idx, body, user_idx } = req;
+    try {
+      const findUserResult = await db.user.findByPk(user_idx, {
+        attributes: ['user_name'],
+      });
+      body.create_people = findUserResult.user_name;
+      body.company_idx = company_idx;
+      await db.config.create(body);
+      return res.send({ success: 200 });
+    } catch (err) {
+      next(err);
+    }
+  },
+  delTemplate: async (req, res, next) => {
+    const {
+      company_idx,
+      params: { templateId },
+    } = req;
+    try {
+      const findUserResult = await db.userCompany.findAll({
+        where: { config_idx: templateId },
+        raw: true,
+        nest: true,
+      });
+      const findConfigResult = await db.config.findOne({
+        where: { company_idx: templateId, template_name: '팀원' },
+        attributes: ['idx'],
+      });
+      findUserResult.forEach(async (data) => {
+        await db.userCompany.update(
+          { config_idx: findConfigResult.idx },
+          { where: { idx: data.idx } }
+        );
+      });
+      await db.config.destroy({ where: { idx: templateId } });
+      return res.send({ success: 200 });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
