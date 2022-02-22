@@ -227,7 +227,7 @@ router.post('/company/check', async (req, res) => {
       );
 
       // 각 데이터에 필요한 key, value
-
+      await db.company;
       card_data.company_idx = login_data.company_idx;
       card_data.user_idx = login_data.user_idx;
 
