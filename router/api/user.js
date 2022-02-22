@@ -179,6 +179,7 @@ router.post('/join/do', async (req, res) => {
     await includeUserToCompany({
       user_idx: createUserResult.idx,
       company_idx: randomCompany.idx,
+      searchingName: user_data.user_name,
     });
     // master 권한 주기
     await giveMasterAuth(createUserResult.idx, randomCompany.idx);
