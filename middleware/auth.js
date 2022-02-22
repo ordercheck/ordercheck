@@ -12,6 +12,7 @@ const loginCheck = async (req, res, next) => {
     const data = await verify_data(token);
     const findUserCompanyResult = await db.userCompany.findOne({
       where: { user_idx: data.user_idx, deleted: null },
+      attributes: ['company_idx'],
     });
     req.user_idx = data.user_idx;
     req.company_idx = findUserCompanyResult.company_idx;

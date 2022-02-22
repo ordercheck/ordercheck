@@ -227,8 +227,11 @@ router.post('/company/check', async (req, res) => {
       );
 
       // 각 데이터에 필요한 key, value
-      await db.company;
-      card_data.company_idx = login_data.company_idx;
+      const findCompanyData = await db.userCompany.findOne({
+        where: { user_idx: login_data.user_idx, deleted: null },
+        attributes: ['company_idx'],
+      });
+      card_data.company_idx = findCompanyData.company_idx;
       card_data.user_idx = login_data.user_idx;
 
       // 법인카드 유무 확인 후 체크
@@ -257,7 +260,7 @@ router.post('/company/check', async (req, res) => {
       );
       plan_data.merchant_uid = nextMerchant_uid;
       await db.plan.update(plan_data, {
-        where: { company_idx: login_data.company_idx },
+        where: { company_idx: findCompanyData.company_idx },
         transaction: t,
       });
 
