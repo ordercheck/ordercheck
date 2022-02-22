@@ -369,7 +369,8 @@ module.exports = {
     }
   },
   searchFileStore: async (req, res, next) => {
-    const totalFindResult = await searchFileandFolder(req);
+    const pureText = makePureText(req.query.search);
+    const totalFindResult = await searchFileandFolder(req, pureText);
     res.send(totalFindResult);
   },
   showDetailFileFolder: async (req, res, next) => {
