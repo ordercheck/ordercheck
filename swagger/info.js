@@ -12,7 +12,7 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/info/company:
+ * /api/config/company:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -24,7 +24,7 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/info/company/:
+ * /api/config/company/:
  *   patch:
  *      security:
  *       - bearerAuth: []
@@ -80,7 +80,7 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/info/company/logo:
+ * /api/config/company/logo:
  *   patch:
  *      security:
  *       - bearerAuth: []
@@ -102,7 +102,7 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/info/company/enrollment:
+ * /api/config/company/enrollment:
  *   patch:
  *      security:
  *       - bearerAuth: []
@@ -124,7 +124,7 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/info/company/member:
+ * /api/config/company/member:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -136,7 +136,7 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/info/company/search/member/:
+ * /api/config/company/search/member/:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -149,6 +149,36 @@
  *           schema:
  *             type: string
  *           example: "김기태"
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/config/company/member/{memberId}:
+ *   delete:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  config
+ *      summary: 회사 팀원 삭제하기
+ *      parameters:
+ *         - in: path
+ *           name: memberId
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/config/company/template:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  config
+ *      summary: 권한 템플릿 가져오기
  *      responses:
  *       '200':
  *         description: 성공

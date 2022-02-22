@@ -69,21 +69,19 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/invite/join/do:
- *   post:
+ * /api/invite/join/do/{memberId}:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
  *      tags:
  *       - invite
  *      summary: 회사 가입 신청 허가
- *      requestBody:
- *       content:
- *         application/json:
+ *      parameters:
+ *         - in: path
+ *           name: memberId
  *           schema:
- *             type: object
- *             properties:
- *               user_idx:
- *                 type: integer
- *             example:
- *               user_idx:1
+ *             type: integer
+ *           example: 1
  *      responses:
  *       '200':
  *         description: 성공

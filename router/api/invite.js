@@ -14,5 +14,5 @@ router.post('/email', loginCheck, sendEmail);
 router.post('/join/company/regist', joinToCompanyByRegist);
 router.post('/join/company/login', joinToCompanyByLogin);
 router.get('/standby', loginCheck, showStandbyUser);
-router.post('/join/do', loginCheck, joinStandbyUser);
+router.get('/join/do/:memberId', loginCheck, joinStandbyUser);
 module.exports = router;

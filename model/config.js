@@ -6,7 +6,11 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-    template_name: { allowNull: true, type: DataTypes.STRING(100) },
+    template_name: {
+      allowNull: true,
+      defaultValue: '팀원',
+      type: DataTypes.STRING(100),
+    },
     change_company_info: {
       allowNull: false,
       defaultValue: false,
@@ -159,5 +163,12 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+
+    create_people: {
+      allowNull: true,
+      defaultValue: '오더체크',
+      type: DataTypes.STRING(100),
+    },
+    update_people: { allowNull: true, type: DataTypes.STRING(100) },
   });
 };

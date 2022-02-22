@@ -8,7 +8,9 @@ const {
   changeCompanyEnrollment,
   getCompanyProfileMember,
   searchMember,
-} = require('../../controller/info');
+  delCompanyMember,
+  showTemplateList,
+} = require('../../controller/config');
 const {
   multer_company_logo_upload,
   multer_company_Enrollment_upload,
@@ -18,7 +20,9 @@ router.get('/user', loginCheck, getUserProfile);
 router.get('/company', loginCheck, getCompanyProfile);
 router.get('/company/member', loginCheck, getCompanyProfileMember);
 router.get('/company/search/member', loginCheck, searchMember);
+router.get('/company/template', loginCheck, showTemplateList);
 router.patch('/company', loginCheck, changeCompanyInfo);
+router.delete('/company/member/:memberId', loginCheck, delCompanyMember);
 router.patch(
   '/company/logo',
   loginCheck,

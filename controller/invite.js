@@ -5,6 +5,7 @@ const {
   createRandomCompany,
   giveMasterAuth,
   createFreePlan,
+  findMembers,
 } = require('../lib/apiFunctions');
 const sendMail = require('../mail/sendInvite');
 
@@ -47,7 +48,6 @@ module.exports = {
       const { createUserResult, success, message } = await joinFunction(
         req.body
       );
-
       if (!success) {
         return res.send({ success: 400, message: message });
       }
@@ -55,20 +55,17 @@ module.exports = {
       const findCompany = await db.company.findOne({
         where: { company_subdomain },
       });
+      const findConfigResult = await db.config.findOne({
+        where: { template_name: '팀원', company_idx: findCompany.idx },
+      });
       // userCompany 만들기 active 0
       await includeUserToCompany({
         user_idx: createUserResult.idx,
         company_idx: findCompany.idx,
         active: 0,
         searchingName: createUserResult.user_name,
+        config_idx: findConfigResult.idx,
       });
-      // 랜덤 회사 만들기
-      const randomCompany = await createRandomCompany(createUserResult.idx);
-      // master 권한 주기
-      await giveMasterAuth(createUserResult.idx, randomCompany.idx);
-
-      // 무료 플랜 만들기
-      await createFreePlan(randomCompany.idx);
 
       return res.send({ success: 200, message: '가입 신청 완료' });
     } catch (err) {
@@ -96,31 +93,44 @@ module.exports = {
     const findCompany = await db.company.findOne({
       where: { company_subdomain },
     });
+    const findConfigResult = await db.config.findOne({
+      where: { template_name: '팀원', company_idx: findCompany.idx },
+    });
     await includeUserToCompany({
       user_idx: check.idx,
       company_idx: findCompany.company_idx,
       active: 0,
       searchingName: check.user_name,
+      config_idx: findConfigResult.idx,
     });
-
     res.send({ success: 200 });
   },
   showStandbyUser: async (req, res, next) => {
-    const standbyUser = await db.userCompany.findAll({
-      where: { company_idx: req.company_idx, active: 0 },
-    });
+    const { company_idx } = req;
+    const standbyUser = await findMembers(
+      {
+        company_idx,
+        active: 0,
+        deleted: null,
+      },
+      company_idx
+    );
 
     return res.send({ success: 200, standbyUser });
   },
   joinStandbyUser: async (req, res, next) => {
-    await db.userCompany.update(
-      { active: 1 },
-      { where: { user_idx: req.body.user_idx, company_idx: req.company_idx } }
-    );
-    await db.create.create({
-      user_idx: req.body.user_idx,
-      company_idx: req.company_idx,
+    const { memberId } = req.params;
+    const findUserCompanyResult = await db.userCompany.findByPk(memberId, {
+      attributes: ['user_idx', 'company_idx'],
     });
+
+    await db.userCompany.update({ active: 1 }, { where: { idx: memberId } });
+
+    await db.config.create({
+      user_idx: findUserCompanyResult.user_idx,
+      company_idx: findUserCompanyResult.company_idx,
+    });
+
     return res.send({ success: 200 });
   },
 };

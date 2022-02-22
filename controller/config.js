@@ -1,13 +1,16 @@
 const db = require('../model/db');
 const { makeSpreadArray } = require('../lib/functions');
 const { sequelize } = require('../model/db');
-const { getFileName } = require('../lib/apiFunctions');
+const { getFileName, findMembers } = require('../lib/apiFunctions');
 const { Op } = require('sequelize');
+const moment = require('moment');
+const { showTemplateListAttributes } = require('../lib/attributes');
+require('moment-timezone');
+moment.tz.setDefault('Asia/Seoul');
+
 const { delFile } = require('../lib/aws/fileupload').ufile;
-const {
-  getCompanyProfileMemberUserAttributes,
-  getCompanyProfileMemberMainAttributes,
-} = require('../lib/attributes');
+const {} = require('../lib/attributes');
+const attributes = require('../lib/attributes');
 const updateLogoAndEnrollment = async (
   company_idxData,
   fileData,
@@ -59,36 +62,6 @@ const updateLogoAndEnrollment = async (
   } catch (err) {
     return false;
   }
-};
-
-const findMembers = async (whereData, company_idxData) => {
-  const result = await db.userCompany.findAll({
-    where: whereData,
-    include: [
-      {
-        model: db.user,
-        attributes: getCompanyProfileMemberUserAttributes,
-        include: [
-          {
-            model: db.config,
-            where: { company_idx: company_idxData },
-            attributes: ['template_name'],
-          },
-        ],
-      },
-    ],
-    attributes: getCompanyProfileMemberMainAttributes,
-    raw: true,
-    nest: true,
-  });
-
-  const findResult = result.map((data) => {
-    data.template_name = data.user.configs.template_name;
-    delete data.user.configs;
-    return data;
-  });
-
-  return findResult;
 };
 
 module.exports = {
@@ -204,7 +177,10 @@ module.exports = {
   getCompanyProfileMember: async (req, res, next) => {
     const { company_idx } = req;
     try {
-      const findResult = await findMembers({ company_idx }, company_idx);
+      const findResult = await findMembers(
+        { company_idx, deleted: null },
+        company_idx
+      );
 
       return res.send({ success: 200, findResult });
     } catch (err) {
@@ -216,16 +192,44 @@ module.exports = {
       query: { search },
       company_idx,
     } = req;
-    const findResult = await findMembers(
-      {
-        searchingName: {
-          [Op.like]: `%${search}%`,
+    try {
+      const findResult = await findMembers(
+        {
+          searchingName: {
+            [Op.like]: `%${search}%`,
+          },
+          company_idx,
+          deleted: null,
         },
-        company_idx,
-      },
-      company_idx
-    );
+        company_idx
+      );
 
-    return res.send(findResult);
+      return res.send(findResult);
+    } catch (err) {
+      next(err);
+    }
+  },
+  delCompanyMember: async (req, res, next) => {
+    const {
+      params: { memberId },
+    } = req;
+    const deletedTime = moment().format('YYYY.MM.DD');
+    try {
+      await db.userCompany.update(
+        { deleted: deletedTime },
+        { where: { idx: memberId } }
+      );
+      return res.send({ success: 200 });
+    } catch (err) {
+      next(err);
+    }
+  },
+  showTemplateList: async (req, res, next) => {
+    const { company_idx } = req;
+    const findResult = await db.config.findAll({
+      where: { company_idx },
+      attributes: showTemplateListAttributes,
+    });
+    return res.send({ success: 200, findResult });
   },
 };

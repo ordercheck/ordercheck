@@ -175,14 +175,22 @@ router.post('/join/do', async (req, res) => {
 
     // 랜덤 회사 만들기
     const randomCompany = await createRandomCompany(createUserResult.idx);
+
+    // master template 만들기
+    const createTempalteResult = await giveMasterAuth(randomCompany.idx);
+    // 팀원 template  만들기
+    await db.config.create({
+      company_idx: randomCompany.idx,
+    });
+
     // 유저 회사에 소속시키기
     await includeUserToCompany({
       user_idx: createUserResult.idx,
       company_idx: randomCompany.idx,
       searchingName: user_data.user_name,
+      config_idx: createTempalteResult.idx,
     });
-    // master 권한 주기
-    await giveMasterAuth(createUserResult.idx, randomCompany.idx);
+
     // 무료 플랜 만들기
     await createFreePlan(randomCompany.idx);
 
