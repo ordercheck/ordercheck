@@ -214,7 +214,6 @@ module.exports = {
   updateFormTitle: async (req, res, next) => {
     const {
       body: { formId, title },
-      company_idx,
     } = req;
     try {
       await db.formLink.update(
