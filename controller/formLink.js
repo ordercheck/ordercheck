@@ -227,7 +227,7 @@ module.exports = {
       let formDetail = await db.formLink.findByPk(formId, {
         attributes: createFormLinkAttributes,
       });
-      formList = formList.map((data) => {
+      formDetail = formDetail.map((data) => {
         data.urlPath = `${data.form_link}/${data.expression}`;
         return data;
       });
