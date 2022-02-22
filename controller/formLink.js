@@ -6,13 +6,10 @@ const {
   findWhiteFormDetail,
   getFileName,
   makePureText,
+  searchingByTitle,
 } = require('../lib/apiFunctions');
-const axios = require('axios');
-const { Op } = require('sequelize');
-const {
-  createFormLinkAttributes,
-  searchFormLinkAttributes,
-} = require('../lib/attributes');
+
+const { createFormLinkAttributes } = require('../lib/attributes');
 module.exports = {
   createFormLink: async (req, res, next) => {
     try {
@@ -148,7 +145,7 @@ module.exports = {
   searchFormLink: async (req, res, next) => {
     try {
       const pureText = makePureText(req.params.title);
-      const searchResult = await searchFormLink(pureText);
+      const searchResult = await searchingByTitle(pureText);
       return res.send({ success: 200, searchResult });
     } catch (err) {
       next(err);
