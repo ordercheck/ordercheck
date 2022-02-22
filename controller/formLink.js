@@ -224,13 +224,11 @@ module.exports = {
         { where: { idx: formId } }
       );
 
-      let formDetail = await db.formLink.findByPk(formId, {
+      const formDetail = await db.formLink.findByPk(formId, {
         attributes: createFormLinkAttributes,
       });
-      formDetail = formDetail.map((data) => {
-        data.urlPath = `${data.form_link}/${data.expression}`;
-        return data;
-      });
+      formDetail.urlPath = `${formDetail.form_link}/${formDetail.expression}`;
+
       return res.send({ success: 200, formDetail });
     } catch (err) {
       next(err);
