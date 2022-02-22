@@ -6,12 +6,7 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-    //host uidx
-    // huidx: {
-    //   allowNull: true,
-    //   unique: true,
-    //   type: DataTypes.INTEGER,
-    // },
+    template_name: { allowNull: true, type: DataTypes.STRING(100) },
     change_company_info: {
       allowNull: false,
       defaultValue: false,

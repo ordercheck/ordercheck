@@ -58,7 +58,6 @@ const check_data = (req, res, next) => {
 
 const createToken = async (data) => {
   // const expiresIn = 60 * 60 * 60;
-  const last_login = _f.getNowTime();
   const token = await jwt.sign(data, process.env.tokenSecret);
   return token;
 };
@@ -70,21 +69,27 @@ router.post('/login', async (req, res, next) => {
   if (!check) {
     return res.send({ success: 400, message: '비밀번호 혹은 전화번호 오류' });
   }
-  let findUserCompany = await db.userCompany.findOne({
-    where: { user_idx: check.idx },
-  });
-  //  userCompany를 찾아 없으면 무료 플랜으로 전환
-  if (!findUserCompany) {
-    const findCompany = await db.company.findOne(
-      { huidx: check.idx },
-      { attributes: ['idx'] }
-    );
-    findUserCompany = await db.userCompany.create({
-      where: { user_idx: check.idx, company_idx: findCompany.idx },
-    });
-  }
 
   if (check) {
+    //  userCompany를 찾아 없으면 무료 플랜으로 전환
+    let findUserCompany = await db.userCompany.findOne({
+      where: { user_idx: check.idx, deleted: null },
+    });
+    if (!findUserCompany) {
+      const findCompany = await db.company.findOne(
+        { huidx: check.idx },
+        { attributes: ['idx'] }
+      );
+
+      findUserCompany = await db.userCompany.create({
+        where: {
+          user_idx: check.idx,
+          company_idx: findCompany.idx,
+          searchingName: check.user_name,
+        },
+      });
+    }
+
     const compareResult = await bcrypt.compare(
       user_password,
       check.user_password
@@ -94,7 +99,6 @@ router.post('/login', async (req, res, next) => {
     }
     const tokenData = {};
     tokenData.user_idx = check.idx;
-    tokenData.company_idx = findUserCompany.company_idx;
 
     token = await createToken(tokenData);
     res.send({ success: 200, token });

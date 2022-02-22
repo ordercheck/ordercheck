@@ -2,7 +2,95 @@ const db = require('../model/db');
 const { makeSpreadArray } = require('../lib/functions');
 const { sequelize } = require('../model/db');
 const { getFileName } = require('../lib/apiFunctions');
+const { Op } = require('sequelize');
 const { delFile } = require('../lib/aws/fileupload').ufile;
+const {
+  getCompanyProfileMemberUserAttributes,
+  getCompanyProfileMemberMainAttributes,
+} = require('../lib/attributes');
+const updateLogoAndEnrollment = async (
+  company_idxData,
+  fileData,
+  changeData
+) => {
+  const updateCompanyLogo = async (UrlData, TitleData, change) => {
+    let updateKey;
+    change == 'logo'
+      ? (updateKey = 'company_logo')
+      : (updateKey = 'business_enrollment');
+
+    const updateKeyTitle = `${updateKey}_title`;
+
+    await db.company.update(
+      {
+        [updateKey]: UrlData,
+        [updateKeyTitle]: TitleData,
+      },
+      { where: { idx: company_idxData } }
+    );
+  };
+  try {
+    const findCompanyResult = await db.company.findByPk(company_idxData, {
+      attributes: ['company_logo_title'],
+    });
+    // 로고를 새로 업로드 하는 경우
+    if (!findCompanyResult.company_logo_title) {
+      const file_name = getFileName(fileData.key);
+      await updateCompanyLogo(fileData.location, file_name, changeData);
+    }
+    // 로고를 삭제하는 경우
+    if (!fileData) {
+      delFile(
+        findCompanyResult.company_logo_title,
+        `ordercheck/${changeData}/${company_idxData}`
+      );
+      await updateCompanyLogo(null, null, changeData);
+    }
+    // 로고를 바꾸는 경우
+    if (findCompanyResult.company_logo_title) {
+      delFile(
+        findCompanyResult.company_logo_title,
+        `ordercheck/${changeData}/${company_idxData}`
+      );
+      const file_name = getFileName(fileData.key);
+      await updateCompanyLogo(fileData.location, file_name, changeData);
+    }
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+const findMembers = async (whereData, company_idxData) => {
+  const result = await db.userCompany.findAll({
+    where: whereData,
+    include: [
+      {
+        model: db.user,
+        attributes: getCompanyProfileMemberUserAttributes,
+        include: [
+          {
+            model: db.config,
+            where: { company_idx: company_idxData },
+            attributes: ['template_name'],
+          },
+        ],
+      },
+    ],
+    attributes: getCompanyProfileMemberMainAttributes,
+    raw: true,
+    nest: true,
+  });
+
+  const findResult = result.map((data) => {
+    data.template_name = data.user.configs.template_name;
+    delete data.user.configs;
+    return data;
+  });
+
+  return findResult;
+};
+
 module.exports = {
   getUserProfile: async (req, res) => {
     try {
@@ -27,8 +115,9 @@ module.exports = {
     try {
       let companyProfile = await db.sequelize
         .query(
-          `SELECT company_name, company_subdomain, address, detail_address, business_number, business_enrollment, user_name FROM userCompany 
-      LEFT JOIN company ON userCompany.company_idx = company.idx 
+          `SELECT plan, company_name, company_logo, company_subdomain, address, detail_address, business_number, business_enrollment,  business_enrollment_title,user_name FROM userCompany 
+      LEFT JOIN company ON userCompany.company_idx = company.idx
+      INNER JOIN plan ON userCompany.company_idx = company.idx
       LEFT JOIN user ON company.huidx = user.idx
       WHERE userCompany.user_idx = ${req.user_idx}
    `
@@ -43,39 +132,100 @@ module.exports = {
     }
   },
   changeCompanyLogo: async (req, res, next) => {
-    const { company_idx, user_idx, body, file } = req;
-    const updateCompanyLogo = async (logoUrlData, logoTitleData) => {
+    const { company_idx, file } = req;
+    try {
+      const result = await updateLogoAndEnrollment(
+        company_idx,
+        file.transforms[0],
+        'logo'
+      );
+      if (result) {
+        return res.send({ success: 200 });
+      }
+    } catch (err) {
+      next(err);
+    }
+  },
+  changeCompanyInfo: async (req, res, next) => {
+    const {
+      body: {
+        company_name,
+        company_subdomain,
+        address,
+        detail_address,
+        business_number,
+      },
+      company_idx,
+    } = req;
+    const updateCompanyInfo = async (updateKey, updateData) => {
       await db.company.update(
-        {
-          company_logo: logoUrlData,
-          company_logo_title: logoTitleData,
-        },
+        { [updateKey]: updateData },
         { where: { idx: company_idx } }
       );
     };
+
     try {
-      const findCompanyResult = await db.company.findByPk(company_idx, {
-        attributes: ['company_logo_title'],
-      });
-      // 로고를 새로 업로드 하는 경우
-      if (!findCompanyResult.company_logo_title) {
-        const file_name = getFileName(file.transforms[0].key);
-        await updateCompanyLogo(file.transforms[0].location, file_name);
+      if (company_name) {
+        await updateCompanyInfo('company_name', company_name);
       }
-      // 로고를 삭제하는 경우
-      if (!file) {
-        delFile(findCompanyResult.company_logo_title, 'ordercheck/logo');
-        await updateCompanyLogo(null, null);
+      if (company_subdomain) {
+        await updateCompanyInfo('company_subdomain', company_subdomain);
       }
-      // 로고를 바꾸는 경우
-      if (findCompanyResult.company_logo_title) {
-        delFile(findCompanyResult.company_logo_title, 'ordercheck/logo');
-        const file_name = getFileName(file.transforms[0].key);
-        await updateCompanyLogo(file.transforms[0].location, file_name);
+      if (address) {
+        await updateCompanyInfo('address', address);
       }
+      if (detail_address) {
+        await updateCompanyInfo('detail_address', detail_address);
+      }
+      if (business_number) {
+        await updateCompanyInfo('business_number', business_number);
+      }
+
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
     }
+  },
+  changeCompanyEnrollment: async (req, res, next) => {
+    const { company_idx, file } = req;
+    try {
+      const result = await updateLogoAndEnrollment(
+        company_idx,
+        file,
+        'enrollment'
+      );
+      if (result) {
+        return res.send({ success: 200 });
+      }
+    } catch (err) {
+      next(err);
+    }
+  },
+  getCompanyProfileMember: async (req, res, next) => {
+    const { company_idx } = req;
+    try {
+      const findResult = await findMembers({ company_idx }, company_idx);
+
+      return res.send({ success: 200, findResult });
+    } catch (err) {
+      next(err);
+    }
+  },
+  searchMember: async (req, res, next) => {
+    const {
+      query: { search },
+      company_idx,
+    } = req;
+    const findResult = await findMembers(
+      {
+        searchingName: {
+          [Op.like]: `%${search}%`,
+        },
+        company_idx,
+      },
+      company_idx
+    );
+
+    return res.send(findResult);
   },
 };

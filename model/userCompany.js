@@ -11,5 +11,16 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: 1,
       type: DataTypes.INTEGER,
     },
+    searchingName: {
+      allowNull: false,
+      defaultValue: '',
+      unique: true,
+      type: DataTypes.STRING(100),
+    },
+    deleted: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.STRING(100),
+    },
   });
 };

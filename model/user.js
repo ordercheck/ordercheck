@@ -49,10 +49,10 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER(4),
     },
 
-    active: {
+    deleted: {
       allowNull: false,
-      defaultValue: 1,
-      type: DataTypes.INTEGER(4),
+      defaultValue: false,
+      type: DataTypes.STRING(100),
     },
 
     use_agree: {

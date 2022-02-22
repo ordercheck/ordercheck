@@ -60,6 +60,7 @@ module.exports = {
         user_idx: createUserResult.idx,
         company_idx: findCompany.idx,
         active: 0,
+        searchingName: createUserResult.user_name,
       });
       // 랜덤 회사 만들기
       const randomCompany = await createRandomCompany(createUserResult.idx);
@@ -99,6 +100,7 @@ module.exports = {
       user_idx: check.idx,
       company_idx: findCompany.company_idx,
       active: 0,
+      searchingName: check.user_name,
     });
 
     res.send({ success: 200 });
