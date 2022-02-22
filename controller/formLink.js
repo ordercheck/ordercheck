@@ -6,6 +6,7 @@ const {
   findWhiteFormDetail,
   getFileName,
 } = require('../lib/apiFunctions');
+const axios = require('axios');
 const { Op } = require('sequelize');
 const {
   createFormLinkAttributes,
@@ -28,11 +29,11 @@ module.exports = {
     }
   },
   showFormLink: async (req, res, next) => {
+    const { company_idx } = req;
     try {
       let formList = await db.formLink.findAll({
-        where: { company_idx: req.company_idx },
+        where: { company_idx },
         attributes: createFormLinkAttributes,
-
         order: [['createdAt', 'DESC']],
         raw: true,
       });
@@ -222,7 +223,9 @@ module.exports = {
         },
         { where: { idx: formId } }
       );
-      const { formDetail } = await findWhiteFormDetail(company_idx, formId);
+
+      const formDetail = await db.formLink.findByPk(formId);
+
       return res.send({ success: 200, formDetail });
     } catch (err) {
       next(err);
