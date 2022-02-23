@@ -36,12 +36,21 @@ router.post('/', async (req, res) => {
         newMerchant_uid
       );
 
+      const findPlanResult = await db.plan.findOne({
+        where: { merchant_uid },
+        raw: true,
+      });
+
       await db.plan.update(
-        { merchant_uid: newMerchant_uid },
+        { active: 0 },
         {
           where: { merchant_uid },
         }
       );
+
+      findPlanResult.merchant_uid = newMerchant_uid;
+
+      await db.plan.create(findPlanResult);
     };
 
     if (

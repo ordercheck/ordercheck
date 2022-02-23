@@ -222,10 +222,14 @@ module.exports = {
   },
   getFormLinkInfo: async (req, res, next) => {
     const { form_link } = req.params;
-    const findResult = await db.formLink.findOne({
-      where: { form_link },
-      attributes: ['whiteLabelChecked', 'expression', 'tempType'],
-    });
-    return res.send({ success: 200, findResult });
+    try {
+      const findResult = await db.formLink.findOne({
+        where: { form_link },
+        attributes: ['whiteLabelChecked', 'expression', 'tempType'],
+      });
+      return res.send({ success: 200, findResult });
+    } catch (err) {
+      next(err);
+    }
   },
 };

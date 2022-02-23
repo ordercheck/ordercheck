@@ -77,7 +77,7 @@ module.exports = {
           FROM user 
           LEFT JOIN userCompany ON user.idx = userCompany.user_idx 
           LEFT JOIN config ON userCompany.config_idx = config.idx  
-          LEFT JOIN plan ON userCompany.company_idx = plan.company_idx       
+          LEFT JOIN plan ON userCompany.company_idx = plan.company_idx and plan.active = 1     
           WHERE user.idx = ${req.user_idx}`
         )
         .spread((r) => {

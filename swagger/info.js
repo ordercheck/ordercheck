@@ -323,16 +323,4 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/config/company/plan/:
- *   patch:
- *      security:
- *       - bearerAuth: []
- *      tags:
- *       -  config
- *      summary: 구독관리 플랜정보 보여주기
- *      responses:
- *       '200':
- *         description: 성공
- *       '401':
- *         description: 실패
  */

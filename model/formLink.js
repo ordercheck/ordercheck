@@ -34,7 +34,6 @@ module.exports = function (sequelize, DataTypes) {
     },
     searchingTitle: {
       allowNull: false,
-      unique: true,
       type: DataTypes.STRING(100),
     },
     copyCount: {
