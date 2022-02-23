@@ -9,6 +9,7 @@ const { errorFunction } = require('../../lib/apiFunctions');
 // 정기 결제 완료 후 다음달 결제 예약
 router.post('/', async (req, res) => {
   try {
+    console.log('hi');
     const { imp_uid, merchant_uid, status } = req.body;
     const getResult = await getPayment(imp_uid);
     console.log(getResult);
