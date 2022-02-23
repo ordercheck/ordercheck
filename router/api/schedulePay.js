@@ -1,11 +1,9 @@
 const express = require('express');
-const uuid = require('uuid').v1;
+const { generateRandomCode } = require('../../lib/functions');
 const router = express.Router();
 const { schedulePay, getPayment } = require('../../lib/payFunction');
 const _f = require('../../lib/functions');
 const db = require('../../model/db');
-const { createFreePlan } = require('../../lib/apiFunctions');
-const { next } = require('cheerio/lib/api/traversing');
 
 // 정기 결제 완료 후 다음달 결제 예약
 router.post('/', async (req, res, next) => {
@@ -25,7 +23,7 @@ router.post('/', async (req, res, next) => {
         payDate = afterMonth.getTime() / 1000;
       }
 
-      const newMerchant_uid = uuid();
+      const newMerchant_uid = generateRandomCode(6);
 
       await schedulePay(
         payDate,

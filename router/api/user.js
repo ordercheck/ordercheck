@@ -70,15 +70,6 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
     let card_data = await verify_data(ct);
     let login_data = await verify_data(lt);
 
-    let check_domain = await db.company
-      .findAll({ where: { company_subdomain } })
-      .then((r) => {
-        return makeArray(r);
-      });
-    if (check_domain.length > 0) {
-      return res.send({ success: 400, type: 'domain' });
-    }
-
     // 각 데이터에 필요한 key, value
     const findCompanyData = await db.userCompany.findOne({
       where: { user_idx: login_data.user_idx, deleted: null },
@@ -98,7 +89,7 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
     // 시간을 unix형태로 변경(실제)
     const changeToTime = new Date(plan_data.start_plan);
     changeToUnix = changeToTime.getTime() / 1000;
-    const nextMerchant_uid = uuid();
+    const nextMerchant_uid = generateRandomCode(6);
 
     //  테스트
     // const now = new Date();
@@ -121,10 +112,9 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
       where: { company_idx: findCompanyData.company_idx },
       transaction: t,
     });
-    return true;
+    return { success: true, login_data };
   } catch (err) {
-    await t.rollback();
-    return false;
+    return { success: false, err };
   }
 };
 
@@ -268,6 +258,10 @@ router.post('/join/do', async (req, res) => {
     const loginToken = await createToken({
       user_idx: createUserResult.idx,
     });
+
+    // 문자 테이블 만들기
+    await db.sms.create({ user_idx: createUserResult.idx });
+
     return res.send({ success: 200, loginToken });
   } else {
     res.send({ success: 400 });
@@ -281,15 +275,25 @@ router.post('/company/check', async (req, res, next) => {
   // 트랜젝션 시작
   const t = await db.sequelize.transaction();
 
+  let check_domain = await db.company
+    .findAll({ where: { company_subdomain } })
+    .then((r) => {
+      return makeArray(r);
+    });
+  if (check_domain.length > 0) {
+    return res.send({ success: 400, type: 'domain' });
+  }
+
   const addPlanResult = await addPlanAndSchedule(ut, pt, ct, lt, t);
-  if (addPlanResult) {
+
+  if (addPlanResult.success) {
     try {
       await db.company.update(
         {
           company_name,
           company_subdomain,
         },
-        { where: { huidx: login_data.user_idx }, transaction: t }
+        { where: { huidx: addPlanResult.login_data.user_idx }, transaction: t }
       );
       await t.commit();
       return res.send({ success: 200, message: '회사 등록 완료' });
@@ -299,7 +303,8 @@ router.post('/company/check', async (req, res, next) => {
       next(err);
     }
   }
-  return;
+  await t.rollback();
+  next(addPlanResult.err);
 });
 // 핸드폰 등록 여부 확인 라우터
 router.post('/phone/check', async (req, res) => {
@@ -498,16 +503,23 @@ router.post('/check/password', async (req, res) => {
 
 router.post('/company/check/later', async (req, res, next) => {
   const { lt, ut, ct, pt } = req.body;
+  console.log(req.body);
+  // 트랜젝션 시작
   const t = await db.sequelize.transaction();
-  try {
-    await addPlanAndSchedule(ut, pt, ct, lt);
-    await t.commit();
-    return res.send({ success: 200, message: '회사 등록 완료' });
-  } catch (err) {
-    // create과정에서 오류가 뜨면 롤백
-    await t.rollback();
-    next(err);
+  const addPlanResult = await addPlanAndSchedule(ut, pt, ct, lt, t);
+
+  if (addPlanResult.success) {
+    try {
+      await t.commit();
+      return res.send({ success: 200, message: '회사 등록 완료' });
+    } catch (err) {
+      // create과정에서 오류가 뜨면 롤백
+      await t.rollback();
+      next(err);
+    }
   }
+  await t.rollback();
+  next(addPlanResult.err);
 });
 
 module.exports = router;

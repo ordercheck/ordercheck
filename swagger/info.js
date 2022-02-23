@@ -335,4 +335,22 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/config/company/plan/detail/{planId}:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  config
+ *      summary: 플랜 detail 보여주기
+ *      parameters:
+ *         - in: path
+ *           name: planId
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

@@ -84,7 +84,8 @@ module.exports = function (sequelize, DataTypes) {
 
     merchant_uid: {
       allowNull: true,
-      type: DataTypes.STRING(100),
+      unique: true,
+      type: DataTypes.INTEGER,
     },
 
     pay_type: {

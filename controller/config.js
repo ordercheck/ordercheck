@@ -8,6 +8,7 @@ const {
   showTemplateListAttributes,
   showPlanAttributes,
   showPlanHistoryAttributes,
+  showDetailPlanAttributes,
 } = require('../lib/attributes');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
@@ -304,5 +305,13 @@ module.exports = {
     } catch (err) {
       next(err);
     }
+  },
+  showDetailPlan: async (req, res, next) => {
+    const { planId } = req.params;
+    const findPlanResult = await db.plan.findOne({
+      where: { merchant_uid: planId },
+      attributes: showDetailPlanAttributes,
+    });
+    return res.send({ success: 200, findPlanResult });
   },
 };

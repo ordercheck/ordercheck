@@ -17,7 +17,7 @@
  *                 type: string
  *             example:
  *               user_phone: '010-6719-6919'
- *               user_password: 'rlxo12345@'
+ *               user_password: 'rlxo12345'
  *     responses:
  *       '200':
  *         description: 성공
