@@ -43,6 +43,7 @@ const {
 const functions = require('../../lib/functions');
 const { checkCard } = require('../../model/db');
 const attributes = require('../../lib/attributes');
+const { next } = require('cheerio/lib/api/traversing');
 
 let global_uidx = 0;
 
@@ -208,7 +209,7 @@ router.post('/join/do', async (req, res) => {
 });
 
 //회사 등록 라우터
-router.post('/company/check', async (req, res) => {
+router.post('/company/check', async (req, res, next) => {
   const { lt, ut, ct, pt, company_name, company_subdomain } = req.body;
   let user_data = await verify_data(ut);
   let plan_data = await verify_data(pt);
@@ -253,12 +254,17 @@ router.post('/company/check', async (req, res) => {
       // 카드 정보 등록 후
       await db.card.create(card_data, { transaction: t });
 
-      // 시간을 unix형태로 변경
-      const changeToTime = new Date(plan_data.start_plan);
+      // 시간을 unix형태로 변경(실제)
+      // const changeToTime = new Date(plan_data.start_plan);
+      // changeToUnix = changeToTime.getTime() / 1000;
+      // const nextMerchant_uid = uuid();
+
+      //  테스트
+      const now = new Date();
+      let changeToTime = new Date(now.setSeconds(now.getSeconds() + 30));
       changeToUnix = changeToTime.getTime() / 1000;
       const nextMerchant_uid = uuid();
-
-      const period = `${plan_data.start_plan}-${expire_plan}`;
+      const period = `${plan_data.start_plan}-${plan_data.expire_plan}`;
 
       // 다음 카드 결제 신청
       await schedulePay(
@@ -286,11 +292,9 @@ router.post('/company/check', async (req, res) => {
       await t.commit();
       return res.send({ success: 200, message: '회사 등록 완료' });
     } catch (err) {
-      console.log(err);
       // create과정에서 오류가 뜨면 롤백
       await t.rollback();
-      const Err = err.message;
-      return res.send({ success: 500, Err });
+      next(err);
     }
   };
   if (user_data.user_phone) {

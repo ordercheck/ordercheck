@@ -24,9 +24,9 @@ const swaggerDefinition = {
      }
      일반카드
      {
-     "card_number": "5387208246852660", 
-     "expiry": "2026-05",  
-     "pwd_2digit":"49", 
+     "card_number": "6573114500510154", 
+     "expiry": "2024-12",  
+     "pwd_2digit":"33", 
      "birth":"961005", 
      "card_email": "rlxo6919@naver.com"
      } 

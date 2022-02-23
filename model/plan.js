@@ -84,12 +84,12 @@ module.exports = function (sequelize, DataTypes) {
 
     merchant_uid: {
       allowNull: true,
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.STRING(100),
     },
 
     pay_type: {
       allowNull: true,
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.STRING(100),
     },
 
     active: {

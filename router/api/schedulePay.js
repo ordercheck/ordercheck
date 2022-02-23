@@ -11,7 +11,7 @@ router.post('/', async (req, res) => {
   try {
     const { imp_uid, merchant_uid, status } = req.body;
     const getResult = await getPayment(imp_uid);
-
+    console.log(getResult);
     const doSchedule = async (pay_type_data) => {
       await db.pay.create({
         imp_uid,
