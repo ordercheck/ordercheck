@@ -72,7 +72,7 @@ module.exports = {
         changeFormLinkUrl();
       }
 
-      const { formDetail } = await findWhiteFormDetail(req.company_idx, formId);
+      const { formDetail } = await findWhiteFormDetail(formId);
       return res.send({ success: 200, formDetail });
     } catch (err) {
       next(err);
@@ -132,10 +132,7 @@ module.exports = {
   },
   showFormDetail: async (req, res, next) => {
     try {
-      const { formDetail } = await findWhiteFormDetail(
-        req.company_idx,
-        req.params.formId
-      );
+      const { formDetail } = await findWhiteFormDetail(req.params.formId);
 
       return res.send({ success: 200, formDetail });
     } catch (err) {
@@ -168,7 +165,7 @@ module.exports = {
       );
 
       // 수정된 정보를 찾기
-      const { formDetail } = await findWhiteFormDetail(req.company_idx, formId);
+      const { formDetail } = await findWhiteFormDetail(formId);
       return res.send({ success: 200, formDetail });
     } catch (err) {
       next(err);
@@ -222,5 +219,13 @@ module.exports = {
     } catch (err) {
       next(err);
     }
+  },
+  getFormLinkInfo: async (req, res, next) => {
+    const { form_link } = req.params;
+    const findResult = await db.formLink.findOne({
+      where: { form_link },
+      attributes: ['whiteLabelChecked', 'expression', 'tempType'],
+    });
+    return res.send({ success: 200, findResult });
   },
 };

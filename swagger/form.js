@@ -193,4 +193,19 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/form/link/info/{form_link}:
+ *   get:
+ *     tags:
+ *       -  Form
+ *     summary: form_link로 정보 보여주기
+ *     parameters:
+ *         - in: path
+ *           name: form_link
+ *           schema:
+ *             type: integer
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

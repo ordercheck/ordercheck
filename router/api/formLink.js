@@ -14,6 +14,7 @@ const {
   updateForm,
   deleteThumbNail,
   updateFormTitle,
+  getFormLinkInfo,
 } = require('../../controller/formLink');
 
 // formlink 만들기
@@ -46,6 +47,9 @@ router.delete('/:formId', loginCheck, delFormLink);
 
 // form 제목으로 검색
 router.get('/search/:title', loginCheck, searchFormLink);
+
+// formlink로 정보 가져오기
+router.get('/info/:form_link', getFormLinkInfo);
 
 // form 상세보기
 router.get('/:formId', loginCheck, showFormDetail);

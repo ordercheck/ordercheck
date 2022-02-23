@@ -9,19 +9,10 @@ const { errorFunction } = require('../../lib/apiFunctions');
 // 정기 결제 완료 후 다음달 결제 예약
 router.post('/', async (req, res) => {
   try {
-    console.log('hi');
     const { imp_uid, merchant_uid, status } = req.body;
     const getResult = await getPayment(imp_uid);
-    console.log(getResult);
-    const doSchedule = async (pay_type_data) => {
-      await db.pay.create({
-        imp_uid,
-        user_name: getResult.buyer_name,
-        user_phone: getResult.buyer_tel,
-        user_email: getResult.buyer_email,
-        customer_uid: getResult.customer_uid,
-      });
 
+    const doSchedule = async (pay_type_data) => {
       let payDate;
       if (pay_type_data == 'month') {
         const now = new Date();
