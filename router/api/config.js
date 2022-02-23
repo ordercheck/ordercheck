@@ -15,6 +15,9 @@ const {
   showPlan,
   showPlanHistory,
   showDetailPlan,
+  showSnsInfo,
+  changeSms,
+  paySms,
 } = require('../../controller/config');
 const {
   multer_company_logo_upload,
@@ -30,7 +33,11 @@ router.post('/company/template', loginCheck, addTemplate);
 router.get('/company/plan', loginCheck, showPlan);
 router.get('/company/plan/history', loginCheck, showPlanHistory);
 router.get('/company/plan/detail/:planId', loginCheck, showDetailPlan);
+router.get('/company/sms', loginCheck, showSnsInfo);
+router.post('/company/sms/pay', loginCheck, paySms);
+router.patch('/company/sms', loginCheck, changeSms);
 router.patch('/company', loginCheck, changeCompanyInfo);
+
 router.delete('/company/member/:memberId', loginCheck, delCompanyMember);
 router.delete('/company/template/:templateId', loginCheck, delTemplate);
 router.patch(

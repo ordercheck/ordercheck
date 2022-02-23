@@ -66,7 +66,7 @@ module.exports = {
         searchingName: createUserResult.user_name,
         config_idx: findConfigResult.idx,
       });
-
+      await db.sms.create({ user_idx: createUserResult.idx });
       return res.send({ success: 200, message: '가입 신청 완료' });
     } catch (err) {
       next(err);

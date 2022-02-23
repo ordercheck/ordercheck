@@ -62,5 +62,10 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: 1,
       type: DataTypes.INTEGER(4),
     },
+    main: {
+      allowNull: false,
+      defaultValue: true,
+      type: DataTypes.BOOLEAN,
+    },
   });
 };

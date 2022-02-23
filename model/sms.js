@@ -17,5 +17,15 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+    auto_min: {
+      allowNull: false,
+      defaultValue: 0,
+      type: DataTypes.STRING(100),
+    },
+    auto_price: {
+      allowNull: false,
+      defaultValue: '5,000',
+      type: DataTypes.STRING(100),
+    },
   });
 };

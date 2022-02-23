@@ -353,4 +353,66 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/config/company/sms:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  config
+ *      summary: 문자 비용 보여주기
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/config/company/sms/:
+ *   patch:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  config
+ *      summary: 자동 문자 요금 충전 설정 변경
+ *      requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               repay:
+ *                 type: boolean
+ *               auto_min:
+ *                 type: string
+ *               auto_price:
+ *                 type: string
+ *             example:
+ *               repay: true
+ *               auto_min: "3,000"
+ *               auto_price: "7,000"
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/config/company/sms/pay:
+ *   post:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  config
+ *      summary: 바로 문자충전
+ *      requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               text_cost:
+ *                 type: string
+ *             example:
+ *               text_cost: "1,5000"
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

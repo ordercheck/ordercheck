@@ -75,7 +75,7 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
       where: { user_idx: login_data.user_idx, deleted: null },
       attributes: ['company_idx'],
     });
-    card_data.company_idx = findCompanyData.company_idx;
+
     card_data.user_idx = login_data.user_idx;
 
     // 법인카드 유무 확인 후 체크

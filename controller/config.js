@@ -314,4 +314,28 @@ module.exports = {
     });
     return res.send({ success: 200, findPlanResult });
   },
+  showSnsInfo: async (req, res, next) => {
+    const { user_idx } = req;
+    const findResult = await db.sms.findOne({
+      where: { user_idx },
+      attributes: ['text_cost', 'repay', 'auto_price', 'auto_min'],
+    });
+    return res.send({ success: 200, findResult });
+  },
+  changeSms: async (req, res, next) => {
+    const { user_idx } = req;
+    try {
+      await db.sms.update(req.body, {
+        where: {
+          user_idx,
+        },
+      });
+      return res.send({ success: 200 });
+    } catch (err) {
+      next(err);
+    }
+  },
+  paySms: async (req, res, next) => {
+    console.log('hi');
+  },
 };

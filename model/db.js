@@ -177,13 +177,6 @@ db.company.hasOne(db.plan, {
   foreignKey: 'company_idx',
 });
 
-// card와 company
-db.card.belongsTo(db.company, {
-  foreignKey: 'company_idx',
-});
-db.company.hasMany(db.card, {
-  foreignKey: 'company_idx',
-});
 // company와 user
 db.company.belongsTo(db.user, {
   foreignKey: 'huidx',
