@@ -38,6 +38,7 @@ router.post('/', async (req, res) => {
 
       const findPlanResult = await db.plan.findOne({
         where: { merchant_uid },
+        attributes: { exclude: ['idx', 'createdAt', 'updatedAt'] },
         raw: true,
       });
 

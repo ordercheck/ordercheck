@@ -227,6 +227,11 @@ module.exports = {
         where: { form_link },
         attributes: ['whiteLabelChecked', 'expression', 'tempType'],
       });
+
+      if (!findResult) {
+        next({ message: '없는 링크입니다.' });
+      }
+
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
