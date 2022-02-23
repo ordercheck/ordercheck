@@ -41,5 +41,10 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: 0,
       type: DataTypes.INTEGER,
     },
+    whiteLabelChecked: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
+    },
   });
 };

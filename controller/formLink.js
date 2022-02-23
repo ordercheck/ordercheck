@@ -162,17 +162,11 @@ module.exports = {
           title,
           expression,
           searchingTitle,
+          whiteLabelChecked,
         },
         { where: { idx: formId } }
       );
 
-      // 프런트에서 준 최신 업데이트 정보로 whiteLabel 수정
-      await db.plan.update(
-        {
-          whiteLabelChecked,
-        },
-        { where: { idx: req.company_idx } }
-      );
       // 수정된 정보를 찾기
       const { formDetail } = await findWhiteFormDetail(req.company_idx, formId);
       return res.send({ success: 200, formDetail });
