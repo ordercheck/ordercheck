@@ -48,9 +48,11 @@ router.post('/', async (req, res) => {
           where: { merchant_uid },
         }
       );
-
+      console.log(newMerchant_uid);
+      console.log('전', findPlanResult);
       findPlanResult.merchant_uid = newMerchant_uid;
 
+      console.log('후', findPlanResult);
       await db.plan.create(findPlanResult);
     };
 
