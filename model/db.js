@@ -167,7 +167,7 @@ db.consulting.belongsTo(db.company, { foreignKey: 'company_idx' });
 db.plan.belongsTo(db.company, {
   foreignKey: 'company_idx',
 });
-db.company.hasMany(db.plan, {
+db.company.hasOne(db.plan, {
   foreignKey: 'company_idx',
 });
 

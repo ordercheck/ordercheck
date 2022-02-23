@@ -162,8 +162,12 @@ router.post('/check/pw', async (req, res) => {
 
 // 회원가입 라우터
 router.post('/join/do', async (req, res) => {
-  let { token } = req.body;
+  let { token, use_agree, private_agree, marketing_agree } = req.body;
   let user_data = await verify_data(token);
+  // 동의 여부 체크
+  user_data.use_agree = use_agree;
+  user_data.private_agree = private_agree;
+  user_data.marketing_agree = marketing_agree;
 
   if (user_data) {
     const { createUserResult, success, message } = await joinFunction(

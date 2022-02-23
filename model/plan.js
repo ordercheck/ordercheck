@@ -39,7 +39,11 @@ module.exports = function (sequelize, DataTypes) {
 
       type: DataTypes.STRING(100),
     },
+    planPrice: {
+      allowNull: true,
 
+      type: DataTypes.STRING(100),
+    },
     result_price: {
       allowNull: true,
 

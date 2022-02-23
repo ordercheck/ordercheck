@@ -4,7 +4,10 @@ const { sequelize } = require('../model/db');
 const { getFileName, findMembers } = require('../lib/apiFunctions');
 const { Op } = require('sequelize');
 const moment = require('moment');
-const { showTemplateListAttributes } = require('../lib/attributes');
+const {
+  showTemplateListAttributes,
+  showPlanAttributes,
+} = require('../lib/attributes');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
 
@@ -65,14 +68,16 @@ const updateLogoAndEnrollment = async (
 };
 
 module.exports = {
-  getUserProfile: async (req, res) => {
+  getUserProfile: async (req, res, next) => {
     try {
       let userProfile = await db.sequelize
         .query(
-          `SELECT user.idx, personal_code, user_phone, user_email, user_name, plan, 
+          `SELECT user.idx, personal_code, user_phone, user_email, user_name, plan, calculateReload,
           date_format(user.createdAt, '%Y.%m.%d') as createdAt
-         FROM user LEFT JOIN userCompany ON user.idx = userCompany.user_idx 
-          LEFT JOIN plan ON userCompany.company_idx = plan.company_idx
+          FROM user 
+          LEFT JOIN userCompany ON user.idx = userCompany.user_idx 
+          LEFT JOIN config ON userCompany.config_idx = config.idx  
+          LEFT JOIN plan ON userCompany.company_idx = plan.company_idx       
           WHERE user.idx = ${req.user_idx}`
         )
         .spread((r) => {
@@ -80,8 +85,7 @@ module.exports = {
         });
       return res.send({ success: 200, userProfile: userProfile[0] });
     } catch (err) {
-      errorFunction(err);
-      return res.send({ success: 500, message: err.message });
+      next(err);
     }
   },
   getCompanyProfile: async (req, res, next) => {
@@ -272,5 +276,19 @@ module.exports = {
     } catch (err) {
       next(err);
     }
+  },
+  showPlan: async (req, res, next) => {
+    const { company_idx } = req;
+    const findPlanResult = await db.plan.findOne({
+      where: { idx: company_idx },
+      include: [
+        {
+          model: db.company,
+          attributes: ['form_link_count'],
+        },
+      ],
+      attributes: showPlanAttributes,
+    });
+    return res.send(findPlanResult);
   },
 };
