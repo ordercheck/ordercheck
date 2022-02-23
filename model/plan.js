@@ -39,7 +39,7 @@ module.exports = function (sequelize, DataTypes) {
 
       type: DataTypes.STRING(100),
     },
-    planPrice: {
+    plan_price: {
       allowNull: true,
 
       type: DataTypes.STRING(100),
@@ -65,18 +65,18 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
     },
 
-    whiteLabelPrice: {
+    whiteLabel_price: {
       allowNull: true,
 
       type: DataTypes.STRING(100),
     },
 
-    chatPrice: {
+    chat_price: {
       allowNull: true,
 
       type: DataTypes.STRING(100),
     },
-    analysticPrice: {
+    analystic_price: {
       allowNull: true,
 
       type: DataTypes.STRING(100),

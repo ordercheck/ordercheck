@@ -258,6 +258,8 @@ router.post('/company/check', async (req, res) => {
       changeToUnix = changeToTime.getTime() / 1000;
       const nextMerchant_uid = uuid();
 
+      const period = `${plan_data.start_plan}-${expire_plan}`;
+
       // 다음 카드 결제 신청
       await schedulePay(
         changeToUnix,
@@ -267,7 +269,12 @@ router.post('/company/check', async (req, res) => {
         user_data.user_phone,
         user_data.user_email,
         nextMerchant_uid,
-        plan_data.pay_type
+        plan_data.pay_type,
+        plan_data.plan,
+        period,
+        plan_data.whiteLabel_price,
+        plan_data.chat_price,
+        plan_data.analystic_price
       );
       plan_data.merchant_uid = nextMerchant_uid;
       await db.plan.update(plan_data, {

@@ -34,5 +34,29 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: 0,
       type: DataTypes.STRING(100),
     },
+    pay_type: {
+      allowNull: false,
+      type: DataTypes.STRING(100),
+    },
+    plan: {
+      allowNull: false,
+      type: DataTypes.STRING(100),
+    },
+    period: {
+      allowNull: false,
+      type: DataTypes.STRING(100),
+    },
+    whiteLabel: {
+      allowNull: false,
+      type: DataTypes.STRING(100),
+    },
+    chat: {
+      allowNull: false,
+      type: DataTypes.STRING(100),
+    },
+    analystic: {
+      allowNull: false,
+      type: DataTypes.STRING(100),
+    },
   });
 };
