@@ -13,6 +13,7 @@ const {
   addTemplate,
   delTemplate,
   showPlan,
+  showPlanHistory,
 } = require('../../controller/config');
 const {
   multer_company_logo_upload,
@@ -26,6 +27,7 @@ router.get('/company/search/member', loginCheck, searchMember);
 router.get('/company/template', loginCheck, showTemplateList);
 router.post('/company/template', loginCheck, addTemplate);
 router.get('/company/plan', loginCheck, showPlan);
+router.get('/company/plan/history', loginCheck, showPlanHistory);
 router.patch('/company', loginCheck, changeCompanyInfo);
 router.delete('/company/member/:memberId', loginCheck, delCompanyMember);
 router.delete('/company/template/:templateId', loginCheck, delTemplate);

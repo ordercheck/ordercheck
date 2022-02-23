@@ -7,6 +7,7 @@ const moment = require('moment');
 const {
   showTemplateListAttributes,
   showPlanAttributes,
+  showPlanHistoryAttributes,
 } = require('../lib/attributes');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
@@ -280,7 +281,7 @@ module.exports = {
   showPlan: async (req, res, next) => {
     const { company_idx } = req;
     const findPlanResult = await db.plan.findOne({
-      where: { idx: company_idx },
+      where: { idx: company_idx, active: 1 },
       include: [
         {
           model: db.company,
@@ -290,5 +291,18 @@ module.exports = {
       attributes: showPlanAttributes,
     });
     return res.send(findPlanResult);
+  },
+  showPlanHistory: async (req, res, next) => {
+    const { company_idx } = req;
+    try {
+      const findPlanResult = await db.plan.findAll({
+        where: { company_idx },
+        attributes: showPlanHistoryAttributes,
+        order: [['createdAt', 'DESC']],
+      });
+      return res.send({ success: 200, findPlanResult });
+    } catch (err) {
+      next(err);
+    }
   },
 };

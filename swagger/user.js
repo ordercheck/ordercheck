@@ -296,5 +296,33 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- *
+ * /api/company/check/later:
+ *   post:
+ *     tags:
+ *       - 회원가입
+ *     summary: 나중에 회사등록하기
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               ut:
+ *                type: string
+ *               lt:
+ *                type: string
+ *               ct:
+ *                type: string
+ *               pt:
+ *                type: string
+ *             example:
+ *               ut: "userToken"
+ *               lt: "loginToken"
+ *               ct: "cardToken"
+ *               pt: "planToken"
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

@@ -4,10 +4,11 @@ const router = express.Router();
 const { schedulePay, getPayment } = require('../../lib/payFunction');
 const _f = require('../../lib/functions');
 const db = require('../../model/db');
-const { errorFunction } = require('../../lib/apiFunctions');
+const { createFreePlan } = require('../../lib/apiFunctions');
+const { next } = require('cheerio/lib/api/traversing');
 
 // 정기 결제 완료 후 다음달 결제 예약
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   try {
     const { imp_uid, merchant_uid, status } = req.body;
     const getResult = await getPayment(imp_uid);
@@ -48,11 +49,9 @@ router.post('/', async (req, res) => {
           where: { merchant_uid },
         }
       );
-      console.log(newMerchant_uid);
-      console.log('전', findPlanResult);
+
       findPlanResult.merchant_uid = newMerchant_uid;
 
-      console.log('후', findPlanResult);
       await db.plan.create(findPlanResult);
     };
 
@@ -82,18 +81,12 @@ router.post('/', async (req, res) => {
           { attributes: ['company_idx'] }
         );
         await db.plan.update(
+          { active: 0 },
           {
-            plan: 'FREE',
-            whiteLabelChecked: true,
-            start_plan: null,
-            free_plan: null,
-            expire_plan: null,
-            result_price: 0,
-            chatChecked: false,
-            analysticChecked: false,
-          },
-          { where: { merchant_uid } }
+            where: { merchant_uid },
+          }
         );
+
         await db.userCompany.destroy({
           where: { company_idx: findPlanResult.company_idx },
         });
@@ -104,8 +97,7 @@ router.post('/', async (req, res) => {
       }
     }
   } catch (err) {
-    errorFunction(err);
-    return res.send({ success: 500, message: err.message });
+    next(err);
   }
 });
 

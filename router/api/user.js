@@ -62,6 +62,70 @@ const createToken = async (data) => {
   const token = await jwt.sign(data, process.env.tokenSecret);
   return token;
 };
+
+const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
+  try {
+    let user_data = await verify_data(ut);
+    let plan_data = await verify_data(pt);
+    let card_data = await verify_data(ct);
+    let login_data = await verify_data(lt);
+
+    let check_domain = await db.company
+      .findAll({ where: { company_subdomain } })
+      .then((r) => {
+        return makeArray(r);
+      });
+    if (check_domain.length > 0) {
+      return res.send({ success: 400, type: 'domain' });
+    }
+
+    // 각 데이터에 필요한 key, value
+    const findCompanyData = await db.userCompany.findOne({
+      where: { user_idx: login_data.user_idx, deleted: null },
+      attributes: ['company_idx'],
+    });
+    card_data.company_idx = findCompanyData.company_idx;
+    card_data.user_idx = login_data.user_idx;
+
+    // 법인카드 유무 확인 후 체크
+    card_data.birth
+      ? (card_data.credit_yn = 'false')
+      : (card_data.credit_yn = 'true');
+
+    // 카드 정보 등록 후
+    await db.card.create(card_data, { transaction: t });
+
+    // 시간을 unix형태로 변경(실제)
+    const changeToTime = new Date(plan_data.start_plan);
+    changeToUnix = changeToTime.getTime() / 1000;
+    const nextMerchant_uid = uuid();
+
+    //  테스트
+    // const now = new Date();
+    // let changeToTime = new Date(now.setSeconds(now.getSeconds() + 30));
+    // changeToUnix = changeToTime.getTime() / 1000;
+    // const nextMerchant_uid = uuid();
+
+    // 다음 카드 결제 신청
+    await schedulePay(
+      changeToUnix,
+      card_data.customer_uid,
+      plan_data.result_price.replace(/,/g, ''),
+      user_data.user_name,
+      user_data.user_phone,
+      user_data.user_email,
+      nextMerchant_uid
+    );
+    plan_data.merchant_uid = nextMerchant_uid;
+    await db.plan.update(plan_data, {
+      where: { company_idx: findCompanyData.company_idx },
+      transaction: t,
+    });
+  } catch (err) {
+    await t.rollback();
+  }
+};
+
 // 로그인 라우터
 router.post('/login', async (req, res, next) => {
   const { user_phone, user_password } = req.body;
@@ -211,98 +275,24 @@ router.post('/join/do', async (req, res) => {
 //회사 등록 라우터
 router.post('/company/check', async (req, res, next) => {
   const { lt, ut, ct, pt, company_name, company_subdomain } = req.body;
-  let user_data = await verify_data(ut);
-  let plan_data = await verify_data(pt);
-  let card_data = await verify_data(ct);
-  let login_data = await verify_data(lt);
 
-  const companyCheck = async (user_phone, user_idx) => {
-    let check_domain = await db.company
-      .findAll({ where: { company_subdomain } })
-      .then((r) => {
-        return makeArray(r);
-      });
-    if (check_domain.length > 0) {
-      return res.send({ success: 400, type: 'domain' });
-    }
-
-    const t = await db.sequelize.transaction();
-    try {
-      // 트랜젝션 시작
-
-      await db.company.update(
-        {
-          company_name,
-          company_subdomain,
-        },
-        { where: { huidx: login_data.user_idx }, transaction: t }
-      );
-
-      // 각 데이터에 필요한 key, value
-      const findCompanyData = await db.userCompany.findOne({
-        where: { user_idx: login_data.user_idx, deleted: null },
-        attributes: ['company_idx'],
-      });
-      card_data.company_idx = findCompanyData.company_idx;
-      card_data.user_idx = login_data.user_idx;
-
-      // 법인카드 유무 확인 후 체크
-      card_data.birth
-        ? (card_data.credit_yn = 'false')
-        : (card_data.credit_yn = 'true');
-
-      // 카드 정보 등록 후
-      await db.card.create(card_data, { transaction: t });
-
-      // 시간을 unix형태로 변경(실제)
-      // const changeToTime = new Date(plan_data.start_plan);
-      // changeToUnix = changeToTime.getTime() / 1000;
-      // const nextMerchant_uid = uuid();
-
-      //  테스트
-      const now = new Date();
-      let changeToTime = new Date(now.setSeconds(now.getSeconds() + 30));
-      changeToUnix = changeToTime.getTime() / 1000;
-      const nextMerchant_uid = uuid();
-      const period = `${plan_data.start_plan}-${plan_data.expire_plan}`;
-
-      // 다음 카드 결제 신청
-      await schedulePay(
-        changeToUnix,
-        card_data.customer_uid,
-        plan_data.result_price.replace(/,/g, ''),
-        user_data.user_name,
-        user_data.user_phone,
-        user_data.user_email,
-        nextMerchant_uid,
-        plan_data.pay_type,
-        plan_data.plan,
-        period,
-        plan_data.whiteLabel_price,
-        plan_data.chat_price,
-        plan_data.analystic_price
-      );
-      plan_data.merchant_uid = nextMerchant_uid;
-      await db.plan.update(plan_data, {
-        where: { company_idx: findCompanyData.company_idx },
-        transaction: t,
-      });
-
-      //  트랜젝션 종료
-      await t.commit();
-      return res.send({ success: 200, message: '회사 등록 완료' });
-    } catch (err) {
-      // create과정에서 오류가 뜨면 롤백
-      await t.rollback();
-      next(err);
-    }
-  };
-  if (user_data.user_phone) {
-    let user_phone = user_data.user_phone;
-    const user = await db.user.findOne({ where: { user_phone } });
-    const user_idx = user.idx;
-    await companyCheck(user_phone, user_idx);
-    return;
+  // 트랜젝션 시작
+  const t = await db.sequelize.transaction();
+  try {
+    await addPlanAndSchedule(ut, pt, ct, lt, t);
+    await db.company.update(
+      {
+        company_name,
+        company_subdomain,
+      },
+      { where: { huidx: login_data.user_idx }, transaction: t }
+    );
+    await t.commit();
+    return res.send({ success: 200, message: '회사 등록 완료' });
+  } catch (err) {
+    // create과정에서 오류가 뜨면 롤백
+    await t.rollback();
+    next(err);
   }
 });
 // 핸드폰 등록 여부 확인 라우터
@@ -497,6 +487,20 @@ router.post('/check/password', async (req, res) => {
   } catch (err) {
     const Err = err.message;
     return res.send({ success: 500, Err });
+  }
+});
+
+router.post('/company/check/later', async (req, res, next) => {
+  const { lt, ut, ct, pt } = req.body;
+  const t = await db.sequelize.transaction();
+  try {
+    await addPlanAndSchedule(ut, pt, ct, lt);
+    await t.commit();
+    return res.send({ success: 200, message: '회사 등록 완료' });
+  } catch (err) {
+    // create과정에서 오류가 뜨면 롤백
+    await t.rollback();
+    next(err);
   }
 });
 
