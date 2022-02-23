@@ -121,8 +121,10 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
       where: { company_idx: findCompanyData.company_idx },
       transaction: t,
     });
+    return true;
   } catch (err) {
     await t.rollback();
+    return false;
   }
 };
 
@@ -278,22 +280,26 @@ router.post('/company/check', async (req, res, next) => {
 
   // 트랜젝션 시작
   const t = await db.sequelize.transaction();
-  try {
-    await addPlanAndSchedule(ut, pt, ct, lt, t);
-    await db.company.update(
-      {
-        company_name,
-        company_subdomain,
-      },
-      { where: { huidx: login_data.user_idx }, transaction: t }
-    );
-    await t.commit();
-    return res.send({ success: 200, message: '회사 등록 완료' });
-  } catch (err) {
-    // create과정에서 오류가 뜨면 롤백
-    await t.rollback();
-    next(err);
+
+  const addPlanResult = await addPlanAndSchedule(ut, pt, ct, lt, t);
+  if (addPlanResult) {
+    try {
+      await db.company.update(
+        {
+          company_name,
+          company_subdomain,
+        },
+        { where: { huidx: login_data.user_idx }, transaction: t }
+      );
+      await t.commit();
+      return res.send({ success: 200, message: '회사 등록 완료' });
+    } catch (err) {
+      // create과정에서 오류가 뜨면 롤백
+      await t.rollback();
+      next(err);
+    }
   }
+  return;
 });
 // 핸드폰 등록 여부 확인 라우터
 router.post('/phone/check', async (req, res) => {
