@@ -298,6 +298,7 @@ module.exports = {
       const {
         body: { uuid, title, isFolder },
         params: { customerFile_idx },
+        query: { path },
       } = req;
 
       // 폴더일 경우
@@ -330,7 +331,7 @@ module.exports = {
 
         const newTitle = `${title}.${titleExtend[titleExtend.length - 1]}`;
 
-        const file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${findFilesResult.uniqueKey}${newTitle}`;
+        const file_url = '';
         //  params만들기
         params = checkFile(
           req,
@@ -341,14 +342,14 @@ module.exports = {
 
         // 파일삭제
         let Bucket = '';
-        if (req.query.path) {
+        if (path) {
+          file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${path}/${findFilesResult.uniqueKey}${newTitle}`;
           Bucket = encodeURI(
-            `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}`
+            `ordercheck/fileStore/${customerFile_idx}/${path}`
           );
         } else {
-          Bucket = encodeURI(
-            `ordercheck/fileStore/${req.params.customerFile_idx}`
-          );
+          file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${findFilesResult.uniqueKey}${newTitle}`;
+          Bucket = encodeURI(`ordercheck/fileStore/${customerFile_idx}`);
         }
 
         const copyResult = await copyAndDelete(
