@@ -153,7 +153,7 @@ module.exports = {
   },
   addFile: async (req, res, next) => {
     const { files } = req;
-
+    console.log(req.body);
     try {
       const createFileResult = [];
       for (let i = 0; i < files.length; i++) {
@@ -184,7 +184,7 @@ module.exports = {
         req.body.file_size = files[i].size / 1e6;
 
         req.body.uuid = random5();
-        console.log(req.body);
+
         const createResult = await db.files.create(req.body);
 
         createFileResult.push(createResult.toJSON());
