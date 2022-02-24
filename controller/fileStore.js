@@ -180,8 +180,8 @@ module.exports = {
 
         req.body.uuid = random5();
         const createResult = await db.files.create(req.body);
-        console.log(createResult.toJSON());
-        createFileResult.push(createResult);
+
+        createFileResult.push(createResult.toJSON());
       });
 
       return res.send({ success: 200, createFileResult });
