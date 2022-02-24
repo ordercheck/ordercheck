@@ -155,13 +155,14 @@ module.exports = {
     const { files } = req;
     console.log(req.body);
     try {
+      if (req.body.uuid) {
+        req.body.folder_uuid = req.body.uuid;
+      }
       const createFileResult = [];
       for (let i = 0; i < files.length; i++) {
         // 회사 인덱스 저장
         req.body.company_idx = req.company_idx;
-        if (req.body.uuid) {
-          req.body.folder_uuid = req.body.uuid;
-        }
+
         req.body.customerFile_idx = req.params.customerFile_idx;
         const findUserResult = await db.user.findByPk(req.user_idx, {
           attributes: ['user_name'],
