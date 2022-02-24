@@ -178,7 +178,7 @@ module.exports = {
         req.body.searchingTitle = pureText;
 
         req.body.title = title;
-        req.body.file_size = req.file[0].size / 1e6;
+        req.body.file_size = req.files[0].size / 1e6;
 
         req.body.uuid = random5();
 
