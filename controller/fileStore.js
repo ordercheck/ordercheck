@@ -153,6 +153,7 @@ module.exports = {
   },
   addFile: async (req, res, next) => {
     const { files } = req;
+    console.log(files);
     try {
       const createFileResult = [];
       for (let i = 0; i < files.length; i++) {
