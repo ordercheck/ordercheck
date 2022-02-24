@@ -93,6 +93,7 @@ module.exports = {
       const findFilesResult = await db.files.findAll({
         where: {
           company_idx: userProfile[0].company_idx,
+          isFolder: false,
         },
         attributes: ['file_size'],
         raw: true,

@@ -154,7 +154,8 @@ module.exports = {
   addFile: async (req, res, next) => {
     const { files } = req;
     try {
-      if (files.length == 1) {
+      // 파일이 1개일 때
+      files.forEach(async (data) => {
         // 회사 인덱스 저장
         req.body.company_idx = req.company_idx;
         if (req.body.uuid) {
@@ -166,8 +167,8 @@ module.exports = {
         });
         req.body.path = req.query.path;
         req.body.upload_people = findUserResult.user_name;
-        req.body.file_url = req.files[0].location;
-        let title = getFileName(req.files[0].key);
+        req.body.file_url = data.location;
+        let title = getFileName(data.key);
 
         // 그냥 text로 변환
         const pureText = makePureText(title.normalize('NFC'));
@@ -175,14 +176,12 @@ module.exports = {
         req.body.searchingTitle = pureText;
 
         req.body.title = title;
-        req.body.file_size = req.files[0].size / 1e6;
+        req.body.file_size = data.size / 1e6;
 
         req.body.uuid = random5();
-
-        const createFileResult = await db.files.create(req.body);
-
-        return res.send({ success: 200, createFileResult });
-      }
+      });
+      const createFileResult = await db.files.create(req.body);
+      return res.send({ success: 200, createFileResult });
     } catch (err) {
       next(err);
     }
@@ -384,7 +383,7 @@ module.exports = {
     if (isFolder == 1) {
       // 폴더 용량 구하기
       const findTitleResult = await db.files.findAll({
-        where: { folder_uuid: uuid, customerFile_idx },
+        where: { folder_uuid: uuid, customerFile_idx, isFolder: false },
         attributes: ['file_size'],
         raw: true,
         nest: true,
