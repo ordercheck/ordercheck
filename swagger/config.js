@@ -13,6 +13,7 @@ const swaggerDefinition = {
       "start_plan": "2022.01.09",
       "expire_plan": "2022.02.08",
       "result_price": "1,000", 
+      "result_price_levy":"1,010"
       "plan_price":"1,000",
       "whiteLabelChecked": false,
       "chatChecked": true,     
