@@ -3,6 +3,7 @@ const { makeSpreadArray } = require('../lib/functions');
 const { sequelize } = require('../model/db');
 const { getFileName, findMembers } = require('../lib/apiFunctions');
 const { Op } = require('sequelize');
+const { payNow } = require('../lib/payFunction');
 const moment = require('moment');
 const {
   showTemplateListAttributes,
@@ -336,6 +337,18 @@ module.exports = {
     }
   },
   paySms: async (req, res, next) => {
-    console.log('hi');
+    const {
+      user_idx,
+      body: { text_cost },
+    } = req;
+
+    const findCardResult = await db.card.findOne({
+      where: { user_idx, main: true },
+    });
+    if (!findCardResult) {
+      return res.send({ success: 400, message: '등록된 카드가 없습니다.' });
+    }
+
+    payNow;
   },
 };

@@ -384,7 +384,8 @@ router.post('/create/token/data', async (req, res) => {
       const { success, imp_uid, card_name, message } = await payNow(
         customer_uid,
         1000,
-        merchant_uid
+        merchant_uid,
+        '카드 입출금 확인'
       );
       if (!success) {
         return res.send({ success: 400, message });
