@@ -155,7 +155,7 @@ module.exports = {
     const { files } = req;
     try {
       const createFileResult = [];
-      files.forEach(async (data) => {
+      await files.forEach(async (data) => {
         // 회사 인덱스 저장
         req.body.company_idx = req.company_idx;
         if (req.body.uuid) {
