@@ -180,7 +180,7 @@ module.exports = {
 
         req.body.uuid = random5();
         const createResult = await db.files.create(req.body);
-        console.log(createResult);
+        console.log(createResult.toJSON());
         createFileResult.push(createResult);
       });
 
