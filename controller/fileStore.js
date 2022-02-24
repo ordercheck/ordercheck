@@ -21,13 +21,11 @@ const { fileStoreSort } = require('../lib/checkData');
 
 const deleteFileToS3 = async (title, req) => {
   if (req.query.path !== 'null') {
-    console.log('패스 있음');
     delFile(
       title,
       `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}`
     );
   } else {
-    console.log('패스 없음');
     delFile(title, `ordercheck/fileStore/${req.params.customerFile_idx}`);
   }
 };
@@ -413,7 +411,7 @@ module.exports = {
 
       let addFileSize = 0;
       findTitleResult.forEach((data) => {
-        addFileSize += Number(data.file_size);
+        addFileSize += data.file_size;
       });
 
       const getDetailResult = await getFolderPath(
