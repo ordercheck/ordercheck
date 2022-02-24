@@ -80,43 +80,35 @@ module.exports = {
   },
   duplicateForm: async (req, res, next) => {
     // copyCount 1증가
-    db.formLink
-      .increment({ copyCount: 1 }, { where: { idx: req.params.formId } })
-      .then(async () => {
-        const findFormLink = await db.formLink.findByPk(req.params.formId, {
-          attributes: { exclude: ['idx', 'createdAt', 'updatedAt'] },
-        });
-        // 복사본 제목 생성
-        const duplicateTitle = `${findFormLink.title}_${findFormLink.copyCount}`;
-        findFormLink.title = duplicateTitle;
-        findFormLink.form_link = _f.random5();
-        findFormLink.copyCount = 0;
 
-        const duplicateForm = await db.formLink.create(findFormLink.dataValues);
-        // 시간 형태에 맞게 변형
-        const createdAt = duplicateForm.createdAt
-          .toISOString()
-          .split('T')[0]
-          .replace(/-/g, '.');
+    const findFormLink = await db.formLink.findByPk(req.params.formId, {
+      attributes: { exclude: ['idx', 'createdAt', 'updatedAt'] },
+    });
+    // 복사본 제목 생성
+    const duplicateTitle = `${findFormLink.title}_copy`;
+    findFormLink.title = duplicateTitle;
+    findFormLink.form_link = _f.random5();
 
-        const duplicateResult = {
-          formId: duplicateForm.idx,
-          title: duplicateForm.title,
-          form_link: duplicateForm.form_link,
-          expression: duplicateForm.expression,
-          pathUrl: `${duplicateForm.form_link}/${duplicateForm.expression}`,
-          createdAt,
-        };
+    const duplicateForm = await db.formLink.create(findFormLink.dataValues);
+    // 시간 형태에 맞게 변형
+    const createdAt = duplicateForm.createdAt
+      .toISOString()
+      .split('T')[0]
+      .replace(/-/g, '.');
 
-        return res.send({
-          success: 200,
-          duplicateResult,
-        });
-      })
-      .catch((err) => {
-        errorFunction(err);
-        return res.send({ success: 500, message: err.message });
-      });
+    const duplicateResult = {
+      formId: duplicateForm.idx,
+      title: duplicateForm.title,
+      form_link: duplicateForm.form_link,
+      expression: duplicateForm.expression,
+      pathUrl: `${duplicateForm.form_link}/${duplicateForm.expression}`,
+      createdAt,
+    };
+
+    return res.send({
+      success: 200,
+      duplicateResult,
+    });
   },
   delFormLink: async (req, res, next) => {
     try {
