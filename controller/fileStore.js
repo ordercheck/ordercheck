@@ -154,7 +154,7 @@ module.exports = {
   addFile: async (req, res, next) => {
     const { files } = req;
     try {
-      // 파일이 1개일 때
+      const createFileResult = [];
       files.forEach(async (data) => {
         // 회사 인덱스 저장
         req.body.company_idx = req.company_idx;
@@ -179,8 +179,10 @@ module.exports = {
         req.body.file_size = data.size / 1e6;
 
         req.body.uuid = random5();
+        const createResult = await db.files.create(req.body);
+        createFileResult.push(createResult);
       });
-      const createFileResult = await db.files.create(req.body);
+      console.log(createFileResult);
       return res.send({ success: 200, createFileResult });
     } catch (err) {
       next(err);
