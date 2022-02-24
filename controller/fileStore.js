@@ -155,34 +155,35 @@ module.exports = {
     const { files } = req;
     try {
       const createFileResult = [];
-      await files.forEach(async (data) => {
-        // 회사 인덱스 저장
-        req.body.company_idx = req.company_idx;
-        if (req.body.uuid) {
-          req.body.folder_uuid = req.body.uuid;
-        }
-        req.body.customerFile_idx = req.params.customerFile_idx;
-        const findUserResult = await db.user.findByPk(req.user_idx, {
-          attributes: ['user_name'],
-        });
-        req.body.path = req.query.path;
-        req.body.upload_people = findUserResult.user_name;
-        req.body.file_url = data.location;
-        let title = getFileName(data.key);
-
-        // 그냥 text로 변환
-        const pureText = makePureText(title.normalize('NFC'));
-
-        req.body.searchingTitle = pureText;
-
-        req.body.title = title;
-        req.body.file_size = data.size / 1e6;
-
-        req.body.uuid = random5();
-        const createResult = await db.files.create(req.body);
-
-        createFileResult.push(createResult.toJSON());
+      for (let i = 0; i < files.length; i++) {
+        console.log('hi');
+      }
+      // 회사 인덱스 저장
+      req.body.company_idx = req.company_idx;
+      if (req.body.uuid) {
+        req.body.folder_uuid = req.body.uuid;
+      }
+      req.body.customerFile_idx = req.params.customerFile_idx;
+      const findUserResult = await db.user.findByPk(req.user_idx, {
+        attributes: ['user_name'],
       });
+      req.body.path = req.query.path;
+      req.body.upload_people = findUserResult.user_name;
+      req.body.file_url = data.location;
+      let title = getFileName(data.key);
+
+      // 그냥 text로 변환
+      const pureText = makePureText(title.normalize('NFC'));
+
+      req.body.searchingTitle = pureText;
+
+      req.body.title = title;
+      req.body.file_size = data.size / 1e6;
+
+      req.body.uuid = random5();
+      const createResult = await db.files.create(req.body);
+
+      createFileResult.push(createResult.toJSON());
 
       return res.send({ success: 200, createFileResult });
     } catch (err) {
