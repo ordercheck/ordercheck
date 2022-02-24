@@ -1,6 +1,6 @@
 const db = require('../model/db');
 const { makeSpreadArray } = require('../lib/functions');
-const { sequelize } = require('../model/db');
+const _f = require('../lib/functions');
 const { getFileName, findMembers } = require('../lib/apiFunctions');
 const { Op } = require('sequelize');
 const { payNow } = require('../lib/payFunction');
@@ -15,8 +15,7 @@ require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
 
 const { delFile } = require('../lib/aws/fileupload').ufile;
-const {} = require('../lib/attributes');
-const attributes = require('../lib/attributes');
+
 const updateLogoAndEnrollment = async (
   company_idxData,
   fileData,
@@ -75,7 +74,7 @@ module.exports = {
     try {
       let userProfile = await db.sequelize
         .query(
-          `SELECT user.idx, personal_code, user_phone, user_email, user_name, plan, calculateReload,
+          `SELECT user.idx, personal_code, user_phone, user_profile, user_email, user_name, plan, calculateReload,
           date_format(user.createdAt, '%Y.%m.%d') as createdAt
           FROM user 
           LEFT JOIN userCompany ON user.idx = userCompany.user_idx 
@@ -349,6 +348,15 @@ module.exports = {
       return res.send({ success: 400, message: '등록된 카드가 없습니다.' });
     }
 
-    payNow;
+    const merchant_uid = _f.random5();
+
+    const payResult = await payNow(
+      findCardResult.customer_uid,
+      text_cost.replace(/,/g, ''),
+      merchant_uid,
+      '문자 충전'
+    );
+
+    console.log(payResult);
   },
 };

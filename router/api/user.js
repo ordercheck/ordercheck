@@ -101,7 +101,7 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
     await schedulePay(
       changeToUnix,
       card_data.customer_uid,
-      plan_data.result_price.replace(/,/g, ''),
+      plan_data.result_price_levy.replace(/,/g, ''),
       user_data.user_name,
       user_data.user_phone,
       user_data.user_email,
@@ -358,7 +358,7 @@ router.post('/create/token', async (req, res) => {
   }
 });
 // body 데이터를 토큰으로 만들기
-router.post('/create/token/data', async (req, res) => {
+router.post('/create/token/data', async (req, res, next) => {
   const { card_number, expiry, pwd_2digit, birth, business_number } = req.body;
 
   try {
@@ -405,9 +405,7 @@ router.post('/create/token/data', async (req, res) => {
     let token = await createToken(req.body);
     return res.send({ success: 200, token });
   } catch (err) {
-    console.log(err);
-    const Err = err.message;
-    return res.send({ success: 500, Err });
+    next(err);
   }
 });
 router.post('/decode/token/data', async (req, res) => {

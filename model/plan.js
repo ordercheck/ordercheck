@@ -46,9 +46,13 @@ module.exports = function (sequelize, DataTypes) {
     },
     result_price: {
       allowNull: true,
-
       type: DataTypes.STRING(100),
     },
+    result_price_levy: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
+
     whiteLabelChecked: {
       allowNull: false,
       defaultValue: true,
