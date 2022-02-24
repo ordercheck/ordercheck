@@ -20,8 +20,7 @@ const { customerFile } = require('../model/db');
 const { fileStoreSort } = require('../lib/checkData');
 
 const deleteFileToS3 = async (title, req) => {
-  console.log(req.query.path);
-  if (req.query.path) {
+  if (req.query.path !== 'null') {
     console.log('패스 있음');
     delFile(
       title,
