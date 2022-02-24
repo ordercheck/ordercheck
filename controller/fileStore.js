@@ -167,8 +167,8 @@ module.exports = {
         });
         req.body.path = req.query.path;
         req.body.upload_people = findUserResult.user_name;
-        req.body.file_url = data.location;
-        let title = getFileName(data.key);
+        req.body.file_url = files[i].location;
+        let title = getFileName(files[i].key);
 
         // 그냥 text로 변환
         const pureText = makePureText(title.normalize('NFC'));
@@ -176,7 +176,7 @@ module.exports = {
         req.body.searchingTitle = pureText;
 
         req.body.title = title;
-        req.body.file_size = data.size / 1e6;
+        req.body.file_size = files[i].size / 1e6;
 
         req.body.uuid = random5();
         const createResult = await db.files.create(req.body);
