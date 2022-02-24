@@ -17,6 +17,12 @@ sequelize = new Sequelize(
     // operatorsAliases: false,
     timezone: '+09:00', //한국 시간 셋팅
     logging: false,
+    pool: {
+      max: 20,
+      min: 0,
+      acquire: 60000,
+      idle: 10000,
+    },
     define: {
       charset: 'utf8',
       collate: 'utf8_general_ci',
