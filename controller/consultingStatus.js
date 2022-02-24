@@ -5,6 +5,7 @@ const {
   getDetailCustomerInfo,
   check,
 } = require('../lib/apiFunctions');
+const axios = require('axios');
 const moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
@@ -22,6 +23,7 @@ const {
   TeamkakaoPushNewForm,
   customerkakaoPushNewForm,
   customerkakaoPushNewCal,
+  checkKakaoPushResult,
 } = require('../lib/kakaoPush');
 const changeToSearch = (body) => {
   const searchingPhoneNumber = body.customer_phoneNumber.replace(/-/g, '');
@@ -436,7 +438,7 @@ module.exports = {
       body: { calculateReload },
     } = req;
     const customerFindResult = await db.customer.findByPk(customer_idx, {
-      attributes: ['customer_phoneNumber'],
+      attributes: ['customer_phoneNumber', 'customer_name'],
     });
 
     const companyFindResult = await db.company.findByPk(req.company_idx, {
@@ -447,27 +449,16 @@ module.exports = {
       attributes: ['file_url', 'calculateNumber'],
     });
     // 견적서 다시보기 동의여부
-    if (calculateReload !== '') {
-      await db.config.update(
-        { calculateReload },
-        { where: { user_idx: req.user_idx, company_idx: req.company_idx } }
-      );
-    }
+    // if (calculateReload !== '') {
+    //   await db.config.update(
+    //     { calculateReload },
+    //     { where: { user_idx: req.user_idx, company_idx: req.company_idx } }
+    //   );
+    // }
 
     const fileUrl = !calculateFindResult.file_url
       ? `orderchecktest.s3-website.ap-northeast-2.amazonaws.com/signin`
       : calculateFindResult.file_url.split('//')[1];
-
-    const kakaoPushResult = await customerkakaoPushNewCal(
-      customerFindResult.customer_phoneNumber,
-      companyFindResult.company_name,
-      customerFindResult.customer_name,
-      calculateFindResult.calculateNumber,
-      '견적서 확인',
-      fileUrl
-    );
-
-    console.log(kakaoPushResult);
 
     const sharedDate = moment().format('YYYY.MM.DD');
     await db.calculate.update(
@@ -477,7 +468,54 @@ module.exports = {
     const findResult = await db.calculate.findByPk(calculate_idx, {
       attributes: showCalculateAttributes,
     });
-    return res.send({ success: 200, findResult });
+    res.send({ success: 200, findResult });
+
+    // 알림톡 보내기
+    const messageId = await customerkakaoPushNewCal(
+      customerFindResult.customer_phoneNumber,
+      companyFindResult.company_name,
+      customerFindResult.customer_name,
+      calculateFindResult.calculateNumber,
+      '견적서 확인',
+      fileUrl
+    );
+    // 알림톡 보낸 결과 조회
+    if (messageId) {
+      const checkKakaoPromise = () => {
+        return new Promise(function (resolve, reject) {
+          setTimeout(async () => {
+            const sendResult = await checkKakaoPushResult(messageId);
+            resolve(sendResult);
+          }, 1000);
+        });
+      };
+      const sendResult = await checkKakaoPromise();
+      //문자 다시 보내기
+
+      // 메시지 전송못할때 3018 (차단, 카톡 없을때)
+      // 전화번호 오류 3008
+      // 정상발송 0000
+      if (sendResult.sendResult === '3018') {
+        const message = `
+[${companyFindResult.company_name}]
+${customerFindResult.customer_name} 고객님, 
+${calculateFindResult.calculateNumber}차 견적서가 발송되었습니다.
+감사합니다.
+  
+견적서 확인:
+${calculateFindResult.file_url}
+  `;
+        user_phone = customerFindResult.customer_phoneNumber;
+
+        await axios({
+          url: '/api/send/sms',
+          method: 'post', // POST method
+          headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
+          data: { user_phone, message, type: 'LMS' },
+        });
+      }
+    }
+    return;
   },
   setMainCalculate: async (req, res, next) => {
     const updateCalculateStatus = async (trueOrfalse, whereData) => {
@@ -564,7 +602,7 @@ module.exports = {
       });
 
       const findCustomerResult = await db.customer.findByPk(body.main_idx, {
-        attributes: ['customer_phoneNumber'],
+        attributes: ['customer_phoneNumber', 'customer_name'],
       });
 
       const findSameUser = await db.customer.findAll({
@@ -575,6 +613,18 @@ module.exports = {
         raw: true,
         nest: true,
       });
+
+      // 통합한 후 파일 보관함 유저 이름 main으로 변경
+      await db.customerFile.update(
+        {
+          customer_name: findCustomerResult.customer_name,
+        },
+        {
+          where: {
+            customer_phoneNumber: findCustomerResult.customer_phoneNumber,
+          },
+        }
+      );
 
       return res.send({ success: 200, findSameUser });
     } catch (err) {
