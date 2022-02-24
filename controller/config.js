@@ -258,7 +258,6 @@ module.exports = {
   },
   delTemplate: async (req, res, next) => {
     const {
-      company_idx,
       params: { templateId },
     } = req;
     try {
@@ -268,7 +267,7 @@ module.exports = {
         nest: true,
       });
       const findConfigResult = await db.config.findOne({
-        where: { company_idx: templateId, template_name: '팀원' },
+        where: { idx: templateId, template_name: '팀원' },
         attributes: ['idx'],
       });
       findUserResult.forEach(async (data) => {

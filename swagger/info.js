@@ -446,6 +446,12 @@
  *      tags:
  *       -  config
  *      summary: 카드정보 상세 보여주기
+ *      parameters:
+ *         - in: path
+ *           name: cardId
+ *           schema:
+ *             type: integer
+ *           example: 1
  *      responses:
  *       '200':
  *         description: 성공
@@ -458,6 +464,12 @@
  *      tags:
  *       -  config
  *      summary: 카드 삭제하기
+ *      parameters:
+ *         - in: path
+ *           name: cardId
+ *           schema:
+ *             type: integer
+ *           example: 1
  *      responses:
  *       '200':
  *         description: 성공

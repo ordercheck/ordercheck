@@ -285,6 +285,8 @@ module.exports = {
   },
 
   addCalculate: async (req, res, next) => {
+    console.log('이것은 바디', req.body);
+    console.log('이것은 파람', req.params);
     const {
       params: { customer_idx },
       company_idx,
