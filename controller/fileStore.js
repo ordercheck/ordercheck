@@ -331,7 +331,7 @@ module.exports = {
 
         const newTitle = `${title}.${titleExtend[titleExtend.length - 1]}`;
 
-        const file_url = '';
+        let file_url = '';
         //  params만들기
         params = checkFile(
           req,
