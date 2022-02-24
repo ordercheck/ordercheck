@@ -153,7 +153,7 @@ module.exports = {
   },
   addFile: async (req, res, next) => {
     const { files } = req;
-    console.log(files);
+
     try {
       const createFileResult = [];
       for (let i = 0; i < files.length; i++) {
@@ -169,7 +169,13 @@ module.exports = {
         req.body.path = req.query.path;
         req.body.upload_people = findUserResult.user_name;
         req.body.file_url = files[i].location;
-        let title = getFileName(files[i].key);
+        let title = files[i].originalname;
+
+        const getLastUrl = getFileName(files[i].key);
+
+        const uniqueKey = getLastUrl.substr(0, 4);
+
+        console.log(uniqueKey);
 
         // 그냥 text로 변환
         const pureText = makePureText(title.normalize('NFC'));
