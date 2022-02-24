@@ -52,15 +52,15 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
     },
 
-    credit_yn: {
+    corporation_yn: {
       allowNull: false,
       defaultValue: '',
-      type: DataTypes.STRING(100),
+      type: DataTypes.BOOLEAN,
     },
     active: {
       allowNull: false,
-      defaultValue: 1,
-      type: DataTypes.INTEGER(4),
+      defaultValue: true,
+      type: DataTypes.BOOLEAN,
     },
     main: {
       allowNull: false,

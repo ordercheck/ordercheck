@@ -41,6 +41,7 @@ db.config = sequelize.import(__dirname + '/config.js');
 db.alarm = sequelize.import(__dirname + '/alarm.js');
 db.customerFile = sequelize.import(__dirname + '/customerFile.js');
 db.userCompany = sequelize.import(__dirname + '/userCompany.js');
+db.smsHistory = sequelize.import(__dirname + '/smsHistory.js');
 db.files = sequelize.import(__dirname + '/files.js');
 db.formLink = sequelize.import(__dirname + '/formLink.js');
 db.err = sequelize.import(__dirname + '/err.js');
@@ -49,6 +50,12 @@ db.timeLine = sequelize.import(__dirname + '/consultingTimeLine.js');
 db.formOpen = sequelize.import(__dirname + '/formOpenMember.js');
 db.calculate = sequelize.import(__dirname + '/calculate.js');
 db.customer = sequelize.import(__dirname + '/customer.js');
+
+// user와 smsHistory
+db.user.hasMany(db.smsHistory, { foreignKey: 'user_idx' });
+db.smsHistory.belongsTo(db.user, {
+  foreignKey: 'user_idx',
+});
 
 // user와 sms
 db.user.hasOne(db.sms, { foreignKey: 'user_idx' });

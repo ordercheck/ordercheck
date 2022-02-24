@@ -10,7 +10,11 @@ const {
   showPlanAttributes,
   showPlanHistoryAttributes,
   showDetailPlanAttributes,
+  showSmsHistoryAttributes,
+  showCardsInfoAttributes,
+  showCardDetailAttributes,
 } = require('../lib/attributes');
+const attributes = require('../lib/attributes');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
 
@@ -314,7 +318,7 @@ module.exports = {
     });
     return res.send({ success: 200, findPlanResult });
   },
-  showSnsInfo: async (req, res, next) => {
+  showSmsInfo: async (req, res, next) => {
     const { user_idx } = req;
     const findResult = await db.sms.findOne({
       where: { user_idx },
@@ -357,6 +361,74 @@ module.exports = {
       '문자 충전'
     );
 
-    console.log(payResult);
+    if (!payResult.success) {
+      return next(payResult.message);
+    }
+
+    const findSmsResult = await db.sms.findOne({
+      where: { user_idx },
+      attributes: ['text_cost'],
+    });
+    // 이전 문자비용 숫자로 바꾸기
+    const beforeCost = parseInt(findSmsResult.text_cost.replace(/,/g, ''));
+    // 추가할 문자비용 숫자로 바꾸기
+    const plusCost = parseInt(text_cost.replace(/,/g, ''));
+    const addCost = (beforeCost + plusCost).toLocaleString();
+
+    await db.sms.update(
+      {
+        text_cost: addCost,
+      },
+      {
+        where: {
+          user_idx,
+        },
+      }
+    );
+
+    return res.send({ success: 200, message: '충전 완료' });
+  },
+  showSmsHistory: async (req, res, next) => {
+    const { user_idx } = req;
+    try {
+      const findResult = await db.smsHistory.findAll({
+        where: { user_idx },
+        attributes: showSmsHistoryAttributes,
+      });
+      return res.send({ success: 200, findResult });
+    } catch (err) {
+      next(err);
+    }
+  },
+  showCardsInfo: async (req, res, next) => {
+    const { user_idx } = req;
+    try {
+      const findResult = await db.card.findAll({
+        where: { user_idx },
+        attributes: showCardsInfoAttributes,
+      });
+      return res.send({ success: 200, findResult });
+    } catch (err) {
+      next(err);
+    }
+  },
+  showCardDetailInfo: async (req, res, next) => {
+    const {
+      params: { cardId },
+    } = req;
+    try {
+      const findResult = await db.card.findByPk(cardId, {
+        attributes: showCardDetailAttributes,
+      });
+
+      return res.send({ success: 200, findResult });
+    } catch (err) {
+      next(err);
+    }
+  },
+  delCard: async (req, res, next) => {
+    // 삭제 하려는 카드가 main 카드인지 체크
+    //아임포트 카드 삭제
+    // db 카드 삭제
   },
 };

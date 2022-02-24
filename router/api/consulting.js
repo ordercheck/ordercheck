@@ -119,7 +119,10 @@ router.post('/calculate/down', loginCheck, downCalculate);
 // 상담폼 추가 라우터
 router.post(
   '/',
-  multer_form_upload().fields([{ name: 'img' }, { name: 'concept' }]),
+  multer_form_upload().fields([
+    { name: 'floor_plan' },
+    { name: 'hope_concept' },
+  ]),
   checkFormLimit,
   addConsultingForm
 );

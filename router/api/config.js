@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const {
-  getUserProfile,
   getCompanyProfile,
   changeCompanyLogo,
   changeCompanyInfo,
@@ -15,9 +14,13 @@ const {
   showPlan,
   showPlanHistory,
   showDetailPlan,
-  showSnsInfo,
+  showSmsInfo,
   changeSms,
+  showSmsHistory,
   paySms,
+  showCardsInfo,
+  showCardDetailInfo,
+  delCard,
 } = require('../../controller/config');
 const {
   multer_company_logo_upload,
@@ -33,7 +36,13 @@ router.post('/company/template', loginCheck, addTemplate);
 router.get('/company/plan', loginCheck, showPlan);
 router.get('/company/plan/history', loginCheck, showPlanHistory);
 router.get('/company/plan/detail/:planId', loginCheck, showDetailPlan);
-router.get('/company/sms', loginCheck, showSnsInfo);
+router.get('/company/sms', loginCheck, showSmsInfo);
+router.get('/company/card', loginCheck, showCardsInfo);
+router.get('/company/card/detail/:cardId', loginCheck, showCardDetailInfo);
+router.delete('/company/card/:cardId', loginCheck, delCard);
+
+router.get('/company/sms/history', loginCheck, showSmsHistory);
+
 router.post('/company/sms/pay', loginCheck, paySms);
 router.patch('/company/sms', loginCheck, changeSms);
 router.patch('/company', loginCheck, changeCompanyInfo);

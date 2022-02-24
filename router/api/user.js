@@ -80,8 +80,8 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
 
     // 법인카드 유무 확인 후 체크
     card_data.birth
-      ? (card_data.credit_yn = 'false')
-      : (card_data.credit_yn = 'true');
+      ? (card_data.corporation_yn = false)
+      : (card_data.corporation_yn = true);
 
     // 카드 정보 등록 후
     await db.card.create(card_data, { transaction: t });
