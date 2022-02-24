@@ -457,8 +457,8 @@ module.exports = {
     const fileUrl = !calculateFindResult.file_url
       ? `orderchecktest.s3-website.ap-northeast-2.amazonaws.com/signin`
       : calculateFindResult.file_url.split('//')[1];
-    console.log(customerFindResult);
-    await customerkakaoPushNewCal(
+
+    const kakaoPushResult = await customerkakaoPushNewCal(
       customerFindResult.customer_phoneNumber,
       companyFindResult.company_name,
       customerFindResult.customer_name,
@@ -466,6 +466,8 @@ module.exports = {
       '견적서 확인',
       fileUrl
     );
+
+    console.log(kakaoPushResult);
 
     const sharedDate = moment().format('YYYY.MM.DD');
     await db.calculate.update(

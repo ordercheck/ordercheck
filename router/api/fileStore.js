@@ -24,7 +24,7 @@ router.post('/folder/:customerFile_idx', loginCheck, addFolder);
 router.post(
   '/upload/:customerFile_idx',
   loginCheck,
-  multer_file_store_upload().single('file'),
+  multer_file_store_upload().array('file'),
   addFile
 );
 router.patch('/update/title/:customerFile_idx', loginCheck, changeFileTitle);
