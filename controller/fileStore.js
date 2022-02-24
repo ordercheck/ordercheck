@@ -173,15 +173,13 @@ module.exports = {
 
         const getLastUrl = getFileName(files[i].key);
 
-        const uniqueKey = getLastUrl.substr(0, 4);
-
-        console.log(uniqueKey);
+        const uniqueKey = getLastUrl.substr(0, 5);
 
         // 그냥 text로 변환
         const pureText = makePureText(title.normalize('NFC'));
 
         req.body.searchingTitle = pureText;
-
+        req.body.uniqueKey = uniqueKey;
         req.body.title = title;
         req.body.file_size = files[i].size / 1e6;
 
@@ -230,11 +228,11 @@ module.exports = {
       if (isfolder == 0) {
         const findFileResult = await db.files.findOne(
           { where: { uuid } },
-          { attributes: ['title', 'path'] }
+          { attributes: ['title', 'path', 'uniqueKey'] }
         );
         // 폴더 안에 없을 때
-
-        deleteFileToS3(findFileResult.title, req);
+        const delTarget = `${findFileResult.uniqueKey}${findFileResult.title}`;
+        deleteFileToS3(delTarget, req);
         await db.files.destroy({
           where: { uuid },
         });
@@ -326,15 +324,18 @@ module.exports = {
           ACL: 'public-read',
         };
 
-        const urlArr = findFilesResult.file_url.split('/');
-
-        const titleExtend = urlArr[urlArr.length - 1].split('.');
+        const titleExtend = findFilesResult.title.split('.');
 
         const newTitle = `${title}.${titleExtend[titleExtend.length - 1]}`;
 
-        const file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${newTitle}`;
+        const file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${findFilesResult.uniqueKey}${newTitle}`;
         //  params만들기
-        params = checkFile(req, params, findFilesResult.title, newTitle);
+        params = checkFile(
+          req,
+          params,
+          `${findFilesResult.uniqueKey}${findFilesResult.title}`,
+          `${findFilesResult.uniqueKey}${newTitle}`
+        );
 
         // 파일삭제
         let Bucket = '';
@@ -351,7 +352,7 @@ module.exports = {
         const copyResult = await copyAndDelete(
           params,
           Bucket,
-          findFilesResult.title
+          `${findFilesResult.uniqueKey}${findFilesResult.title}`
         );
         if (copyResult) {
           const pureText = makePureText(newTitle);
