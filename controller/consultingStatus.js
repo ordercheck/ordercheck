@@ -141,6 +141,8 @@ module.exports = {
         return;
       }
 
+      console.log(body);
+
       // 이미지나 파일이 있을 때
       // const imgUrlString = selectUrl(files.img);
       // const conceptUrlString = selectUrl(files.concept);
