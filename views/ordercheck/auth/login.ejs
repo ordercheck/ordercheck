@@ -1,62 +1,88 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
-
-<head>
+  <head>
     <%- include('../common/authHead.ejs') %>
-</head>
+  </head>
 
-<body>
-  <!-- skip -->
-  <div id="skip">
-    <a href="#content">컨텐츠 바로가기</a>
-  </div>
-  <!-- //skip -->
-  <input type="hidden" id="HOST" value="<%= locals.HOST%>"/>
-  <div id="wrap">
-    <section id="content" class="subpage">
-      <header class="header">
-        <%- include('../common/logo.ejs') %>
-      </header>
-      <div class="center-box">
-        <div class="login-wrap main">
-          <div class="login-top">
-            <h2 class="title">로그인</h2>
-          </div>
-          <div class="form-area">
-            <label for="user_phone" class="inp-title">아이디</label>
-            <div class="inp large">
-              <input type="tel" id="user_phone" pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}" maxlength="13" placeholder="아이디(휴대폰 번호)" required/>
+  <body>
+    <!-- skip -->
+    <div id="skip">
+      <a href="#content">컨텐츠 바로가기</a>
+    </div>
+    <!-- //skip -->
+    <input type="hidden" id="HOST" value="<%= locals.HOST%>" />
+    <div id="wrap">
+      <section id="content" class="subpage">
+        <header class="header"><%- include('../common/logo.ejs') %></header>
+        <div class="center-box">
+          <div class="login-wrap main">
+            <div class="login-top">
+              <h2 class="title">로그인</h2>
             </div>
-            <label for="user_password" class="inp-title">비밀번호</label>
-            <div class="inp">
-              <input type="password" id="user_password" placeholder="비밀번호">
-              <button type="button" class="pos btn-pw-show"><span class="txt hide">비밀번호 보기</span></button>
+            <div class="form-area">
+              <label for="user_phone" class="inp-title">아이디</label>
+              <div class="inp large">
+                <input
+                  type="tel"
+                  id="user_phone"
+                  pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}"
+                  maxlength="13"
+                  placeholder="아이디(휴대폰 번호)"
+                  required
+                />
+              </div>
+              <label for="user_password" class="inp-title">비밀번호</label>
+              <div class="inp">
+                <input
+                  type="password"
+                  id="user_password"
+                  placeholder="비밀번호"
+                />
+                <button type="button" class="pos btn-pw-show">
+                  <span class="txt hide">비밀번호 보기</span>
+                </button>
+              </div>
+              <p class="warning-txt account-warning hide">
+                아이디 또는 비밀번호가 일치하지 않습니다! 😵
+              </p>
             </div>
-            <p class="warning-txt account-warning hide">아이디 또는 비밀번호가 일치하지 않습니다! 😵 </p>
-          </div>
-          <div class="form-btm tl">
-            <span class="txt">비밀번호를 잊으셨나요?</span>
-            <a href="/password/find" class="btn-golink tx-darkgray"><span>비밀번호 찾기</span></a>
-          </div>
-          <div class="btn-group">
-            <button type="button" class="btn-l btn-bk login" onclick="doLogin()"><span>로그인</span></button>
-          </div>
-          <div class="form-btm tc">
-            <span class="txt">오더체크가 처음이신가요?</span>
-            <a href="/join/select-account" class="btn-golink"><span>회원가입</span></a>
-          </div>
-          <!-- <p class="line"><span class="txt">OR</span></p>
+            <div class="form-btm tl">
+              <span class="txt">비밀번호를 잊으셨나요?</span>
+              <a href="/password/find" class="btn-golink tx-darkgray"
+                ><span>비밀번호 찾기</span></a
+              >
+            </div>
+            <div class="btn-group">
+              <button
+                type="button"
+                class="btn-l btn-bk login"
+                onclick="doLogin()"
+              >
+                <span>로그인</span>
+              </button>
+            </div>
+            <div class="form-btm tc">
+              <span class="txt">오더체크가 처음이신가요?</span>
+              <a href="/join/select-account" class="btn-golink"
+                ><span>회원가입</span></a
+              >
+            </div>
+            <!-- <p class="line"><span class="txt">OR</span></p>
           <div class="social-login">
             <button type="button" class="btn-l btn-kakao"><span>카카오톡 계정으로 계속하기</span></button>
             <button type="button" class="btn-l btn-apple"><span>애플 계정으로 계속하기</span></button>
           </div> -->
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
 
-  </div>
+    <%- include('../common/authScript.ejs') %>
+  </body>
 
-<%- include('../common/authScript.ejs') %>
-</body>
-
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io('http://localhost');
+    socket.emit('join', '1');
+  </script>
 </html>
