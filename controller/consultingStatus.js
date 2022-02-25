@@ -139,7 +139,7 @@ module.exports = {
       if (!req.files) {
         console.log(req.body);
         console.log('여기타라');
-        body.choice = JSON.parse(body.choice).join(', ');
+        body.choice = body.choice.join(', ');
         createConsultingAndIncrement(body);
         return;
       }
