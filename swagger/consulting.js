@@ -4,7 +4,7 @@
  *   post:
  *     tags:
  *       -  consult
- *     summary: consulting 추가 api (FORM DATA)
+ *     summary: consulting 추가 api
  *     requestBody:
  *       content:
  *         application/json:
@@ -48,6 +48,29 @@
  *                customer_name: "김기태"
  *                customer_phoneNumber : "010-6719-6919"
  *                form_link : "oe2n87z209"
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/consulting/files:
+ *   post:
+ *     tags:
+ *       -  consult
+ *     summary: file 추가 api
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *                floor_plan:
+ *                 type: string
+ *                hope_concept:
+ *                 type: string
+ *             example:
+ *                floor_plan: "file"
+ *                hope_concept: "file"
  *     responses:
  *       '200':
  *         description: 성공
