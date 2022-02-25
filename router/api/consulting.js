@@ -116,7 +116,7 @@ router.post(
 );
 
 router.post(
-  '/',
+  '/files',
   multer_form_upload().fields([
     { name: 'floor_plan' },
     { name: 'hope_concept' },
