@@ -42,133 +42,130 @@ module.exports = {
     return res.send({ success: 200, message: '저장 됨' });
   },
   addConsultingForm: async (req, res, next) => {
-    console.log('파일', req.files);
+    const t = await db.sequelize.transaction();
+    const selectUrl = (fileData) => {
+      try {
+        return (result = fileData.map((element) => {
+          return element.location;
+        }));
+      } catch (err) {
+        return;
+      }
+    };
+    try {
+      // url을 string으로 연결
+      const { body, files } = req;
+      const createConsultingAndIncrement = async (bodyData) => {
+        try {
+          await db.consulting.create(bodyData, { transaction: t });
+          await t.commit();
 
-    console.log(req.body);
-    // const t = await db.sequelize.transaction();
-    // const selectUrl = (fileData) => {
-    //   try {
-    //     return (result = fileData.map((element) => {
-    //       return element.location;
-    //     }));
-    //   } catch (err) {
-    //     return;
-    //   }
-    // };
-    // try {
-    //   // url을 string으로 연결
-    //   const { body, files } = req;
-    //   const createConsultingAndIncrement = async (bodyData) => {
-    //     try {
-    //       await db.consulting.create(bodyData, { transaction: t });
-    //       await t.commit();
+          db.company.increment(
+            { form_link_count: 1, customer_count: 1 },
+            { where: { idx: formLinkCompany.company_idx } }
+          );
+          res.send({ success: 200 });
 
-    //       db.company.increment(
-    //         { form_link_count: 1, customer_count: 1 },
-    //         { where: { idx: formLinkCompany.company_idx } }
-    //       );
-    //       res.send({ success: 200 });
+          // 고객 카카오 푸쉬 보내기
+          // await customerkakaoPushNewForm(
+          //   bodyData.customer_phoneNumber,
+          //   bodyData.company_name,
+          //   bodyData.customer_name,
+          //   '접수 내용 확인',
+          //   bodyData.title
+          // );
 
-    //       // 고객 카카오 푸쉬 보내기
-    //       // await customerkakaoPushNewForm(
-    //       //   bodyData.customer_phoneNumber,
-    //       //   bodyData.company_name,
-    //       //   bodyData.customer_name,
-    //       //   '접수 내용 확인',
-    //       //   bodyData.title
-    //       // );
+          // 팀원 카카오 푸쉬 보내기
+          // const getMembers = await db.userCompany.findAll({
+          //   where: { company_idx: bodyData.company_idx },
+          //   include: [
+          //     {
+          //       model: db.user,
+          //       attributes: ['user_phone'],
+          //     },
+          //   ],
+          //   attributes: ['user_idx'],
+          // });
+          // getMembers.forEach(async (data) => {
+          //   await TeamkakaoPushNewForm(
+          //     data.user.user_phone,
+          //     bodyData.title,
+          //     bodyData.customer_name,
+          //     '확인하기',
+          //     bodyData.customer_phoneNumber
+          //   );
+          // });
+        } catch (err) {
+          await t.rollback();
+          next(err);
+        }
+      };
 
-    //       // 팀원 카카오 푸쉬 보내기
-    //       // const getMembers = await db.userCompany.findAll({
-    //       //   where: { company_idx: bodyData.company_idx },
-    //       //   include: [
-    //       //     {
-    //       //       model: db.user,
-    //       //       attributes: ['user_phone'],
-    //       //     },
-    //       //   ],
-    //       //   attributes: ['user_idx'],
-    //       // });
-    //       // getMembers.forEach(async (data) => {
-    //       //   await TeamkakaoPushNewForm(
-    //       //     data.user.user_phone,
-    //       //     bodyData.title,
-    //       //     bodyData.customer_name,
-    //       //     '확인하기',
-    //       //     bodyData.customer_phoneNumber
-    //       //   );
-    //       // });
-    //     } catch (err) {
-    //       await t.rollback();
-    //       next(err);
-    //     }
-    //   };
+      const formLinkCompany = await db.formLink.findOne({
+        where: { form_link: body.form_link },
+        include: [
+          {
+            model: db.company,
+            attributes: ['company_name'],
+          },
+        ],
+        attributes: ['company_idx', 'title', 'tempType'],
+      });
 
-    //   const formLinkCompany = await db.formLink.findOne({
-    //     where: { form_link: body.form_link },
-    //     include: [
-    //       {
-    //         model: db.company,
-    //         attributes: ['company_name'],
-    //       },
-    //     ],
-    //     attributes: ['company_idx', 'title', 'tempType'],
-    //   });
+      const { searchingAddress, searchingPhoneNumber } = changeToSearch(body);
 
-    //   const { searchingAddress, searchingPhoneNumber } = changeToSearch(body);
+      body.searchingAddress = searchingAddress;
+      body.searchingPhoneNumber = searchingPhoneNumber;
+      body.company_idx = formLinkCompany.company_idx;
+      body.company_name = formLinkCompany.company.company_name;
+      body.title = formLinkCompany.title;
 
-    //   body.searchingAddress = searchingAddress;
-    //   body.searchingPhoneNumber = searchingPhoneNumber;
-    //   body.company_idx = formLinkCompany.company_idx;
-    //   body.company_name = formLinkCompany.company.company_name;
-    //   body.title = formLinkCompany.title;
+      const createCustomerResult = await db.customer.create(body, {
+        transaction: t,
+      });
 
-    //   const createCustomerResult = await db.customer.create(body, {
-    //     transaction: t,
-    //   });
+      body.customer_phoneNumber = createCustomerResult.customer_phoneNumber;
+      body.customer_name = createCustomerResult.customer_name;
+      body.customer_idx = createCustomerResult.idx;
 
-    //   body.customer_phoneNumber = createCustomerResult.customer_phoneNumber;
-    //   body.customer_name = createCustomerResult.customer_name;
-    //   body.customer_idx = createCustomerResult.idx;
+      // 파일 보관함 db 생성
+      const createFileStoreResult = await createFileStore(body, t);
+      if (!createFileStoreResult.success) {
+        next(createFileStoreResult.err);
+        return;
+      }
 
-    //   // 파일 보관함 db 생성
-    //   const createFileStoreResult = await createFileStore(body, t);
-    //   if (!createFileStoreResult.success) {
-    //     next(createFileStoreResult.err);
-    //     return;
-    //   }
+      // 이미지나 파일이 없을 때  간편 Form
+      if (formLinkCompany.tempType == 1) {
+        body.choice = body.choice.join(', ');
+        createConsultingAndIncrement(body);
+        return;
+      }
 
-    //   // 이미지나 파일이 없을 때  간편 Form
-    //   if (formLinkCompany.tempType == 1) {
-    //     body.choice = body.choice.join(', ');
-    //     createConsultingAndIncrement(body);
-    //     return;
-    //   }
+      const imgUrlString = selectUrl(files.img);
+      const conceptUrlString = selectUrl(files.concept);
+      body.floor_plan = JSON.stringify(imgUrlString);
+      body.hope_concept = JSON.stringify(conceptUrlString);
+      body.expand = body.expand.join(', ');
+      body.carpentry = body.carpentry.join(', ');
+      body.paint = body.paint.join(', ');
+      body.bathroom_option = body.bathroom_option.join(', ');
+      body.floor = body.floor.join(', ');
+      body.tile = body.tile.join(', ');
+      body.electricity_lighting = body.electricity_lighting.join(', ');
+      body.kitchen_option = body.kitchen_option.join(', ');
+      body.furniture = body.furniture.join(', ');
+      body.facility = body.facility.join(', ');
+      body.film = body.film.join(', ');
+      body.etc = body.etc.join(', ');
 
-    //   const imgUrlString = selectUrl(files.img);
-    //   const conceptUrlString = selectUrl(files.concept);
-    //   body.floor_plan = JSON.stringify(imgUrlString);
-    //   body.hope_concept = JSON.stringify(conceptUrlString);
-    //   body.expand = body.expand.join(', ');
-    //   body.carpentry = body.carpentry.join(', ');
-    //   body.paint = body.paint.join(', ');
-    //   body.bathroom_option = body.bathroom_option.join(', ');
-    //   body.floor = body.floor.join(', ');
-    //   body.tile = body.tile.join(', ');
-    //   body.electricity_lighting = body.electricity_lighting.join(', ');
-    //   body.kitchen_option = body.kitchen_option.join(', ');
-    //   body.furniture = body.furniture.join(', ');
-    //   body.facility = body.facility.join(', ');
-    //   body.film = body.film.join(', ');
-    //   body.etc = body.etc.join(', ');
+      await createConsultingAndIncrement(body);
 
-    //   await createConsultingAndIncrement(body);
-
-    //   return;
-    // } catch (err) {
-    //   await t.rollback();
-    //   next(err);
-    // }
+      return;
+    } catch (err) {
+      await t.rollback();
+      next(err);
+    }
   },
 
   setConsultingContactMember: async (req, res, next) => {
