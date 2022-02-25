@@ -469,11 +469,7 @@ module.exports = {
     });
     await Promise.all(
       findResult.map(async (data) => {
-        const findPath = await getFolderPath(
-          data.path,
-          customerFile_idx,
-          ' > '
-        );
+        const findPath = await getFolderPath(data.path, customerFile_idx, '/');
         data.path = findPath;
       })
     );
