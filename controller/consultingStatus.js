@@ -42,7 +42,7 @@ module.exports = {
     return res.send({ success: 200, message: '저장 됨' });
   },
   addConsultingForm: async (req, res, next) => {
-    console.log('파일', req.file);
+    console.log('파일', req.files);
     console.log(req.body);
     // const t = await db.sequelize.transaction();
     // const selectUrl = (fileData) => {
