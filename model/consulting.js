@@ -19,7 +19,7 @@ module.exports = function (sequelize, DataTypes) {
 
     room_size: {
       allowNull: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(100),
     },
 
     customer_email: {
