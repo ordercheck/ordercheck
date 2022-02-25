@@ -3,11 +3,11 @@ const {
   getFileName,
   createFileStore,
   getDetailCustomerInfo,
-  check,
 } = require('../lib/apiFunctions');
 const axios = require('axios');
 const moment = require('moment');
 require('moment-timezone');
+
 moment.tz.setDefault('Asia/Seoul');
 
 const {
@@ -17,7 +17,7 @@ const {
 } = require('../lib/attributes');
 const db = require('../model/db');
 const { checkDetailCustomerUpdateField } = require('../lib/checkData');
-const { down_one_file } = require('../lib/aws/aws');
+const { s3_get } = require('../lib/aws/aws');
 const { delFile } = require('../lib/aws/fileupload').ufile;
 const {
   TeamkakaoPushNewForm,
@@ -38,10 +38,8 @@ const changeToSearch = (body) => {
 };
 
 module.exports = {
-  addConsultingFormFiles: async (req, res, next) => {
-    return res.send({ success: 200, message: '저장 됨' });
-  },
   addConsultingForm: async (req, res, next) => {
+    console.log(req.body);
     const t = await db.sequelize.transaction();
     const selectUrl = (fileData) => {
       try {
@@ -56,6 +54,7 @@ module.exports = {
       // url을 string으로 연결
       const { body, files } = req;
       const createConsultingAndIncrement = async (bodyData) => {
+        console.log(bodyData);
         try {
           await db.consulting.create(bodyData, { transaction: t });
           await t.commit();
@@ -278,7 +277,6 @@ module.exports = {
         room_size_kind,
         room_size,
         contract_possibility,
-
         detail_address,
         address,
         customer_phoneNumber,
@@ -294,7 +292,6 @@ module.exports = {
       room_size_kind,
       room_size,
       contract_possibility,
-
       detail_address,
       address,
       customer_phoneNumber,
@@ -308,8 +305,6 @@ module.exports = {
   },
 
   addCalculate: async (req, res, next) => {
-    console.log('이것은 바디', req.body);
-    console.log('이것은 파람', req.params);
     const {
       params: { customer_idx },
       company_idx,
@@ -569,18 +564,15 @@ ${calculateFindResult.file_url}
     }
   },
   downCalculate: async (req, res, next) => {
-    const params = {
-      Bucket: `ordercheck`,
-      Key: `fileStore/${req.body.customerFile_idx}/${req.body.path}/${req.body.title}`,
+    console.log('hi');
+    var params = {
+      Bucket: 'ordercheck',
+      Delimiter: '/',
+      Prefix: `calculate/`,
     };
 
-    down_one_file(params, (err, url) => {
-      if (err) {
-        next(err);
-      } else {
-        res.attachment(req.body.title);
-        return res.send(url.Body);
-      }
+    s3_get(params, (err, data) => {
+      return res.send(data);
     });
   },
   doIntegratedUser: async (req, res, next) => {

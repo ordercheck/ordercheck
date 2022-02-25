@@ -79,6 +79,8 @@ router.get(
 // *****************************changeStatus*********************************
 // 컨설팅 상태 수정 및 메모
 router.patch('/status/:customer_idx', loginCheck, patchConsultingStatus);
+// 견적서 다운로드
+router.post('/calculate/down', loginCheck, downCalculate);
 // 견적서 등록
 router.post(
   '/calculate/:customer_idx',
@@ -125,8 +127,6 @@ router.post(
 //   addConsultingFormFiles
 // );
 
-// 견적서 다운로드
-router.post('/calculate/down', loginCheck, downCalculate);
 // 상담폼 추가 라우터
 router.post(
   '/',
