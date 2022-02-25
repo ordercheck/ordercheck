@@ -38,7 +38,9 @@ const changeToSearch = (body) => {
 };
 
 module.exports = {
-  addConsultingFormFiles: async (req, res, next) => {},
+  addConsultingFormFiles: async (req, res, next) => {
+    console.log('hi');
+  },
   addConsultingForm: async (req, res, next) => {
     const t = await db.sequelize.transaction();
     const selectUrl = (fileData) => {

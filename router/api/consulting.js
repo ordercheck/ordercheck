@@ -29,6 +29,7 @@ const {
   doIntegratedUser,
   patchCalculate,
   setMainCalculate,
+  addConsultingFormFiles,
 } = require('../../controller/consultingStatus');
 const {
   checkFormLimit,
@@ -112,6 +113,16 @@ router.post(
   '/member/set/:customer_idx/:contract_person',
   loginCheck,
   setConsultingContactMember
+);
+
+router.post(
+  '/',
+  multer_form_upload().fields([
+    { name: 'floor_plan' },
+    { name: 'hope_concept' },
+  ]),
+  checkFormLimit,
+  addConsultingFormFiles
 );
 
 // 견적서 다운로드
