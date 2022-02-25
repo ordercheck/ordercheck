@@ -519,7 +519,10 @@ ${calculateFindResult.calculateNumber}차 견적서가 발송되었습니다.
 견적서 확인:
 ${calculateFindResult.file_url}
   `;
-        user_phone = customerFindResult.customer_phoneNumber;
+        user_phone = customerFindResult.customer_phoneNumber.replace(
+          /\./g,
+          '-'
+        );
 
         await axios({
           url: '/api/send/sms',

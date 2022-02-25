@@ -185,9 +185,9 @@ router.post('/join/check', async (req, res) => {
   if (emailCheck.length > 0) {
     return res.send({ success: 400, type: 'email' });
   }
-  console.log(user_phone);
+
   user_phone = user_phone.replace(/\./g, '-');
-  console.log(user_phone);
+
   let result = await axios({
     url: '/api/send/sms',
     method: 'post', // POST method
@@ -223,6 +223,7 @@ router.post('/check/pw', async (req, res) => {
 // 회원가입 라우터
 router.post('/join/do', async (req, res) => {
   let { token, use_agree, private_agree, marketing_agree } = req.body;
+  console.log(req.body);
   let user_data = await verify_data(token);
   // 동의 여부 체크
   user_data.use_agree = use_agree;
