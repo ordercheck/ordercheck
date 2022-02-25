@@ -38,22 +38,29 @@ const changeToSearch = (body) => {
 };
 
 module.exports = {
+  addConsultingFormFiles: async (req, res, next) => {
+    const { body } = req;
+    console.log(body);
+    const { files } = req;
+    const selectUrl = (fileData) => {
+      try {
+        return (result = fileData.map((element) => {
+          return element.location;
+        }));
+      } catch (err) {
+        return;
+      }
+    };
+    const imgUrlString = selectUrl(files.img);
+    const conceptUrlString = selectUrl(files.concept);
+    body.floor_plan = JSON.stringify(imgUrlString);
+    body.hope_concept = JSON.stringify(conceptUrlString);
+  },
   addConsultingForm: async (req, res, next) => {
     const t = await db.sequelize.transaction();
     try {
       // url을 string으로 연결
-      const { body, files } = req;
-
-      const selectUrl = (fileData) => {
-        try {
-          return (result = fileData.map((element) => {
-            return element.location;
-          }));
-        } catch (err) {
-          return;
-        }
-      };
-
+      const { body } = req;
       const createConsultingAndIncrement = async (bodyData) => {
         try {
           await db.consulting.create(bodyData, { transaction: t });
@@ -108,7 +115,7 @@ module.exports = {
             attributes: ['company_name'],
           },
         ],
-        attributes: ['company_idx', 'title'],
+        attributes: ['company_idx', 'title', 'tempType'],
       });
 
       const { searchingAddress, searchingPhoneNumber } = changeToSearch(body);
@@ -135,19 +142,12 @@ module.exports = {
       }
 
       // 이미지나 파일이 없을 때  간편 Form
-      if (!req.files) {
+      if (formLinkCompany.tempType == 1) {
         body.choice = body.choice.join(', ');
         createConsultingAndIncrement(body);
         return;
       }
 
-      console.log(body);
-
-      // 이미지나 파일이 있을 때
-      // const imgUrlString = selectUrl(files.img);
-      // const conceptUrlString = selectUrl(files.concept);
-      // body.floor_plan = JSON.stringify(imgUrlString);
-      // body.hope_concept = JSON.stringify(conceptUrlString);
       body.expand = body.expand.join(', ');
       body.carpentry = body.carpentry.join(', ');
       body.paint = body.paint.join(', ');

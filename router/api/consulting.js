@@ -29,6 +29,7 @@ const {
   doIntegratedUser,
   patchCalculate,
   setMainCalculate,
+  addConsultingFormFiles,
 } = require('../../controller/consultingStatus');
 const {
   checkFormLimit,
@@ -117,15 +118,17 @@ router.post(
 // 견적서 다운로드
 router.post('/calculate/down', loginCheck, downCalculate);
 // 상담폼 추가 라우터
+router.post('/', checkFormLimit, addConsultingForm);
+// 상담폼 formData 라우터
 router.post(
-  '/',
-  // multer_form_upload().fields([
-  //   { name: 'floor_plan' },
-  //   { name: 'hope_concept' },
-  // ]),
-  checkFormLimit,
-  addConsultingForm
+  '/files',
+  multer_form_upload().fields([
+    { name: 'floor_plan' },
+    { name: 'hope_concept' },
+  ]),
+  addConsultingFormFiles
 );
+
 // 고객등록 api
 router.post('/customer', loginCheck, checkCustomerLimit, addCompanyCustomer);
 
