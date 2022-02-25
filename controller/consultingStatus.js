@@ -43,6 +43,7 @@ module.exports = {
   },
   addConsultingForm: async (req, res, next) => {
     console.log('파일', req.files);
+
     console.log(req.body);
     // const t = await db.sequelize.transaction();
     // const selectUrl = (fileData) => {
