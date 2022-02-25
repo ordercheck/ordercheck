@@ -38,9 +38,6 @@ const changeToSearch = (body) => {
 };
 
 module.exports = {
-  addConsultingFormFiles: async (req, res, next) => {
-    return res.send({ success: 200, message: '저장 됨' });
-  },
   addConsultingForm: async (req, res, next) => {
     const t = await db.sequelize.transaction();
     const selectUrl = (fileData) => {
@@ -141,7 +138,7 @@ module.exports = {
         createConsultingAndIncrement(body);
         return;
       }
-
+      console.log(files);
       const imgUrlString = selectUrl(files.img);
       const conceptUrlString = selectUrl(files.concept);
       body.floor_plan = JSON.stringify(imgUrlString);
