@@ -38,6 +38,9 @@ const changeToSearch = (body) => {
 };
 
 module.exports = {
+  addConsultingFormFiles: async (req, res, next) => {
+    return res.send({ success: 200, message: '저장 됨' });
+  },
   addConsultingForm: async (req, res, next) => {
     const t = await db.sequelize.transaction();
     const selectUrl = (fileData) => {
@@ -138,11 +141,23 @@ module.exports = {
         createConsultingAndIncrement(body);
         return;
       }
-      console.log(files);
+
       const imgUrlString = selectUrl(files.img);
       const conceptUrlString = selectUrl(files.concept);
       body.floor_plan = JSON.stringify(imgUrlString);
       body.hope_concept = JSON.stringify(conceptUrlString);
+      body.expand = body.expand.replace(/,/g, ', ');
+      body.carpentry = body.carpentry.replace(/,/g, ', ');
+      body.paint = body.paint.replace(/,/g, ', ');
+      body.bathroom_option = body.bathroom_option.replace(/,/g, ', ');
+      body.floor = body.floor.replace(/,/g, ', ');
+      body.tile = body.tile.replace(/,/g, ', ');
+      body.electricity_lighting = body.electricity_lighting.replace(/,/g, ', ');
+      body.kitchen_option = body.kitchen_option.replace(/,/g, ', ');
+      body.furniture = body.furniture.replace(/,/g, ', ');
+      body.facility = body.facility.replace(/,/g, ', ');
+      body.film = body.film.replace(/,/g, ', ');
+      body.etc = body.etc.replace(/,/g, ', ');
 
       await createConsultingAndIncrement(body);
 
