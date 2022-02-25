@@ -185,6 +185,7 @@ router.post('/join/check', async (req, res) => {
   if (emailCheck.length > 0) {
     return res.send({ success: 400, type: 'email' });
   }
+  console.log(user_phone);
   user_phone = user_phone.replace(/./g, '-');
   console.log(user_phone);
   let result = await axios({
