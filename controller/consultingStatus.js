@@ -140,26 +140,24 @@ module.exports = {
         createConsultingAndIncrement(body);
         return;
       }
-      console.log(body);
+
       // 이미지나 파일이 있을 때
-      const imgUrlString = selectUrl(files.img);
-      const conceptUrlString = selectUrl(files.concept);
-      body.floor_plan = JSON.stringify(imgUrlString);
-      body.hope_concept = JSON.stringify(conceptUrlString);
-      body.expand = JSON.parse(body.expand).join(', ');
-      body.carpentry = JSON.parse(body.carpentry).join(', ');
-      body.paint = JSON.parse(body.paint).join(', ');
-      body.bathroom_option = JSON.parse(body.bathroom_option).join(', ');
-      body.floor = JSON.parse(body.floor).join(', ');
-      body.tile = JSON.parse(body.tile).join(', ');
-      body.electricity_lighting = JSON.parse(body.electricity_lighting).join(
-        ', '
-      );
-      body.kitchen_option = JSON.parse(body.kitchen_option).join(', ');
-      body.furniture = JSON.parse(body.furniture).join(', ');
-      body.facility = JSON.parse(body.facility).join(', ');
-      body.film = JSON.parse(body.film).join(', ');
-      body.etc = JSON.parse(body.etc).join(', ');
+      // const imgUrlString = selectUrl(files.img);
+      // const conceptUrlString = selectUrl(files.concept);
+      // body.floor_plan = JSON.stringify(imgUrlString);
+      // body.hope_concept = JSON.stringify(conceptUrlString);
+      body.expand = body.expand.join(', ');
+      body.carpentry = body.carpentry.join(', ');
+      body.paint = body.paint.join(', ');
+      body.bathroom_option = body.bathroom_option.join(', ');
+      body.floor = body.floor.join(', ');
+      body.tile = body.tile.join(', ');
+      body.electricity_lighting = body.electricity_lighting.join(', ');
+      body.kitchen_option = body.kitchen_option.join(', ');
+      body.furniture = body.furniture.join(', ');
+      body.facility = body.facility.join(', ');
+      body.film = body.film.join(', ');
+      body.etc = body.etc.join(', ');
 
       await createConsultingAndIncrement(body);
 
