@@ -186,6 +186,7 @@ router.post('/join/check', async (req, res) => {
     return res.send({ success: 400, type: 'email' });
   }
   user_phone = user_phone.replace(/./g, '-');
+  console.log(user_phone);
   let result = await axios({
     url: '/api/send/sms',
     method: 'post', // POST method
