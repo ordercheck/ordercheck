@@ -38,10 +38,9 @@ const changeToSearch = (body) => {
 };
 
 module.exports = {
-  addConsultingFormFiles: async (req, res, next) => {
-    const { body } = req;
-    console.log(body);
-    const { files } = req;
+  addConsultingFormFiles: async (req, res, next) => {},
+  addConsultingForm: async (req, res, next) => {
+    const t = await db.sequelize.transaction();
     const selectUrl = (fileData) => {
       try {
         return (result = fileData.map((element) => {
@@ -51,16 +50,9 @@ module.exports = {
         return;
       }
     };
-    const imgUrlString = selectUrl(files.img);
-    const conceptUrlString = selectUrl(files.concept);
-    body.floor_plan = JSON.stringify(imgUrlString);
-    body.hope_concept = JSON.stringify(conceptUrlString);
-  },
-  addConsultingForm: async (req, res, next) => {
-    const t = await db.sequelize.transaction();
     try {
       // url을 string으로 연결
-      const { body } = req;
+      const { body, files } = req;
       const createConsultingAndIncrement = async (bodyData) => {
         try {
           await db.consulting.create(bodyData, { transaction: t });
@@ -148,6 +140,10 @@ module.exports = {
         return;
       }
 
+      const imgUrlString = selectUrl(files.img);
+      const conceptUrlString = selectUrl(files.concept);
+      body.floor_plan = JSON.stringify(imgUrlString);
+      body.hope_concept = JSON.stringify(conceptUrlString);
       body.expand = body.expand.join(', ');
       body.carpentry = body.carpentry.join(', ');
       body.paint = body.paint.join(', ');
