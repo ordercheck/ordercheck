@@ -115,20 +115,28 @@ router.post(
   setConsultingContactMember
 );
 
-router.post(
-  '/files',
-  multer_form_upload().fields([
-    { name: 'floor_plan' },
-    { name: 'hope_concept' },
-  ]),
-  checkFormLimit,
-  addConsultingFormFiles
-);
+// router.post(
+//   '/files',
+// multer_form_upload().fields([
+//   { name: 'floor_plan' },
+//   { name: 'hope_concept' },
+// ]),
+//   checkFormLimit,
+//   addConsultingFormFiles
+// );
 
 // 견적서 다운로드
 router.post('/calculate/down', loginCheck, downCalculate);
 // 상담폼 추가 라우터
-router.post('/', checkFormLimit, addConsultingForm);
+router.post(
+  '/',
+  // checkFormLimit,
+  multer_form_upload().fields([
+    { name: 'floor_plan' },
+    { name: 'hope_concept' },
+  ]),
+  addConsultingForm
+);
 // 고객등록 api
 router.post('/customer', loginCheck, checkCustomerLimit, addCompanyCustomer);
 
