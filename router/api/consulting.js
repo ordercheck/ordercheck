@@ -122,10 +122,13 @@ router.post('/', checkFormLimit, addConsultingForm);
 // 상담폼 formData 라우터
 router.post(
   '/files',
-  multer_form_upload().fields([
-    { name: 'floor_plan' },
-    { name: 'hope_concept' },
-  ]),
+  multer_form_upload().single(
+    'floor_plan'
+    //   [
+    //   { name: 'floor_plan' },
+    //   { name: 'hope_concept' },
+    // ]
+  ),
   addConsultingFormFiles
 );
 
