@@ -135,9 +135,8 @@ module.exports = {
         return;
       }
 
-      console.log(req.body);
       // 이미지나 파일이 없을 때  간편 Form
-      if (!files.img && !files.concept) {
+      if (!req.files) {
         console.log('여기타라');
         body.choice = JSON.parse(body.choice).join(', ');
         createConsultingAndIncrement(body);
