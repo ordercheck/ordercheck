@@ -39,7 +39,6 @@ const changeToSearch = (body) => {
 
 module.exports = {
   addConsultingForm: async (req, res, next) => {
-    console.log(req.body);
     const t = await db.sequelize.transaction();
     const selectUrl = (fileData) => {
       try {
@@ -54,7 +53,6 @@ module.exports = {
       // url을 string으로 연결
       const { body, files } = req;
       const createConsultingAndIncrement = async (bodyData) => {
-        console.log(bodyData);
         try {
           await db.consulting.create(bodyData, { transaction: t });
           await t.commit();
@@ -564,11 +562,10 @@ ${calculateFindResult.file_url}
     }
   },
   downCalculate: async (req, res, next) => {
-    console.log('hi');
     var params = {
       Bucket: 'ordercheck',
       Delimiter: '/',
-      Prefix: `calculate/`,
+      Prefix: `fileStore/10/`,
     };
 
     s3_get(params, (err, data) => {

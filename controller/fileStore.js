@@ -456,4 +456,28 @@ module.exports = {
 
     return res.send({ succes: 200, getFileResult });
   },
+  getAllFolders: async (req, res, next) => {
+    const {
+      body: { uuid, path },
+      params: { customerFile_idx },
+    } = req;
+    const findResult = await db.files.findAll({
+      where: { path: { [Op.like]: `%${uuid}%` }, isFolder: false },
+      attributes: ['file_url', 'title', 'path'],
+      raw: true,
+      nest: true,
+    });
+    await Promise.all(
+      findResult.map(async (data) => {
+        const findPath = await getFolderPath(
+          data.path,
+          customerFile_idx,
+          ' > '
+        );
+        data.path = findPath;
+      })
+    );
+
+    return res.send(findResult);
+  },
 };

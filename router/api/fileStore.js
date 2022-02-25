@@ -10,6 +10,7 @@ const {
   changeFileTitle,
   searchFileStore,
   showDetailFileFolder,
+  getAllFolders,
 } = require('../../controller/fileStore');
 
 const { multer_file_store_upload } = require('../../lib/aws/aws');
@@ -20,6 +21,7 @@ router.get(
   loginCheck,
   showRootFoldersAndFiles
 );
+router.post('/down/folder/:customerFile_idx', loginCheck, getAllFolders);
 router.post('/folder/:customerFile_idx', loginCheck, addFolder);
 router.post(
   '/upload/:customerFile_idx',

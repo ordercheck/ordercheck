@@ -434,29 +434,32 @@
  *            description: 성공
  *         '400':
  *           description: 실패
- * /api/consulting/calculate/down:
+ * /api/file/store/down/folder/{customerFile_idx}:
  *   post:
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       -  FileStore
- *     summary: 파일 다운로드
+ *     summary: 폴더 다운로드
  *     requestBody:
  *       content:
  *         application/json:
  *           schema:
  *             type: object
  *             properties:
- *               title:
+ *               uuid:
  *                 type: string
  *               path:
  *                 type: string
- *               customerFile_idx:
- *                 type: integer
  *             example:
- *               title: "title"
+ *               uuid: "FJEK"
  *               path: "path"
- *               customerFile_idx: 1
+ *     parameters:
+ *         - in: path
+ *           name: customerFile_idx
+ *           schema:
+ *             type: integer
+ *           example: 1
  *     responses:
  *       '200':
  *         description: 성공
