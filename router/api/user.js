@@ -165,7 +165,7 @@ router.post('/login', async (req, res, next) => {
 });
 // 회원가입 체크 라우터
 router.post('/join/check', async (req, res) => {
-  const { user_email, user_phone } = req.body;
+  let { user_email, user_phone } = req.body;
   const randomNumber = generateRandomCode(6);
   const message = `[인증번호:${randomNumber}] 오더체크 인증번호입니다.\n오더체크와 편리한 고객응대를 시작해보세요.`;
   let phoneCheck = await db.user
@@ -185,7 +185,7 @@ router.post('/join/check', async (req, res) => {
   if (emailCheck.length > 0) {
     return res.send({ success: 400, type: 'email' });
   }
-  user_phone.replace(/./g, '-');
+  user_phone = user_phone.replace(/./g, '-');
   let result = await axios({
     url: '/api/send/sms',
     method: 'post', // POST method
