@@ -142,8 +142,8 @@ module.exports = {
         return;
       }
 
-      const imgUrlString = selectUrl(files.img);
-      const conceptUrlString = selectUrl(files.concept);
+      const imgUrlString = selectUrl(files.floor_plan);
+      const conceptUrlString = selectUrl(files.hope_concept);
       body.floor_plan = JSON.stringify(imgUrlString);
       body.hope_concept = JSON.stringify(conceptUrlString);
       body.expand = body.expand.replace(/,/g, ', ');
