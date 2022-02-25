@@ -39,7 +39,7 @@ const changeToSearch = (body) => {
 
 module.exports = {
   addConsultingFormFiles: async (req, res, next) => {
-    console.log('hi');
+    return res.send({ success: 200, message: '저장 됨' });
   },
   addConsultingForm: async (req, res, next) => {
     const t = await db.sequelize.transaction();
