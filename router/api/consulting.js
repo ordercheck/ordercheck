@@ -128,12 +128,7 @@ router.post(
 // 견적서 다운로드
 router.post('/calculate/down', loginCheck, downCalculate);
 // 상담폼 추가 라우터
-router.post(
-  '/',
-
-  checkFormLimit,
-  addConsultingForm
-);
+router.post('/', checkFormLimit, addConsultingForm);
 // 고객등록 api
 router.post('/customer', loginCheck, checkCustomerLimit, addCompanyCustomer);
 
