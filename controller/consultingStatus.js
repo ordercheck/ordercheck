@@ -39,7 +39,6 @@ const changeToSearch = (body) => {
 
 module.exports = {
   addConsultingForm: async (req, res, next) => {
-    console.log();
     const t = await db.sequelize.transaction();
     try {
       // url을 string으로 연결
@@ -137,12 +136,11 @@ module.exports = {
 
       // 이미지나 파일이 없을 때  간편 Form
       if (!req.files) {
-        console.log(req.body);
-        console.log('여기타라');
-        body.choice = req.body.choice.join(', ');
+        body.choice = body.choice.join(', ');
         createConsultingAndIncrement(body);
         return;
       }
+      console.log(body);
       // 이미지나 파일이 있을 때
       const imgUrlString = selectUrl(files.img);
       const conceptUrlString = selectUrl(files.concept);
