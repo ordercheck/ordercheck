@@ -54,7 +54,7 @@ module.exports = function (sequelize, DataTypes) {
 
     corporation_yn: {
       allowNull: false,
-      defaultValue: '',
+      defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
     active: {

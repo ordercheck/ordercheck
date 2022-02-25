@@ -230,6 +230,7 @@ router.post('/join/do', async (req, res) => {
     const { createUserResult, success, message } = await joinFunction(
       user_data
     );
+
     if (!success) {
       return res.send({ success: 400, message: message });
     }
@@ -261,6 +262,8 @@ router.post('/join/do', async (req, res) => {
 
     // 문자 테이블 만들기
     await db.sms.create({ user_idx: createUserResult.idx });
+    // 유저 설정 테이블 만들기
+    await db.userConfig.create({ user_idx: createUserResult.idx });
 
     return res.send({ success: 200, loginToken });
   } else {

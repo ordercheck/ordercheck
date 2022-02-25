@@ -158,12 +158,6 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
     },
 
-    calculateReload: {
-      allowNull: false,
-      defaultValue: false,
-      type: DataTypes.BOOLEAN,
-    },
-
     create_people: {
       allowNull: true,
       defaultValue: '오더체크',

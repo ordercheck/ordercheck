@@ -39,6 +39,7 @@ const changeToSearch = (body) => {
 
 module.exports = {
   addConsultingForm: async (req, res, next) => {
+    console.log();
     const t = await db.sequelize.transaction();
     try {
       // url을 string으로 연결
@@ -134,14 +135,15 @@ module.exports = {
         return;
       }
 
+      console.log(req.body);
       // 이미지나 파일이 없을 때  간편 Form
       if (!files.img && !files.concept) {
+        console.log('여기타라');
         body.choice = JSON.parse(body.choice).join(', ');
         createConsultingAndIncrement(body);
         return;
       }
       // 이미지나 파일이 있을 때
-
       const imgUrlString = selectUrl(files.img);
       const conceptUrlString = selectUrl(files.concept);
       body.floor_plan = JSON.stringify(imgUrlString);
@@ -197,13 +199,36 @@ module.exports = {
   delConsulting: async (req, res, next) => {
     const {
       params: { customer_idx },
-
-      company_idx,
     } = req;
     try {
+      // 고객 전화번호 찾기
+      const findCustomerResult = await db.customer.findByPk(
+        {
+          customer_idx,
+        },
+        { attributes: ['customer_phoneNumber'] }
+      );
+
+      // 고객 지우기
       await db.customer.destroy({
-        where: { idx: customer_idx, company_idx },
+        where: { idx: customer_idx },
       });
+
+      // 전화번호로 찾기
+      const findResultCustomers = await db.customer.count({
+        where: {
+          customer_phoneNumber: findCustomerResult.customer_phoneNumber,
+        },
+      });
+      // 같은 전화번호가 없을 경우, fileStore도 삭제
+      if (findResultCustomers == 0) {
+        await db.customerFile.destroy({
+          where: {
+            customer_phoneNumber: findCustomerResult.customer_phoneNumber,
+          },
+        });
+      }
+
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
@@ -449,12 +474,12 @@ module.exports = {
       attributes: ['file_url', 'calculateNumber'],
     });
     // 견적서 다시보기 동의여부
-    // if (calculateReload !== '') {
-    //   await db.config.update(
-    //     { calculateReload },
-    //     { where: { user_idx: req.user_idx, company_idx: req.company_idx } }
-    //   );
-    // }
+    if (calculateReload !== '') {
+      await db.userConfig.update(
+        { calculateReload },
+        { where: { user_idx: req.user_idx } }
+      );
+    }
 
     const fileUrl = !calculateFindResult.file_url
       ? `orderchecktest.s3-website.ap-northeast-2.amazonaws.com/signin`
