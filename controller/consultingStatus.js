@@ -146,18 +146,6 @@ module.exports = {
       const conceptUrlString = selectUrl(files.concept);
       body.floor_plan = JSON.stringify(imgUrlString);
       body.hope_concept = JSON.stringify(conceptUrlString);
-      body.expand = body.expand.join(', ');
-      body.carpentry = body.carpentry.join(', ');
-      body.paint = body.paint.join(', ');
-      body.bathroom_option = body.bathroom_option.join(', ');
-      body.floor = body.floor.join(', ');
-      body.tile = body.tile.join(', ');
-      body.electricity_lighting = body.electricity_lighting.join(', ');
-      body.kitchen_option = body.kitchen_option.join(', ');
-      body.furniture = body.furniture.join(', ');
-      body.facility = body.facility.join(', ');
-      body.film = body.film.join(', ');
-      body.etc = body.etc.join(', ');
 
       await createConsultingAndIncrement(body);
 
