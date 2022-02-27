@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { multer_form_thumbNail_upload } = require('../../lib/aws/aws');
+const { multer_upload_img } = require('../../lib/aws/aws');
 const loginCheck = require('../../middleware/auth');
 
 const {
@@ -27,7 +27,7 @@ router.get('/list', loginCheck, showFormLink);
 router.post(
   '/thumbNail/:formId',
   loginCheck,
-  multer_form_thumbNail_upload().single('thumbNail'),
+  multer_upload_img().single('thumbNail'),
   createThumbNail
 );
 

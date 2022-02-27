@@ -56,8 +56,6 @@ module.exports = {
         const originalUrl = req.file.location;
         const thumbNail_title = getFileName(originalUrl);
         const thumbNail = originalUrl.replace(/\/original\//, '/thumb/');
-        console.log(thumbNail);
-        console.log(thumbNail_title);
 
         await db.formLink.update(
           {

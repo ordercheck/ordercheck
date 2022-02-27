@@ -23,7 +23,7 @@ const {
   delCard,
 } = require('../../controller/config');
 const {
-  multer_company_logo_upload,
+  multer_upload_img,
   multer_company_Enrollment_upload,
 } = require('../../lib/aws/aws');
 const loginCheck = require('../../middleware/auth');
@@ -52,7 +52,7 @@ router.delete('/company/template/:templateId', loginCheck, delTemplate);
 router.patch(
   '/company/logo',
   loginCheck,
-  multer_company_logo_upload().single('img'),
+  multer_upload_img().single('img'),
   changeCompanyLogo
 );
 router.patch(

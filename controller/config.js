@@ -47,25 +47,22 @@ const updateLogoAndEnrollment = async (
     });
     // 로고를 새로 업로드 하는 경우
     if (!findCompanyResult.company_logo_title) {
-      const file_name = getFileName(fileData.key);
-      await updateCompanyLogo(fileData.location, file_name, changeData);
+      const originalUrl = fileData.location;
+      const file_name = getFileName(originalUrl);
+      const thumbNail = originalUrl.replace(/\/original\//, '/thumb/');
+
+      await updateCompanyLogo(thumbNail, file_name, changeData);
     }
     // 로고를 삭제하는 경우
     if (!fileData) {
-      delFile(
-        findCompanyResult.company_logo_title,
-        `ordercheck/${changeData}/${company_idxData}`
-      );
       await updateCompanyLogo(null, null, changeData);
     }
     // 로고를 바꾸는 경우
     if (findCompanyResult.company_logo_title) {
-      delFile(
-        findCompanyResult.company_logo_title,
-        `ordercheck/${changeData}/${company_idxData}`
-      );
-      const file_name = getFileName(fileData.key);
-      await updateCompanyLogo(fileData.location, file_name, changeData);
+      const originalUrl = fileData.location;
+      const file_name = getFileName(originalUrl);
+      const thumbNail = originalUrl.replace(/\/original\//, '/thumb/');
+      await updateCompanyLogo(thumbNail, file_name, changeData);
     }
     return true;
   } catch (err) {
@@ -133,11 +130,7 @@ module.exports = {
   changeCompanyLogo: async (req, res, next) => {
     const { company_idx, file } = req;
     try {
-      const result = await updateLogoAndEnrollment(
-        company_idx,
-        file.transforms[0],
-        'logo'
-      );
+      const result = await updateLogoAndEnrollment(company_idx, file, 'logo');
       if (result) {
         return res.send({ success: 200 });
       }
