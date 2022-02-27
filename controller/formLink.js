@@ -54,14 +54,15 @@ module.exports = {
 
       const changeFormLinkUrl = async () => {
         const originalUrl = req.file.location;
-        const file_name = getFileName(originalUrl);
+        const thumbNail_title = getFileName(originalUrl);
         const thumbNail = originalUrl.replace(/\/original\//, '/thumb/');
         console.log(thumbNail);
         console.log(thumbNail_title);
+
         await db.formLink.update(
           {
             thumbNail,
-            thumbNail_title: file_name,
+            thumbNail_title,
           },
           { where: { idx: formId } }
         );
