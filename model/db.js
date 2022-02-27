@@ -222,7 +222,7 @@ db.user.hasOne(db.userCompany, {
   foreignKey: 'user_idx',
 });
 // config와 userCompany
-db.config.hasMany(db.userCompany, {
+db.config.hasOne(db.userCompany, {
   foreignKey: 'config_idx',
 });
 
