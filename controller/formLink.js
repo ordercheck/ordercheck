@@ -53,10 +53,12 @@ module.exports = {
       const { formId } = req.params;
 
       const changeFormLinkUrl = async () => {
-        const file_name = getFileName(req.file.transforms[0].key);
+        const file_name = getFileName(req.file.key);
+        const thumbNail = originalUrl.replace(/\/original\//, '/thumb/');
+
         await db.formLink.update(
           {
-            thumbNail: req.file.transforms[0].location,
+            thumbNail,
             thumbNail_title: file_name,
           },
           { where: { idx: formId } }
@@ -66,7 +68,7 @@ module.exports = {
         attributes: ['thumbNail_title'],
       });
       if (findFormLinkResult.thumbNail_title) {
-        delFile(findFormLinkResult.thumbNail_title, 'ordercheck/formThumbNail');
+        delFile(findFormLinkResult.thumbNail_title, 'ordercheck/thumb');
         changeFormLinkUrl();
       } else {
         changeFormLinkUrl();
