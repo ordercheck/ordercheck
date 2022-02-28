@@ -116,7 +116,6 @@ module.exports = {
     } = req;
 
     // 그냥 text로 변환
-    const pureText = makePureText(title);
 
     const t = await db.sequelize.transaction();
     try {
@@ -129,13 +128,24 @@ module.exports = {
       req.body.customerFile_idx = customerFile_idx;
       const newUuid = random5();
       if (req.body.root) {
-        // const req = checkTitle(db.formLink, {},title, company_idx, req);
+        const insertData = checkTitle(
+          db.folders,
+          { root: true, title, customerFile_idx, company_idx },
+          title,
+          req.body
+        );
 
-        req.body.uuid = newUuid;
-        req.body.path = newUuid;
-        const createFolderResult = await db.folders.create(req.body);
+        const pureText = makePureText(insertData.title);
+        insertData.searchingTitle = pureText;
+        insertData.company_idx = company_idx;
+        insertData.upload_people = findUserResult.user_name;
+        insertData.customerFile_idx = customerFile_idx;
+        insertData.uuid = newUuid;
+        insertData.path = newUuid;
+        const createFolderResult = await db.folders.create(insertData);
         return res.send({ succes: true, createFolderResult });
       }
+
       req.body.root = false;
       const findResult = await db.folders.findOne(
         { where: { uuid: req.body.uuid } },

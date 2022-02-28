@@ -22,7 +22,7 @@ module.exports = {
         db.formLink,
         { title, company_idx },
         title,
-        req
+        req.body
       );
 
       const pureText = makePureText(insertData.body.title);
