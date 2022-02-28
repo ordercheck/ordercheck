@@ -122,10 +122,10 @@ module.exports = {
       const findUserResult = await db.user.findByPk(user_idx, {
         attributes: ['user_name'],
       });
-      req.body.searchingTitle = pureText;
-      req.body.company_idx = company_idx;
-      req.body.upload_people = findUserResult.user_name;
-      req.body.customerFile_idx = customerFile_idx;
+      // req.body.searchingTitle = pureText;
+      // req.body.company_idx = company_idx;
+      // req.body.upload_people = findUserResult.user_name;
+      // req.body.customerFile_idx = customerFile_idx;
       const newUuid = random5();
       if (req.body.root) {
         const insertData = checkTitle(
