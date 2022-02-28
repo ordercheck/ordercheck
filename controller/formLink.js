@@ -24,12 +24,12 @@ module.exports = {
         title,
         req.body
       );
-      console.log(insertData);
-      const pureText = makePureText(insertData.body.title);
-      insertData.body.form_link = _f.random5();
-      insertData.body.company_idx = insertData.company_idx;
-      insertData.body.searchingTitle = pureText;
-      const createResult = await db.formLink.create(insertData.body);
+
+      const pureText = makePureText(insertData.title);
+      insertData.form_link = _f.random5();
+      insertData.company_idx = insertData.company_idx;
+      insertData.searchingTitle = pureText;
+      const createResult = await db.formLink.create(insertData);
       return res.send({
         success: 200,
         formId: createResult.idx,
