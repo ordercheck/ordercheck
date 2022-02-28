@@ -22,6 +22,7 @@ const {
   showCardDetailInfo,
   delCard,
   showDetailTemplate,
+  setCardMain,
 } = require('../../controller/config');
 const {
   multer_upload_img,
@@ -46,6 +47,8 @@ router.get('/company/plan/detail/:planId', loginCheck, showDetailPlan);
 router.get('/company/sms', loginCheck, showSmsInfo);
 router.get('/company/card', loginCheck, showCardsInfo);
 router.get('/company/card/detail/:cardId', loginCheck, showCardDetailInfo);
+router.post('/company/card/set/main/:cardId', loginCheck, setCardMain);
+
 router.delete('/company/card/:cardId', loginCheck, delCard);
 
 router.get('/company/sms/history', loginCheck, showSmsHistory);

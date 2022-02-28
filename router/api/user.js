@@ -9,6 +9,9 @@ const {
   schedulePay,
 } = require('../../lib/payFunction');
 const db = require('../../model/db');
+const moment = require('moment');
+require('moment-timezone');
+moment.tz.setDefault('Asia/Seoul');
 const _f = require('../../lib/functions');
 const verify_data = require('../../lib/jwtfunctions');
 

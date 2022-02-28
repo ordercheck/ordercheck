@@ -3,7 +3,12 @@ const { makeSpreadArray } = require('../lib/functions');
 const _f = require('../lib/functions');
 const { getFileName, findMembers } = require('../lib/apiFunctions');
 const { Op } = require('sequelize');
-const { payNow, delCardPort } = require('../lib/payFunction');
+const {
+  payNow,
+  delCardPort,
+  cancelSchedule,
+  schedulePay,
+} = require('../lib/payFunction');
 const moment = require('moment');
 const {
   showTemplateListAttributes,
@@ -15,7 +20,7 @@ const {
   showCardDetailAttributes,
   showDetailTemplateConfig,
 } = require('../lib/attributes');
-const attributes = require('../lib/attributes');
+
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
 
@@ -445,20 +450,58 @@ module.exports = {
   delCard: async (req, res, next) => {
     const { cardId } = req.params;
     // 삭제 하려는 카드가 main 카드인지 체크
+    try {
+      const findCardResult = await db.card.findByPk(cardId, {
+        attributes: ['main'],
+      });
+      if (findCardResult.main == true) {
+        next({ message: '기본 결제 카드로 지정된 카드 입니다.' });
+      }
 
-    const findCardResult = await db.card.findByPk(cardId, {
-      attributes: ['main'],
-    });
-    if (findCardResult.main == true) {
-      next({ message: '기본 결제 카드로 지정된 카드 입니다.' });
+      // db 카드 삭제
+      await db.card.destroy({ where: { idx: cardId } });
+
+      res.send({ success: 200, message: '카드 삭제 완료' });
+      //아임포트 카드 삭제
+      await delCardPort(findCardResult.customer_uid);
+    } catch (err) {
+      next(err);
     }
+  },
+  setCardMain: async (req, res, next) => {
+    const {
+      user_idx,
+      params: { cardId },
+    } = req;
+    // 메인으로 설정되어있는 카드 false로 변경
 
-    //아임포트 카드 삭제
+    const findMainCardResult = await db.card.findOne(
+      { where: { user_idx, main: true } },
+      { attributes: ['idx', 'customer_uid'] }
+    );
 
-    // db 카드 삭제
-    await db.card.destroy({ where: { idx: cardId } });
+    await db.card.update(
+      { main: false },
+      { where: { idx: findMainCardResult.idx } }
+    );
 
-    res.send({ success: 200, message: '카드 삭제 완료' });
-    await delCardPort(findCardResult.customer_uid);
+    //타겟 카드를 true로 변경
+    await db.card.update({ main: true }, { where: { idx: cardId } });
+
+    // 기존의 아임포트 결제 예약 취소
+
+    await cancelSchedule(findMainCardResult.customer_uid);
+
+    // 새로운 카드로 결제 예약
+
+    await schedulePay(
+      changeToUnix,
+      card_data.customer_uid,
+      plan_data.result_price_levy.replace(/,/g, ''),
+      user_data.user_name,
+      user_data.user_phone,
+      user_data.user_email,
+      nextMerchant_uid
+    );
   },
 };

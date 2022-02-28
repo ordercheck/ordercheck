@@ -493,4 +493,22 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/config/company/card/set/main/{cardId}:
+ *   post:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  config
+ *      summary: 메인카드로 변경하기
+ *      parameters:
+ *         - in: path
+ *           name: cardId
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */
