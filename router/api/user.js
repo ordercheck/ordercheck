@@ -90,8 +90,13 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
     await db.card.create(card_data, { transaction: t });
 
     // 시간을 unix형태로 변경(실제)
-    const changeToTime = new Date(plan_data.start_plan);
-    changeToUnix = changeToTime.getTime() / 1000;
+
+    const Hour = moment().format('HH');
+
+    const startDate = plan_data.start_plan.replace(/\./g, '-');
+
+    const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
+
     const nextMerchant_uid = generateRandomCode(6);
 
     //  테스트
