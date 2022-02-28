@@ -188,7 +188,7 @@ module.exports = {
   },
   addFile: async (req, res, next) => {
     const { files } = req;
-    console.log(req.body);
+
     try {
       if (req.body.uuid) {
         req.body.folder_uuid = req.body.uuid;
