@@ -134,7 +134,7 @@ module.exports = {
           title,
           req.body
         );
-
+        console.log(insertData);
         const pureText = makePureText(insertData.title);
         insertData.searchingTitle = pureText;
         insertData.company_idx = company_idx;
