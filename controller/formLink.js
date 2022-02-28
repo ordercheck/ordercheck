@@ -18,7 +18,6 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      console.log(company_idx);
       const insertData = await checkTitle(
         db.formLink,
         { title, company_idx },
@@ -28,7 +27,7 @@ module.exports = {
 
       const pureText = makePureText(insertData.title);
       insertData.form_link = _f.random5();
-      insertData.company_idx = insertData.company_idx;
+      insertData.company_idx = company_idx;
       insertData.searchingTitle = pureText;
       const createResult = await db.formLink.create(insertData);
       return res.send({
