@@ -14,7 +14,7 @@ module.exports = function (sequelize, DataTypes) {
 
     company_total: {
       allowNull: false,
-      defaultValue: true,
+      defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
 
@@ -26,7 +26,7 @@ module.exports = function (sequelize, DataTypes) {
 
     member_total: {
       allowNull: false,
-      defaultValue: true,
+      defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
 
@@ -48,7 +48,7 @@ module.exports = function (sequelize, DataTypes) {
 
     member_invite_total: {
       allowNull: false,
-      defaultValue: true,
+      defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
 
@@ -60,7 +60,7 @@ module.exports = function (sequelize, DataTypes) {
 
     auth_total: {
       allowNull: false,
-      defaultValue: true,
+      defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
 
@@ -211,7 +211,7 @@ module.exports = function (sequelize, DataTypes) {
 
     analytics_total: {
       allowNull: false,
-      defaultValue: true,
+      defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
     stat_access: {
