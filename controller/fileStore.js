@@ -148,6 +148,8 @@ module.exports = {
         { attributes: ['path'] }
       );
 
+      console.log(findResult.path);
+
       const insertData = await checkTitle(
         db.folders,
         {
@@ -160,6 +162,7 @@ module.exports = {
         title,
         req.body
       );
+      console.log(insertData);
       const pureText = makePureText(insertData.title);
       insertData.searchingTitle = pureText;
       insertData.company_idx = company_idx;
