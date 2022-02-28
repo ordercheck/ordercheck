@@ -145,16 +145,14 @@ module.exports = {
 
       const findResult = await db.folders.findOne(
         { where: { uuid: req.body.uuid } },
-        { attributes: ['path'] }
+        { attributes: ['path', 'uuid'] }
       );
-
-      console.log(findResult.path);
 
       const insertData = await checkTitle(
         db.folders,
         {
           root: false,
-          path: findResult.path,
+          upperFolder: findResult.uuid,
           title,
           customerFile_idx,
           company_idx,
@@ -162,8 +160,9 @@ module.exports = {
         title,
         req.body
       );
-      console.log(insertData);
+
       const pureText = makePureText(insertData.title);
+      insertData.upperFolder = insertData.uuid;
       insertData.searchingTitle = pureText;
       insertData.company_idx = company_idx;
       insertData.upload_people = findUserResult.user_name;

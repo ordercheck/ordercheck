@@ -37,6 +37,11 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: '',
       type: DataTypes.STRING(100),
     },
+    upperFolder: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
+
     duplicateCount: {
       defaultValue: 1,
       type: DataTypes.INTEGER,
