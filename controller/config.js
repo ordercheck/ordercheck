@@ -258,7 +258,7 @@ module.exports = {
     return res.send({ success: 200, findResult });
   },
   showDetailTemplate: async (req, res, next) => {
-    const { templateId } = req;
+    const { templateId } = req.params;
     const findResult = await db.config.findByPk(templateId, {
       attributes: { exclude: showDetailTemplateConfig },
     });
