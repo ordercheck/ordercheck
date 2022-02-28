@@ -42,7 +42,7 @@ router.post('/', async (req, res, next) => {
       });
 
       await db.plan.update(
-        { active: 0 },
+        { active: false },
         {
           where: { merchant_uid },
         }
@@ -79,7 +79,7 @@ router.post('/', async (req, res, next) => {
           { attributes: ['company_idx'] }
         );
         await db.plan.update(
-          { active: 0 },
+          { active: false },
           {
             where: { merchant_uid },
           }

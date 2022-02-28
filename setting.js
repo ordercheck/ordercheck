@@ -4,7 +4,12 @@ const config = {
 };
 const server = createServer(config);
 
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST'],
+  },
+});
 server.app.set('io', io);
 
 const port = config.port;

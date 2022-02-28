@@ -307,7 +307,7 @@ module.exports = {
   showPlan: async (req, res, next) => {
     const { company_idx } = req;
     const findPlanResult = await db.plan.findOne({
-      where: { idx: company_idx, active: 1 },
+      where: { idx: company_idx, active: true },
       include: [
         {
           model: db.company,
@@ -471,6 +471,7 @@ module.exports = {
   setCardMain: async (req, res, next) => {
     const {
       user_idx,
+      company_idx,
       params: { cardId },
     } = req;
     // 메인으로 설정되어있는 카드 false로 변경
@@ -493,6 +494,14 @@ module.exports = {
     await cancelSchedule(findMainCardResult.customer_uid);
 
     // 새로운 카드로 결제 예약
+
+    await db.plan.findOne({ where: { company_idx, active: true } });
+
+    const Hour = moment().format('HH');
+
+    const startDate = plan_data.start_plan.replace(/\./g, '-');
+
+    const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
     await schedulePay(
       changeToUnix,
