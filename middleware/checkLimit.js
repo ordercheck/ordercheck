@@ -7,7 +7,7 @@ const checkCustomerCount = async (company_idx, data) => {
     attributes: [data],
   });
   const findPlanResult = await db.plan.findOne({
-    where: { company_idx },
+    where: { company_idx, active: 1 },
     attributes: ['plan'],
   });
   return {

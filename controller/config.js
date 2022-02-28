@@ -307,7 +307,7 @@ module.exports = {
   showPlan: async (req, res, next) => {
     const { company_idx } = req;
     const findPlanResult = await db.plan.findOne({
-      where: { idx: company_idx, active: true },
+      where: { idx: company_idx, active: 1 },
       include: [
         {
           model: db.company,
@@ -495,7 +495,7 @@ module.exports = {
 
     // 새로운 카드로 결제 예약
 
-    await db.plan.findOne({ where: { company_idx, active: true } });
+    await db.plan.findOne({ where: { company_idx, active: 1 } });
 
     const Hour = moment().format('HH');
 

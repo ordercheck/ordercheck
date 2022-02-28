@@ -99,8 +99,8 @@ module.exports = function (sequelize, DataTypes) {
 
     active: {
       allowNull: false,
-      defaultValue: true,
-      type: DataTypes.BOOLEAN,
+      defaultValue: 1,
+      type: DataTypes.INTEGER,
     },
   });
 };

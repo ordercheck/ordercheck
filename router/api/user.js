@@ -116,6 +116,13 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
       nextMerchant_uid
     );
     plan_data.merchant_uid = nextMerchant_uid;
+
+    await db.plan.create({
+      ...plan_data,
+      company_idx: findCompanyData.company_idx,
+      active: 3,
+    });
+
     await db.plan.update(plan_data, {
       where: { company_idx: findCompanyData.company_idx },
       transaction: t,
