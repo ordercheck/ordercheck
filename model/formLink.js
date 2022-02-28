@@ -36,6 +36,10 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false,
       type: DataTypes.STRING(100),
     },
+    duplicateCount: {
+      defaultValue: 1,
+      type: DataTypes.INTEGER,
+    },
 
     whiteLabelChecked: {
       allowNull: false,

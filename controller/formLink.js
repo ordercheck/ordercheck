@@ -12,7 +12,29 @@ const {
 const { createFormLinkAttributes } = require('../lib/attributes');
 module.exports = {
   createFormLink: async (req, res, next) => {
+    const {
+      body: { title },
+      company_idx,
+    } = req;
     try {
+      // 중복된 form이 있는지 확인
+      const findFormLinkCountResult = await db.formLink.findOne(
+        { where: { title, company_idx } },
+        { attributes: ['duplicateCount'] }
+      );
+
+      // 중복된 title이 있는 경우
+      if (findFormLinkCountResult) {
+        req.body.title = `${title}_${
+          findFormLinkCountResult.duplicateCount + 1
+        }`;
+
+        db.formLink.increment(
+          { duplicateCount: 1 },
+          { where: { title, company_idx } }
+        );
+      }
+
       const pureText = makePureText(req.body.title);
       req.body.form_link = _f.random5();
       req.body.company_idx = req.company_idx;
