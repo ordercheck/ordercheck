@@ -203,10 +203,12 @@ router.post('/join/check', async (req, res) => {
 });
 // 비밀번호 찾기 인증번호
 router.post('/check/pw', async (req, res) => {
-  const { user_phone } = req.body;
+  let { user_phone } = req.body;
 
   const randomNumber = generateRandomCode(6);
   const message = `[인증번호: ${randomNumber}] \n 오더체크 인증번호입니다.`;
+  user_phone = user_phone.replace(/\./g, '-');
+
   try {
     await axios({
       url: '/api/send/sms',

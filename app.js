@@ -63,7 +63,7 @@ const cardRouter = require('./router/api/card');
 const totalRouter = require('./router/api/total');
 const formLinkRouter = require('./router/api/formLink');
 const fileRouter = require('./router/api/fileStore');
-
+const socketRouter = require('./router/api/socket');
 const s3ControllRouter = require('./router/api/s3');
 const db = require('./model/db');
 
@@ -180,6 +180,7 @@ class AppServer extends http.Server {
     this.app.use('/api/invite', inviteRouter);
     this.app.use('/api/card', cardRouter);
     this.app.use('/api/file/store', fileRouter);
+    this.app.use('/api/socket', socketRouter);
     // 에러처리
     this.app.use((err, req, res, next) => {
       errorFunction(err);

@@ -84,5 +84,8 @@
   <script>
     const socket = io('http://localhost');
     socket.emit('join', '1');
+    socket.on('alarm', (data) => {
+      console.log(data);
+    });
   </script>
 </html>
