@@ -2,9 +2,10 @@
 require('dotenv').config();
 
 const io = require('./setting');
-
+const db = require('./model/db');
+const { joinFunction } = require('./lib/apiFunctions');
 io.on('connection', (socket) => {
-  socket.on('join', async (data) => {
-    console.log('누군가 들어왔다');
+  socket.on('alarm', async (data) => {
+    socket.join(`${data}`);
   });
 });

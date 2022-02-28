@@ -83,8 +83,8 @@
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io('http://localhost');
-    socket.emit('join', '1');
-    socket.on('alarm', (data) => {
+    socket.emit('alarm', '1');
+    socket.on('sendAlarm', (data) => {
       console.log(data);
     });
   </script>

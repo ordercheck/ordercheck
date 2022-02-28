@@ -475,4 +475,22 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/config/company/template/detail/{templateId}:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  config
+ *      summary: 템플릿  detail 가져오기
+ *      parameters:
+ *         - in: path
+ *           name: templateId
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

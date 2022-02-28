@@ -3,7 +3,7 @@ const { makeSpreadArray } = require('../lib/functions');
 const _f = require('../lib/functions');
 const { getFileName, findMembers } = require('../lib/apiFunctions');
 const { Op } = require('sequelize');
-const { payNow } = require('../lib/payFunction');
+const { payNow, delCardPort } = require('../lib/payFunction');
 const moment = require('moment');
 const {
   showTemplateListAttributes,
@@ -13,6 +13,7 @@ const {
   showSmsHistoryAttributes,
   showCardsInfoAttributes,
   showCardDetailAttributes,
+  showDetailTemplateConfig,
 } = require('../lib/attributes');
 const attributes = require('../lib/attributes');
 require('moment-timezone');
@@ -251,6 +252,14 @@ module.exports = {
     });
     return res.send({ success: 200, findResult });
   },
+  showDetailTemplate: async (req, res, next) => {
+    const { templateId } = req;
+
+    const findResult = await db.config.findByPk(templateId, {
+      attributes: { exclude: showDetailTemplateConfig },
+    });
+    return res.send({ success: 200, findResult });
+  },
   addTemplate: async (req, res, next) => {
     const { company_idx, body, user_idx } = req;
     try {
@@ -435,8 +444,22 @@ module.exports = {
     }
   },
   delCard: async (req, res, next) => {
+    const { cardId } = req.params;
     // 삭제 하려는 카드가 main 카드인지 체크
+
+    const findCardResult = await db.card.findByPk(cardId, {
+      attributes: ['main'],
+    });
+    if (findCardResult.main == true) {
+      next({ message: '기본 결제 카드로 지정된 카드 입니다.' });
+    }
+
     //아임포트 카드 삭제
+
     // db 카드 삭제
+    await db.card.destroy({ where: { idx: cardId } });
+
+    res.send({ success: 200, message: '카드 삭제 완료' });
+    await delCardPort(findCardResult.customer_uid);
   },
 };

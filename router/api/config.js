@@ -21,6 +21,7 @@ const {
   showCardsInfo,
   showCardDetailInfo,
   delCard,
+  showDetailTemplate,
 } = require('../../controller/config');
 const {
   multer_upload_img,
@@ -33,6 +34,12 @@ router.get('/company/member', loginCheck, getCompanyProfileMember);
 router.get('/company/search/member', loginCheck, searchMember);
 router.get('/company/template', loginCheck, showTemplateList);
 router.post('/company/template', loginCheck, addTemplate);
+router.get(
+  '/company/template/detail/:templateId',
+  loginCheck,
+  showDetailTemplate
+);
+
 router.get('/company/plan', loginCheck, showPlan);
 router.get('/company/plan/history', loginCheck, showPlanHistory);
 router.get('/company/plan/detail/:planId', loginCheck, showDetailPlan);
