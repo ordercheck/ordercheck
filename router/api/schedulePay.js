@@ -2,6 +2,9 @@ const express = require('express');
 const { generateRandomCode } = require('../../lib/functions');
 const router = express.Router();
 const { schedulePay, getPayment } = require('../../lib/payFunction');
+const moment = require('moment');
+require('moment-timezone');
+moment.tz.setDefault('Asia/Seoul');
 const _f = require('../../lib/functions');
 const db = require('../../model/db');
 
@@ -14,13 +17,20 @@ router.post('/', async (req, res, next) => {
     const doSchedule = async (pay_type_data) => {
       let payDate;
       if (pay_type_data == 'month') {
-        const now = new Date();
-        let afterMonth = new Date(now.setMonth(now.getMonth() + 1));
-        payDate = afterMonth.getTime() / 1000;
+        let payDay = moment().daysInMonth();
+
+        const last = moment().add('1', 'M').daysInMonth();
+
+        if (payDay > last) {
+          payDay = last;
+        }
+
+        const setLastDate = moment().add('1', 'M').format(`YYYY-MM-${payDay}`);
+
+        payDate = moment(setLastDate).unix();
       } else {
-        const now = new Date();
-        let afterMonth = new Date(now.setFullYear(now.getFullYear() + 1));
-        payDate = afterMonth.getTime() / 1000;
+        const nextYear = moment().add('1', 'Y');
+        payDate = moment(nextYear).unix();
       }
 
       const newMerchant_uid = generateRandomCode(6);
@@ -35,22 +45,64 @@ router.post('/', async (req, res, next) => {
         newMerchant_uid
       );
 
+      // 결제 예정 plan을 active 1
+      const findActivePlanResult = await db.plan.findOne({
+        where: { merchant_uid, active: 1 },
+        attributes: { exclude: ['idx', 'createdAt', 'updatedAt'] },
+        raw: true,
+      });
+      // 무료체험 끝나고 결제 한 경우
+      if (findActivePlanResult) {
+        // 새로운 결제 예약
+        await db.plan.create({
+          ...findPlanResult,
+          merchant_uid: newMerchant_uid,
+          active: 3,
+        });
+
+        // 이전 결제 예약은 제거
+        await db.plan.destroy({ where: { merchant_uid, active: 3 } });
+      } else {
+        const findPlanCompany = await db.plan.findOne(
+          { where: { merchant_uid } },
+          { attributes: ['company_idx'] }
+        );
+
+        const beforePlanIdx = await db.plan.findOne(
+          {
+            where: { active: 1, company_idx: findPlanCompany.company_idx },
+          },
+          { attributes: ['idx'] }
+        );
+
+        // 이전 플랜 비활성화
+        await db.plan.update(
+          { active: 0 },
+          {
+            where: { idx: beforePlanIdx },
+          }
+        );
+        // 결제 예약 활성화
+        await db.plan.update(
+          {
+            active: 1,
+          },
+          { where: { merchant_uid, active: 3 } }
+        );
+      }
+
+      // 새로운 결제 예약 등록
       const findPlanResult = await db.plan.findOne({
-        where: { merchant_uid },
+        where: { merchant_uid, active: 1 },
         attributes: { exclude: ['idx', 'createdAt', 'updatedAt'] },
         raw: true,
       });
 
-      await db.plan.update(
-        { active: false },
-        {
-          where: { merchant_uid },
-        }
-      );
-
-      findPlanResult.merchant_uid = newMerchant_uid;
-
-      await db.plan.create(findPlanResult);
+      await db.plan.create({
+        ...findPlanResult,
+        merchant_uid: newMerchant_uid,
+        active: 3,
+      });
     };
 
     if (
@@ -79,7 +131,7 @@ router.post('/', async (req, res, next) => {
           { attributes: ['company_idx'] }
         );
         await db.plan.update(
-          { active: false },
+          { active: 0 },
           {
             where: { merchant_uid },
           }
