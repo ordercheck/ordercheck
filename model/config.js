@@ -11,11 +11,25 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: '팀원',
       type: DataTypes.STRING(100),
     },
+
+    company_total: {
+      allowNull: false,
+      defaultValue: true,
+      type: DataTypes.BOOLEAN,
+    },
+
     change_company_info: {
       allowNull: false,
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+
+    member_total: {
+      allowNull: false,
+      defaultValue: true,
+      type: DataTypes.BOOLEAN,
+    },
+
     member_approval: {
       allowNull: false,
       defaultValue: false,
@@ -31,11 +45,25 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+
+    member_invite_total: {
+      allowNull: false,
+      defaultValue: true,
+      type: DataTypes.BOOLEAN,
+    },
+
     member_invite: {
       allowNull: false,
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+
+    auth_total: {
+      allowNull: false,
+      defaultValue: true,
+      type: DataTypes.BOOLEAN,
+    },
+
     create_auth_template: {
       allowNull: false,
       defaultValue: false,
@@ -51,6 +79,13 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+
+    customer_total: {
+      allowNull: false,
+      defaultValue: true,
+      type: DataTypes.BOOLEAN,
+    },
+
     add_new_customer: {
       allowNull: false,
       defaultValue: true,
@@ -71,6 +106,12 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+
+    calculate_total: {
+      allowNull: false,
+      defaultValue: true,
+      type: DataTypes.BOOLEAN,
+    },
     calculate_upload_share: {
       allowNull: false,
       defaultValue: true,
@@ -86,6 +127,11 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+    file_total: {
+      allowNull: false,
+      defaultValue: true,
+      type: DataTypes.BOOLEAN,
+    },
     file_upload: {
       allowNull: false,
       defaultValue: true,
@@ -99,6 +145,11 @@ module.exports = function (sequelize, DataTypes) {
     file_del: {
       allowNull: false,
       defaultValue: false,
+      type: DataTypes.BOOLEAN,
+    },
+    form_total: {
+      allowNull: false,
+      defaultValue: true,
       type: DataTypes.BOOLEAN,
     },
     create_form: {
@@ -126,6 +177,11 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+    chat_total: {
+      allowNull: false,
+      defaultValue: true,
+      type: DataTypes.BOOLEAN,
+    },
     send_message: {
       allowNull: false,
       defaultValue: true,
@@ -148,6 +204,12 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
     },
     set_chat: {
+      allowNull: false,
+      defaultValue: true,
+      type: DataTypes.BOOLEAN,
+    },
+
+    analytics_total: {
       allowNull: false,
       defaultValue: true,
       type: DataTypes.BOOLEAN,
