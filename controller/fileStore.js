@@ -2,6 +2,7 @@ const db = require('../model/db');
 const {
   getFileName,
   makePureText,
+  checkTitle,
   searchFileandFolder,
 } = require('../lib/apiFunctions');
 const { random5 } = require('../lib/functions');
@@ -107,20 +108,29 @@ module.exports = {
     return res.send({ success: 200, folders, files });
   },
   addFolder: async (req, res, next) => {
+    const {
+      body: { title },
+      params: { customerFile_idx },
+      company_idx,
+      user_idx,
+    } = req;
+
     // 그냥 text로 변환
-    const pureText = makePureText(req.body.title);
+    const pureText = makePureText(title);
 
     const t = await db.sequelize.transaction();
     try {
-      const findUserResult = await db.user.findByPk(req.user_idx, {
+      const findUserResult = await db.user.findByPk(user_idx, {
         attributes: ['user_name'],
       });
       req.body.searchingTitle = pureText;
-      req.body.company_idx = req.company_idx;
+      req.body.company_idx = company_idx;
       req.body.upload_people = findUserResult.user_name;
-      req.body.customerFile_idx = req.params.customerFile_idx;
+      req.body.customerFile_idx = customerFile_idx;
       const newUuid = random5();
       if (req.body.root) {
+        // const req = checkTitle(db.formLink, {},title, company_idx, req);
+
         req.body.uuid = newUuid;
         req.body.path = newUuid;
         const createFolderResult = await db.folders.create(req.body);

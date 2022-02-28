@@ -7,6 +7,7 @@ const {
   getFileName,
   makePureText,
   searchingByTitle,
+  checkTitle,
 } = require('../lib/apiFunctions');
 
 const { createFormLinkAttributes } = require('../lib/attributes');
@@ -17,23 +18,13 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      // 중복된 form이 있는지 확인
-      const findFormLinkCountResult = await db.formLink.findOne(
-        { where: { title, company_idx } },
-        { attributes: ['duplicateCount'] }
+      const req = checkTitle(
+        db.formLink,
+        { title, company_idx },
+        title,
+        company_idx,
+        req
       );
-
-      // 중복된 title이 있는 경우
-      if (findFormLinkCountResult) {
-        req.body.title = `${title}_${
-          findFormLinkCountResult.duplicateCount + 1
-        }`;
-
-        db.formLink.increment(
-          { duplicateCount: 1 },
-          { where: { title, company_idx } }
-        );
-      }
 
       const pureText = makePureText(req.body.title);
       req.body.form_link = _f.random5();
