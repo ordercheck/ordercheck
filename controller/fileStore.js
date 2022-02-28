@@ -128,7 +128,7 @@ module.exports = {
       // req.body.customerFile_idx = customerFile_idx;
       const newUuid = random5();
       if (req.body.root) {
-        const insertData = checkTitle(
+        const insertData = await checkTitle(
           db.folders,
           { root: true, title, customerFile_idx, company_idx },
           title,
