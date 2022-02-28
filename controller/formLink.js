@@ -18,6 +18,7 @@ module.exports = {
       company_idx,
     } = req;
     try {
+      console.log(company_idx);
       const insertData = await checkTitle(
         db.formLink,
         { title, company_idx },
