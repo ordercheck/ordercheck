@@ -134,7 +134,7 @@ module.exports = {
           title,
           req.body
         );
-        console.log(insertData);
+
         const pureText = makePureText(insertData.title);
         insertData.searchingTitle = pureText;
         insertData.company_idx = company_idx;
@@ -151,9 +151,8 @@ module.exports = {
         { where: { uuid: req.body.uuid } },
         { attributes: ['path'] }
       );
-
+      console.log(findResult.path);
       req.body.path = `${findResult.path}/${newUuid}`;
-
       req.body.folder_uuid = req.body.uuid;
       req.body.uuid = newUuid;
       const createFolderResult = await db.folders.create(req.body, {
