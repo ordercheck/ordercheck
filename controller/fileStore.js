@@ -122,10 +122,7 @@ module.exports = {
       const findUserResult = await db.user.findByPk(user_idx, {
         attributes: ['user_name'],
       });
-      // req.body.searchingTitle = pureText;
-      // req.body.company_idx = company_idx;
-      // req.body.upload_people = findUserResult.user_name;
-      // req.body.customerFile_idx = customerFile_idx;
+
       const newUuid = random5();
       if (req.body.root) {
         const insertData = await checkTitle(
@@ -146,23 +143,40 @@ module.exports = {
         return res.send({ succes: true, createFolderResult });
       }
 
-      req.body.root = false;
       const findResult = await db.folders.findOne(
         { where: { uuid: req.body.uuid } },
         { attributes: ['path'] }
       );
-      console.log(findResult.path);
-      req.body.path = `${findResult.path}/${newUuid}`;
-      req.body.folder_uuid = req.body.uuid;
-      req.body.uuid = newUuid;
-      const createFolderResult = await db.folders.create(req.body, {
+
+      const insertData = await checkTitle(
+        db.folders,
+        {
+          root: false,
+          path: findResult.path,
+          title,
+          customerFile_idx,
+          company_idx,
+        },
+        title,
+        req.body
+      );
+      const pureText = makePureText(insertData.title);
+      insertData.searchingTitle = pureText;
+      insertData.company_idx = company_idx;
+      insertData.upload_people = findUserResult.user_name;
+      insertData.customerFile_idx = customerFile_idx;
+      insertData.root = false;
+      insertData.path = `${findResult.path}/${newUuid}`;
+      insertData.folder_uuid = insertData.uuid;
+      insertData.uuid = newUuid;
+      const createFolderResult = await db.folders.create(insertData, {
         transaction: t,
       });
 
-      req.body.isFolder = true;
-      req.body.title = req.body.title;
+      insertData.isFolder = true;
+      insertData.title = insertData.title;
 
-      await db.files.create(req.body, { transaction: t });
+      await db.files.create(insertData, { transaction: t });
       await t.commit();
       return res.send({ succes: true, createFolderResult });
     } catch (err) {
