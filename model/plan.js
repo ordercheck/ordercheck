@@ -88,7 +88,6 @@ module.exports = function (sequelize, DataTypes) {
 
     merchant_uid: {
       allowNull: true,
-      unique: true,
       type: DataTypes.INTEGER,
     },
 

@@ -495,22 +495,30 @@ module.exports = {
 
     // 새로운 카드로 결제 예약
 
-    await db.plan.findOne({ where: { company_idx, active: 1 } });
+    const findPlanResult = await db.plan.findOne({
+      where: { company_idx, active: 3 },
+    });
+
+    const findCardResult = await db.card.findByPk(cardId);
+
+    const findUserResult = await db.user.findByPk(user_idx);
 
     const Hour = moment().format('HH');
 
-    const startDate = plan_data.start_plan.replace(/\./g, '-');
+    const startDate = findPlanResult.start_plan.replace(/\./g, '-');
 
     const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
     await schedulePay(
       changeToUnix,
-      card_data.customer_uid,
-      plan_data.result_price_levy.replace(/,/g, ''),
-      user_data.user_name,
-      user_data.user_phone,
-      user_data.user_email,
-      nextMerchant_uid
+      findCardResult.customer_uid,
+      findPlanResult.result_price_levy.replace(/,/g, ''),
+      findUserResult.user_name,
+      findUserResult.user_phone,
+      findUserResult.user_email,
+      findPlanResult.merchant_uid
     );
+
+    return res.send({ success: 200 });
   },
 };
