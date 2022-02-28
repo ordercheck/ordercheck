@@ -22,10 +22,10 @@ module.exports = {
         db.formLink,
         { title, company_idx },
         title,
-        company_idx,
+
         req
       );
-
+      console.log(insertData);
       const pureText = makePureText(insertData.body.title);
       insertData.body.form_link = _f.random5();
       insertData.body.company_idx = insertData.company_idx;
