@@ -23,6 +23,8 @@ const {
   delCard,
   showDetailTemplate,
   setCardMain,
+  getReceiptList,
+  getReceiptDetail,
 } = require('../../controller/config');
 const {
   multer_upload_img,
@@ -48,8 +50,13 @@ router.get('/company/sms', loginCheck, showSmsInfo);
 router.get('/company/card', loginCheck, showCardsInfo);
 router.get('/company/card/detail/:cardId', loginCheck, showCardDetailInfo);
 router.post('/company/card/set/main/:cardId', loginCheck, setCardMain);
-
 router.delete('/company/card/:cardId', loginCheck, delCard);
+router.get('/company/card/receipt/list', loginCheck, getReceiptList);
+router.get(
+  '/company/card/receipt/detail/:receiptId',
+  loginCheck,
+  getReceiptDetail
+);
 
 router.get('/company/sms/history', loginCheck, showSmsHistory);
 

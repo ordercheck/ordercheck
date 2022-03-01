@@ -45,23 +45,19 @@ module.exports = function (sequelize, DataTypes) {
 
     whiteLabel_price: {
       allowNull: true,
+      defaultValue: '0',
       type: DataTypes.STRING(100),
     },
 
     chat_price: {
       allowNull: true,
-
+      defaultValue: '0',
       type: DataTypes.STRING(100),
     },
     analystic_price: {
       allowNull: true,
-
+      defaultValue: '0',
       type: DataTypes.STRING(100),
-    },
-
-    merchant_uid: {
-      allowNull: true,
-      type: DataTypes.INTEGER,
     },
   });
 };

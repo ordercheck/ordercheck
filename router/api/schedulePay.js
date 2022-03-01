@@ -13,7 +13,7 @@ router.post('/', async (req, res, next) => {
   try {
     const { imp_uid, merchant_uid, status } = req.body;
     const getResult = await getPayment(imp_uid);
-
+    console.log(getResult);
     const doSchedule = async (pay_type_data) => {
       let payDate;
       if (pay_type_data == 'month') {
@@ -48,14 +48,31 @@ router.post('/', async (req, res, next) => {
       // 결제 예정 plan을 active 1
       const findActivePlanResult = await db.plan.findOne({
         where: { merchant_uid, active: 1 },
-        attributes: { exclude: ['idx', 'createdAt', 'updatedAt'] },
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
         raw: true,
       });
       // 무료체험 끝나고 결제 한 경우
       if (findActivePlanResult) {
+        // 영수증 발행
+
+        const findCompanyName = await db.company.findByPk(
+          findActivePlanResult.idx,
+          {
+            attributes: ['company_name'],
+          }
+        );
+        const receiptId = generateRandomCode(6);
+        delete findActivePlanResult.idx;
+        await db.receipt.create({
+          ...findActivePlanResult,
+          receiptId,
+          company_name: findCompanyName.company_name,
+          receipt_kind: '구독',
+        });
+
         // 새로운 결제 예약
         await db.plan.create({
-          ...findPlanResult,
+          ...findActivePlanResult,
           merchant_uid: newMerchant_uid,
           active: 3,
         });
@@ -94,10 +111,27 @@ router.post('/', async (req, res, next) => {
       // 새로운 결제 예약 등록
       const findPlanResult = await db.plan.findOne({
         where: { merchant_uid, active: 1 },
-        attributes: { exclude: ['idx', 'createdAt', 'updatedAt'] },
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
         raw: true,
       });
 
+      // 영수증 발행
+      const findCompanyName = await db.company.findByPk(
+        findActivePlanResult.idx,
+        {
+          attributes: ['company_name'],
+        }
+      );
+      const receiptId = generateRandomCode(6);
+      delete findPlanResult.idx;
+      await db.receipt.create({
+        ...findPlanResult,
+        receiptId,
+        company_name: findCompanyName.company_name,
+        receipt_kind: '구독',
+      });
+
+      // 플랜 다음 결제 예약
       await db.plan.create({
         ...findPlanResult,
         merchant_uid: newMerchant_uid,

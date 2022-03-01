@@ -46,6 +46,7 @@ db.sms = sequelize.import(__dirname + '/sms.js');
 db.config = sequelize.import(__dirname + '/config.js');
 db.userConfig = sequelize.import(__dirname + '/userConfig.js');
 db.alarm = sequelize.import(__dirname + '/alarm.js');
+db.receipt = sequelize.import(__dirname + '/receipt.js');
 db.customerFile = sequelize.import(__dirname + '/customerFile.js');
 db.userCompany = sequelize.import(__dirname + '/userCompany.js');
 db.smsHistory = sequelize.import(__dirname + '/smsHistory.js');
@@ -80,6 +81,11 @@ db.sms.belongsTo(db.user, {
 // company와 customerFile
 db.company.hasMany(db.customerFile, { foreignKey: 'company_idx' });
 db.customerFile.belongsTo(db.company, {
+  foreignKey: 'company_idx',
+});
+// company와 receipt
+db.company.hasMany(db.receipt, { foreignKey: 'company_idx' });
+db.receipt.belongsTo(db.company, {
   foreignKey: 'company_idx',
 });
 

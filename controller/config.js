@@ -521,4 +521,68 @@ module.exports = {
 
     return res.send({ success: 200 });
   },
+
+  getReceiptList: async (req, res, next) => {
+    const findReceiptList = async (whereData) => {
+      const findReceiptListResult = await db.receipt.findAll({
+        where: whereData,
+        attributes: [
+          'receiptId',
+          'receipt_kind',
+          'status',
+          'result_price_levy',
+          [
+            db.sequelize.fn(
+              'date_format',
+              db.sequelize.col('createdAt'),
+              '%Y.%m.%d'
+            ),
+            'createdAt',
+          ],
+        ],
+        order: [['createdAt', 'DESC']],
+      });
+      return findReceiptListResult;
+    };
+
+    const {
+      query: { category },
+      company_idx,
+    } = req;
+
+    try {
+      let findResult;
+
+      if (category == 0) {
+        findResult = await findReceiptList({ company_idx });
+      }
+
+      if (category == 1) {
+        findResult = await findReceiptList({
+          company_idx,
+          receipt_kind: '구독',
+        });
+      }
+      if (category == 2) {
+        findResult = await findReceiptList({
+          company_idx,
+          receipt_kind: '자동문자',
+        });
+      }
+      return res.send({ success: 200, findResult });
+    } catch (err) {
+      next(err);
+    }
+  },
+  getReceiptDetail: async (req, res, next) => {
+    const {
+      params: { receiptId },
+      company_idx,
+    } = req;
+
+    await db.receipt.findOne({
+      where: { receiptId },
+      attributes: { exclude: ['idx', 'updatedAt'] },
+    });
+  },
 };
