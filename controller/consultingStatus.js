@@ -192,6 +192,7 @@ module.exports = {
   delConsulting: async (req, res, next) => {
     const {
       params: { customer_idx },
+      company_idx,
     } = req;
     try {
       // 고객 전화번호 찾기
@@ -210,6 +211,7 @@ module.exports = {
       const findResultCustomers = await db.customer.count({
         where: {
           customer_phoneNumber: findCustomerResult.customer_phoneNumber,
+          company_idx,
         },
       });
       // 같은 전화번호가 없을 경우, fileStore도 삭제
