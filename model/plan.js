@@ -42,15 +42,15 @@ module.exports = function (sequelize, DataTypes) {
     plan_price: {
       allowNull: true,
 
-      type: DataTypes.STRING(100),
+      type: DataTypes.INTEGER,
     },
     result_price: {
       allowNull: true,
-      type: DataTypes.STRING(100),
+      type: DataTypes.INTEGER,
     },
     result_price_levy: {
       allowNull: true,
-      type: DataTypes.STRING(100),
+      type: DataTypes.INTEGER,
     },
 
     whiteLabelChecked: {
@@ -72,18 +72,18 @@ module.exports = function (sequelize, DataTypes) {
     whiteLabel_price: {
       allowNull: true,
 
-      type: DataTypes.STRING(100),
+      type: DataTypes.INTEGER,
     },
 
     chat_price: {
       allowNull: true,
 
-      type: DataTypes.STRING(100),
+      type: DataTypes.INTEGER,
     },
     analystic_price: {
       allowNull: true,
 
-      type: DataTypes.STRING(100),
+      type: DataTypes.INTEGER,
     },
 
     merchant_uid: {

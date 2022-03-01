@@ -13,7 +13,7 @@ router.post('/', async (req, res, next) => {
   try {
     const { imp_uid, merchant_uid, status } = req.body;
     const getResult = await getPayment(imp_uid);
-    console.log(getResult);
+
     const doSchedule = async (pay_type_data) => {
       let payDate;
       if (pay_type_data == 'month') {
@@ -39,6 +39,7 @@ router.post('/', async (req, res, next) => {
         payDate,
         getResult.customer_uid,
         getResult.amount,
+
         getResult.buyer_name,
         getResult.buyer_tel,
         getResult.buyer_email,
@@ -61,11 +62,17 @@ router.post('/', async (req, res, next) => {
             attributes: ['company_name'],
           }
         );
+        const findCardNumber = await db.card.findOne({
+          where: { customer_uid: getResult.customer_uid },
+          attributes: ['card_number'],
+        });
         const receiptId = generateRandomCode(6);
         delete findActivePlanResult.idx;
         await db.receipt.create({
           ...findActivePlanResult,
+          card_name: getResult.card_name,
           receiptId,
+          card_number: findCardNumber.card_number,
           company_name: findCompanyName.company_name,
           receipt_kind: '구독',
         });
@@ -116,17 +123,21 @@ router.post('/', async (req, res, next) => {
       });
 
       // 영수증 발행
-      const findCompanyName = await db.company.findByPk(
-        findActivePlanResult.idx,
-        {
-          attributes: ['company_name'],
-        }
-      );
+
+      const findCompanyName = await db.company.findByPk(findPlanResult.idx, {
+        attributes: ['company_name'],
+      });
+      const findCardNumber = await db.card.findOne({
+        where: { customer_uid: getResult.customer_uid },
+        attributes: ['card_number'],
+      });
       const receiptId = generateRandomCode(6);
       delete findPlanResult.idx;
       await db.receipt.create({
         ...findPlanResult,
+        card_name: getResult.card_name,
         receiptId,
+        card_number: findCardNumber.card_number,
         company_name: findCompanyName.company_name,
         receipt_kind: '구독',
       });

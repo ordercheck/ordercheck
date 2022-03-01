@@ -580,9 +580,10 @@ module.exports = {
       company_idx,
     } = req;
 
-    await db.receipt.findOne({
+    const findReceiptResult = await db.receipt.findOne({
       where: { receiptId },
       attributes: { exclude: ['idx', 'updatedAt'] },
+      raw: true,
     });
   },
 };
