@@ -196,9 +196,8 @@ module.exports = {
     try {
       // 고객 전화번호 찾기
       const findCustomerResult = await db.customer.findByPk(
-        {
-          customer_idx,
-        },
+        customer_idx,
+
         { attributes: ['customer_phoneNumber'] }
       );
 

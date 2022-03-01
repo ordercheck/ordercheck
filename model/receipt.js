@@ -35,29 +35,29 @@ module.exports = function (sequelize, DataTypes) {
     },
     result_price: {
       allowNull: true,
-      type: DataTypes.STRING(100),
+      type: DataTypes.INTEGER,
     },
 
     result_price_levy: {
       allowNull: true,
-      type: DataTypes.STRING(100),
+      type: DataTypes.INTEGER,
     },
 
     whiteLabel_price: {
       allowNull: true,
-      defaultValue: '0',
-      type: DataTypes.STRING(100),
+      defaultValue: 0,
+      type: DataTypes.INTEGER,
     },
 
     chat_price: {
       allowNull: true,
-      defaultValue: '0',
-      type: DataTypes.STRING(100),
+      defaultValue: 0,
+      type: DataTypes.INTEGER,
     },
     analystic_price: {
       allowNull: true,
-      defaultValue: '0',
-      type: DataTypes.STRING(100),
+      defaultValue: 0,
+      type: DataTypes.INTEGER,
     },
   });
 };

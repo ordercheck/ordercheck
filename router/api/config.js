@@ -25,6 +25,9 @@ const {
   setCardMain,
   getReceiptList,
   getReceiptDetail,
+  showFormList,
+  setFormOpenMembers,
+  showChatTemplate,
 } = require('../../controller/config');
 const {
   multer_upload_img,
@@ -78,5 +81,9 @@ router.patch(
   multer_company_Enrollment_upload().single('file'),
   changeCompanyEnrollment
 );
+
+router.get('/company/form/list', loginCheck, showFormList);
+router.post('/company/form/set/member/:formId', loginCheck, setFormOpenMembers);
+router.get('/company/chat/template', loginCheck, showChatTemplate);
 
 module.exports = router;

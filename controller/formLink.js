@@ -16,6 +16,7 @@ module.exports = {
     const {
       body: { title },
       company_idx,
+      user_idx,
     } = req;
     try {
       const insertData = await checkTitle(
@@ -25,10 +26,15 @@ module.exports = {
         req.body
       );
 
+      const findUserNameResult = await db.user.findByPk(user_idx, {
+        attributes: ['user_name'],
+      });
+
       const pureText = makePureText(insertData.title);
       insertData.form_link = _f.random5();
       insertData.company_idx = company_idx;
       insertData.searchingTitle = pureText;
+      insertData.create_people = findUserNameResult.user_name;
       const createResult = await db.formLink.create(insertData);
       return res.send({
         success: 200,

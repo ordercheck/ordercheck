@@ -47,6 +47,8 @@ db.config = sequelize.import(__dirname + '/config.js');
 db.userConfig = sequelize.import(__dirname + '/userConfig.js');
 db.alarm = sequelize.import(__dirname + '/alarm.js');
 db.receipt = sequelize.import(__dirname + '/receipt.js');
+db.chatTemplate = sequelize.import(__dirname + '/chatTemplate.js');
+
 db.customerFile = sequelize.import(__dirname + '/customerFile.js');
 db.userCompany = sequelize.import(__dirname + '/userCompany.js');
 db.smsHistory = sequelize.import(__dirname + '/smsHistory.js');
@@ -59,8 +61,13 @@ db.formOpen = sequelize.import(__dirname + '/formOpenMember.js');
 db.calculate = sequelize.import(__dirname + '/calculate.js');
 db.customer = sequelize.import(__dirname + '/customer.js');
 
-// user와 userConfig
+// company와 chatTemplate
+db.company.hasMany(db.chatTemplate, { foreignKey: 'company_idx' });
+db.chatTemplate.belongsTo(db.company, {
+  foreignKey: 'company_idx',
+});
 
+// user와 userConfig
 db.user.hasOne(db.userConfig, { foreignKey: 'user_idx' });
 db.userConfig.belongsTo(db.user, {
   foreignKey: 'user_idx',
@@ -156,6 +163,7 @@ db.formOpen.belongsTo(db.user, {
   foreignKey: 'user_idx',
 });
 
+db.formLink.hasMany(db.formOpen, { foreignKey: 'formLink_idx' });
 db.formOpen.belongsTo(db.formLink, {
   foreignKey: 'formLink_idx',
 });

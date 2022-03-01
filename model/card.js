@@ -39,17 +39,17 @@ module.exports = function (sequelize, DataTypes) {
     },
     business_number: {
       allowNull: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(100),
     },
     customer_uid: {
       allowNull: true,
       unique: true,
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
     },
     customer_uid: {
       allowNull: true,
       unique: true,
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
     },
 
     corporation_yn: {

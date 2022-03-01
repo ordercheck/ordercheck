@@ -19,6 +19,8 @@ const {
   showCardsInfoAttributes,
   showCardDetailAttributes,
   showDetailTemplateConfig,
+  getReceiptListAttributes,
+  showFormListAttributes,
 } = require('../lib/attributes');
 
 require('moment-timezone');
@@ -512,7 +514,7 @@ module.exports = {
     await schedulePay(
       changeToUnix,
       findCardResult.customer_uid,
-      findPlanResult.result_price_levy.replace(/,/g, ''),
+      findPlanResult.result_price_levy,
       findUserResult.user_name,
       findUserResult.user_phone,
       findUserResult.user_email,
@@ -526,20 +528,7 @@ module.exports = {
     const findReceiptList = async (whereData) => {
       const findReceiptListResult = await db.receipt.findAll({
         where: whereData,
-        attributes: [
-          'receiptId',
-          'receipt_kind',
-          'status',
-          'result_price_levy',
-          [
-            db.sequelize.fn(
-              'date_format',
-              db.sequelize.col('createdAt'),
-              '%Y.%m.%d'
-            ),
-            'createdAt',
-          ],
-        ],
+        attributes: getReceiptListAttributes,
         order: [['createdAt', 'DESC']],
       });
       return findReceiptListResult;
@@ -577,13 +566,60 @@ module.exports = {
   getReceiptDetail: async (req, res, next) => {
     const {
       params: { receiptId },
-      company_idx,
     } = req;
 
-    const findReceiptResult = await db.receipt.findOne({
+    const findResult = await db.receipt.findOne({
       where: { receiptId },
       attributes: { exclude: ['idx', 'updatedAt'] },
       raw: true,
     });
+
+    findResult.tax_price =
+      findResult.result_price_levy - findResult.result_price;
+
+    return res.send({ success: 200, findResult });
+  },
+  showFormList: async (req, res, next) => {
+    const { company_idx } = req;
+
+    const findResult = await db.formLink.findAll({
+      where: { company_idx },
+      include: [
+        {
+          model: db.formOpen,
+          attributes: ['user_name'],
+        },
+      ],
+      attributes: showFormListAttributes,
+    });
+    return res.send({ success: 200, findResult });
+  },
+  setFormOpenMembers: async (req, res, next) => {
+    const {
+      params: { formId },
+      body: { members },
+      company_idx,
+    } = req;
+
+    members.forEach(async (data) => {
+      const findUserNameResult = await db.user.findByPk(data, {
+        attributes: ['user_name'],
+      });
+
+      await db.formOpen.create({
+        formLink_idx: formId,
+        user_name: findUserNameResult.user_name,
+        user_idx: data,
+      });
+    });
+    return res.send({ success: 200 });
+  },
+  showChatTemplate: async (req, res, next) => {
+    const { company_idx } = req;
+    const findResult = await db.chatTemplate.findAll({
+      where: { company_idx },
+      attributes: ['title', 'contents', 'edit'],
+    });
+    return res.send({ success: 200, findResult });
   },
 };

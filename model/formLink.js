@@ -46,5 +46,9 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+    create_people: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
   });
 };

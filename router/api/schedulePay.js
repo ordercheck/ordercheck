@@ -39,7 +39,6 @@ router.post('/', async (req, res, next) => {
         payDate,
         getResult.customer_uid,
         getResult.amount,
-
         getResult.buyer_name,
         getResult.buyer_tel,
         getResult.buyer_email,
