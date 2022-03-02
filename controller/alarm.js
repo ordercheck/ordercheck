@@ -21,7 +21,10 @@ module.exports = {
   },
 
   confirmAlarm: async (req, res, next) => {
-    const { alarmId } = req.body;
+    const {
+      body: { alarmId },
+      user_idx,
+    } = req;
     alarmId.forEach(async (data) => {
       await db.alarm.update({ confirm: true }, { where: { idx: data } });
     });
