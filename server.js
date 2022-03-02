@@ -22,9 +22,9 @@ io.on('connection', (socket) => {
       attributes: ['idx', 'message'],
     });
 
-    socket.emit('sendAlarm', '알람 정보');
+    socket.emit('sendAlarm', findResult);
 
     console.log(user);
-    socket.join(`${user.idx}`);
+    socket.join(`${findUserCompanyResult.company_idx}`);
   });
 });
