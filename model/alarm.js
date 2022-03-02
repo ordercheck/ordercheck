@@ -17,7 +17,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
     },
 
-    check: {
+    confirm: {
       allowNull: false,
       defaultValue: false,
       type: DataTypes.BOOLEAN,
