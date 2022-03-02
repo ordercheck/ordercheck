@@ -49,6 +49,7 @@ io.on('connection', (socket) => {
       raw: true,
     });
     // 시간차 구하기
+
     const scheduleAlarm = findAllAlarmResult.map((data) => {
       const targetDate = moment(data.repeat_time);
       const now = moment();
