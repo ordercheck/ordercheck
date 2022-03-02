@@ -22,6 +22,7 @@ io.on('connection', (socket) => {
       attributes: ['idx', 'message', 'createdAt'],
     });
     socket.join(findUserCompanyResult.company_idx);
+    console.log(socket);
     socket.to(findUserCompanyResult.company_idx).emit('sendAlarm', findResult);
   });
 });
