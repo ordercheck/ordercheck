@@ -14,8 +14,13 @@ module.exports = function (sequelize, DataTypes) {
 
     alarm_type: {
       allowNull: false,
-
       type: DataTypes.INTEGER,
+    },
+
+    check: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
     },
   });
 };

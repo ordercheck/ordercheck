@@ -120,16 +120,40 @@ module.exports = {
       let companyProfile = await db.sequelize
         .query(
           `SELECT plan, company_name, company_logo, company_subdomain, address, 
-          detail_address, business_number, business_enrollment,  business_enrollment_title, user_name FROM userCompany 
-      LEFT JOIN company ON userCompany.company_idx = company.idx
-      INNER JOIN plan ON userCompany.company_idx = company.idx
-      LEFT JOIN user ON company.huidx = user.idx
-      WHERE userCompany.user_idx = ${req.user_idx}
+          detail_address, business_number, business_enrollment, business_enrollment_title, user_name,
+          whiteLabelChecked,  
+          chatChecked, 
+          analysticChecked
+          FROM userCompany 
+          LEFT JOIN company ON userCompany.company_idx = company.idx
+          LEFT JOIN plan ON userCompany.company_idx = company.idx
+          LEFT JOIN user ON company.huidx = user.idx
+          WHERE userCompany.user_idx = ${req.user_idx}
    `
         )
         .spread((r) => {
           return makeSpreadArray(r);
         });
+
+      if (companyProfile[0].whiteLabelChecked == 1) {
+        companyProfile[0].whiteLabelChecked = true;
+      }
+      if (companyProfile[0].chatChecked == 1) {
+        companyProfile[0].chatChecked = true;
+      }
+      if (companyProfile[0].analysticChecked == 1) {
+        companyProfile[0].analysticChecked = true;
+      }
+
+      if (companyProfile[0].whiteLabelChecked == 0) {
+        companyProfile[0].whiteLabelChecked = false;
+      }
+      if (companyProfile[0].chatChecked == 0) {
+        companyProfile[0].chatChecked = false;
+      }
+      if (companyProfile[0].analysticChecked == 0) {
+        companyProfile[0].analysticChecked = false;
+      }
 
       return res.send({ success: 200, companyProfile: companyProfile[0] });
     } catch (err) {
