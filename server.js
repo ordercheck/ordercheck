@@ -21,9 +21,7 @@ io.on('connection', (socket) => {
       where: { company_idx: findUserCompanyResult.company_idx },
       attributes: ['idx', 'message', 'createdAt'],
     });
-
-    socket.emit('sendAlarm', findResult);
-
-    socket.join(`${findUserCompanyResult.company_idx}`);
+    socket.join(findUserCompanyResult.company_idx);
+    socket.to(findUserCompanyResult.company_idx).emit('sendAlarm', findResult);
   });
 });
