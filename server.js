@@ -22,7 +22,9 @@ io.on('connection', (socket) => {
       attributes: ['idx', 'message', 'createdAt'],
     });
     socket.join('1');
-    console.log(io.sockets.manager);
+
     socket.in('1').emit('sendAlarm', '보내져라 룸!');
   });
+
+  console.log(io.sockets.manager);
 });
