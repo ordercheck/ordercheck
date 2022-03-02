@@ -2,6 +2,8 @@
  * @swagger
  * /api/alarm/{alarmId}:
  *   delete:
+ *      security:
+ *       - bearerAuth: []
  *      tags:
  *       - alarm
  *      summary: 알람 삭제하기
