@@ -5,6 +5,7 @@ const db = require('./model/db');
 const verify_data = require('./lib/jwtfunctions');
 const { joinFunction } = require('./lib/apiFunctions');
 io.on('connection', (socket) => {
+  socket.join('1');
   console.log('연결됨');
   socket.on('alarm', async (data) => {
     // 토큰으로 user idx 찾기
@@ -21,7 +22,6 @@ io.on('connection', (socket) => {
       where: { company_idx: findUserCompanyResult.company_idx },
       attributes: ['idx', 'message', 'createdAt'],
     });
-    socket.join('1');
 
     socket.to('1').emit('sendAlarm', '보내져라 룸!');
   });
