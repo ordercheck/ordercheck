@@ -12,10 +12,12 @@ module.exports = {
 
   confirmAlarm: async (req, res, next) => {
     const { alarmId } = req.body;
-    console.log(alarmId);
+
     alarmId.forEach(async (data) => {
       await db.alarm.update({ confirm: true }, { where: { idx: data } });
     });
+
+    return res.send({ success: 200, message: '확인 완료' });
   },
   repeatAlarm: async (req, res, next) => {
     const {
