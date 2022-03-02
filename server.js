@@ -13,14 +13,7 @@ io.on('connection', (socket) => {
   socket.on('alarmJoin', async (data) => {
     // 토큰으로 user idx 찾기
     const user = await verify_data(data);
-    // 소속 회사 idx 찾기
-    const findUserCompanyResult = await db.userCompany.findOne({
-      where: { user_idx: user.user_idx, deleted: null, active: 1 },
-      attributes: ['company_idx'],
-    });
 
-    // 회사 room 참가
-    socket.join(findUserCompanyResult.company_idx);
     // 개인 room 참가
     socket.join(user.user_idx);
   });
@@ -30,39 +23,32 @@ io.on('connection', (socket) => {
     const user = await verify_data(data);
     // 소속 회사 idx 찾기
     const findUserCompanyResult = await db.userCompany.findOne({
-      where: { user_idx: user.user_idx, deleted: null, active: 1 },
+      where: { user_idx: user.user_idx, deleted: null, active: true },
       attributes: ['company_idx'],
     });
-    // 회사 alarm 찾기
-    const findResult = await db.alarm.findAll({
-      where: { company_idx: findUserCompanyResult.company_idx },
-      attributes: alarmAttributes,
-    });
-
-    io.to(findUserCompanyResult.company_idx).emit('sendAlarm', findResult);
 
     // 개인 repeat alarm 찾기
-    alarmAttributes.push('repeat_time');
-    const findAllAlarmResult = await db.alarm.findAll({
+
+    const findAllAlarms = await db.alarm.findAll({
       where: { user_idx: user.user_idx },
       attributes: alarmAttributes,
       raw: true,
     });
     // 시간차 구하기
 
-    const scheduleAlarm = findAllAlarmResult.map((data) => {
+    const scheduleAlarm = findAllAlarms.map((data) => {
       const targetDate = moment(data.repeat_time);
       const now = moment();
       if (moment.duration(now.diff(targetDate)).asMinutes() > 0) {
+        await db.alarm.destroy({ where: { idx: data.alarmId } });
+        return data;
+      }
+
+      if (data.repeat_time == null) {
         return data;
       }
     });
 
     io.to(user.user_idx).emit('sendScheduleAlarm', scheduleAlarm);
-
-    // 알람들 삭제
-    scheduleAlarm.forEach(async (data) => {
-      await db.alarm.destroy({ where: { idx: data.alarmId } });
-    });
   });
 });

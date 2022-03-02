@@ -11,7 +11,7 @@ const loginCheck = async (req, res, next) => {
   try {
     const data = await verify_data(token);
     const findUserCompanyResult = await db.userCompany.findOne({
-      where: { user_idx: data.user_idx, deleted: null, active: 1 },
+      where: { user_idx: data.user_idx, deleted: null, active: true },
       attributes: ['company_idx'],
     });
 

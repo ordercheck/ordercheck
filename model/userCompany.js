@@ -9,7 +9,7 @@ module.exports = function (sequelize, DataTypes) {
     active: {
       allowNull: false,
       defaultValue: 1,
-      type: DataTypes.INTEGER,
+      type: DataTypes.BOOLEAN,
     },
     searchingName: {
       allowNull: false,

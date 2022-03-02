@@ -3,7 +3,7 @@ const {
   getFileName,
   createFileStore,
   getDetailCustomerInfo,
-  sendAlarm,
+  sendCompanyAlarm,
 } = require('../lib/apiFunctions');
 const axios = require('axios');
 const moment = require('moment');
@@ -258,7 +258,7 @@ module.exports = {
 
       res.send({ success: 200 });
 
-      // 알람 보내기
+      // 팀원들에게 알람 보내기
       const findCustomer = await db.customer.findByPk(
         createCustomerResult.idx,
         {
@@ -270,13 +270,19 @@ module.exports = {
         attributes: ['user_name'],
       });
 
+      const findMembers = await db.userCompany.findAll({
+        where: { company_idx, active: true },
+        attributes: ['user_idx'],
+        raw: true,
+      });
+
       const now = moment().format('YY.MM.DD');
 
       const message = `${findUser.user_name}님이 [${findCustomer.customer_name} ${now}]을 신규 등록했습니다.`;
 
       const io = req.app.get('io');
 
-      await sendAlarm(message, company_idx, 0, io);
+      await sendCompanyAlarm(message, company_idx, findMembers, 0, io);
       return;
     } catch (err) {
       await t.rollback();

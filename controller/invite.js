@@ -62,7 +62,7 @@ module.exports = {
       await includeUserToCompany({
         user_idx: createUserResult.idx,
         company_idx: findCompany.idx,
-        active: 0,
+        active: false,
         searchingName: createUserResult.user_name,
         config_idx: findConfigResult.idx,
       });
@@ -99,7 +99,7 @@ module.exports = {
     await includeUserToCompany({
       user_idx: check.idx,
       company_idx: findCompany.company_idx,
-      active: 0,
+      active: false,
       searchingName: check.user_name,
       config_idx: findConfigResult.idx,
     });
@@ -110,7 +110,7 @@ module.exports = {
     const standbyUser = await findMembers(
       {
         company_idx,
-        active: 0,
+        active: false,
         deleted: null,
       },
       company_idx
@@ -124,7 +124,7 @@ module.exports = {
       attributes: ['user_idx', 'company_idx'],
     });
 
-    await db.userCompany.update({ active: 1 }, { where: { idx: memberId } });
+    await db.userCompany.update({ active: true }, { where: { idx: memberId } });
 
     await db.config.create({
       user_idx: findUserCompanyResult.user_idx,
