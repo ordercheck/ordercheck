@@ -163,7 +163,7 @@ module.exports = {
   },
   changeCompanyLogo: async (req, res, next) => {
     const { company_idx, file } = req;
-    console.log(file);
+
     try {
       const result = await updateLogoAndEnrollment(company_idx, file, 'logo');
       if (result) {
