@@ -271,7 +271,7 @@ module.exports = {
       });
 
       const now = moment().format('YY.MM.DD');
-      console.log(now);
+
       const message = `${findUser.user_name}님이 [${findCustomer.customer_name} ${now}]을 신규 등록했습니다.`;
 
       const io = req.app.get('io');
