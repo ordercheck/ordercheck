@@ -8,7 +8,7 @@ io.on('connection', (socket) => {
   console.log('연결됨');
   socket.on('alarm', async (data) => {
     // 토큰으로 user idx 찾기
-    const user = verify_data(data);
+    const user = await verify_data(data);
     console.log(user);
     // 소속 회사 idx 찾기
     const findUserCompanyResult = await db.userCompany.findOne({
