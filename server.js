@@ -36,19 +36,21 @@ io.on('connection', (socket) => {
     });
     // 시간차 구하기
 
-    const scheduleAlarm = findAllAlarms.map(async (data) => {
-      const targetDate = moment(data.repeat_time);
-      const now = moment();
-      if (moment.duration(now.diff(targetDate)).asMinutes() > 0) {
-        await db.alarm.destroy({ where: { idx: data.alarmId } });
-        return data;
-      }
+    const scheduleAlarm = await Promise.all(
+      findAllAlarms.map(async (data) => {
+        const targetDate = moment(data.repeat_time);
+        const now = moment();
+        if (moment.duration(now.diff(targetDate)).asMinutes() > 0) {
+          await db.alarm.destroy({ where: { idx: data.alarmId } });
+          return data;
+        }
 
-      if (data.repeat_time == null) {
-        return data;
-      }
-    });
-    console.log(scheduleAlarm);
+        if (data.repeat_time == null) {
+          return data;
+        }
+      })
+    );
+
     io.to(user.user_idx).emit('sendScheduleAlarm', scheduleAlarm);
   });
 });
