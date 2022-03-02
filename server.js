@@ -27,6 +27,6 @@ io.on('connection', (socket) => {
 
     socket
       .to(`${findUserCompanyResult.company_idx}`)
-      .emit('sendAlarm', findResult);
+      .emit('sendAlarm', '보내져라 메세지');
   });
 });
