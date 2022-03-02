@@ -26,7 +26,7 @@ io.on('connection', (socket) => {
     console.log(socket);
 
     socket
-      .in(`${findUserCompanyResult.company_idx}`)
+      .to(`${findUserCompanyResult.company_idx}`)
       .emit('sendAlarm', findResult);
   });
 });
