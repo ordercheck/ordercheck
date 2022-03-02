@@ -6,9 +6,7 @@ module.exports = {
     const {
       params: { alarmId },
     } = req;
-
     await db.alarm.destroy({ where: { idx: alarmId } });
-
     return res.send({ success: 200, message: '삭제 완료' });
   },
 };
