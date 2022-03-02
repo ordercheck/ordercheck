@@ -10,12 +10,11 @@ module.exports = {
 
     await db.alarm.destroy({ where: { idx: alarmId } });
 
-    const io = req.app.get('io');
-
     const findResult = await db.alarm.findAll({
       where: { user_idx, repeat_time: null },
       raw: true,
     });
+    const io = req.app.get('io');
     io.to(user_idx).emit('sendAlarm', findResult);
     return;
   },
@@ -33,6 +32,7 @@ module.exports = {
       where: { user_idx, repeat_time: null },
       raw: true,
     });
+    const io = req.app.get('io');
     io.to(user_idx).emit('sendAlarm', findResult);
   },
   repeatAlarm: async (req, res, next) => {

@@ -297,7 +297,15 @@ module.exports = {
     const findResult = await db.config.findAll({
       where: { company_idx },
       attributes: showTemplateListAttributes,
+      raw: true,
     });
+
+    let No = 1;
+    findResult.map((data) => {
+      data.No = No;
+      No++;
+    });
+
     return res.send({ success: 200, findResult });
   },
   showDetailTemplate: async (req, res, next) => {
