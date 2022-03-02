@@ -23,6 +23,6 @@ io.on('connection', (socket) => {
     });
     socket.join('1');
 
-    socket.to('1').emit('sendAlarm', findResult);
+    socket.to('1').emit('sendAlarm', '보내져라 룸!');
   });
 });
