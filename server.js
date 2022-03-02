@@ -6,8 +6,8 @@ const verify_data = require('./lib/jwtfunctions');
 const { joinFunction } = require('./lib/apiFunctions');
 io.on('connection', (socket) => {
   console.log('연결됨');
-  // 연결 하자마자 알림
 
+  // 회사 알람 시스템에 Join
   socket.on('alarmJoin', async (data) => {
     // 토큰으로 user idx 찾기
     const user = await verify_data(data);
@@ -19,7 +19,7 @@ io.on('connection', (socket) => {
     // 회사 room 참가
     socket.join(findUserCompanyResult.company_idx);
   });
-
+  // 회사 알람 보여주기
   socket.on('alarm', async (data) => {
     // 토큰으로 user idx 찾기
     const user = await verify_data(data);

@@ -12,9 +12,9 @@ module.exports = {
 
   confirmAlarm: async (req, res, next) => {
     const { alarmId } = req.body;
-
     alarmId.forEach(async (data) => {
       await db.alarm.update({ confirm: true }, { where: { idx: data } });
     });
   },
+  repeatAlarm: async (req, res, next) => {},
 };
