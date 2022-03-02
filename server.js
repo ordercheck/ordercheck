@@ -7,6 +7,7 @@ const { joinFunction } = require('./lib/apiFunctions');
 io.on('connection', (socket) => {
   console.log('연결됨');
   socket.on('alarm', async (data) => {
+    console.log(data);
     // 토큰으로 user idx 찾기
     const user = verify_data(data);
 
@@ -25,6 +26,6 @@ io.on('connection', (socket) => {
     socket.emit('sendAlarm', findResult);
 
     console.log(user);
-    socket.join(`${data}`);
+    socket.join(`${user.idx}`);
   });
 });
