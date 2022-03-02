@@ -1,18 +1,24 @@
 /**
  * @swagger
- * /api/alarm/{alarmId}:
- *   delete:
+ * /api/alarm:
+ *   post:
  *      security:
  *       - bearerAuth: []
  *      tags:
  *       - alarm
  *      summary: 알람 삭제하기
- *      parameters:
- *         - in: path
- *           name: alarmId
+ *      requestBody:
+ *       content:
+ *         application/json:
  *           schema:
- *             type: integer
- *           example: 1
+ *             type: object
+ *             properties:
+ *               alarmId:
+ *                 type: array
+ *               time:
+ *                 type: string
+ *             example:
+ *               alarmId: [1,2,3]
  *      responses:
  *       '200':
  *         description: 성공

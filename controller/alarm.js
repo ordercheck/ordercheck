@@ -8,7 +8,9 @@ module.exports = {
       user_idx,
     } = req;
 
-    await db.alarm.destroy({ where: { idx: alarmId } });
+    alarmId.forEach(async (idx) => {
+      await db.alarm.destroy({ where: { idx } });
+    });
 
     const findResult = await db.alarm.findAll({
       where: { user_idx, repeat_time: null },

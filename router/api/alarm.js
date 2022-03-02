@@ -6,8 +6,8 @@ const {
   repeatAlarm,
 } = require('../../controller/alarm');
 const loginCheck = require('../../middleware/auth');
-router.delete('/:alarmId', loginCheck, delAlarm);
+
 router.post('/confirm', loginCheck, confirmAlarm);
 router.post('/repeat', loginCheck, repeatAlarm);
-
+router.post('/', loginCheck, delAlarm);
 module.exports = router;
