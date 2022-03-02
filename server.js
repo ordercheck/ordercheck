@@ -36,9 +36,10 @@ io.on('connection', (socket) => {
         'message',
         'createdAt',
         'alarm_type',
-        'check',
+        'confirm',
       ],
     });
+
     io.to(findUserCompanyResult.company_idx).emit('sendAlarm', findResult);
   });
 });
