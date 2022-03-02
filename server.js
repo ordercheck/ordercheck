@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
       attributes: ['idx', 'message'],
     });
 
-    socket.emit('sendAlarm', findResult);
+    socket.emit('sendAlarm', '알람 정보');
 
     console.log(user);
     socket.join(`${user.idx}`);
