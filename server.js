@@ -16,11 +16,13 @@ io.on('connection', (socket) => {
       where: { user_idx: user.user_idx, deleted: null, active: 1 },
       attributes: ['company_idx'],
     });
+
     // 회사 room 참가
     socket.join(findUserCompanyResult.company_idx);
   });
   // 회사 알람 보여주기
   socket.on('alarm', async (data) => {
+    console.log(socket);
     // 토큰으로 user idx 찾기
     const user = await verify_data(data);
     // 소속 회사 idx 찾기
