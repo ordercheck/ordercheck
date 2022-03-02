@@ -276,7 +276,7 @@ module.exports = {
 
       const io = req.app.get('io');
 
-      await sendAlarm(message, company_idx, io);
+      await sendAlarm(message, company_idx, io, 0);
       return;
     } catch (err) {
       await t.rollback();
