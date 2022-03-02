@@ -48,7 +48,7 @@ io.on('connection', (socket) => {
         return data;
       }
     });
-
+    console.log(scheduleAlarm);
     io.to(user.user_idx).emit('sendScheduleAlarm', scheduleAlarm);
   });
 });
