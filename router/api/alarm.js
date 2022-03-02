@@ -9,5 +9,5 @@ const loginCheck = require('../../middleware/auth');
 
 router.post('/confirm', loginCheck, confirmAlarm);
 router.post('/repeat', loginCheck, repeatAlarm);
-router.post('/', loginCheck, delAlarm);
+router.post('/del', loginCheck, delAlarm);
 module.exports = router;
