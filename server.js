@@ -17,10 +17,11 @@ io.on('connection', (socket) => {
 
     // 회사 room 참가
     socket.join(findUserCompanyResult.company_idx);
+    // 개인 room 참가
+    socket.join(user.user_idx);
   });
   // 회사 알람 보여주기
   socket.on('alarm', async (data) => {
-    console.log(socket);
     // 토큰으로 user idx 찾기
     const user = await verify_data(data);
     // 소속 회사 idx 찾기
@@ -39,7 +40,29 @@ io.on('connection', (socket) => {
         'confirm',
       ],
     });
+    io.to(findUserCompanyResult.company_idx).emit('sendAlarm', findResult);
+  });
 
+  // 알람 스케쥴링
+  socket.on('alarmSchedule', async (data) => {
+    // 토큰으로 user idx 찾기
+    const user = await verify_data(data);
+    // 소속 회사 idx 찾기
+    const findUserCompanyResult = await db.userCompany.findOne({
+      where: { user_idx: user.user_idx, deleted: null, active: 1 },
+      attributes: ['company_idx'],
+    });
+    // 회사 alarm 찾기
+    const findResult = await db.alarm.findAll({
+      where: { company_idx: findUserCompanyResult.company_idx },
+      attributes: [
+        ['idx', 'alarmId'],
+        'message',
+        'createdAt',
+        'alarm_type',
+        'confirm',
+      ],
+    });
     io.to(findUserCompanyResult.company_idx).emit('sendAlarm', findResult);
   });
 });
