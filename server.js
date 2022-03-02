@@ -23,8 +23,6 @@ io.on('connection', (socket) => {
     });
     socket.join(`${findUserCompanyResult.company_idx}`);
 
-    console.log(findResult);
-
     socket
       .to(`${findUserCompanyResult.company_idx}`)
       .emit('sendAlarm', '보내져라 메세지');
