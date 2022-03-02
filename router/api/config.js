@@ -28,6 +28,7 @@ const {
   showFormList,
   setFormOpenMembers,
   showChatTemplate,
+  delCompanyLogo,
 } = require('../../controller/config');
 const {
   multer_upload_img,
@@ -75,6 +76,8 @@ router.patch(
   multer_upload_img().single('img'),
   changeCompanyLogo
 );
+router.delete('/company/logo', loginCheck, delCompanyLogo);
+
 router.patch(
   '/company/enrollment',
   loginCheck,

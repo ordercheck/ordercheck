@@ -172,6 +172,18 @@ module.exports = {
       next(err);
     }
   },
+
+  delCompanyLogo: async (req, res, next) => {
+    const { company_idx, file } = req;
+    try {
+      const result = await updateLogoAndEnrollment(company_idx, file, 'logo');
+      if (result) {
+        return res.send({ success: 200 });
+      }
+    } catch (err) {
+      next(err);
+    }
+  },
   changeCompanyInfo: async (req, res, next) => {
     const {
       body: {

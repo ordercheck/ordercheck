@@ -102,6 +102,18 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/config/company/logo/:
+ *   delete:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  config
+ *      summary: 회사 로고 삭제
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  * /api/config/company/enrollment:
  *   patch:
  *      security:
