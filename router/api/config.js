@@ -29,6 +29,7 @@ const {
   setFormOpenMembers,
   showChatTemplate,
   delCompanyLogo,
+  changeMemberInfo,
 } = require('../../controller/config');
 const {
   multer_upload_img,
@@ -69,6 +70,8 @@ router.patch('/company/sms', loginCheck, changeSms);
 router.patch('/company', loginCheck, changeCompanyInfo);
 
 router.delete('/company/member/:memberId', loginCheck, delCompanyMember);
+router.patch('/company/member/:memberId', loginCheck, changeMemberInfo);
+
 router.delete('/company/template/:templateId', loginCheck, delTemplate);
 router.patch(
   '/company/logo',

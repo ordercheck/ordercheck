@@ -85,7 +85,8 @@ module.exports = {
     try {
       let userProfile = await db.sequelize
         .query(
-          `SELECT user.idx, personal_code, user_phone, userCompany.company_idx, user_profile, user_email, user_name, plan, calculateReload,
+          `SELECT user.idx, personal_code, user_phone, userCompany.company_idx, user_profile, 
+          user_email, user_name, plan, calculateReload,
           date_format(user.createdAt, '%Y.%m.%d') as createdAt
           FROM user 
           LEFT JOIN userCompany ON user.idx = userCompany.user_idx 
@@ -670,5 +671,27 @@ module.exports = {
       attributes: ['title', 'contents', 'edit'],
     });
     return res.send({ success: 200, findResult });
+  },
+  changeMemberInfo: async (req, res, next) => {
+    const {
+      body: { user_name, user_email, templateId },
+      params: { memberId },
+    } = req;
+
+    // 검색용 usre_name 변경, config 변경
+    await db.userCompany.update(
+      { searchingName: user_name, config_idx: templateId },
+      { where: { idx: memberId } }
+    );
+    // user찾기
+    const findUserResult = await db.userCompany.findByPk(memberId, {
+      attributes: ['user_idx'],
+    });
+    // user 정보 변경
+    await db.user.update(
+      { user_name, user_email },
+      { where: { idx: findUserResult.user_idx } }
+    );
+    return res.send({ success: 200 });
   },
 };
