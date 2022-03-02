@@ -14,6 +14,7 @@ module.exports = {
 
     const findResult = await db.alarm.findAll({
       where: { user_idx, repeat_time: null },
+      attributes: alarmAttributes,
       raw: true,
     });
     const io = req.app.get('io');
@@ -26,12 +27,14 @@ module.exports = {
       body: { alarmId },
       user_idx,
     } = req;
+
     alarmId.forEach(async (data) => {
       await db.alarm.update({ confirm: true }, { where: { idx: data } });
     });
 
     const findResult = await db.alarm.findAll({
       where: { user_idx, repeat_time: null },
+      attributes: alarmAttributes,
       raw: true,
     });
     const io = req.app.get('io');
