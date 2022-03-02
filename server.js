@@ -22,7 +22,10 @@ io.on('connection', (socket) => {
       attributes: ['idx', 'message', 'createdAt'],
     });
     socket.join(`${findUserCompanyResult.company_idx}`);
+    console.log(findUserCompanyResult.company_idx);
 
-    socket.emit('sendAlarm', '보내져라 메세지');
+    socket
+      .to(`${findUserCompanyResult.company_idx}`)
+      .emit('sendAlarm', '보내져라 메세지');
   });
 });
