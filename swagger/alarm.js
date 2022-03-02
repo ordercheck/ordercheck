@@ -48,15 +48,18 @@
  *       - alarm
  *      summary: 나중에 다시 알람
  *      requestBody:
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              alamId:
- *                type: integer
- *            example:
- *              alamId: 1
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               alarmId:
+ *                 type: integer
+ *               time:
+ *                 type: integer
+ *             example:
+ *               alarmId: 1
+ *               time: 30
  *      responses:
  *       '200':
  *         description: 성공

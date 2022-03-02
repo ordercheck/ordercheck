@@ -16,5 +16,14 @@ module.exports = {
       await db.alarm.update({ confirm: true }, { where: { idx: data } });
     });
   },
-  repeatAlarm: async (req, res, next) => {},
+  repeatAlarm: async (req, res, next) => {
+    const {
+      body: { alarmId, time },
+      user_idx,
+    } = req;
+
+    const io = req.app.get('io');
+
+    io.to(user_idx).emit('sendAlarm', '스케줄 알람');
+  },
 };
