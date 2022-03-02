@@ -54,7 +54,7 @@ const updateLogoAndEnrollment = async (
       attributes: ['company_logo_title'],
     });
     // 로고를 새로 업로드 하는 경우
-    if (!findCompanyResult.company_logo_title) {
+    if (findCompanyResult.company_logo_title == '') {
       const originalUrl = fileData.location;
       const file_name = getFileName(originalUrl);
       const thumbNail = originalUrl.replace(/\/original\//, '/thumb/');
@@ -63,10 +63,10 @@ const updateLogoAndEnrollment = async (
     }
     // 로고를 삭제하는 경우
     if (!fileData) {
-      await updateCompanyLogo(null, null, changeData);
+      await updateCompanyLogo('', '', changeData);
     }
     // 로고를 바꾸는 경우
-    if (findCompanyResult.company_logo_title) {
+    if (findCompanyResult.company_logo_title !== '') {
       const originalUrl = fileData.location;
       const file_name = getFileName(originalUrl);
       const thumbNail = originalUrl.replace(/\/original\//, '/thumb/');

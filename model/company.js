@@ -57,6 +57,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     company_logo: {
       allowNull: true,
+      defaultValue: '',
       type: DataTypes.TEXT(),
     },
     company_logo_title: {
