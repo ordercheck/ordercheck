@@ -16,7 +16,7 @@ module.exports = {
     });
     const io = req.app.get('io');
     io.to(user_idx).emit('sendAlarm', findResult);
-    return;
+    return res.send({ success: 200 });
   },
 
   confirmAlarm: async (req, res, next) => {
@@ -34,6 +34,7 @@ module.exports = {
     });
     const io = req.app.get('io');
     io.to(user_idx).emit('sendAlarm', findResult);
+    return res.send({ success: 200 });
   },
   repeatAlarm: async (req, res, next) => {
     const {
@@ -53,5 +54,6 @@ module.exports = {
       user_idx,
       company_idx,
     });
+    return res.send({ success: 200 });
   },
 };
