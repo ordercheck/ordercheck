@@ -51,6 +51,6 @@ io.on('connection', (socket) => {
       })
     );
     console.log(scheduleAlarm);
-    io.to(user.user_idx).emit('sendScheduleAlarm', scheduleAlarm);
+    io.to(user.user_idx).emit('sendAlarm', scheduleAlarm);
   });
 });
