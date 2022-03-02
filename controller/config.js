@@ -71,7 +71,7 @@ const updateLogoAndEnrollment = async (
     }
     // 사업자 등록증 삭제
     else if (!fileData && changeData == 'enrollment') {
-      await updateCompanyLogo('', '', changeData);
+      await updateCompanyLogo(null, null, changeData);
     }
 
     return true;
