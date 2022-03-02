@@ -4,7 +4,7 @@ const _f = require('../lib/functions');
 module.exports = {
   delAlarm: async (req, res, next) => {
     const {
-      params: { alarmId },
+      body: { alarmId },
       user_idx,
     } = req;
 
