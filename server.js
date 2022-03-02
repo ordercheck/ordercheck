@@ -56,6 +56,12 @@ io.on('connection', (socket) => {
         return data;
       }
     });
-    io.to(findUserCompanyResult.company_idx).emit('sendAlarm', scheduleAlarm);
+    console.log(scheduleAlarm);
+    io.to(user.user_idx).emit('sendAlarm', scheduleAlarm);
+
+    // 알람들 삭제
+    scheduleAlarm.forEach(async (data) => {
+      await db.alarm.destroy({ where: { idx: data.alarmId } });
+    });
   });
 });
