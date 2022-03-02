@@ -181,7 +181,13 @@ db.customer.belongsTo(db.company, {
   foreignKey: 'company_idx',
 });
 
-// alarm과  company
+// alarm과 user, company
+db.alarm.belongsTo(db.user, {
+  foreignKey: 'user_idx',
+});
+db.user.hasMany(db.alarm, {
+  foreignKey: 'user_idx',
+});
 
 db.alarm.belongsTo(db.company, {
   foreignKey: 'company_idx',

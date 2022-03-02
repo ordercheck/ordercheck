@@ -1,5 +1,5 @@
 const db = require('../model/db');
-
+const { alarmAttributes } = require('../lib/attributes');
 const _f = require('../lib/functions');
 module.exports = {
   delAlarm: async (req, res, next) => {
@@ -20,10 +20,19 @@ module.exports = {
     const {
       body: { alarmId, time },
       user_idx,
+      company_idx,
     } = req;
 
-    const io = req.app.get('io');
+    const findAlarmResult = await db.alarm.findByPk(alarmId, {
+      attributes: alarmAttributes,
+      raw: true,
+    });
 
-    io.to(user_idx).emit('sendAlarm', '스케줄 알람');
+    await db.alarm.create({
+      ...findAlarmResult,
+      repeat_time: time,
+      user_idx,
+      company_idx,
+    });
   },
 };

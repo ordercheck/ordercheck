@@ -22,5 +22,10 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+
+    repeat_time: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
   });
 };

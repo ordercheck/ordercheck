@@ -2,6 +2,10 @@
 require('dotenv').config();
 const io = require('./setting');
 const db = require('./model/db');
+const moment = require('moment');
+require('moment-timezone');
+moment.tz.setDefault('Asia/Seoul');
+const { alarmAttributes } = require('./lib/attributes');
 const verify_data = require('./lib/jwtfunctions');
 const { joinFunction } = require('./lib/apiFunctions');
 io.on('connection', (socket) => {
@@ -32,14 +36,26 @@ io.on('connection', (socket) => {
     // 회사 alarm 찾기
     const findResult = await db.alarm.findAll({
       where: { company_idx: findUserCompanyResult.company_idx },
-      attributes: [
-        ['idx', 'alarmId'],
-        'message',
-        'createdAt',
-        'alarm_type',
-        'confirm',
-      ],
+      attributes: alarmAttributes,
     });
+
     io.to(findUserCompanyResult.company_idx).emit('sendAlarm', findResult);
+
+    // 개인 repeat alarm 찾기
+    alarmAttributes.push('repeat_time');
+    const findAllAlarmResult = await db.alarm.findAll({
+      where: { user_idx: user.user_idx },
+      attributes: alarmAttributes,
+      raw: true,
+    });
+    // 시간차 구하기
+    const scheduleAlarm = findAllAlarmResult.map((data) => {
+      const targetDate = moment(data.repeat_time);
+      const now = moment();
+      if (moment.duration(now.diff(targetDate)).asMinutes() > 0) {
+        return data;
+      }
+    });
+    io.to(findUserCompanyResult.company_idx).emit('sendAlarm', scheduleAlarm);
   });
 });

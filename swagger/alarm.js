@@ -26,15 +26,15 @@
  *       - alarm
  *      summary: 알람 확인처리
  *      requestBody:
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              alamId:
- *                type: array
- *            example:
- *              alamId: [1,2,3]
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               alarmId:
+ *                 type: array
+ *             example:
+ *               alarmId: [1,2,3]
  *      responses:
  *       '200':
  *         description: 성공
@@ -56,10 +56,10 @@
  *               alarmId:
  *                 type: integer
  *               time:
- *                 type: integer
+ *                 type: string
  *             example:
  *               alarmId: 1
- *               time: 30
+ *               time: 2022-03-02 02:13
  *      responses:
  *       '200':
  *         description: 성공
