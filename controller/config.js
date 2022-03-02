@@ -55,7 +55,7 @@ const updateLogoAndEnrollment = async (
       await updateCompanyLogo('', '', changeData);
     }
     // 로고를 바꾸는 경우
-    else if (changeData == 'logo') {
+    else if (file_name && changeData == 'logo') {
       const originalUrl = fileData.location;
       const file_name = getFileName(originalUrl);
       const thumbNail = originalUrl.replace(/\/original\//, '/thumb/');
@@ -63,13 +63,17 @@ const updateLogoAndEnrollment = async (
     }
 
     //사업자 등록증 새로 등록
-    else if (changeData == 'enrollment') {
+    else if (file_name && changeData == 'enrollment') {
+      console.log('타야함');
+      console.log(fileData);
       const originalUrl = fileData.location;
+      console.log(originalUrl);
       const file_name = getFileName(originalUrl);
       await updateCompanyLogo(originalUrl, file_name, changeData);
     }
     // 사업자 등록증 삭제
     else if (!fileData && changeData == 'enrollment') {
+      console.log('타면 안됌');
       await updateCompanyLogo('', '', changeData);
     }
 
