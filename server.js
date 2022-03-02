@@ -20,7 +20,7 @@ io.on('connection', (socket) => {
   });
   // 회사 알람 보여주기
   socket.on('alarm', async (data) => {
-    console.log(socket.adapter.rooms);
+    console.log(socket.adapter);
     // 토큰으로 user idx 찾기
     const user = await verify_data(data);
     // 소속 회사 idx 찾기
