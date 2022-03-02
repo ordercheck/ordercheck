@@ -11,5 +11,11 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: '',
       type: DataTypes.STRING(100),
     },
+
+    alarm_type: {
+      allowNull: false,
+
+      type: DataTypes.INTEGER,
+    },
   });
 };

@@ -119,7 +119,8 @@ module.exports = {
     try {
       let companyProfile = await db.sequelize
         .query(
-          `SELECT plan, company_name, company_logo, company_subdomain, address, detail_address, business_number, business_enrollment,  business_enrollment_title,user_name FROM userCompany 
+          `SELECT plan, company_name, company_logo, company_subdomain, address, 
+          detail_address, business_number, business_enrollment,  business_enrollment_title, user_name FROM userCompany 
       LEFT JOIN company ON userCompany.company_idx = company.idx
       INNER JOIN plan ON userCompany.company_idx = company.idx
       LEFT JOIN user ON company.huidx = user.idx

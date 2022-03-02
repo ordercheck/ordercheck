@@ -9,7 +9,7 @@ io.on('connection', (socket) => {
   socket.on('alarm', async (data) => {
     // 토큰으로 user idx 찾기
     const user = await verify_data(data);
-    console.log(user);
+
     // 소속 회사 idx 찾기
     const findUserCompanyResult = await db.userCompany.findOne({
       where: { user_idx: user.user_idx, deleted: null, active: 1 },
@@ -19,12 +19,11 @@ io.on('connection', (socket) => {
     // 회사 alarm 찾기
     const findResult = await db.alarm.findAll({
       where: { company_idx: findUserCompanyResult.company_idx },
-      attributes: ['idx', 'message'],
+      attributes: ['idx', 'message', 'createdAt'],
     });
 
     socket.emit('sendAlarm', findResult);
 
-    console.log(user);
     socket.join(`${findUserCompanyResult.company_idx}`);
   });
 });
