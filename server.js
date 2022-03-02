@@ -26,5 +26,5 @@ io.on('connection', (socket) => {
     socket.in('1').emit('sendAlarm', '보내져라 룸!');
   });
 
-  console.log(io.sockets.manager);
+  console.log(io.sockets);
 });
