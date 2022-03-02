@@ -23,7 +23,7 @@ io.on('connection', (socket) => {
     });
     socket.join(`${findUserCompanyResult.company_idx}`);
 
-    console.log(socket);
+    console.log(findResult);
 
     socket
       .to(`${findUserCompanyResult.company_idx}`)
