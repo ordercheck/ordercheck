@@ -31,7 +31,7 @@ io.on('connection', (socket) => {
     // 회사 alarm 찾기
     const findResult = await db.alarm.findAll({
       where: { company_idx: findUserCompanyResult.company_idx },
-      attributes: ['idx', 'message', 'createdAt'],
+      attributes: ['idx', 'message', 'createdAt', 'alarm_type', 'check'],
     });
     io.to(findUserCompanyResult.company_idx).emit('sendAlarm', findResult);
   });

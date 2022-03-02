@@ -138,6 +138,7 @@ module.exports = {
       if (companyProfile[0].whiteLabelChecked == 1) {
         companyProfile[0].whiteLabelChecked = true;
       }
+
       if (companyProfile[0].chatChecked == 1) {
         companyProfile[0].chatChecked = true;
       }
