@@ -57,8 +57,8 @@ io.on('connection', (socket) => {
         return data;
       }
     });
-    console.log(scheduleAlarm);
-    io.to(user.user_idx).emit('sendAlarm', scheduleAlarm);
+
+    io.to(user.user_idx).emit('sendScheduleAlarm', scheduleAlarm);
 
     // 알람들 삭제
     scheduleAlarm.forEach(async (data) => {
