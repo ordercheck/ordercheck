@@ -123,7 +123,7 @@ module.exports = {
         searchingAddress,
         searchingPhoneNumber
       );
-
+      console.log(customerData);
       const createCustomerResult = await db.customer.create(customerData, {
         transaction: t,
       });
