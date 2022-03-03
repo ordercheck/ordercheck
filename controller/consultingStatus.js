@@ -111,25 +111,32 @@ module.exports = {
         attributes: ['company_idx', 'title', 'tempType'],
       });
 
-      const { searchingAddress, searchingPhoneNumber } = changeToSearch(body);
+      body.company_name = formLinkCompany.company.company_name;
+      body.title = formLinkCompany.title;
+      const bodyClass = new Form(body);
 
-      body.searchingAddress = searchingAddress;
-      body.searchingPhoneNumber = searchingPhoneNumber;
-      body.company_idx = formLinkCompany.company_idx;
-      // new Form();
+      const { searchingAddress, searchingPhoneNumber } = changeToSearch(
+        bodyClass.bodyData
+      );
 
-      const createCustomerResult = await db.customer.create(body, {
+      const customerData = bodyClass.createCustomerData(
+        searchingAddress,
+        searchingPhoneNumber
+      );
+
+      const createCustomerResult = await db.customer.create(customerData, {
         transaction: t,
       });
 
-      body.company_name = formLinkCompany.company.company_name;
-      body.title = formLinkCompany.title;
-      body.customer_phoneNumber = createCustomerResult.customer_phoneNumber;
-      body.customer_name = createCustomerResult.customer_name;
-      body.customer_idx = createCustomerResult.idx;
+      const fileStoreData = bodyClass.fileStoreData(
+        createCustomerResult.customer_phoneNumber,
+        createCustomerResult.customer_name,
+        createCustomerResult.idx,
+        searchingPhoneNumber
+      );
 
       // 파일 보관함 db 생성
-      const createFileStoreResult = await createFileStore(body, t);
+      const createFileStoreResult = await createFileStore(fileStoreData, t);
       if (!createFileStoreResult.success) {
         next(createFileStoreResult.err);
         return;
@@ -137,17 +144,19 @@ module.exports = {
 
       // 이미지나 파일이 없을 때  간편 Form
       if (formLinkCompany.tempType == 1) {
-        body.choice = body.choice.join(', ');
-        createConsultingAndIncrement(body);
+        bodyData.data.choice = bodyData.data.choice.join(', ');
+
+        createConsultingAndIncrement(bodyData.data);
         return;
       }
 
       const imgUrlString = selectUrl(files.floor_plan);
       const conceptUrlString = selectUrl(files.hope_concept);
 
-      const newUrl = new Form(imgUrlString, conceptUrlString, body);
-
-      const formBodyData = { ...body, ...newUrl };
+      const formBodyData = bodyClass.createNewUrl(
+        imgUrlString,
+        conceptUrlString
+      );
 
       await createConsultingAndIncrement(formBodyData);
 
@@ -189,7 +198,7 @@ module.exports = {
         message,
         user_idx: contract_person,
         company_idx,
-        alarm_type: 0,
+        alarm_type: 2,
       });
       const alarm = new Alarm(createResult);
 
@@ -286,7 +295,7 @@ module.exports = {
       const io = req.app.get('io');
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
 
-      await sendCompanyAlarm(message, company_idx, findMembers, 0, io);
+      await sendCompanyAlarm(message, company_idx, findMembers, 1, io);
       return;
     } catch (err) {
       await t.rollback();
