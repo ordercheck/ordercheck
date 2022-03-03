@@ -206,8 +206,9 @@ module.exports = {
         alarm_type: 2,
       });
       const alarm = new Alarm(createResult);
-
-      io.to(parseInt(createResult.user_idx)).emit('addAlarm', alarm);
+      console.log(parseInt(createResult.user_idx));
+      console.log(parseInt(alarm));
+      io.to(parseInt(createResult.user_idx)).emit('addAlarm', '가라');
     } catch (err) {
       next(err);
     }
