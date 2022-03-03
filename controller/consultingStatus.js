@@ -8,7 +8,7 @@ const {
 } = require('../lib/apiFunctions');
 const { Alarm, Form } = require('../lib/class');
 const axios = require('axios');
-const { Op } = require('sequelize');
+
 const moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
@@ -115,6 +115,7 @@ module.exports = {
       body.title = formLinkCompany.title;
       body.company_idx = formLinkCompany.company_idx;
       body.tempType = formLinkCompany.tempType;
+
       const bodyClass = new Form(body);
 
       const { searchingAddress, searchingPhoneNumber } = changeToSearch(
@@ -147,15 +148,13 @@ module.exports = {
       // 이미지나 파일이 없을 때  간편 Form
       if (bodyClass.bodyData.tempType == 1) {
         bodyClass.bodyData.choice = bodyClass.bodyData.choice.join(', ');
-        console.log(bodyClass.bodyData);
+
         createConsultingAndIncrement(bodyClass.bodyData);
         return;
       }
 
       const imgUrlString = selectUrl(files.floor_plan);
       const conceptUrlString = selectUrl(files.hope_concept);
-
-      console.log(bodyClass);
 
       const formBodyData = bodyClass.createNewUrl(
         imgUrlString,
