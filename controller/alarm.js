@@ -29,13 +29,14 @@ module.exports = {
     } = req;
 
     for (let i = 0; i < alarmId.length; i++) {
-      await db.alarm.update({ confirm: true }, { where: { idx: data } });
+      await db.alarm.update({ confirm: true }, { where: { idx: alarmId[i] } });
     }
     const findResult = await db.alarm.findAll({
       where: { user_idx, repeat_time: null },
       attributes: alarmAttributes,
       raw: true,
     });
+
     const io = req.app.get('io');
     io.to(user_idx).emit('sendAlarm', findResult);
     return res.send({ success: 200 });
