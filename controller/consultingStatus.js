@@ -148,7 +148,7 @@ module.exports = {
       if (bodyClass.bodyData.tempType == 1) {
         bodyClass.bodyData.choice = bodyClass.bodyData.choice.join(', ');
         console.log('여기 타라');
-        createConsultingAndIncrement(bodyClass.bodyData.data);
+        createConsultingAndIncrement(bodyClass.bodyData);
         return;
       }
 
