@@ -116,7 +116,7 @@ module.exports = {
       body.company_idx = formLinkCompany.company_idx;
       body.tempType = formLinkCompany.tempType;
       const bodyClass = new Form(body);
-      console.log(bodyClass);
+
       const { searchingAddress, searchingPhoneNumber } = changeToSearch(
         bodyClass.bodyData
       );
