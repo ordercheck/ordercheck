@@ -6,7 +6,7 @@ const {
   sendCompanyAlarm,
   findMemberExceptMe,
 } = require('../lib/apiFunctions');
-const Alarm = require('../lib/alarmClass');
+const { Alarm, Form } = require('../lib/class');
 const axios = require('axios');
 const { Op } = require('sequelize');
 const moment = require('moment');
@@ -143,22 +143,12 @@ module.exports = {
 
       const imgUrlString = selectUrl(files.floor_plan);
       const conceptUrlString = selectUrl(files.hope_concept);
-      body.floor_plan = JSON.stringify(imgUrlString);
-      body.hope_concept = JSON.stringify(conceptUrlString);
-      body.expand = body.expand.replace(/,/g, ', ');
-      body.carpentry = body.carpentry.replace(/,/g, ', ');
-      body.paint = body.paint.replace(/,/g, ', ');
-      body.bathroom_option = body.bathroom_option.replace(/,/g, ', ');
-      body.floor = body.floor.replace(/,/g, ', ');
-      body.tile = body.tile.replace(/,/g, ', ');
-      body.electricity_lighting = body.electricity_lighting.replace(/,/g, ', ');
-      body.kitchen_option = body.kitchen_option.replace(/,/g, ', ');
-      body.furniture = body.furniture.replace(/,/g, ', ');
-      body.facility = body.facility.replace(/,/g, ', ');
-      body.film = body.film.replace(/,/g, ', ');
-      body.etc = body.etc.replace(/,/g, ', ');
 
-      await createConsultingAndIncrement(body);
+      const newUrl = new Form(imgUrlString, conceptUrlString, body);
+
+      const formBodyData = { ...body, ...newUrl };
+
+      await createConsultingAndIncrement(formBodyData);
 
       return;
     } catch (err) {
@@ -201,8 +191,8 @@ module.exports = {
         alarm_type: 0,
       });
       const alarm = new Alarm(createResult);
-      console.log(alarm.alarmId);
-      io.to(user_idx.user_idx).emit('addAlarm', alarm);
+
+      io.to(createResult.user_idx).emit('addAlarm', alarm);
     } catch (err) {
       next(err);
     }

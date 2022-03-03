@@ -86,7 +86,7 @@ module.exports = {
       let userProfile = await db.sequelize
         .query(
           `SELECT user.idx, personal_code, user_phone, userCompany.company_idx, user_profile, 
-          user_email, user_name, plan, calculateReload,
+          user_email, user_name, plan, calculateReload, config_idx,
           date_format(user.createdAt, '%Y.%m.%d') as createdAt
           FROM user 
           LEFT JOIN userCompany ON user.idx = userCompany.user_idx 
@@ -111,8 +111,12 @@ module.exports = {
       findFilesResult.forEach((data) => {
         fileStoreSize += data.file_size;
       });
-      userProfile[0].fileStoreSize = fileStoreSize;
 
+      const findConfig = await db.config.findByPk(userProfile[0].company_idx, {
+        attributes: { exclude: ['createdAt', 'updatedAt', 'company_idx'] },
+      });
+      userProfile[0].fileStoreSize = fileStoreSize;
+      userProfile[0].authList = findConfig;
       return res.send({ success: 200, userProfile: userProfile[0] });
     } catch (err) {
       next(err);
