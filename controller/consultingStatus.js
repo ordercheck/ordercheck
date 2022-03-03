@@ -144,8 +144,8 @@ module.exports = {
       }
 
       // 이미지나 파일이 없을 때  간편 Form
-      if (formLinkCompany.tempType == 1) {
-        bodyData.data.choice = bodyData.data.choice.join(', ');
+      if (bodyClass.bodyData.tempType == 1) {
+        bodyClass.bodyData.choice = bodyClass.bodyData.choice.join(', ');
 
         createConsultingAndIncrement(bodyData.data);
         return;
