@@ -6,7 +6,7 @@ const {
   sendCompanyAlarm,
   findMemberExceptMe,
 } = require('../lib/apiFunctions');
-const { Alarm, Form } = require('../lib/class');
+const { Alarm, Form, Customer } = require('../lib/class');
 const axios = require('axios');
 
 const moment = require('moment');
@@ -265,14 +265,24 @@ module.exports = {
 
       body.user_idx = user_idx;
       body.company_idx = company_idx;
-      body.searchingAddress = searchingAddress;
-      body.searchingPhoneNumber = searchingPhoneNumber;
-      const createCustomerResult = await db.customer.create(body, {
+      const classBody = new Customer(body);
+      const customerData = classBody.createCustomerData(
+        searchingAddress,
+        searchingPhoneNumber
+      );
+
+      const createCustomerResult = await db.customer.create(customerData, {
         transaction: t,
       });
-      body.customer_phoneNumber = createCustomerResult.customer_phoneNumber;
-      body.customer_name = createCustomerResult.customer_name;
-      const { success, err } = await createFileStore(body, t);
+
+      const fileStoreData = classBody.fileStoreData(
+        createCustomerResult.customer_phoneNumber,
+        createCustomerResult.customer_name,
+        createCustomerResult.customer_idx,
+        customerData.searchingPhoneNumber
+      );
+
+      const { success, err } = await createFileStore(fileStoreData, t);
       if (!success) {
         next(err);
       }
