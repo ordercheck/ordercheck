@@ -43,11 +43,13 @@ module.exports = {
       user_idx,
       company_idx,
     } = req;
-    // 신청한 회사 정보 찾기
+    // 문자 비용 계산(없으면 오류)
+
+    // 회사 정보 찾기
     const findCompany = await db.company.findByPk(company_idx, {
       attributes: ['company_name'],
     });
-
+    // 초대한 유저 찾기
     const findInviter = await db.user.findByPk(user_idx, {
       attributes: ['user_name'],
     });
@@ -69,7 +71,12 @@ ${company_url}
         data: { user_phone, message, type: 'LMS' },
       });
     });
-    return res.send({ success: 200 });
+
+    res.send({ success: 200 });
+
+    // 비용에서 차감
+
+    // 문자 내역 기록
   },
 
   joinToCompanyByRegist: async (req, res, next) => {

@@ -3,6 +3,8 @@ const { makeSpreadArray } = require('../lib/functions');
 const _f = require('../lib/functions');
 const { getFileName, findMembers, findMember } = require('../lib/apiFunctions');
 const { Op } = require('sequelize');
+const { masterConfig } = require('../lib/standardTemplate');
+
 const {
   payNow,
   delCardPort,
@@ -298,6 +300,23 @@ module.exports = {
       next(err);
     }
   },
+  addTemplate: async (req, res, next) => {
+    const {
+      body: { title },
+      company_idx,
+      user_idx,
+    } = req;
+    const findUser = await db.user.findByPk(user_idx, {
+      attributes: ['user_name'],
+    });
+
+    masterConfig.template_name = title;
+    masterConfig.create_people = findUser.user_name;
+
+    await db.create(masterConfig);
+
+    return res.send({ success: 200 });
+  },
   showTemplateList: async (req, res, next) => {
     const { company_idx } = req;
     const findResult = await db.config.findAll({
@@ -321,15 +340,24 @@ module.exports = {
     });
     return res.send({ success: 200, findResult });
   },
-  addTemplate: async (req, res, next) => {
-    const { company_idx, body, user_idx } = req;
+  changeTemplate: async (req, res, next) => {
+    const {
+      company_idx,
+      body,
+      user_idx,
+      params: { templateId },
+    } = req;
     try {
       const findUserResult = await db.user.findByPk(user_idx, {
         attributes: ['user_name'],
       });
-      body.create_people = findUserResult.user_name;
+
+      const updatedDate = moment().format('YYYY.MM.DD HH:mm');
+
+      const update_people = `${updatedDate} ${findUserResult.user_name}`;
+      body.update_people = update_people;
       body.company_idx = company_idx;
-      await db.config.create(body);
+      await db.config.update(body, { where: { idx: templateId } });
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
