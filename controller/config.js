@@ -1,7 +1,7 @@
 const db = require('../model/db');
 const { makeSpreadArray } = require('../lib/functions');
 const _f = require('../lib/functions');
-const { getFileName, findMembers } = require('../lib/apiFunctions');
+const { getFileName, findMembers, findMember } = require('../lib/apiFunctions');
 const { Op } = require('sequelize');
 const {
   payNow,
@@ -246,10 +246,7 @@ module.exports = {
   getCompanyProfileMember: async (req, res, next) => {
     const { company_idx } = req;
     try {
-      const findResult = await findMembers(
-        { company_idx, deleted: null },
-        company_idx
-      );
+      const findResult = await findMembers({ company_idx, deleted: null });
 
       return res.send({ success: 200, findResult });
     } catch (err) {
@@ -676,6 +673,7 @@ module.exports = {
     const {
       body: { user_name, user_email, templateId },
       params: { memberId },
+      company_idx,
     } = req;
 
     // 검색용 usre_name 변경, config 변경
@@ -692,6 +690,11 @@ module.exports = {
       { user_name, user_email },
       { where: { idx: findUserResult.user_idx } }
     );
-    return res.send({ success: 200 });
+
+    const findResult = await findMember({
+      idx: memberId,
+    });
+
+    return res.send({ success: 200, findResult });
   },
 };
