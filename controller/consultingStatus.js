@@ -155,6 +155,8 @@ module.exports = {
       const imgUrlString = selectUrl(files.floor_plan);
       const conceptUrlString = selectUrl(files.hope_concept);
 
+      console.log(bodyClass);
+
       const formBodyData = bodyClass.createNewUrl(
         imgUrlString,
         conceptUrlString
