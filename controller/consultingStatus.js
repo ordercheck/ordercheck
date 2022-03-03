@@ -204,6 +204,7 @@ module.exports = {
         user_idx: contract_person,
         company_idx,
         alarm_type: 2,
+        customer_idx: consultResult.idx,
       });
 
       const alarm = new Alarm(createResult);
@@ -296,7 +297,7 @@ module.exports = {
       const findCustomer = await db.customer.findByPk(
         createCustomerResult.idx,
         {
-          attributes: ['customer_name'],
+          attributes: ['customer_name', 'idx'],
         }
       );
 
@@ -310,8 +311,13 @@ module.exports = {
 
       const io = req.app.get('io');
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
-
-      await sendCompanyAlarm(message, company_idx, findMembers, 1, io);
+      const insertData = {
+        message,
+        company_idx,
+        alarm_type: 1,
+        customer_idx: findCustomer.idx,
+      };
+      await sendCompanyAlarm(insertData, findMembers, io);
       return;
     } catch (err) {
       await t.rollback();
