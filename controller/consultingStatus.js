@@ -138,6 +138,8 @@ module.exports = {
         searchingPhoneNumber
       );
 
+      console.log(fileStoreData);
+
       // 파일 보관함 db 생성
       const createFileStoreResult = await createFileStore(fileStoreData, t);
       if (!createFileStoreResult.success) {
