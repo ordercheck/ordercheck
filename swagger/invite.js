@@ -87,4 +87,22 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/invite/refuse/{memberId}:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       - invite
+ *      summary: 회사 가입 거절
+ *      parameters:
+ *         - in: path
+ *           name: memberId
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

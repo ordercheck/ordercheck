@@ -7,6 +7,7 @@ const {
   showStandbyUser,
   joinStandbyUser,
   joinToCompanyByLogin,
+  refuseUser,
 } = require('../../controller/invite');
 
 // update Company
@@ -15,4 +16,6 @@ router.post('/join/company/regist', joinToCompanyByRegist);
 router.post('/join/company/login', joinToCompanyByLogin);
 router.get('/standby', loginCheck, showStandbyUser);
 router.get('/join/do/:memberId', loginCheck, joinStandbyUser);
+router.get('/refuse/:memberId', loginCheck, refuseUser);
+
 module.exports = router;
