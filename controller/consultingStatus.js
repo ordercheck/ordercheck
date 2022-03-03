@@ -193,12 +193,14 @@ module.exports = {
 
       const message = `[${consultResult.customer_name}]님의 담당자로 지정되었습니다.`;
 
-      await db.alarm.create({
+      const createResult = await db.alarm.create({
         message,
         user_idx: contract_person,
         company_idx,
         alarm_type: 0,
       });
+
+      io.to(user_idx).emit('addAlarm', alarm);
     } catch (err) {
       next(err);
     }

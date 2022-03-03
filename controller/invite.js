@@ -135,7 +135,7 @@ module.exports = {
   },
   refuseUser: async (req, res, next) => {
     const { memberId } = req.params;
-    await db.userCompany.destroy({ where: { memberId } });
+    await db.userCompany.destroy({ where: { idx: memberId } });
     return res.send({ success: 200 });
   },
 };
