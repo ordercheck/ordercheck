@@ -4,13 +4,13 @@ const {
   createFileStore,
   getDetailCustomerInfo,
   sendCompanyAlarm,
+  findMemberExceptMe,
 } = require('../lib/apiFunctions');
 const axios = require('axios');
+const { Op } = require('sequelize');
 const moment = require('moment');
 require('moment-timezone');
-
 moment.tz.setDefault('Asia/Seoul');
-
 const {
   patchCalculateAttributes,
   findSameUserAttributes,
@@ -169,6 +169,7 @@ module.exports = {
   setConsultingContactMember: async (req, res, next) => {
     const {
       params: { customer_idx, contract_person },
+      company_idx,
     } = req;
     try {
       await db.customer.update(
@@ -184,7 +185,20 @@ module.exports = {
         return;
       }
 
-      return res.send({ success: 200, consultResult });
+      res.send({ success: 200, consultResult });
+
+      // 팀원들 알림 보내기
+
+      const io = req.app.get('io');
+
+      const message = `[${consultResult.customer_name}]님의 담당자로 지정되었습니다.`;
+
+      await db.alarm.create({
+        message,
+        user_idx: contract_person,
+        company_idx,
+        alarm_type: 0,
+      });
     } catch (err) {
       next(err);
     }
@@ -270,17 +284,12 @@ module.exports = {
         attributes: ['user_name'],
       });
 
-      const findMembers = await db.userCompany.findAll({
-        where: { company_idx, active: true },
-        attributes: ['user_idx'],
-        raw: true,
-      });
-
       const now = moment().format('YY.MM.DD');
 
       const message = `${findUser.user_name}님이 [${findCustomer.customer_name} ${now}]을 신규 등록했습니다.`;
 
       const io = req.app.get('io');
+      const findMembers = await findMemberExceptMe(company_idx, user_idx);
 
       await sendCompanyAlarm(message, company_idx, findMembers, 0, io);
       return;

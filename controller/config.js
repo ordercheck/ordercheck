@@ -246,7 +246,11 @@ module.exports = {
   getCompanyProfileMember: async (req, res, next) => {
     const { company_idx } = req;
     try {
-      const findResult = await findMembers({ company_idx, deleted: null });
+      const findResult = await findMembers({
+        company_idx,
+        deleted: null,
+        active: true,
+      });
 
       return res.send({ success: 200, findResult });
     } catch (err) {
