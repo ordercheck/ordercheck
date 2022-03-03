@@ -205,10 +205,10 @@ module.exports = {
         company_idx,
         alarm_type: 2,
       });
+
       const alarm = new Alarm(createResult);
-      console.log(parseInt(createResult.user_idx));
-      console.log(parseInt(alarm));
-      io.to(parseInt(createResult.user_idx)).emit('addAlarm', '가라');
+
+      io.to(parseInt(createResult.user_idx)).emit('addAlarm', alarm);
     } catch (err) {
       next(err);
     }
