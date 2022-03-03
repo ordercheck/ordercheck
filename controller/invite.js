@@ -8,7 +8,7 @@ const {
   findMembers,
 } = require('../lib/apiFunctions');
 const sendMail = require('../mail/sendInvite');
-
+const axios = require('axios');
 const db = require('../model/db');
 module.exports = {
   sendEmail: async (req, res, next) => {
@@ -18,11 +18,6 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      // 관리자가 회사소속인지 체크
-      // const checkResult = await checkUserCompany(body.company_idx, user_idx);
-      // if (checkResult == false) {
-      //   return res.send({ success: 400 });
-      // }
       const company_result = await db.company.findByPk(company_idx, {
         attributes: ['company_name'],
       });
@@ -42,6 +37,41 @@ module.exports = {
       next(err);
     }
   },
+  sendSMS: async (req, res, next) => {
+    const {
+      body: { company_url, target_phoneNumber },
+      user_idx,
+      company_idx,
+    } = req;
+    // 신청한 회사 정보 찾기
+    const findCompany = await db.company.findByPk(company_idx, {
+      attributes: ['company_name'],
+    });
+
+    const findInviter = await db.user.findByPk(user_idx, {
+      attributes: ['user_name'],
+    });
+
+    const message = `
+[${findCompany.company_name}]
+안녕하세요, ${findInviter.user_name}님이 ${findCompany.company_name} 회사에 초대합니다:)
+
+참여하기:
+${company_url}
+ `;
+    target_phoneNumber.forEach(async (data) => {
+      user_phone = data.replace(/\./g, '-');
+
+      await axios({
+        url: '/api/send/sms',
+        method: 'post', // POST method
+        headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
+        data: { user_phone, message, type: 'LMS' },
+      });
+    });
+    return res.send({ success: 200 });
+  },
+
   joinToCompanyByRegist: async (req, res, next) => {
     try {
       const { company_subdomain } = req.body;

@@ -8,10 +8,12 @@ const {
   joinStandbyUser,
   joinToCompanyByLogin,
   refuseUser,
+  sendSMS,
 } = require('../../controller/invite');
 
 // update Company
 router.post('/email', loginCheck, sendEmail);
+router.post('/SMS', loginCheck, sendSMS);
 router.post('/join/company/regist', joinToCompanyByRegist);
 router.post('/join/company/login', joinToCompanyByLogin);
 router.get('/standby', loginCheck, showStandbyUser);

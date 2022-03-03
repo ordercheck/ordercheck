@@ -36,21 +36,6 @@ var s3 = new AWS.S3();
 
 const axios = require('axios');
 router.post('/', async (req, res) => {
-  //   const message = `
-  //    [오더킹]
-  // 김오더 고객님 간편상담 접수가
-  // 완료되었습니다.
-  // 감사합니다.
-  // 접수 내용 확인:
-  // http://my.ordercheck.io/FEQF
-  // `;
-  //   const user_phone = '01067196919';
-  //   let result = await axios({
-  //     url: '/api/send/sms',
-  //     method: 'post', // POST method
-  //     headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
-  //     data: { user_phone, message },
-  //   });
   // for (let i = 1028; i <= 3000; i++) {
   //   try {
   //     const result = await db.customer.create({

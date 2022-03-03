@@ -270,6 +270,17 @@
  *               stat_access:
  *                 type: boolean
  *             example:
+ *               company_total:"회사정보"
+ *               member_total: "팀원관리"
+ *               company_total: "회사정보"
+ *               member_invite_total: "팀원 초대"
+ *               auth_total: "권한 관리"
+ *               customer_total: "고객 관리"
+ *               calculate_total: "견적 관리"
+ *               file_total: "파일보관함"
+ *               form_total: "상담 신청폼"
+ *               chat_total: "채팅"
+ *               analytics_total: "통계분석"
  *               template_name: "템플릿 이름"
  *               change_company_info: "회사정보편집"
  *               member_approval: "팀원승인"
