@@ -200,9 +200,9 @@ module.exports = {
         company_idx,
         alarm_type: 0,
       });
-      const AlarmResult = new Alarm(createResult);
-      console.log(AlarmResult);
-      io.to(user_idx).emit('addAlarm', alarm);
+      const Alarm = new Alarm(createResult);
+      console.log(Alarm.alarmId);
+      io.to(user_idx.user_idx).emit('addAlarm', Alarm);
     } catch (err) {
       next(err);
     }
