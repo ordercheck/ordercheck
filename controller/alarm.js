@@ -28,10 +28,9 @@ module.exports = {
       user_idx,
     } = req;
 
-    alarmId.forEach(async (data) => {
+    for (let i = 0; i < alarmId.length; i++) {
       await db.alarm.update({ confirm: true }, { where: { idx: data } });
-    });
-
+    }
     const findResult = await db.alarm.findAll({
       where: { user_idx, repeat_time: null },
       attributes: alarmAttributes,
