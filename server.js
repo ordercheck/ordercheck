@@ -23,14 +23,13 @@ io.on('connection', (socket) => {
     const user = await verify_data(data);
 
     // 개인 repeat alarm 찾기
-
     const findAllAlarms = await db.alarm.findAll({
       where: { user_idx: user.user_idx },
       attributes: alarmAttributes,
+      order: [['createdAt', 'DESC']],
       raw: true,
     });
     // 시간차 구하기
-
     const scheduleAlarm = await Promise.all(
       findAllAlarms.map(async (data) => {
         const targetDate = moment(data.repeat_time);

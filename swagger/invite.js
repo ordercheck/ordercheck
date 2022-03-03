@@ -25,6 +25,31 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/invite/SMS:
+ *   post:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       - invite
+ *      summary: 팀원 SMS로 초대
+ *      requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               target_phoneNumber:
+ *                 type: array
+ *               company_url:
+ *                 type: string
+ *             example:
+ *               target_phoneNumber: ["010.6719.6919"]
+ *               company_url: "https://insplace.co.kr/"
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  * /api/invite/join/company:
  *   post:
  *      tags:

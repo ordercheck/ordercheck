@@ -15,6 +15,7 @@ module.exports = {
     const findResult = await db.alarm.findAll({
       where: { user_idx, repeat_time: null },
       attributes: alarmAttributes,
+      order: [['createdAt', 'DESC']],
       raw: true,
     });
     const io = req.app.get('io');
@@ -34,12 +35,13 @@ module.exports = {
     const findResult = await db.alarm.findAll({
       where: { user_idx, repeat_time: null },
       attributes: alarmAttributes,
+      order: [['createdAt', 'DESC']],
       raw: true,
     });
-
+    res.send({ success: 200 });
     const io = req.app.get('io');
     io.to(user_idx).emit('sendAlarm', findResult);
-    return res.send({ success: 200 });
+    return;
   },
   repeatAlarm: async (req, res, next) => {
     const {
