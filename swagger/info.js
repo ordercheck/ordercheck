@@ -270,9 +270,8 @@
  *               stat_access:
  *                 type: boolean
  *             example:
- *               company_total:"회사정보"
- *               member_total: "팀원관리"
  *               company_total: "회사정보"
+ *               member_total: "팀원관리"
  *               member_invite_total: "팀원 초대"
  *               auth_total: "권한 관리"
  *               customer_total: "고객 관리"
