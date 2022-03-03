@@ -113,6 +113,7 @@ module.exports = {
 
       body.company_name = formLinkCompany.company.company_name;
       body.title = formLinkCompany.title;
+      body.company_idx = formLinkCompany.company_idx;
       const bodyClass = new Form(body);
 
       const { searchingAddress, searchingPhoneNumber } = changeToSearch(
