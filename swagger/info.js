@@ -196,7 +196,7 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/config/company/template:
+ * /api/config/company/template/:
  *   post:
  *      security:
  *       - bearerAuth: []
@@ -218,7 +218,7 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/config/company/template/{templateId}:
+ * /api/config/company/template/{templateId}/:
  *   patch:
  *      security:
  *       - bearerAuth: []

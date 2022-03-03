@@ -181,7 +181,7 @@ db.customer.belongsTo(db.company, {
   foreignKey: 'company_idx',
 });
 
-// alarm과 user, company
+// alarm과 user, company, customer, formLink
 db.alarm.belongsTo(db.user, {
   foreignKey: 'user_idx',
 });
@@ -194,6 +194,20 @@ db.alarm.belongsTo(db.company, {
 });
 db.company.hasMany(db.alarm, {
   foreignKey: 'company_idx',
+});
+
+db.alarm.belongsTo(db.customer, {
+  foreignKey: 'userId',
+});
+db.customer.hasMany(db.alarm, {
+  foreignKey: 'userId',
+});
+
+db.alarm.belongsTo(db.formLink, {
+  foreignKey: 'formId',
+});
+db.formLink.hasMany(db.alarm, {
+  foreignKey: 'formId',
 });
 
 // company와 formLink
