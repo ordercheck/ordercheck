@@ -6,6 +6,7 @@ const {
   sendCompanyAlarm,
   findMemberExceptMe,
 } = require('../lib/apiFunctions');
+const Alarm = require('../lib/alarmClass');
 const axios = require('axios');
 const { Op } = require('sequelize');
 const moment = require('moment');
@@ -199,7 +200,8 @@ module.exports = {
         company_idx,
         alarm_type: 0,
       });
-
+      const AlarmResult = new Alarm(createResult);
+      console.log(AlarmResult);
       io.to(user_idx).emit('addAlarm', alarm);
     } catch (err) {
       next(err);
