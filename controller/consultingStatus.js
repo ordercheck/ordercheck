@@ -116,7 +116,7 @@ module.exports = {
       body.searchingAddress = searchingAddress;
       body.searchingPhoneNumber = searchingPhoneNumber;
       body.company_idx = formLinkCompany.company_idx;
-      new Form();
+      // new Form();
 
       const createCustomerResult = await db.customer.create(body, {
         transaction: t,
