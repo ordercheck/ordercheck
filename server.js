@@ -39,6 +39,7 @@ io.on('connection', (socket) => {
         const targetDate = moment(data.repeat_time);
         const now = moment();
         if (moment.duration(now.diff(targetDate)).asMinutes() > 0) {
+          console.log('예약문자 ');
           await db.alarm.destroy({ where: { idx: data.alarmId } });
           return data;
         }
