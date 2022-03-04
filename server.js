@@ -38,13 +38,16 @@ io.on('connection', (socket) => {
     // 시간차 구하기
     const scheduleAlarm = await Promise.all(
       findAllAlarms.map((data) => {
-        console.log(data);
         const targetDate = moment(data.repeat_time);
-        if (moment.duration(now.diff(targetDate)).asMinutes() > 0) {
+        if (
+          moment.duration(now.diff(targetDate)).asMinutes() > 0 &&
+          data.repeat_time
+        ) {
+          console.log(data);
           return data;
         }
 
-        if (data.repeat_time == null) {
+        if (!data.repeat_time) {
           return data;
         }
       })
