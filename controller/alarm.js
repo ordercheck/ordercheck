@@ -15,10 +15,10 @@ module.exports = {
     const findResult = await db.alarm.findAll({
       where: { user_idx, repeat_time: null },
       attributes: alarmAttributes,
+      order: [['createdAt', 'DESC']],
       raw: true,
     });
-    const io = req.app.get('io');
-    io.to(user_idx).emit('sendAlarm', findResult);
+
     return res.send({ success: 200 });
   },
 
@@ -28,18 +28,18 @@ module.exports = {
       user_idx,
     } = req;
 
-    alarmId.forEach(async (data) => {
-      await db.alarm.update({ confirm: true }, { where: { idx: data } });
-    });
-
+    for (let i = 0; i < alarmId.length; i++) {
+      await db.alarm.update({ confirm: true }, { where: { idx: alarmId[i] } });
+    }
     const findResult = await db.alarm.findAll({
       where: { user_idx, repeat_time: null },
       attributes: alarmAttributes,
+      order: [['createdAt', 'DESC']],
       raw: true,
     });
-    const io = req.app.get('io');
-    io.to(user_idx).emit('sendAlarm', findResult);
-    return res.send({ success: 200 });
+    res.send({ success: 200 });
+
+    return;
   },
   repeatAlarm: async (req, res, next) => {
     const {

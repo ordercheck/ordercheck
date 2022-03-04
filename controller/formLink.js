@@ -8,6 +8,8 @@ const {
   makePureText,
   searchingByTitle,
   checkTitle,
+  sendCompanyAlarm,
+  findMemberExceptMe,
 } = require('../lib/apiFunctions');
 
 const { createFormLinkAttributes } = require('../lib/attributes');
@@ -36,11 +38,17 @@ module.exports = {
       insertData.searchingTitle = pureText;
       insertData.create_people = findUserNameResult.user_name;
       const createResult = await db.formLink.create(insertData);
-      return res.send({
+      res.send({
         success: 200,
         formId: createResult.idx,
         message: '폼 생성 ',
       });
+      // 팀원들에게 알람 보내기
+
+      const io = req.app.get('io');
+      const findMembers = await findMemberExceptMe(company_idx, user_idx);
+
+      await sendCompanyAlarm(message, company_idx, findMembers, 1, io);
     } catch (err) {
       next(err);
     }

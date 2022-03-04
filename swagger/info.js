@@ -202,7 +202,35 @@
  *       - bearerAuth: []
  *      tags:
  *       -  config
- *      summary: 권한 템플릿 등록하기
+ *      summary: 템플릿 등록하기
+ *      requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *             example:
+ *               title: '제목'
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/config/company/template/{templateId}/:
+ *   patch:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  config
+ *      summary: 권한 템플릿 수정하기
+ *      parameters:
+ *         - in: path
+ *           name: templateId
+ *           schema:
+ *             type: integer
+ *           example: 1
  *      requestBody:
  *       content:
  *         application/json:
@@ -270,6 +298,16 @@
  *               stat_access:
  *                 type: boolean
  *             example:
+ *               company_total: "회사정보"
+ *               member_total: "팀원관리"
+ *               member_invite_total: "팀원 초대"
+ *               auth_total: "권한 관리"
+ *               customer_total: "고객 관리"
+ *               calculate_total: "견적 관리"
+ *               file_total: "파일보관함"
+ *               form_total: "상담 신청폼"
+ *               chat_total: "채팅"
+ *               analytics_total: "통계분석"
  *               template_name: "템플릿 이름"
  *               change_company_info: "회사정보편집"
  *               member_approval: "팀원승인"

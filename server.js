@@ -13,14 +13,9 @@ io.on('connection', (socket) => {
   socket.on('alarmJoin', async (data) => {
     // 토큰으로 user idx 찾기
     const user = await verify_data(data);
-    // 소속 회사 idx 찾기
-    const findUserCompanyResult = await db.userCompany.findOne({
-      where: { user_idx: user.user_idx, deleted: null, active: true },
-      attributes: ['company_idx'],
-    });
+
     // 개인 room 참가
     socket.join(user.user_idx);
-    // 회사 room 참가
   });
   // 회사 알람 보여주기
   socket.on('alarm', async (data) => {
@@ -28,14 +23,13 @@ io.on('connection', (socket) => {
     const user = await verify_data(data);
 
     // 개인 repeat alarm 찾기
-
     const findAllAlarms = await db.alarm.findAll({
       where: { user_idx: user.user_idx },
       attributes: alarmAttributes,
+      order: [['createdAt', 'DESC']],
       raw: true,
     });
     // 시간차 구하기
-
     const scheduleAlarm = await Promise.all(
       findAllAlarms.map(async (data) => {
         const targetDate = moment(data.repeat_time);

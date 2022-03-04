@@ -5,10 +5,11 @@ const {
   getDetailCustomerInfo,
   sendCompanyAlarm,
   findMemberExceptMe,
+  createExpireDate,
 } = require('../lib/apiFunctions');
-const { Alarm, Form } = require('../lib/class');
+const { Alarm, Form, Customer } = require('../lib/class');
 const axios = require('axios');
-const { Op } = require('sequelize');
+
 const moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
@@ -111,43 +112,55 @@ module.exports = {
         attributes: ['company_idx', 'title', 'tempType'],
       });
 
-      const { searchingAddress, searchingPhoneNumber } = changeToSearch(body);
-
-      body.searchingAddress = searchingAddress;
-      body.searchingPhoneNumber = searchingPhoneNumber;
+      body.company_name = formLinkCompany.company.company_name;
+      body.title = formLinkCompany.title;
       body.company_idx = formLinkCompany.company_idx;
-      // new Form();
+      body.tempType = formLinkCompany.tempType;
 
-      const createCustomerResult = await db.customer.create(body, {
+      const bodyClass = new Form(body);
+
+      const { searchingAddress, searchingPhoneNumber } = changeToSearch(
+        bodyClass.bodyData
+      );
+
+      const customerData = bodyClass.createCustomerData(
+        searchingAddress,
+        searchingPhoneNumber
+      );
+
+      const createCustomerResult = await db.customer.create(customerData, {
         transaction: t,
       });
 
-      body.company_name = formLinkCompany.company.company_name;
-      body.title = formLinkCompany.title;
-      body.customer_phoneNumber = createCustomerResult.customer_phoneNumber;
-      body.customer_name = createCustomerResult.customer_name;
-      body.customer_idx = createCustomerResult.idx;
+      const fileStoreData = bodyClass.fileStoreData(
+        createCustomerResult.customer_phoneNumber,
+        createCustomerResult.customer_name,
+        createCustomerResult.idx,
+        searchingPhoneNumber
+      );
 
       // 파일 보관함 db 생성
-      const createFileStoreResult = await createFileStore(body, t);
+      const createFileStoreResult = await createFileStore(fileStoreData, t);
       if (!createFileStoreResult.success) {
         next(createFileStoreResult.err);
         return;
       }
 
       // 이미지나 파일이 없을 때  간편 Form
-      if (formLinkCompany.tempType == 1) {
-        body.choice = body.choice.join(', ');
-        createConsultingAndIncrement(body);
+      if (bodyClass.bodyData.tempType == 1) {
+        bodyClass.bodyData.choice = bodyClass.bodyData.choice.join(', ');
+
+        createConsultingAndIncrement(bodyClass.bodyData);
         return;
       }
 
       const imgUrlString = selectUrl(files.floor_plan);
       const conceptUrlString = selectUrl(files.hope_concept);
 
-      const newUrl = new Form(imgUrlString, conceptUrlString, body);
-
-      const formBodyData = { ...body, ...newUrl };
+      const formBodyData = bodyClass.createNewUrl(
+        imgUrlString,
+        conceptUrlString
+      );
 
       await createConsultingAndIncrement(formBodyData);
 
@@ -189,11 +202,13 @@ module.exports = {
         message,
         user_idx: contract_person,
         company_idx,
-        alarm_type: 0,
+        alarm_type: 2,
+        customer_idx: consultResult.idx,
       });
+
       const alarm = new Alarm(createResult);
 
-      io.to(createResult.user_idx).emit('addAlarm', alarm);
+      io.to(parseInt(createResult.user_idx)).emit('addAlarm', alarm);
     } catch (err) {
       next(err);
     }
@@ -251,14 +266,24 @@ module.exports = {
 
       body.user_idx = user_idx;
       body.company_idx = company_idx;
-      body.searchingAddress = searchingAddress;
-      body.searchingPhoneNumber = searchingPhoneNumber;
-      const createCustomerResult = await db.customer.create(body, {
+      const classBody = new Customer(body);
+      const customerData = classBody.createCustomerData(
+        searchingAddress,
+        searchingPhoneNumber
+      );
+
+      const createCustomerResult = await db.customer.create(customerData, {
         transaction: t,
       });
-      body.customer_phoneNumber = createCustomerResult.customer_phoneNumber;
-      body.customer_name = createCustomerResult.customer_name;
-      const { success, err } = await createFileStore(body, t);
+
+      const fileStoreData = classBody.fileStoreData(
+        createCustomerResult.customer_phoneNumber,
+        createCustomerResult.customer_name,
+        createCustomerResult.customer_idx,
+        customerData.searchingPhoneNumber
+      );
+
+      const { success, err } = await createFileStore(fileStoreData, t);
       if (!success) {
         next(err);
       }
@@ -271,7 +296,7 @@ module.exports = {
       const findCustomer = await db.customer.findByPk(
         createCustomerResult.idx,
         {
-          attributes: ['customer_name'],
+          attributes: ['customer_name', 'idx'],
         }
       );
 
@@ -284,9 +309,19 @@ module.exports = {
       const message = `${findUser.user_name}님이 [${findCustomer.customer_name} ${now}]을 신규 등록했습니다.`;
 
       const io = req.app.get('io');
+
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
 
-      await sendCompanyAlarm(message, company_idx, findMembers, 0, io);
+      const expiry_date = createExpireDate();
+      console.log(expiry_date);
+      const insertData = {
+        message,
+        company_idx,
+        alarm_type: 1,
+        customer_idx: findCustomer.idx,
+        expiry_date,
+      };
+      await sendCompanyAlarm(insertData, findMembers, io);
       return;
     } catch (err) {
       await t.rollback();

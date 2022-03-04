@@ -9,7 +9,7 @@ const {
   searchMember,
   delCompanyMember,
   showTemplateList,
-  addTemplate,
+  changeTemplate,
   delTemplate,
   showPlan,
   showPlanHistory,
@@ -30,6 +30,7 @@ const {
   showChatTemplate,
   delCompanyLogo,
   changeMemberInfo,
+  addTemplate,
 } = require('../../controller/config');
 const {
   multer_upload_img,
@@ -42,6 +43,7 @@ router.get('/company/member', loginCheck, getCompanyProfileMember);
 router.get('/company/search/member', loginCheck, searchMember);
 router.get('/company/template', loginCheck, showTemplateList);
 router.post('/company/template', loginCheck, addTemplate);
+router.patch('/company/template/:templateId', loginCheck, changeTemplate);
 router.get(
   '/company/template/detail/:templateId',
   loginCheck,
