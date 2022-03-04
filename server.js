@@ -32,18 +32,18 @@ io.on('connection', (socket) => {
       order: [['createdAt', 'DESC']],
       raw: true,
     });
-    console.log('호출 되나');
-    // const now = moment();
-    // const scheduleAlarm = [];
-    // for (i = 0; i < findAllAlarms.length; i++) {
-    //   console.log(findAllAlarms[i]);
-    //   const targetDate = moment(findAllAlarms[i].repeat_time);
-    //   if (moment.duration(now.diff(targetDate)).asMinutes() < 0) {
-    //     pass;
-    //   } else {
-    //     scheduleAlarm.push(findAllAlarms[i]);
-    //   }
-    // }
+
+    const now = moment();
+    const scheduleAlarm = [];
+    for (i = 0; i < findAllAlarms.length; i++) {
+      console.log(findAllAlarms[i]);
+      const targetDate = moment(findAllAlarms[i].repeat_time);
+      if (moment.duration(now.diff(targetDate)).asMinutes() < 0) {
+        pass;
+      } else {
+        scheduleAlarm.push(findAllAlarms[i]);
+      }
+    }
 
     console.log('알람', findAllAlarms);
 
