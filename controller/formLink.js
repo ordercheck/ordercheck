@@ -47,8 +47,17 @@ module.exports = {
 
       const io = req.app.get('io');
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
+
       const message = `${findUserNameResult.user_name}님이 새로운 신청폼 [${title}]을 등록하였습니다.`;
-      await sendCompanyAlarm(message, company_idx, findMembers, 7, io);
+      const data = {
+        message,
+        company_idx,
+        alarm_type: 7,
+        customer_idx: findCustomer.idx,
+        expiry_date,
+      };
+
+      await sendCompanyAlarm(data, findMembers, io);
     } catch (err) {
       next(err);
     }
@@ -194,11 +203,6 @@ module.exports = {
   },
   deleteThumbNail: async (req, res, next) => {
     try {
-      // formLink title 찾기
-      const findThumbNailTitle = await db.formLink.findByPk(req.params.formId, {
-        attributes: ['thumbNail_title'],
-      });
-
       // formLink thumbNail, thumbNail_title 초기화
       const updateResult = await db.formLink.update(
         { thumbNail: '', thumbNail_title: null },
@@ -208,9 +212,6 @@ module.exports = {
       if (updateResult[0] == 0) {
         return res.send({ success: 400, message: '썸네일 삭제 실패' });
       }
-
-      // s3에서 file이름으로 이미지 삭제 진행
-      delFile(findThumbNailTitle.thumbNail_title, 'ordercheck/formThumbNail');
 
       return res.send({ success: 200, message: '썸네일 삭제 ' });
     } catch (err) {

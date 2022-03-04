@@ -43,6 +43,7 @@ module.exports = {
       if (!contractPersonData) {
         const countCustomersResult = await db.customer.count({
           where: {
+            deleted: null,
             company_idx,
             createdAt: { [Op.between]: [firstDate, secondDate] },
             status: {
@@ -57,6 +58,7 @@ module.exports = {
       } else {
         const countCustomersResult = await db.customer.count({
           where: {
+            deleted: null,
             company_idx,
             createdAt: { [Op.between]: [firstDate, secondDate] },
             status: {
@@ -92,6 +94,7 @@ module.exports = {
         let findAndCountAllFilterdCustomers = await db.customer.findAndCountAll(
           {
             where: {
+              deleted: null,
               company_idx,
               createdAt: { [Op.between]: [firstDate, secondDate] },
               status: {
@@ -138,6 +141,7 @@ module.exports = {
         let findAndCountAllFilterdCustomers = await db.customer.findAndCountAll(
           {
             where: {
+              deleted: null,
               company_idx,
               createdAt: { [Op.between]: [firstDate, secondDate] },
               status: {
@@ -246,6 +250,7 @@ module.exports = {
 
       let searchedCountAndFindAll = await db.customer.findAndCountAll({
         where: {
+          deleted: null,
           company_idx,
           [Op.or]: {
             customer_name: {
