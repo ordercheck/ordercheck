@@ -197,13 +197,14 @@ module.exports = {
       const io = req.app.get('io');
 
       const message = `[${consultResult.customer_name}]님의 담당자로 지정되었습니다.`;
-
+      const expiry_date = createExpireDate();
       const createResult = await db.alarm.create({
         message,
         user_idx: contract_person,
         company_idx,
         alarm_type: 2,
         customer_idx: consultResult.idx,
+        expiry_date,
       });
 
       const alarm = new Alarm(createResult);
@@ -313,7 +314,7 @@ module.exports = {
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
 
       const expiry_date = createExpireDate();
-      console.log(expiry_date);
+
       const insertData = {
         message,
         company_idx,
