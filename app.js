@@ -213,7 +213,7 @@ class AppServer extends http.Server {
   schedule() {
     // sessionCheck.run()
 
-    require('./lib/formSchedule');
+    require('./lib/schedule');
     console.log(process.env.NODE_ENV);
     if (process.env.NODE_ENV == 'development') {
       // pushNotify.run(3)
