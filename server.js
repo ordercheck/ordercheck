@@ -39,7 +39,7 @@ io.on('connection', (socket) => {
       console.log(findAllAlarms[i]);
       const targetDate = moment(findAllAlarms[i].repeat_time);
       if (moment.duration(now.diff(targetDate)).asMinutes() < 0) {
-        pass;
+        continue;
       } else {
         scheduleAlarm.push(findAllAlarms[i]);
       }
