@@ -35,7 +35,7 @@ io.on('connection', (socket) => {
 
     const now = moment();
     const scheduleAlarm = [];
-    for (i = 0; i < findAllAlarms.length; i++) {
+    for (let i = 0; i < findAllAlarms.length; i++) {
       console.log(findAllAlarms[i]);
       const targetDate = moment(findAllAlarms[i].repeat_time);
       if (moment.duration(now.diff(targetDate)).asMinutes() < 0) {
@@ -45,8 +45,8 @@ io.on('connection', (socket) => {
       }
     }
 
-    console.log('알람', findAllAlarms);
+    console.log('알람', scheduleAlarm);
 
-    io.to(user.user_idx).emit('sendAlarm', findAllAlarms);
+    io.to(user.user_idx).emit('sendAlarm', scheduleAlarm);
   });
 });
