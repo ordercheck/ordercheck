@@ -36,6 +36,7 @@ io.on('connection', (socket) => {
     const now = moment();
     const scheduleAlarm = [];
     for (i = 0; i < findAllAlarms.length; i++) {
+      console.log(findAllAlarms[i]);
       const targetDate = moment(findAllAlarms[i].repeat_time);
       if (moment.duration(now.diff(targetDate)).asMinutes() < 0) {
         pass;
