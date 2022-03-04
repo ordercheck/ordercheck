@@ -67,6 +67,9 @@ module.exports = {
 
     const now = moment();
     const reAlertMs = moment.duration(now.diff(time)).asMilliseconds();
+
+    console.log(reAlertMs);
+
     setTimeout(() => {
       console.log('hi');
       const io = req.app.get('io');
