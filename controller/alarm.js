@@ -61,7 +61,7 @@ module.exports = {
     await db.alarm.update(
       { confirm: true },
       {
-        idx: alarmId,
+        where: { idx: alarmId },
       }
     );
 
@@ -69,6 +69,7 @@ module.exports = {
     const expiry_date = createExpireDate();
     findAlarmResult.expiry_date = expiry_date;
     findAlarmResult.confirm = false;
+
     const createResult = await db.alarm.create({
       ...findAlarmResult,
       repeat_time: time,

@@ -223,6 +223,7 @@ module.exports = {
       }
       if (company_subdomain) {
         const checkDomain = await db.company.count({ company_subdomain });
+        console.log(checkDomain);
         if (checkDomain !== 0) {
           return res.send({
             success: 400,
