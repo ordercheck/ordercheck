@@ -222,7 +222,9 @@ module.exports = {
         await updateCompanyInfo('company_name', company_name);
       }
       if (company_subdomain) {
-        const checkDomain = await db.company.count({ company_subdomain });
+        const checkDomain = await db.company.count({
+          where: { company_subdomain },
+        });
         console.log(checkDomain);
         if (checkDomain !== 0) {
           return res.send({
