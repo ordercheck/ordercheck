@@ -512,10 +512,16 @@ module.exports = {
       body: { calculateReload },
       text_cost,
       repay,
+      sms_idx,
+      user_idx,
     } = req;
 
     const customerFindResult = await db.customer.findByPk(customer_idx, {
       attributes: ['customer_phoneNumber', 'customer_name'],
+    });
+
+    const findSender = await db.user.findByPk(user_idx, {
+      attributes: ['user_phone'],
     });
 
     const companyFindResult = await db.company.findByPk(req.company_idx, {
@@ -525,30 +531,19 @@ module.exports = {
     const calculateFindResult = await db.calculate.findByPk(calculate_idx, {
       attributes: ['file_url', 'calculateNumber'],
     });
-    // 견적서 다시보기 동의여부
-    if (calculateReload !== '') {
-      await db.userConfig.update(
-        { calculateReload },
-        { where: { user_idx: req.user_idx } }
-      );
-    }
 
     const fileUrl = !calculateFindResult.file_url
       ? `orderchecktest.s3-website.ap-northeast-2.amazonaws.com/signin`
       : calculateFindResult.file_url.split('//')[1];
 
     const sharedDate = moment().format('YYYY.MM.DD');
-    await db.calculate.update(
-      { sharedDate },
-      { where: { customer_idx, idx: calculate_idx } }
-    );
-    const findResult = await db.calculate.findByPk(calculate_idx, {
-      attributes: showCalculateAttributes,
-    });
-    res.send({ success: 200, findResult });
 
-    // 알림톡 보내기
-    const messageId = await customerkakaoPushNewCal(
+    // 알림톡 보내기 전 알림톡 비용 체크
+    if (text_cost < 10) {
+      return next({ message: '알림톡 비용 부족' });
+    }
+
+    const { kakaoPushResult, message } = await customerkakaoPushNewCal(
       customerFindResult.customer_phoneNumber,
       companyFindResult.company_name,
       customerFindResult.customer_name,
@@ -556,12 +551,25 @@ module.exports = {
       '견적서 확인',
       fileUrl
     );
+
+    // 알림톡 비용 차감
+    db.sms.decrement({ text_cost: 10 }, { where: { idx: sms_idx } });
+    // 알림톡 history 저장
+    await db.smsHistory.create({
+      sender_phoneNumber: findSender.user_phone,
+      receiver_phoneNumber: customerFindResult.customer_phoneNumber,
+      type: '알림톡',
+      text: message,
+      price: 10,
+      sms_idx,
+    });
+
     // 알림톡 보낸 결과 조회
-    if (messageId) {
+    if (kakaoPushResult) {
       const checkKakaoPromise = () => {
         return new Promise(function (resolve, reject) {
           setTimeout(async () => {
-            const sendResult = await checkKakaoPushResult(messageId);
+            const sendResult = await checkKakaoPushResult(kakaoPushResult);
             resolve(sendResult);
           }, 1000);
         });
@@ -573,20 +581,28 @@ module.exports = {
       // 전화번호 오류 3008
       // 정상발송 0000
       if (sendResult.sendResult === '3018') {
-        const message = `
-[${companyFindResult.company_name}]
-${customerFindResult.customer_name} 고객님, 
-${calculateFindResult.calculateNumber}차 견적서가 발송되었습니다.
-감사합니다.
-  
-견적서 확인:
-${calculateFindResult.file_url}
-  `;
+        // 문자 보내기 전 문자 비용 체크
+
+        if (text_cost - 10 < 37) {
+          return next({ message: 'LMS 비용 부족' });
+        }
+
+        // 문자 보내기 전 비용 차감
+        db.sms.decrement({ text_cost: 37 }, { where: { idx: sms_idx } });
+        // 알림톡 history 추가
+        await db.smsHistory.create({
+          sender_phoneNumber: findSender.user_phone,
+          receiver_phoneNumber: customerFindResult.customer_phoneNumber,
+          type: 'LMS',
+          text: message,
+          price: 37,
+          sms_idx,
+        });
+
         user_phone = customerFindResult.customer_phoneNumber.replace(
           /\./g,
           '-'
         );
-
         await axios({
           url: '/api/send/sms',
           method: 'post', // POST method
@@ -595,7 +611,24 @@ ${calculateFindResult.file_url}
         });
       }
     }
-    return;
+
+    // 견적서 다시보기 동의여부
+    if (calculateReload !== '') {
+      await db.userConfig.update(
+        { calculateReload },
+        { where: { user_idx: req.user_idx } }
+      );
+    }
+
+    await db.calculate.update(
+      { sharedDate },
+      { where: { customer_idx, idx: calculate_idx } }
+    );
+
+    const findResult = await db.calculate.findByPk(calculate_idx, {
+      attributes: showCalculateAttributes,
+    });
+    res.send({ success: 200, findResult });
   },
   setMainCalculate: async (req, res, next) => {
     const updateCalculateStatus = async (trueOrfalse, whereData) => {

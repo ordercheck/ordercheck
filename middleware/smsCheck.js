@@ -8,7 +8,7 @@ const smsCheck = async (req, res, next) => {
 
   const findSms = await db.sms.findOne({
     where: { user_idx: findCompany.huidx },
-    attributes: ['text_cost', 'repay'],
+    attributes: ['text_cost', 'repay', 'idx'],
   });
 
   if (!findSms.repay && findSms.text_cost < 37) {
@@ -17,6 +17,7 @@ const smsCheck = async (req, res, next) => {
 
   req.text_cost = findSms.text_cost;
   req.repay = findSms.repay;
+  req.sms_idx = findSms.idx;
   next();
 };
 

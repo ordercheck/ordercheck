@@ -73,10 +73,10 @@ db.userConfig.belongsTo(db.user, {
   foreignKey: 'user_idx',
 });
 
-// user와 smsHistory
-db.user.hasMany(db.smsHistory, { foreignKey: 'user_idx' });
-db.smsHistory.belongsTo(db.user, {
-  foreignKey: 'user_idx',
+// sms와 smsHistory
+db.sms.hasMany(db.smsHistory, { foreignKey: 'sms_idx' });
+db.smsHistory.belongsTo(db.sms, {
+  foreignKey: 'sms_idx',
 });
 
 // user와 sms
