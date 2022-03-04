@@ -45,10 +45,10 @@ module.exports = {
       });
       // 팀원들에게 알람 보내기
 
-      // const io = req.app.get('io');
-      // const findMembers = await findMemberExceptMe(company_idx, user_idx);
-
-      // await sendCompanyAlarm(message, company_idx, findMembers, 1, io);
+      const io = req.app.get('io');
+      const findMembers = await findMemberExceptMe(company_idx, user_idx);
+      const message = `${findUserNameResult.user_name}님이 새로운 신청폼 [${title}]을 등록하였습니다.`;
+      await sendCompanyAlarm(message, company_idx, findMembers, 7, io);
     } catch (err) {
       next(err);
     }
