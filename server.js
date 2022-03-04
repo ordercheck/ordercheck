@@ -22,7 +22,6 @@ io.on('connection', (socket) => {
   });
   // 회사 알람 보여주기
   socket.on('alarm', async (data) => {
-    console.log('alarm');
     // 토큰으로 user idx 찾기
     const user = await verify_data(data);
 
@@ -38,9 +37,10 @@ io.on('connection', (socket) => {
       findAllAlarms.map(async (data) => {
         const targetDate = moment(data.repeat_time);
         const now = moment();
-        if (moment.duration(now.diff(targetDate)).asMinutes() > 0) {
-          console.log('예약문자 ');
-          await db.alarm.destroy({ where: { idx: data.alarmId } });
+        if (
+          moment.duration(now.diff(targetDate)).asMinutes() > 0 &&
+          data.resend == true
+        ) {
           return data;
         }
 
