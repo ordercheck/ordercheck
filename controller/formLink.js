@@ -9,6 +9,7 @@ const {
   searchingByTitle,
   checkTitle,
   sendCompanyAlarm,
+  createExpireDate,
   findMemberExceptMe,
 } = require('../lib/apiFunctions');
 
@@ -49,11 +50,11 @@ module.exports = {
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
 
       const message = `${findUserNameResult.user_name}님이 새로운 신청폼 [${title}]을 등록하였습니다.`;
+      const expiry_date = createExpireDate();
       const data = {
         message,
         company_idx,
         alarm_type: 7,
-        customer_idx: findCustomer.idx,
         expiry_date,
       };
 
@@ -150,10 +151,6 @@ module.exports = {
   },
   delFormLink: async (req, res, next) => {
     try {
-      const findFormLinkResult = await db.formLink.findByPk(req.params.formId, {
-        attributes: ['thumbNail_title'],
-      });
-      delFile(findFormLinkResult.thumbNail_title, 'ordercheck/formThumbNail');
       await db.formLink.destroy({ where: { idx: req.params.formId } });
       return res.send({ success: 200, message: '삭제 성공' });
     } catch (err) {
