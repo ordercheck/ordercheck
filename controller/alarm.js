@@ -76,7 +76,7 @@ module.exports = {
       const io = req.app.get('io');
       const alarm = new Alarm(createResult);
       io.to(parseInt(user_idx)).emit('addAlarm', alarm);
-      db.alarm.update({ where: { resend: false } });
+      db.alarm.update({ resend: false }, { where: { idx: createResult.idx } });
     }, reAlertMs);
   },
 };
