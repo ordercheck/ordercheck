@@ -9,7 +9,7 @@ module.exports = function (sequelize, DataTypes) {
     text_cost: {
       allowNull: false,
       defaultValue: 0,
-      type: DataTypes.STRING(100),
+      type: DataTypes.INTEGER,
     },
 
     repay: {
@@ -20,12 +20,12 @@ module.exports = function (sequelize, DataTypes) {
     auto_min: {
       allowNull: false,
       defaultValue: 0,
-      type: DataTypes.STRING(100),
+      type: DataTypes.INTEGER,
     },
     auto_price: {
       allowNull: false,
-      defaultValue: '5,000',
-      type: DataTypes.STRING(100),
+      defaultValue: 5000,
+      type: DataTypes.INTEGER,
     },
   });
 };

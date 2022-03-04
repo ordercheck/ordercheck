@@ -2,6 +2,8 @@
  * @swagger
  * /api/card:
  *   post:
+ *      security:
+ *       - bearerAuth: []
  *      tags:
  *       - card
  *      summary: 카드등록하기

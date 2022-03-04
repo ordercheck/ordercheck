@@ -515,10 +515,11 @@ module.exports = {
       repay,
       sms_idx,
       user_idx,
+      token,
     } = req;
     // 알림톡 보내기 전 알림톡 비용 체크
     if (text_cost < 10) {
-      return next({ message: '알림톡 비용 부족' });
+      return res.send({ success: 400, message: '알림톡 비용 부족' });
     }
 
     const customerFindResult = await db.customer.findByPk(customer_idx, {
@@ -583,7 +584,7 @@ module.exports = {
         // 문자 보내기 전 문자 비용 체크
 
         if (text_cost - 10 < 37) {
-          return next({ message: 'LMS 비용 부족' });
+          return res.send({ success: 400, message: 'LMS 비용 부족' });
         }
 
         // LMS 비용 차감 후 저장
@@ -609,9 +610,26 @@ module.exports = {
         });
       }
     }
-
+    console.log(repay);
     // 문자 자동 충전
-    await db.sms.findByPk();
+    if (repay) {
+      const autoSms = await db.sms.findByPk(sms_idx, {
+        attributes: ['text_cost', 'auto_min', 'auto_price'],
+      });
+
+      if (autoSms.text_cost < autoSms.auto_min) {
+        const result = await axios({
+          url: '/api/config/company/sms/pay',
+          method: 'post', // POST method
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token} `,
+          }, // "Content-Type": "application/json"
+          data: { text_cost: autoSms.auto_price },
+        });
+        console.log(result);
+      }
+    }
 
     // 견적서 다시보기 동의여부
     if (calculateReload !== '') {

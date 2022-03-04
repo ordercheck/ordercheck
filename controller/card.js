@@ -1,5 +1,5 @@
 const db = require('../model/db');
-const { payNow, refund } = require('../lib/payFunction');
+const { payNow, refund, addCard } = require('../lib/payFunction');
 const _f = require('../lib/functions');
 module.exports = {
   enrollmentCard: async (req, res, next) => {
@@ -33,7 +33,7 @@ module.exports = {
     if (!cardAddResult.success) {
       return res.send({ success: 400, message: cardAddResult.message });
     }
-    const merchant_uid = _f.randomString9;
+    const merchant_uid = _f.randomString9();
     const { success, imp_uid, card_name, message } = await payNow(
       customer_uid,
       1000,

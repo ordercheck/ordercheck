@@ -491,10 +491,10 @@ module.exports = {
       attributes: ['text_cost'],
     });
     // 이전 문자비용 숫자로 바꾸기
-    const beforeCost = parseInt(findSmsResult.text_cost.replace(/,/g, ''));
+    const beforeCost = findSmsResult.text_cost;
     // 추가할 문자비용 숫자로 바꾸기
-    const plusCost = parseInt(text_cost.replace(/,/g, ''));
-    const addCost = (beforeCost + plusCost).toLocaleString();
+    const plusCost = text_cost;
+    const addCost = beforeCost + plusCost;
 
     await db.sms.update(
       {

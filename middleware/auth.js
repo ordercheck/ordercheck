@@ -17,6 +17,7 @@ const loginCheck = async (req, res, next) => {
 
     req.user_idx = data.user_idx;
     req.company_idx = findUserCompanyResult.company_idx;
+    req.token = token;
     next();
   } catch (err) {
     console.log(err);
