@@ -17,7 +17,7 @@ module.exports = {
       await db.alarm.destroy({ where: { idx } });
     });
 
-    const findResult = await db.alarm.findAll({
+    await db.alarm.findAll({
       where: { user_idx, repeat_time: null },
       attributes: alarmAttributes,
       order: [['createdAt', 'DESC']],
@@ -36,7 +36,7 @@ module.exports = {
     for (let i = 0; i < alarmId.length; i++) {
       await db.alarm.update({ confirm: true }, { where: { idx: alarmId[i] } });
     }
-    const findResult = await db.alarm.findAll({
+    await db.alarm.findAll({
       where: { user_idx, repeat_time: null },
       attributes: alarmAttributes,
       order: [['createdAt', 'DESC']],
@@ -57,6 +57,12 @@ module.exports = {
       attributes: alarmAttributes,
       raw: true,
     });
+    await db.alarm.update(
+      { confirm: true },
+      {
+        idx: alarmId,
+      }
+    );
 
     delete findAlarmResult.createdAt;
     const expiry_date = createExpireDate();
