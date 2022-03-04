@@ -228,17 +228,21 @@ module.exports = {
 
         { attributes: ['customer_phoneNumber'] }
       );
-
+      const deletedTime = moment().format('YYYY.MM.DD');
       // 고객 지우기
-      await db.customer.destroy({
-        where: { idx: customer_idx },
-      });
+      await db.customer.update(
+        { deleted: deletedTime },
+        {
+          where: { idx: customer_idx },
+        }
+      );
 
       // 전화번호로 찾기
       const findResultCustomers = await db.customer.count({
         where: {
           customer_phoneNumber: findCustomerResult.customer_phoneNumber,
           company_idx,
+          deleted: null,
         },
       });
       // 같은 전화번호가 없을 경우, fileStore도 삭제
@@ -691,7 +695,7 @@ module.exports = {
   },
   doIntegratedUser: async (req, res, next) => {
     const { body } = req;
-
+    const deletedTime = moment().format('YYYY.MM.DD');
     try {
       // 대표 상담폼과 병합
       await body.target_idx.forEach(async (data) => {
@@ -720,9 +724,14 @@ module.exports = {
               where: { customer_idx: data },
             }
           );
-          await db.customer.destroy({
-            where: { idx: data },
-          });
+          await db.customer.update(
+            {
+              deleted: deletedTime,
+            },
+            {
+              where: { idx: data },
+            }
+          );
         } catch (err) {
           console.log(err);
         }
@@ -735,6 +744,7 @@ module.exports = {
       const findSameUser = await db.customer.findAll({
         where: {
           customer_phoneNumber: findCustomerResult.customer_phoneNumber,
+          deleted: null,
         },
         attributes: findSameUserAttributes,
         raw: true,

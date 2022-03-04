@@ -21,7 +21,9 @@ module.exports = {
       company_idx,
     } = req;
 
-    const totalData = await db.customer.count({ where: { company_idx } });
+    const totalData = await db.customer.count({
+      where: { company_idx, deleted: null },
+    });
     const { start, intlimit, intPage } = await checkPage(
       limit,
       page,
@@ -29,7 +31,7 @@ module.exports = {
     );
     const getCustomerData = async (sortField, sort, No, addminus) => {
       let customerFindAndCount = await db.customer.findAndCountAll({
-        where: { company_idx },
+        where: { company_idx, deleted: null },
         include: [
           {
             model: db.user,
@@ -135,7 +137,7 @@ module.exports = {
     } = req;
     try {
       const result = await db.customer.findAll({
-        where: { form_link },
+        where: { form_link, deleted: null },
         group: ['customer_phoneNumber'],
       });
       return res.send({ result });
@@ -229,7 +231,7 @@ module.exports = {
     } = req;
     try {
       const result = await db.customer.findAll({
-        where: { customer_phoneNumber, company_idx },
+        where: { customer_phoneNumber, company_idx, deleted: null },
         attributes: showIntegratedUserAttributes,
       });
       return res.send({ result });

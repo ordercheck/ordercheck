@@ -52,13 +52,17 @@ module.exports = function (sequelize, DataTypes) {
     },
     searchingPhoneNumber: {
       allowNull: false,
-
       type: DataTypes.STRING(100),
     },
     contract_possibility: {
       allowNull: false,
       defaultValue: 0,
       type: DataTypes.INTEGER,
+    },
+
+    deleted: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
     },
   });
 };

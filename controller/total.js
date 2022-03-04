@@ -20,6 +20,7 @@ module.exports = {
       // customer search
       let searchCustomer = await db.customer.findAll({
         where: {
+          deleted: null,
           company_idx,
           [Op.or]: {
             customer_name: {
