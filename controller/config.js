@@ -314,7 +314,7 @@ module.exports = {
 
     const Title = await checkTitle(
       db.config,
-      { title, company_idx },
+      { template_name: title, company_idx },
       title,
       req.body
     );
