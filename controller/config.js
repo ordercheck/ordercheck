@@ -225,8 +225,8 @@ module.exports = {
         const checkDomain = await db.company.count({
           where: { company_subdomain },
         });
-        console.log(checkDomain);
-        if (checkDomain !== 0) {
+
+        if (checkDomain !== 1) {
           return res.send({
             success: 400,
             message: '해당 회사 도메인은 이미 사용되었습니다.',

@@ -47,14 +47,14 @@ io.on('connection', (socket) => {
             },
             {
               where: {
-                idx: data.idx,
+                idx: data.alarmId,
               },
             }
           );
           return data;
         }
 
-        if (data.resend == false) {
+        if (data.resend == false && data.repeat_time == null) {
           return data;
         }
       })
