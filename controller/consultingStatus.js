@@ -610,7 +610,7 @@ module.exports = {
         });
       }
     }
-    console.log(repay);
+
     // 문자 자동 충전
     if (repay) {
       const autoSms = await db.sms.findByPk(sms_idx, {
@@ -618,7 +618,7 @@ module.exports = {
       });
 
       if (autoSms.text_cost < autoSms.auto_min) {
-        const result = await axios({
+        await axios({
           url: '/api/config/company/sms/pay',
           method: 'post', // POST method
           headers: {
@@ -627,7 +627,6 @@ module.exports = {
           }, // "Content-Type": "application/json"
           data: { text_cost: autoSms.auto_price },
         });
-        console.log(result);
       }
     }
 

@@ -1,4 +1,8 @@
 const db = require('../model/db');
+const moment = require('moment');
+require('moment-timezone');
+moment.tz.setDefault('Asia/Seoul');
+const { Alarm } = require('../lib/class');
 const { alarmAttributes } = require('../lib/attributes');
 const _f = require('../lib/functions');
 module.exports = {
@@ -53,12 +57,21 @@ module.exports = {
       raw: true,
     });
 
-    await db.alarm.create({
+    const createResult = await db.alarm.create({
       ...findAlarmResult,
       repeat_time: time,
       user_idx,
       company_idx,
     });
-    return res.send({ success: 200 });
+    res.send({ success: 200 });
+
+    const now = moment();
+    const reAlertMs = moment.duration(now.diff(time)).asMilliseconds();
+    setTimeout(() => {
+      const io = req.app.get('io');
+      const alarm = new Alarm(createResult);
+      io.to(parseInt(user_idx)).emit('addAlarm', alarm);
+      db.alarm.destroy({ where: { idx: createResult.idx } });
+    }, reAlertMs);
   },
 };

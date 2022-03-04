@@ -6,10 +6,12 @@ const {
   giveMasterAuth,
   createFreePlan,
   findMembers,
+  decreasePriceAndHistory,
 } = require('../lib/apiFunctions');
 const sendMail = require('../mail/sendInvite');
 const axios = require('axios');
 const db = require('../model/db');
+const { find } = require('cheerio/lib/api/traversing');
 module.exports = {
   sendEmail: async (req, res, next) => {
     const {
@@ -42,8 +44,16 @@ module.exports = {
       body: { company_url, target_phoneNumber },
       user_idx,
       company_idx,
+      text_cost,
+      repay,
+      sms_idx,
+      token,
     } = req;
     // 문자 비용 계산(없으면 오류)
+
+    if (text_cost < target_phoneNumber.length * 37) {
+      return res.send({ success: 400, message: 'LMS 비용이 부족합니다.' });
+    }
 
     // 회사 정보 찾기
     const findCompany = await db.company.findByPk(company_idx, {
@@ -51,7 +61,7 @@ module.exports = {
     });
     // 초대한 유저 찾기
     const findInviter = await db.user.findByPk(user_idx, {
-      attributes: ['user_name'],
+      attributes: ['user_name', 'user_phone'],
     });
 
     const message = `
@@ -61,8 +71,8 @@ module.exports = {
 참여하기:
 ${company_url}
  `;
-    target_phoneNumber.forEach(async (data) => {
-      user_phone = data.replace(/\./g, '-');
+    target_phoneNumber.forEach(async (phoneNumber) => {
+      const user_phone = phoneNumber.replace(/\./g, '-');
 
       await axios({
         url: '/api/send/sms',
@@ -70,13 +80,40 @@ ${company_url}
         headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
         data: { user_phone, message, type: 'LMS' },
       });
+
+      // 비용에서 차감
+      // 알림톡 비용 차감 후 저장
+      decreasePriceAndHistory(
+        { text_cost: 37 },
+        sms_idx,
+        'LMS',
+        message,
+        37,
+        findInviter.user_phone,
+        phoneNumber
+      );
     });
 
+    // 문자 자동 충전
+    if (repay) {
+      const autoSms = await db.sms.findByPk(sms_idx, {
+        attributes: ['text_cost', 'auto_min', 'auto_price'],
+      });
+
+      if (autoSms.text_cost < autoSms.auto_min) {
+        await axios({
+          url: '/api/config/company/sms/pay',
+          method: 'post', // POST method
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token} `,
+          }, // "Content-Type": "application/json"
+          data: { text_cost: autoSms.auto_price },
+        });
+      }
+    }
+
     res.send({ success: 200 });
-
-    // 비용에서 차감
-
-    // 문자 내역 기록
   },
 
   joinToCompanyByRegist: async (req, res, next) => {

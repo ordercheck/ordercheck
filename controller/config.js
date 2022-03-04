@@ -477,7 +477,7 @@ module.exports = {
 
     const payResult = await payNow(
       findCardResult.customer_uid,
-      text_cost.replace(/,/g, ''),
+      text_cost,
       merchant_uid,
       '문자 충전'
     );
@@ -490,9 +490,8 @@ module.exports = {
       where: { user_idx },
       attributes: ['text_cost'],
     });
-    // 이전 문자비용 숫자로 바꾸기
+
     const beforeCost = findSmsResult.text_cost;
-    // 추가할 문자비용 숫자로 바꾸기
     const plusCost = text_cost;
     const addCost = beforeCost + plusCost;
 
@@ -507,7 +506,9 @@ module.exports = {
       }
     );
 
-    return res.send({ success: 200, message: '충전 완료' });
+    res.send({ success: 200, message: '충전 완료' });
+
+    // 영수증 등록
   },
   showSmsHistory: async (req, res, next) => {
     const { user_idx } = req;
