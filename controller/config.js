@@ -314,9 +314,9 @@ module.exports = {
     createConfig.create_people = findUser.user_name;
     createConfig.company_idx = company_idx;
 
-    await db.config.create(createConfig);
+    const createdResult = await db.config.create(createConfig);
 
-    return res.send({ success: 200 });
+    return res.send({ success: 200, templateId: createdResult.idx });
   },
   showTemplateList: async (req, res, next) => {
     const { company_idx } = req;
