@@ -5,6 +5,7 @@ const {
   getDetailCustomerInfo,
   sendCompanyAlarm,
   findMemberExceptMe,
+  createExpireDate,
 } = require('../lib/apiFunctions');
 const { Alarm, Form, Customer } = require('../lib/class');
 const axios = require('axios');
@@ -137,8 +138,6 @@ module.exports = {
         createCustomerResult.idx,
         searchingPhoneNumber
       );
-
-      console.log(fileStoreData);
 
       // 파일 보관함 db 생성
       const createFileStoreResult = await createFileStore(fileStoreData, t);
@@ -311,11 +310,13 @@ module.exports = {
 
       const io = req.app.get('io');
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
+      const expiry_date = createExpireDate();
       const insertData = {
         message,
         company_idx,
         alarm_type: 1,
         customer_idx: findCustomer.idx,
+        expiry_date,
       };
       await sendCompanyAlarm(insertData, findMembers, io);
       return;
