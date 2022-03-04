@@ -312,7 +312,7 @@ module.exports = {
       user_idx,
     } = req;
 
-    const checkTitle = await checkTitle(
+    const Title = await checkTitle(
       db.config,
       { title, company_idx },
       title,
@@ -323,7 +323,7 @@ module.exports = {
       attributes: ['user_name'],
     });
 
-    createConfig.template_name = checkTitle.title;
+    createConfig.template_name = Title.title;
     createConfig.create_people = findUser.user_name;
     createConfig.company_idx = company_idx;
 

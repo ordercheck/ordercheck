@@ -6,6 +6,7 @@ const {
   sendCompanyAlarm,
   findMemberExceptMe,
   createExpireDate,
+  decreasePriceAndHistory,
 } = require('../lib/apiFunctions');
 const { Alarm, Form, Customer } = require('../lib/class');
 const axios = require('axios');
@@ -515,6 +516,10 @@ module.exports = {
       sms_idx,
       user_idx,
     } = req;
+    // 알림톡 보내기 전 알림톡 비용 체크
+    if (text_cost < 10) {
+      return next({ message: '알림톡 비용 부족' });
+    }
 
     const customerFindResult = await db.customer.findByPk(customer_idx, {
       attributes: ['customer_phoneNumber', 'customer_name'],
@@ -537,11 +542,6 @@ module.exports = {
       : calculateFindResult.file_url.split('//')[1];
 
     const sharedDate = moment().format('YYYY.MM.DD');
-
-    // 알림톡 보내기 전 알림톡 비용 체크
-    if (text_cost < 10) {
-      return next({ message: '알림톡 비용 부족' });
-    }
 
     const { kakaoPushResult, message } = await customerkakaoPushNewCal(
       customerFindResult.customer_phoneNumber,

@@ -11,10 +11,6 @@ const smsCheck = async (req, res, next) => {
     attributes: ['text_cost', 'repay', 'idx'],
   });
 
-  if (!findSms.repay && findSms.text_cost < 37) {
-    return res.send({ success: 400, message: '요금이 부족합니다' });
-  }
-
   req.text_cost = findSms.text_cost;
   req.repay = findSms.repay;
   req.sms_idx = findSms.idx;
