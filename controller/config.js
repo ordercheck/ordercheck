@@ -222,6 +222,13 @@ module.exports = {
         await updateCompanyInfo('company_name', company_name);
       }
       if (company_subdomain) {
+        const checkDomain = await db.company.count({ company_subdomain });
+        if (checkDomain !== 0) {
+          return res.send({
+            success: 400,
+            message: '해당 회사 도메인은 이미 사용되었습니다.',
+          });
+        }
         await updateCompanyInfo('company_subdomain', company_subdomain);
       }
       if (address) {

@@ -57,6 +57,7 @@ module.exports = {
       attributes: alarmAttributes,
       raw: true,
     });
+
     await db.alarm.update(
       { confirm: true },
       {
