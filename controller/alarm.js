@@ -83,7 +83,7 @@ module.exports = {
     setTimeout(() => {
       const io = req.app.get('io');
       const alarm = new Alarm(createResult);
-
+      console.log('슬 보내볼까?');
       io.to(parseInt(user_idx)).emit('addAlarm', alarm);
     }, reAlertMs);
   },
