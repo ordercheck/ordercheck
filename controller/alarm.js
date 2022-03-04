@@ -65,10 +65,9 @@ module.exports = {
     });
     res.send({ success: 200 });
 
+    const after = moment(time);
     const now = moment();
-    const reAlertMs = moment.duration(now.diff(time)).asMilliseconds();
-
-    console.log(reAlertMs);
+    const reAlertMs = moment.duration(after.diff(now)).asMilliseconds();
 
     setTimeout(() => {
       console.log('hi');
