@@ -309,6 +309,7 @@ module.exports = {
       const message = `${findUser.user_name}님이 [${findCustomer.customer_name} ${now}]을 신규 등록했습니다.`;
 
       const io = req.app.get('io');
+      console.log('hi');
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
       const expiry_date = createExpireDate();
       console.log(expiry_date);
