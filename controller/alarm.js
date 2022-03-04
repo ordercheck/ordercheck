@@ -75,7 +75,6 @@ module.exports = {
       repeat_time: time,
       user_idx,
       company_idx,
-      resend: true,
     });
     res.send({ success: 200 });
 
