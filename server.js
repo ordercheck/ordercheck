@@ -54,12 +54,12 @@ io.on('connection', (socket) => {
           return data;
         }
 
-        if (data.resend == false) {
+        if (data.repeat_time == null) {
           return data;
         }
       })
     );
-
+    console.log(scheduleAlarm);
     io.to(user.user_idx).emit('sendAlarm', scheduleAlarm);
   });
 });
