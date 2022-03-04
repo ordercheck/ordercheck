@@ -65,10 +65,10 @@ module.exports = {
     });
     res.send({ success: 200 });
 
-    console.log(afterTime);
     const reAlertMs = afterTime * 60000;
-
+    console.log(reAlertMs);
     setTimeout(() => {
+      console.log('hi');
       const io = req.app.get('io');
       const alarm = new Alarm(createResult);
       io.to(parseInt(user_idx)).emit('addAlarm', alarm);
