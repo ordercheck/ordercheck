@@ -1,24 +1,12 @@
 /**
  * @swagger
- * /api/alarm:
- *   post:
+ * /api/home:
+ *   get:
  *      security:
  *       - bearerAuth: []
  *      tags:
  *       - home
- *      summary: 알람 삭제하기
- *      requestBody:
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               alarmId:
- *                 type: array
- *               time:
- *                 type: string
- *             example:
- *               alarmId: [1,2,3]
+ *      summary: home화면 보여주기
  *      responses:
  *       '200':
  *         description: 성공
