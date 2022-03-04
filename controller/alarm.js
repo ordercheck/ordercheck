@@ -18,8 +18,7 @@ module.exports = {
       order: [['createdAt', 'DESC']],
       raw: true,
     });
-    const io = req.app.get('io');
-    io.to(user_idx).emit('sendAlarm', findResult);
+
     return res.send({ success: 200 });
   },
 
@@ -39,8 +38,7 @@ module.exports = {
       raw: true,
     });
     res.send({ success: 200 });
-    const io = req.app.get('io');
-    io.to(user_idx).emit('sendAlarm', findResult);
+
     return;
   },
   repeatAlarm: async (req, res, next) => {

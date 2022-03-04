@@ -312,8 +312,9 @@ module.exports = {
 
     masterConfig.template_name = title;
     masterConfig.create_people = findUser.user_name;
+    masterConfig.create_people = company_idx;
 
-    await db.create(masterConfig);
+    await db.config.create(masterConfig);
 
     return res.send({ success: 200 });
   },
