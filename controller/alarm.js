@@ -47,7 +47,7 @@ module.exports = {
   },
   repeatAlarm: async (req, res, next) => {
     const {
-      body: { alarmId, time },
+      body: { alarmId, time, afterTime },
       user_idx,
       company_idx,
     } = req;
@@ -65,10 +65,9 @@ module.exports = {
     });
     res.send({ success: 200 });
 
-    const after = moment(time);
-    const now = moment();
-    const reAlertMs = moment.duration(after.diff(now)).asMilliseconds();
-    console.log(reAlertMs);
+    console.log(afterTime);
+    const reAlertMs = afterTime * 60000;
+
     setTimeout(() => {
       const io = req.app.get('io');
       const alarm = new Alarm(createResult);
