@@ -37,20 +37,7 @@ io.on('connection', (socket) => {
       findAllAlarms.map(async (data) => {
         const targetDate = moment(data.repeat_time);
         const now = moment();
-        if (
-          moment.duration(now.diff(targetDate)).asMinutes() > 0 &&
-          data.resend == true
-        ) {
-          db.alarm.update(
-            {
-              resend: false,
-            },
-            {
-              where: {
-                idx: data.alarmId,
-              },
-            }
-          );
+        if (moment.duration(now.diff(targetDate)).asMinutes() > 0) {
           return data;
         }
 

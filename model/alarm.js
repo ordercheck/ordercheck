@@ -32,11 +32,5 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
-
-    resend: {
-      allowNull: false,
-      defaultValue: false,
-      type: DataTypes.BOOLEAN,
-    },
   });
 };

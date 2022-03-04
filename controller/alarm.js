@@ -86,7 +86,6 @@ module.exports = {
       const alarm = new Alarm(createResult);
 
       io.to(parseInt(user_idx)).emit('addAlarm', alarm);
-      db.alarm.update({ resend: false }, { where: { idx: createResult.idx } });
     }, reAlertMs);
   },
 };
