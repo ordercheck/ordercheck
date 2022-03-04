@@ -226,5 +226,10 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(100),
     },
     update_people: { allowNull: true, type: DataTypes.STRING(100) },
+
+    duplicateCount: {
+      defaultValue: 1,
+      type: DataTypes.INTEGER,
+    },
   });
 };

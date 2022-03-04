@@ -510,7 +510,10 @@ module.exports = {
     const {
       params: { customer_idx, calculate_idx },
       body: { calculateReload },
+      text_cost,
+      repay,
     } = req;
+
     const customerFindResult = await db.customer.findByPk(customer_idx, {
       attributes: ['customer_phoneNumber', 'customer_name'],
     });

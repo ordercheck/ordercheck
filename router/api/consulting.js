@@ -5,6 +5,7 @@ const {
   multer_form_upload,
 } = require('../../lib/aws/aws');
 const loginCheck = require('../../middleware/auth');
+const smsCheck = require('../../middleware/smsCheck');
 const { Filter, searchCustomer } = require('../../controller/consultingFilter');
 const {
   showTotalConsultingDefault,
@@ -51,6 +52,7 @@ router.get('/calculate/:customer_idx', loginCheck, showCalculate);
 router.post(
   '/calculate/share/:customer_idx/:calculate_idx',
   loginCheck,
+  smsCheck,
   shareCalculate
 );
 

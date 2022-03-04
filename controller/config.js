@@ -1,7 +1,12 @@
 const db = require('../model/db');
 const { makeSpreadArray } = require('../lib/functions');
 const _f = require('../lib/functions');
-const { getFileName, findMembers, findMember } = require('../lib/apiFunctions');
+const {
+  getFileName,
+  findMembers,
+  findMember,
+  checkTitle,
+} = require('../lib/apiFunctions');
 const { Op } = require('sequelize');
 const { createConfig } = require('../lib/standardTemplate');
 
@@ -306,11 +311,19 @@ module.exports = {
       company_idx,
       user_idx,
     } = req;
+
+    const checkTitle = await checkTitle(
+      db.config,
+      { title, company_idx },
+      title,
+      req.body
+    );
+
     const findUser = await db.user.findByPk(user_idx, {
       attributes: ['user_name'],
     });
 
-    createConfig.template_name = title;
+    createConfig.template_name = checkTitle.title;
     createConfig.create_people = findUser.user_name;
     createConfig.company_idx = company_idx;
 
@@ -367,6 +380,7 @@ module.exports = {
   delTemplate: async (req, res, next) => {
     const {
       params: { templateId },
+      company_idx,
     } = req;
     try {
       const findUserResult = await db.userCompany.findAll({
@@ -375,7 +389,7 @@ module.exports = {
         nest: true,
       });
       const findConfigResult = await db.config.findOne({
-        where: { idx: templateId, template_name: '팀원' },
+        where: { company_idx, template_name: '팀원' },
         attributes: ['idx'],
       });
       findUserResult.forEach(async (data) => {
