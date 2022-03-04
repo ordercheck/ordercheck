@@ -3,7 +3,7 @@ const { makeSpreadArray } = require('../lib/functions');
 const _f = require('../lib/functions');
 const { getFileName, findMembers, findMember } = require('../lib/apiFunctions');
 const { Op } = require('sequelize');
-const { masterConfig } = require('../lib/standardTemplate');
+const { createConfig } = require('../lib/standardTemplate');
 
 const {
   payNow,
@@ -310,11 +310,11 @@ module.exports = {
       attributes: ['user_name'],
     });
 
-    masterConfig.template_name = title;
-    masterConfig.create_people = findUser.user_name;
-    masterConfig.create_people = company_idx;
+    createConfig.template_name = title;
+    createConfig.create_people = findUser.user_name;
+    createConfig.company_idx = company_idx;
 
-    await db.config.create(masterConfig);
+    await db.config.create(createConfig);
 
     return res.send({ success: 200 });
   },
