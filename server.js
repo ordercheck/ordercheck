@@ -41,6 +41,16 @@ io.on('connection', (socket) => {
           moment.duration(now.diff(targetDate)).asMinutes() > 0 &&
           data.resend == true
         ) {
+          db.alarm.update(
+            {
+              resend: false,
+            },
+            {
+              where: {
+                idx: data.idx,
+              },
+            }
+          );
           return data;
         }
 

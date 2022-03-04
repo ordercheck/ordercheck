@@ -84,7 +84,7 @@ module.exports = {
     setTimeout(() => {
       const io = req.app.get('io');
       const alarm = new Alarm(createResult);
-      console.log('되라');
+
       io.to(parseInt(user_idx)).emit('addAlarm', alarm);
       db.alarm.update({ resend: false }, { where: { idx: createResult.idx } });
     }, reAlertMs);
