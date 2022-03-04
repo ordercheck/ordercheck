@@ -34,24 +34,15 @@ io.on('connection', (socket) => {
     });
 
     const now = moment();
-
-    // 시간차 구하기
-    const scheduleAlarm = await Promise.all(
-      findAllAlarms.map((data) => {
-        const targetDate = moment(data.repeat_time);
-        if (
-          moment.duration(now.diff(targetDate)).asMinutes() > 0 &&
-          data.repeat_time
-        ) {
-          console.log(data);
-          return data;
-        }
-
-        if (!data.repeat_time) {
-          return data;
-        }
-      })
-    );
+    scheduleAlarm = [];
+    for (i = 0; i < findAllAlarms.length; i++) {
+      const targetDate = moment(findAllAlarms[i].repeat_time);
+      if (moment.duration(now.diff(targetDate)).asMinutes() < 0) {
+        pass;
+      } else {
+        scheduleAlarm.push(findAllAlarms[i]);
+      }
+    }
 
     io.to(user.user_idx).emit('sendAlarm', scheduleAlarm);
   });
