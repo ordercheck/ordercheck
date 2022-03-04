@@ -552,17 +552,16 @@ module.exports = {
       fileUrl
     );
 
-    // 알림톡 비용 차감
-    db.sms.decrement({ text_cost: 10 }, { where: { idx: sms_idx } });
-    // 알림톡 history 저장
-    await db.smsHistory.create({
-      sender_phoneNumber: findSender.user_phone,
-      receiver_phoneNumber: customerFindResult.customer_phoneNumber,
-      type: '알림톡',
-      text: message,
-      price: 10,
+    // 알림톡 비용 차감 후 저장
+    decreasePriceAndHistory(
+      { text_cost: 10 },
       sms_idx,
-    });
+      '알림톡',
+      message,
+      10,
+      findSender.user_phone,
+      customerFindResult.customer_phoneNumber
+    );
 
     // 알림톡 보낸 결과 조회
     if (kakaoPushResult) {
@@ -587,17 +586,16 @@ module.exports = {
           return next({ message: 'LMS 비용 부족' });
         }
 
-        // 문자 보내기 전 비용 차감
-        db.sms.decrement({ text_cost: 37 }, { where: { idx: sms_idx } });
-        // 알림톡 history 추가
-        await db.smsHistory.create({
-          sender_phoneNumber: findSender.user_phone,
-          receiver_phoneNumber: customerFindResult.customer_phoneNumber,
-          type: 'LMS',
-          text: message,
-          price: 37,
+        // LMS 비용 차감 후 저장
+        decreasePriceAndHistory(
+          { text_cost: 37 },
           sms_idx,
-        });
+          'LMS',
+          message,
+          37,
+          findSender.user_phone,
+          customerFindResult.customer_phoneNumber
+        );
 
         user_phone = customerFindResult.customer_phoneNumber.replace(
           /\./g,
@@ -611,6 +609,9 @@ module.exports = {
         });
       }
     }
+
+    // 문자 자동 충전
+    await db.sms.findByPk();
 
     // 견적서 다시보기 동의여부
     if (calculateReload !== '') {

@@ -119,7 +119,7 @@ module.exports = {
         fileStoreSize += data.file_size;
       });
 
-      const findConfig = await db.config.findByPk(userProfile[0].company_idx, {
+      const findConfig = await db.config.findByPk(userProfile[0].config_idx, {
         attributes: { exclude: ['createdAt', 'updatedAt', 'company_idx'] },
       });
       userProfile[0].fileStoreSize = fileStoreSize;
