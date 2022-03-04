@@ -32,11 +32,11 @@ io.on('connection', (socket) => {
       order: [['createdAt', 'DESC']],
       raw: true,
     });
+    const targetDate = moment(data.repeat_time);
+    const now = moment();
     // 시간차 구하기
     const scheduleAlarm = await Promise.all(
-      findAllAlarms.map(async (data) => {
-        const targetDate = moment(data.repeat_time);
-        const now = moment();
+      findAllAlarms.map((data) => {
         if (moment.duration(now.diff(targetDate)).asMinutes() > 0) {
           return data;
         }
