@@ -311,7 +311,7 @@ module.exports = {
       const io = req.app.get('io');
 
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
-      console.log(findMembers);
+
       const expiry_date = createExpireDate();
       console.log(expiry_date);
       const insertData = {
