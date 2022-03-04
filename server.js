@@ -54,7 +54,7 @@ io.on('connection', (socket) => {
           return data;
         }
 
-        if (data.resend == false && data.repeat_time == null) {
+        if (data.resend == false) {
           return data;
         }
       })
