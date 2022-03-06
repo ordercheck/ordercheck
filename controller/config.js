@@ -120,7 +120,9 @@ module.exports = {
       });
 
       const findConfig = await db.config.findByPk(userProfile[0].config_idx, {
-        attributes: { exclude: ['createdAt', 'updatedAt', 'company_idx'] },
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'company_idx', 'duplicateCount'],
+        },
       });
       userProfile[0].fileStoreSize = fileStoreSize;
       userProfile[0].authList = findConfig;

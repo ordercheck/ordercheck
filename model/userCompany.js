@@ -8,7 +8,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     active: {
       allowNull: false,
-      defaultValue: 1,
+      defaultValue: true,
       type: DataTypes.BOOLEAN,
     },
     searchingName: {
