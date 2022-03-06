@@ -9,6 +9,7 @@ const loginCheck = async (req, res, next) => {
 
   const [, token] = authorization.split(' ');
   try {
+    console.log(token);
     const data = await verify_data(token);
     const findUserCompanyResult = await db.userCompany.findOne({
       where: { user_idx: data.user_idx, deleted: null, active: true },
