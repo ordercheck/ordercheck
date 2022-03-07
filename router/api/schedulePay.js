@@ -107,6 +107,7 @@ router.post('/', async (req, res, next) => {
 
         // 이전 결제 예약은 제거
         await db.plan.destroy({ where: { merchant_uid, active: 3 } });
+        return res.send({ success: 200 });
       } else {
         const findPlanCompany = await db.plan.findOne(
           { where: { merchant_uid } },
@@ -134,6 +135,7 @@ router.post('/', async (req, res, next) => {
           },
           { where: { merchant_uid, active: 3 } }
         );
+        return res.send({ success: 200 });
       }
 
       // 새로운 결제 예약 등록
@@ -173,8 +175,6 @@ router.post('/', async (req, res, next) => {
         merchant_uid: newMerchant_uid,
         active: 3,
       });
-
-      return res.send({ success: 200 });
     }
     // 정기결제 실패했을 때
     if (status == 'failed') {
