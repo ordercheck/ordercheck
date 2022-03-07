@@ -81,10 +81,10 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
       : (card_data.corporation_yn = true);
 
     // 카드 정보 등록 후
+
     await db.card.create(card_data, { transaction: t });
 
     // 시간을 unix형태로 변경(실제)
-
     const Hour = moment().format('HH');
 
     const startDate = plan_data.start_plan.replace(/\./g, '-');
@@ -97,7 +97,6 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
     // const now = new Date();
     // let changeToTime = new Date(now.setSeconds(now.getSeconds() + 30));
     // changeToUnix = changeToTime.getTime() / 1000;
-    // const nextMerchant_uid = uuid();
 
     // 다음 카드 결제 신청
     await schedulePay(
@@ -232,7 +231,7 @@ router.post('/check/pw', async (req, res) => {
 // 회원가입 라우터
 router.post('/join/do', async (req, res) => {
   let { token, use_agree, private_agree, marketing_agree } = req.body;
-  console.log(req.body);
+
   let user_data = await verify_data(token);
   // 동의 여부 체크
   user_data.use_agree = use_agree;

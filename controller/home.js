@@ -55,24 +55,71 @@ module.exports = {
         },
       });
 
-      const consultingCount = await db.consulting.count({
+      const consultingCountArr = await db.consulting.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
         },
+        attributes: [
+          [
+            db.sequelize.fn(
+              'date_format',
+              db.sequelize.col('createdAt'),
+              '%Y.%m.%d'
+            ),
+            'createdAt',
+          ],
+        ],
+        raw: true,
       });
 
-      const calculateCount = await db.calculate.count({
+      const calculateCountArr = await db.calculate.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
         },
+        attributes: [
+          [
+            db.sequelize.fn(
+              'date_format',
+              db.sequelize.col('createdAt'),
+              '%Y.%m.%d'
+            ),
+            'createdAt',
+          ],
+        ],
+        raw: true,
       });
 
-      const completeConsulting = await db.customer.count({
+      const completeConsultingArr = await db.customer.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
           contract_possibility: 3,
         },
+        attributes: [
+          [
+            db.sequelize.fn(
+              'date_format',
+              db.sequelize.col('createdAt'),
+              '%Y.%m.%d'
+            ),
+            'createdAt',
+          ],
+        ],
+        raw: true,
       });
+
+      const consultingCount = [];
+      const calculateCount = [];
+      const completeConsulting = [];
+
+      for (let i = 0; i < consultingCountArr.length; i++) {
+        consultingCount.push(consultingCountArr[i].createdAt);
+      }
+      for (let i = 0; i < calculateCountArr.length; i++) {
+        consultingCount.push(consultingCountArr[i].createdAt);
+      }
+      for (let i = 0; i < completeConsultingArr.length; i++) {
+        consultingCount.push(completeConsultingArr[i].createdAt);
+      }
 
       return res.send({
         success: 200,

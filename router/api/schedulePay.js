@@ -14,18 +14,36 @@ router.post('/', async (req, res, next) => {
     const { imp_uid, merchant_uid, status } = req.body;
     const getResult = await getPayment(imp_uid);
 
-    const doSchedule = async (pay_type_data) => {
+    if (
+      getResult.amount == 1000 ||
+      status == 'cancelled' ||
+      !getResult.buyer_email
+    ) {
+      return res.send({ success: 400 });
+    }
+
+    // 계속 스케줄을 할 때
+    if (status == 'paid') {
+      // 결제 month, yaer 찾기
+
+      const checkMonthYear = await db.plan.findOne({
+        where: { merchant_uid },
+        attributes: ['pay_type'],
+        raw: true,
+      });
+
       let payDate;
-      if (pay_type_data == 'month') {
-        let payDay = moment().daysInMonth();
+      let nextDate;
+      if (checkMonthYear.pay_type == 'month') {
+        let payDay = moment().format('DD');
         const last = moment().add('1', 'M').daysInMonth();
         if (payDay > last) {
-          payDay = last;
+          nextDate = moment().add('1', 'M').format(`YYYY-MM-${payDay} HH:00`);
+          payDate = moment(nextDate).unix();
+        } else {
+          nextDate = moment().add('1', 'M').format(`YYYY-MM-DD HH:00`);
+          payDate = moment(nextDate).unix();
         }
-        const setLastDate = moment().add('1', 'M').format(`YYYY-MM-${payDay}`);
-        payDate = moment(setLastDate).unix();
-
-        console.log(setLastDate);
       } else {
         const nextYear = moment().add('1', 'Y');
         payDate = moment(nextYear).unix();
@@ -46,15 +64,19 @@ router.post('/', async (req, res, next) => {
       // 결제 예정 plan을 active 1
       const findActivePlanResult = await db.plan.findOne({
         where: { merchant_uid, active: 1 },
-        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        attributes: { exclude: ['createdAt', 'updatedAt', 'free_plan'] },
         raw: true,
       });
+
       // 무료체험 끝나고 결제 한 경우
       if (findActivePlanResult) {
         // 영수증 발행
 
-        const findCompanyName = await db.company.findByPk(
-          findActivePlanResult.idx,
+        const findCompanyName = await db.company.findOne(
+          {
+            company_idx: findActivePlanResult.idx,
+          },
+
           {
             attributes: ['company_name'],
           }
@@ -74,6 +96,11 @@ router.post('/', async (req, res, next) => {
           receipt_kind: '구독',
         });
 
+        const startDate = moment().format('YYYY.MM.DD');
+        nextDate = moment(nextDate).format('YYYY.MM.DD');
+
+        findActivePlanResult.start_plan = startDate;
+        findActivePlanResult.expire_plan = nextDate;
         // 새로운 결제 예약
         await db.plan.create({
           ...findActivePlanResult,
@@ -83,6 +110,7 @@ router.post('/', async (req, res, next) => {
 
         // 이전 결제 예약은 제거
         await db.plan.destroy({ where: { merchant_uid, active: 3 } });
+        return res.send({ success: 200 });
       } else {
         const findPlanCompany = await db.plan.findOne(
           { where: { merchant_uid } },
@@ -121,9 +149,13 @@ router.post('/', async (req, res, next) => {
 
       // 영수증 발행
 
-      const findCompanyName = await db.company.findByPk(findPlanResult.idx, {
-        attributes: ['company_name'],
-      });
+      const findCompanyName = await db.company.findByPk(
+        findPlanResult.company_idx,
+        {
+          attributes: ['company_name'],
+        }
+      );
+
       const findCardNumber = await db.card.findOne({
         where: { customer_uid: getResult.customer_uid },
         attributes: ['card_number'],
@@ -145,24 +177,6 @@ router.post('/', async (req, res, next) => {
         merchant_uid: newMerchant_uid,
         active: 3,
       });
-    };
-
-    if (
-      getResult.amount == 1000 ||
-      status == 'cancelled' ||
-      !getResult.buyer_email
-    ) {
-      return res.send({ success: 400 });
-    }
-
-    // 계속 스케줄을 할 때
-    if (status == 'paid') {
-      // payType 체크 (month, year)
-
-      getResult.pay_type == 'month'
-        ? await doSchedule('month')
-        : await doSchedule('year');
-
       return res.send({ success: 200 });
     }
     // 정기결제 실패했을 때
