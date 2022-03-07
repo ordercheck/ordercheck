@@ -11,6 +11,12 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: true,
       type: DataTypes.BOOLEAN,
     },
+    standBy: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
+    },
+
     searchingName: {
       allowNull: false,
       defaultValue: '',
@@ -18,7 +24,6 @@ module.exports = function (sequelize, DataTypes) {
     },
     deleted: {
       allowNull: true,
-
       type: DataTypes.STRING(100),
     },
   });

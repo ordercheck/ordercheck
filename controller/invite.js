@@ -11,6 +11,7 @@ const {
 const sendMail = require('../mail/sendInvite');
 const axios = require('axios');
 const db = require('../model/db');
+const { createToken } = require('../lib/jwtfunctions');
 const { find } = require('cheerio/lib/api/traversing');
 module.exports = {
   sendEmail: async (req, res, next) => {
@@ -132,10 +133,11 @@ ${company_url}
       const findConfigResult = await db.config.findOne({
         where: { template_name: '팀원', company_idx: findCompany.idx },
       });
-      // userCompany 만들기 active 0
+      // userCompany 만들기 standBy true, active 0
       await includeUserToCompany({
         user_idx: createUserResult.idx,
         company_idx: findCompany.idx,
+        standBy: true,
         active: false,
         searchingName: createUserResult.user_name,
         config_idx: findConfigResult.idx,
@@ -170,21 +172,43 @@ ${company_url}
     const findConfigResult = await db.config.findOne({
       where: { template_name: '팀원', company_idx: findCompany.idx },
     });
-    await includeUserToCompany({
-      user_idx: check.idx,
-      company_idx: findCompany.company_idx,
-      active: false,
-      searchingName: check.user_name,
-      config_idx: findConfigResult.idx,
+
+    const checkCompanyStandBy = await db.userCompany.findOne({
+      where: {
+        user_idx: check.idx,
+        company_idx: findCompany.company_idx,
+      },
+      attributes: ['active', 'standBy'],
     });
-    res.send({ success: 200 });
+    const token = await createToken({ user_idx: check.idx });
+    if (!checkCompanyStandBy) {
+      await includeUserToCompany({
+        user_idx: check.idx,
+        company_idx: findCompany.company_idx,
+        standBy: true,
+        active: true,
+        searchingName: check.user_name,
+        config_idx: findConfigResult.idx,
+      });
+      return res.send({ success: 200, token });
+    }
+
+    return res.send({
+      success: 200,
+      token,
+      status: {
+        active: checkCompanyStandBy.active,
+        standBy: checkCompanyStandBy.standBy,
+      },
+    });
   },
   showStandbyUser: async (req, res, next) => {
     const { company_idx } = req;
     const standbyUser = await findMembers(
       {
         company_idx,
-        active: false,
+        active: true,
+        standBy: true,
         deleted: null,
       },
       company_idx
@@ -198,7 +222,10 @@ ${company_url}
       attributes: ['user_idx', 'company_idx'],
     });
 
-    await db.userCompany.update({ active: true }, { where: { idx: memberId } });
+    await db.userCompany.update(
+      { active: true, standBy: false },
+      { where: { idx: memberId } }
+    );
 
     await db.config.create({
       user_idx: findUserCompanyResult.user_idx,
@@ -209,7 +236,10 @@ ${company_url}
   },
   refuseUser: async (req, res, next) => {
     const { memberId } = req.params;
-    await db.userCompany.destroy({ where: { idx: memberId } });
+    await db.userCompany.update(
+      { active: false, standBy: true },
+      { where: { idx: memberId } }
+    );
     return res.send({ success: 200 });
   },
 };

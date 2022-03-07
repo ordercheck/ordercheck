@@ -1,4 +1,4 @@
-const verify_data = require('../lib/jwtfunctions');
+const { verify_data } = require('../lib/jwtfunctions');
 const db = require('../model/db');
 const loginCheck = async (req, res, next) => {
   const { authorization } = req.headers;
@@ -12,7 +12,12 @@ const loginCheck = async (req, res, next) => {
     const data = await verify_data(token);
 
     const findUserCompanyResult = await db.userCompany.findOne({
-      where: { user_idx: data.user_idx, deleted: null, active: true },
+      where: {
+        user_idx: data.user_idx,
+        deleted: null,
+        active: true,
+        standBy: false,
+      },
       attributes: ['company_idx'],
     });
 

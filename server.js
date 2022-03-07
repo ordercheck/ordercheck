@@ -6,12 +6,11 @@ const moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
 const { alarmAttributes } = require('./lib/attributes');
-const verify_data = require('./lib/jwtfunctions');
+const { verify_data } = require('./lib/jwtfunctions');
 
 io.on('connection', (socket) => {
   // 회사 알람 시스템에 Join
   socket.on('alarmJoin', async (data) => {
-    console.log('alarmJoin');
     // 토큰으로 user idx 찾기
     const user = await verify_data(data);
 

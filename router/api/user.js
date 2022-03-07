@@ -13,7 +13,7 @@ const moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
 const _f = require('../../lib/functions');
-const verify_data = require('../../lib/jwtfunctions');
+const { verify_data, createToken } = require('../../lib/jwtfunctions');
 
 const user_session_check = (req, res, next) => {
   next();
@@ -58,12 +58,6 @@ const check_data = (req, res, next) => {
       next();
     }
   });
-};
-
-const createToken = async (data) => {
-  // const expiresIn = 60 * 60 * 60;
-  const token = await jwt.sign(data, process.env.tokenSecret);
-  return token;
 };
 
 const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
@@ -169,10 +163,8 @@ router.post('/login', async (req, res, next) => {
     if (!compareResult) {
       return res.send({ success: 400, message: '비밀번호 혹은 전화번호 오류' });
     }
-    const tokenData = {};
-    tokenData.user_idx = check.idx;
 
-    token = await createToken(tokenData);
+    const token = await createToken({ user_idx: check.idx });
     res.send({ success: 200, token });
   } else {
     res.send({ success: 400, message: '비밀번호 혹은 전화번호 오류' });
