@@ -52,6 +52,7 @@ module.exports = {
       const message = `${findUserNameResult.user_name}님이 새로운 신청폼 [${title}]을 등록하였습니다.`;
       const expiry_date = createExpireDate();
       const data = {
+        form_idx: createResult.idx,
         message,
         company_idx,
         alarm_type: 7,
@@ -104,12 +105,7 @@ module.exports = {
       const findFormLinkResult = await db.formLink.findByPk(formId, {
         attributes: ['thumbNail_title'],
       });
-      if (findFormLinkResult.thumbNail_title) {
-        delFile(findFormLinkResult.thumbNail_title, 'ordercheck/thumb');
-        changeFormLinkUrl();
-      } else {
-        changeFormLinkUrl();
-      }
+      changeFormLinkUrl();
 
       const { formDetail } = await findWhiteFormDetail(formId);
       return res.send({ success: 200, formDetail });
@@ -160,7 +156,6 @@ module.exports = {
   showFormDetail: async (req, res, next) => {
     try {
       const { formDetail } = await findWhiteFormDetail(req.params.formId);
-
       return res.send({ success: 200, formDetail });
     } catch (err) {
       next(err);
@@ -176,7 +171,11 @@ module.exports = {
     }
   },
   updateForm: async (req, res, next) => {
-    const { title, whiteLabelChecked, formId, expression } = req.body;
+    const {
+      body: { title, whiteLabelChecked, formId, expression },
+      company_idx,
+      user_idx,
+    } = req;
     try {
       // 프런트에서 준 최신 업데이트 정보로 formLink 수정
       const searchingTitle = makePureText(title);
@@ -193,7 +192,28 @@ module.exports = {
 
       // 수정된 정보를 찾기
       const { formDetail } = await findWhiteFormDetail(formId);
-      return res.send({ success: 200, formDetail });
+      res.send({ success: 200, formDetail });
+
+      // 팀원들에게 알람 보내기
+
+      const findUser = await db.user.findByPk(user_idx, {
+        attributes: ['user_name'],
+      });
+
+      const io = req.app.get('io');
+      const findMembers = await findMemberExceptMe(company_idx, user_idx);
+
+      const message = `${findUser.user_name}님이 [${title}] 신청폼을 수정하였습니다.`;
+      const expiry_date = createExpireDate();
+      const data = {
+        form_idx: formId,
+        message,
+        company_idx,
+        alarm_type: 5,
+        expiry_date,
+      };
+
+      await sendCompanyAlarm(data, findMembers, io);
     } catch (err) {
       next(err);
     }

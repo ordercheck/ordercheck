@@ -770,7 +770,7 @@ module.exports = {
         attributes: ['customer_name', 'idx'],
       });
 
-      const message = `[[${findCustomer.customer_name}] 고객님의 고객 연동이 완료되었습니다.`;
+      const message = `[${findCustomer.customer_name}] 고객님의 고객 연동이 완료되었습니다.`;
 
       const io = req.app.get('io');
 
