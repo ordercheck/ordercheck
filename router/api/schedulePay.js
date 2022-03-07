@@ -18,16 +18,14 @@ router.post('/', async (req, res, next) => {
       let payDate;
       if (pay_type_data == 'month') {
         let payDay = moment().daysInMonth();
-
         const last = moment().add('1', 'M').daysInMonth();
-
         if (payDay > last) {
           payDay = last;
         }
-
         const setLastDate = moment().add('1', 'M').format(`YYYY-MM-${payDay}`);
-
         payDate = moment(setLastDate).unix();
+
+        console.log(setLastDate);
       } else {
         const nextYear = moment().add('1', 'Y');
         payDate = moment(nextYear).unix();
