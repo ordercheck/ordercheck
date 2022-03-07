@@ -67,8 +67,6 @@ module.exports = {
           ),
           'createdAt',
         ],
-        raw: true,
-        nest: true,
       });
 
       const calculateCount = await db.calculate.findAll({
@@ -93,7 +91,7 @@ module.exports = {
         attributes: [
           db.sequelize.fn(
             'date_format',
-            db.sequelize.col('customer.createdAt'),
+            db.sequelize.col('createdAt'),
             '%Y.%m.%d'
           ),
           'createdAt',
