@@ -81,6 +81,7 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
       : (card_data.corporation_yn = true);
 
     // 카드 정보 등록 후
+
     await db.card.create(card_data, { transaction: t });
 
     // 시간을 unix형태로 변경(실제)
@@ -230,7 +231,7 @@ router.post('/check/pw', async (req, res) => {
 // 회원가입 라우터
 router.post('/join/do', async (req, res) => {
   let { token, use_agree, private_agree, marketing_agree } = req.body;
-  console.log(req.body);
+
   let user_data = await verify_data(token);
   // 동의 여부 체크
   user_data.use_agree = use_agree;
