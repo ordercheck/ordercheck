@@ -98,6 +98,7 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
     let changeToTime = new Date(now.setSeconds(now.getSeconds() + 30));
     changeToUnix = changeToTime.getTime() / 1000;
 
+    console.log(changeToUnix);
     // 다음 카드 결제 신청
     await schedulePay(
       changeToUnix,

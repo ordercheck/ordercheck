@@ -55,7 +55,7 @@ module.exports = {
         },
       });
 
-      const consultingCount = await db.consulting.findAll({
+      const consultingCountArr = await db.consulting.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
         },
@@ -70,10 +70,9 @@ module.exports = {
           ],
         ],
         raw: true,
-        nest: true,
       });
 
-      const calculateCount = await db.calculate.findAll({
+      const calculateCountArr = await db.calculate.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
         },
@@ -87,9 +86,10 @@ module.exports = {
             'createdAt',
           ],
         ],
+        raw: true,
       });
 
-      const completeConsulting = await db.customer.findAll({
+      const completeConsultingArr = await db.customer.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
           contract_possibility: 3,
@@ -104,7 +104,21 @@ module.exports = {
             'createdAt',
           ],
         ],
+        raw: true,
       });
+
+      const consultingCount = [];
+      const calculateCount = [];
+      const completeConsulting = [];
+
+      for (let i = 0; i < consultingCountArr.length; i++) {
+        const targetDate = moment(findAllAlarms[i].repeat_time);
+        if (moment.duration(now.diff(targetDate)).asMinutes() < 0) {
+          continue;
+        } else {
+          scheduleAlarm.push(findAllAlarms[i]);
+        }
+      }
 
       return res.send({
         success: 200,
