@@ -112,7 +112,8 @@ module.exports = {
       const io = req.app.get('io');
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
 
-      const message = `${findUser.user_name}님이 [${formLink.title}] 신청폼을 수정하였습니다.`;
+      const message = `${findUser.user_name}님이 [${formDetail.title}] 신청폼을 수정하였습니다.`;
+
       const expiry_date = createExpireDate();
       const data = {
         form_idx: formId,
@@ -161,9 +162,38 @@ module.exports = {
     });
   },
   delFormLink: async (req, res, next) => {
+    const {
+      params: { formId },
+      user_idx,
+      company_idx,
+    } = req;
     try {
-      await db.formLink.destroy({ where: { idx: req.params.formId } });
-      return res.send({ success: 200, message: '삭제 성공' });
+      const formTitle = await db.formLink.findByPk(formId, {
+        attributes: ['title'],
+      });
+      await db.formLink.destroy({ where: { idx: formId } });
+      res.send({ success: 200, message: '삭제 성공' });
+
+      // 팀원들에게 알람 보내기
+      const findUser = await db.user.findByPk(user_idx, {
+        attributes: ['user_name'],
+      });
+      //
+      const io = req.app.get('io');
+      const findMembers = await findMemberExceptMe(company_idx, user_idx);
+      const message = `${findUser.user_name}님이 [${formTitle.title}] 신청폼을 삭제하였습니다.`;
+
+      const expiry_date = createExpireDate();
+      const data = {
+        form_idx: formId,
+        message,
+        company_idx,
+        alarm_type: 8,
+        expiry_date,
+      };
+
+      await sendCompanyAlarm(data, findMembers, io);
+      return;
     } catch (err) {
       next(err);
     }
@@ -236,17 +266,44 @@ module.exports = {
   },
   deleteThumbNail: async (req, res, next) => {
     try {
+      const {
+        params: { formId },
+        user_idx,
+        company_idx,
+      } = req;
       // formLink thumbNail, thumbNail_title 초기화
-      const updateResult = await db.formLink.update(
+      await db.formLink.update(
         { thumbNail: '', thumbNail_title: null },
-        { where: { idx: req.params.formId } }
+        { where: { idx: formId } }
       );
-      // 업데이트 결과가 0일때 (실패)
-      if (updateResult[0] == 0) {
-        return res.send({ success: 400, message: '썸네일 삭제 실패' });
-      }
 
-      return res.send({ success: 200, message: '썸네일 삭제 ' });
+      res.send({ success: 200, message: '썸네일 삭제 ' });
+
+      // 팀원들에게 알람 보내기
+      const findUser = await db.user.findByPk(user_idx, {
+        attributes: ['user_name'],
+      });
+
+      const formTitle = await db.formLink.findByPk(formId, {
+        attributes: ['title'],
+      });
+
+      const io = req.app.get('io');
+      const findMembers = await findMemberExceptMe(company_idx, user_idx);
+
+      const message = `${findUser.user_name}님이 [${formTitle.title}] 신청폼을 수정하였습니다.`;
+
+      const expiry_date = createExpireDate();
+      const data = {
+        form_idx: formId,
+        message,
+        company_idx,
+        alarm_type: 5,
+        expiry_date,
+      };
+
+      await sendCompanyAlarm(data, findMembers, io);
+      return;
     } catch (err) {
       next(err);
     }
