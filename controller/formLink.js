@@ -192,6 +192,7 @@ module.exports = {
 
       // 수정된 정보를 찾기
       const { formDetail } = await findWhiteFormDetail(formId);
+      console.log('보냄');
       res.send({ success: 200, formDetail });
 
       // 팀원들에게 알람 보내기
