@@ -15,6 +15,7 @@ router.post('/', async (req, res, next) => {
     const getResult = await getPayment(imp_uid);
 
     const doSchedule = async (pay_type_data) => {
+      console.log(pay_type_data);
       let payDate;
       if (pay_type_data == 'month') {
         let payDay = moment().daysInMonth();
@@ -25,7 +26,7 @@ router.post('/', async (req, res, next) => {
         const setLastDate = moment().add('1', 'M').format(`YYYY-MM-${payDay}`);
         payDate = moment(setLastDate).unix();
 
-        console.log(setLastDate);
+        console.log('다음 결제일', setLastDate);
       } else {
         const nextYear = moment().add('1', 'Y');
         payDate = moment(nextYear).unix();
@@ -49,7 +50,7 @@ router.post('/', async (req, res, next) => {
         attributes: { exclude: ['createdAt', 'updatedAt'] },
         raw: true,
       });
-      console.log(findActivePlanResult);
+
       // 무료체험 끝나고 결제 한 경우
       if (findActivePlanResult) {
         // 영수증 발행
