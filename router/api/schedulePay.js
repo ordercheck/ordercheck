@@ -145,9 +145,13 @@ router.post('/', async (req, res, next) => {
 
       // 영수증 발행
 
-      const findCompanyName = await db.company.findByPk(findPlanResult.idx, {
-        attributes: ['company_name'],
-      });
+      const findCompanyName = await db.company.findByPk(
+        findPlanResult.company_idx,
+        {
+          attributes: ['company_name'],
+        }
+      );
+
       const findCardNumber = await db.card.findOne({
         where: { customer_uid: getResult.customer_uid },
         attributes: ['card_number'],
