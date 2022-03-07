@@ -89,26 +89,41 @@ module.exports = {
     try {
       const { formId } = req.params;
 
-      const changeFormLinkUrl = async () => {
-        const originalUrl = req.file.location;
-        const thumbNail_title = getFileName(originalUrl);
-        const thumbNail = originalUrl.replace(/\/original\//, '/thumb/');
+      const originalUrl = req.file.location;
+      const thumbNail_title = getFileName(originalUrl);
+      const thumbNail = originalUrl.replace(/\/original\//, '/thumb/');
 
-        await db.formLink.update(
-          {
-            thumbNail,
-            thumbNail_title,
-          },
-          { where: { idx: formId } }
-        );
-      };
-      const findFormLinkResult = await db.formLink.findByPk(formId, {
-        attributes: ['thumbNail_title'],
-      });
-      changeFormLinkUrl();
+      await db.formLink.update(
+        {
+          thumbNail,
+          thumbNail_title,
+        },
+        { where: { idx: formId } }
+      );
 
       const { formDetail } = await findWhiteFormDetail(formId);
-      return res.send({ success: 200, formDetail });
+      res.send({ success: 200, formDetail });
+
+      // 팀원들에게 알람 보내기
+      const findUser = await db.user.findByPk(user_idx, {
+        attributes: ['user_name'],
+      });
+
+      const io = req.app.get('io');
+      const findMembers = await findMemberExceptMe(company_idx, user_idx);
+
+      const message = `${findUser.user_name}님이 [${formLink.title}] 신청폼을 수정하였습니다.`;
+      const expiry_date = createExpireDate();
+      const data = {
+        form_idx: formId,
+        message,
+        company_idx,
+        alarm_type: 5,
+        expiry_date,
+      };
+
+      await sendCompanyAlarm(data, findMembers, io);
+      return;
     } catch (err) {
       next(err);
     }
@@ -192,18 +207,17 @@ module.exports = {
 
       // 수정된 정보를 찾기
       const { formDetail } = await findWhiteFormDetail(formId);
-      console.log('보냄');
+
       res.send({ success: 200, formDetail });
 
       // 팀원들에게 알람 보내기
-
       const findUser = await db.user.findByPk(user_idx, {
         attributes: ['user_name'],
       });
 
       const io = req.app.get('io');
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
-      console.log(findMembers);
+
       const message = `${findUser.user_name}님이 [${title}] 신청폼을 수정하였습니다.`;
       const expiry_date = createExpireDate();
       const data = {
@@ -215,6 +229,7 @@ module.exports = {
       };
 
       await sendCompanyAlarm(data, findMembers, io);
+      return;
     } catch (err) {
       next(err);
     }

@@ -515,6 +515,7 @@ module.exports = {
     const {
       params: { customer_idx, calculate_idx },
       body: { calculateReload },
+      company_idx,
       text_cost,
       repay,
       sms_idx,
@@ -527,11 +528,11 @@ module.exports = {
     }
 
     const customerFindResult = await db.customer.findByPk(customer_idx, {
-      attributes: ['customer_phoneNumber', 'customer_name'],
+      attributes: ['customer_phoneNumber', 'customer_name', 'idx'],
     });
 
     const findSender = await db.user.findByPk(user_idx, {
-      attributes: ['user_phone'],
+      attributes: ['user_phone', 'user_name'],
     });
 
     const companyFindResult = await db.company.findByPk(req.company_idx, {
@@ -651,6 +652,25 @@ module.exports = {
       attributes: showCalculateAttributes,
     });
     res.send({ success: 200, findResult });
+
+    // 팀원들에게 알람 보내기
+
+    const io = req.app.get('io');
+    const now = moment().format('YY/MM/DD');
+
+    const findMembers = await findMemberExceptMe(company_idx, user_idx);
+    const alarmMessage = `${findSender.user_name}님이 [${customerFindResult.customer_name} ${now}] 고객님께 ${calculateFindResult.calculateNumber}차 견적서를 발송했습니다.`;
+    const expiry_date = createExpireDate();
+    const data = {
+      customer_idx: customerFindResult.idx,
+      message: alarmMessage,
+      company_idx,
+      alarm_type: 3,
+      expiry_date,
+    };
+
+    await sendCompanyAlarm(data, findMembers, io);
+    return;
   },
   setMainCalculate: async (req, res, next) => {
     const updateCalculateStatus = async (trueOrfalse, whereData) => {
