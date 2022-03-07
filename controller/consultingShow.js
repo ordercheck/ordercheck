@@ -179,6 +179,7 @@ module.exports = {
           },
         ],
         attributes: [['user_idx', 'userId']],
+        order: [['searchingName', 'ASC']],
         raw: true,
         nest: true,
       });
