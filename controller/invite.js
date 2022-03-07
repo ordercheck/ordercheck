@@ -148,7 +148,7 @@ ${company_url}
       next(err);
     }
   },
-  joinToCompanyByLogin: async () => {
+  joinToCompanyByLogin: async (req, res, next) => {
     const { user_phone, user_password, company_subdomain } = req.body;
 
     let check = await db.user.findOne({ where: { user_phone } });
