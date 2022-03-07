@@ -9,14 +9,17 @@ const loginCheck = async (req, res, next) => {
 
   const [, token] = authorization.split(' ');
   try {
-    console.log(token);
     const data = await verify_data(token);
-    console.log(data);
+
     const findUserCompanyResult = await db.userCompany.findOne({
       where: { user_idx: data.user_idx, deleted: null, active: true },
       attributes: ['company_idx'],
     });
-    console.log(findUserCompanyResult);
+
+    if (!findUserCompanyResult) {
+      return res.send({ success: 400, message: 'user company가 없습니다.' });
+    }
+
     req.user_idx = data.user_idx;
     req.company_idx = findUserCompanyResult.company_idx;
     req.token = token;
