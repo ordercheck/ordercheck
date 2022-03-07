@@ -112,12 +112,13 @@ module.exports = {
       const completeConsulting = [];
 
       for (let i = 0; i < consultingCountArr.length; i++) {
-        const targetDate = moment(findAllAlarms[i].repeat_time);
-        if (moment.duration(now.diff(targetDate)).asMinutes() < 0) {
-          continue;
-        } else {
-          scheduleAlarm.push(findAllAlarms[i]);
-        }
+        consultingCount.push(consultingCountArr[i].createdAt);
+      }
+      for (let i = 0; i < calculateCountArr.length; i++) {
+        consultingCount.push(consultingCountArr[i].createdAt);
+      }
+      for (let i = 0; i < completeConsultingArr.length; i++) {
+        consultingCount.push(completeConsultingArr[i].createdAt);
       }
 
       return res.send({

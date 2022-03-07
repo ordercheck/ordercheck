@@ -100,7 +100,7 @@ router.post('/', async (req, res, next) => {
         nextDate = moment(nextDate).format('YYYY.MM.DD');
 
         findActivePlanResult.start_plan = startDate;
-        findActivePlanResult.free_plan = nextDate;
+        findActivePlanResult.expire_plan = nextDate;
         // 새로운 결제 예약
         await db.plan.create({
           ...findActivePlanResult,
