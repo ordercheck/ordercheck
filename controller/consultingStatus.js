@@ -193,7 +193,7 @@ module.exports = {
 
       res.send({ success: 200, consultResult });
 
-      // 팀원들 알림 보내기
+      // 팀원들에게 알림 보내기
 
       const io = req.app.get('io');
 
@@ -694,7 +694,7 @@ module.exports = {
     });
   },
   doIntegratedUser: async (req, res, next) => {
-    const { body } = req;
+    const { body, company_idx, user_idx } = req;
     const deletedTime = moment().format('YYYY.MM.DD');
     try {
       // 대표 상담폼과 병합
@@ -763,7 +763,30 @@ module.exports = {
         }
       );
 
-      return res.send({ success: 200, findSameUser });
+      res.send({ success: 200, findSameUser });
+
+      // 팀원들에게 알람 보내기
+      const findCustomer = await db.customer.findByPk(body.main_idx, {
+        attributes: ['customer_name', 'idx'],
+      });
+
+      const message = `[[${findCustomer.customer_name}] 고객님의 고객 연동이 완료되었습니다.`;
+
+      const io = req.app.get('io');
+
+      const findMembers = await findMemberExceptMe(company_idx, user_idx);
+
+      const expiry_date = createExpireDate();
+
+      const insertData = {
+        message,
+        company_idx,
+        alarm_type: 4,
+        customer_idx: findCustomer.idx,
+        expiry_date,
+      };
+      await sendCompanyAlarm(insertData, findMembers, io);
+      return;
     } catch (err) {
       next(err);
     }
