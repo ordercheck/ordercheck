@@ -211,7 +211,7 @@ ${company_url}
         standBy: true,
         deleted: null,
       },
-      company_idx
+      ['createdAt', 'DESC']
     );
 
     return res.send({ success: 200, standbyUser });
