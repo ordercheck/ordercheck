@@ -186,7 +186,7 @@ ${company_url}
     if (!checkCompanyStandBy) {
       await includeUserToCompany({
         user_idx: check.idx,
-        company_idx: findCompany.company_idx,
+        company_idx: findCompany.idx,
         standBy: true,
         active: true,
         searchingName: check.user_name,
