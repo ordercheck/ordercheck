@@ -70,6 +70,7 @@ module.exports = {
           ],
         ],
         raw: true,
+        nest: true,
       });
 
       const calculateCount = await db.calculate.findAll({
