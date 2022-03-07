@@ -55,7 +55,7 @@ module.exports = {
         },
       });
 
-      const consultingCountArr = await db.consulting.findAll({
+      const consultingCount = await db.consulting.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
         },
@@ -71,7 +71,7 @@ module.exports = {
         nest: true,
       });
 
-      const calculateCountArr = await db.calculate.findAll({
+      const calculateCount = await db.calculate.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
         },
@@ -85,7 +85,7 @@ module.exports = {
         ],
       });
 
-      const completeConsultingArr = await db.customer.findAll({
+      const completeConsulting = await db.customer.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
           contract_possibility: 3,
