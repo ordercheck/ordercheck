@@ -35,18 +35,16 @@ router.post('/', async (req, res, next) => {
       let payDate;
       if (checkMonthYear.pay_type == 'month') {
         let payDay = moment().format('DD');
-        console.log(payDay);
+
         const last = moment().add('1', 'M').daysInMonth();
         if (payDay > last) {
           const setLastDate = moment()
             .add('1', 'M')
             .format(`YYYY-MM-${payDay} HH:00`);
           payDate = moment(setLastDate).unix();
-          console.log(setLastDate);
         } else {
           const setLastDate = moment().add('1', 'M').format(`YYYY-MM-DD HH:00`);
           payDate = moment(setLastDate).unix();
-          console.log(setLastDate);
         }
       } else {
         const nextYear = moment().add('1', 'Y');
@@ -76,8 +74,11 @@ router.post('/', async (req, res, next) => {
       if (findActivePlanResult) {
         // 영수증 발행
 
-        const findCompanyName = await db.company.findByPk(
-          findActivePlanResult.idx,
+        const findCompanyName = await db.company.findOne(
+          {
+            company_idx: findActivePlanResult.idx,
+          },
+
           {
             attributes: ['company_name'],
           }
