@@ -85,7 +85,7 @@ module.exports = {
         ],
       });
 
-      const completeConsultingArr = await db.findAll({
+      const completeConsultingArr = await db.customer.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
           contract_possibility: 3,
