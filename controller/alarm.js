@@ -77,7 +77,7 @@ module.exports = {
       company_idx,
     });
     res.send({ success: 200 });
-
+    console.log(afterTime);
     const reAlertMs = afterTime * 60000;
 
     setTimeout(() => {
