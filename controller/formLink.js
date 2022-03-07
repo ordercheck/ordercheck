@@ -202,7 +202,7 @@ module.exports = {
 
       const io = req.app.get('io');
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
-
+      console.log(findMembers);
       const message = `${findUser.user_name}님이 [${title}] 신청폼을 수정하였습니다.`;
       const expiry_date = createExpireDate();
       const data = {
