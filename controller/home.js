@@ -60,12 +60,14 @@ module.exports = {
           createdAt: { [Op.between]: [daysAgo, now] },
         },
         attributes: [
-          db.sequelize.fn(
-            'date_format',
-            db.sequelize.col('createdAt'),
-            '%Y.%m.%d'
-          ),
-          'createdAt',
+          [
+            db.sequelize.fn(
+              'date_format',
+              db.sequelize.col('createdAt'),
+              '%Y.%m.%d'
+            ),
+            'createdAt',
+          ],
         ],
       });
 
@@ -74,12 +76,14 @@ module.exports = {
           createdAt: { [Op.between]: [daysAgo, now] },
         },
         attributes: [
-          db.sequelize.fn(
-            'date_format',
-            db.sequelize.col('createdAt'),
-            '%Y.%m.%d'
-          ),
-          'createdAt',
+          [
+            db.sequelize.fn(
+              'date_format',
+              db.sequelize.col('createdAt'),
+              '%Y.%m.%d'
+            ),
+            'createdAt',
+          ],
         ],
       });
 
@@ -89,12 +93,14 @@ module.exports = {
           contract_possibility: 3,
         },
         attributes: [
-          db.sequelize.fn(
-            'date_format',
-            db.sequelize.col('createdAt'),
-            '%Y.%m.%d'
-          ),
-          'createdAt',
+          [
+            db.sequelize.fn(
+              'date_format',
+              db.sequelize.col('createdAt'),
+              '%Y.%m.%d'
+            ),
+            'createdAt',
+          ],
         ],
       });
 
