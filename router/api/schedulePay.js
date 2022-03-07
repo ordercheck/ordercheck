@@ -33,20 +33,18 @@ router.post('/', async (req, res, next) => {
       });
 
       let payDate;
-      let payHour;
       if (checkMonthYear.pay_type == 'month') {
         let payDay = moment().daysInMonth();
         const last = moment().add('1', 'M').daysInMonth();
         if (payDay > last) {
-          payDay = last;
+          const setLastDate = moment()
+            .add('1', 'M')
+            .format(`YYYY-MM-${payDay} HH:00`);
+          payDate = moment(setLastDate).unix();
         } else {
-          payDay = moment().format('DD');
-          payHour = moment().format('HH');
+          const setLastDate = moment().add('1', 'M').format(`YYYY-MM-DD HH:00`);
+          payDate = moment(setLastDate).unix();
         }
-        const setLastDate = moment()
-          .add('1', 'M')
-          .format(`YYYY-MM-${payDay} ${payHour}:00`);
-        payDate = moment(setLastDate).unix();
 
         console.log('다음 결제일', setLastDate);
       } else {
