@@ -69,6 +69,7 @@ module.exports = {
             'createdAt',
           ],
         ],
+        raw: true,
       });
 
       const calculateCount = await db.calculate.findAll({
