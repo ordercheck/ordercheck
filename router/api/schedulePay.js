@@ -34,19 +34,20 @@ router.post('/', async (req, res, next) => {
 
       let payDate;
       if (checkMonthYear.pay_type == 'month') {
-        let payDay = moment().daysInMonth();
+        let payDay = moment().format('DD');
+        console.log(payDay);
         const last = moment().add('1', 'M').daysInMonth();
         if (payDay > last) {
           const setLastDate = moment()
             .add('1', 'M')
             .format(`YYYY-MM-${payDay} HH:00`);
           payDate = moment(setLastDate).unix();
+          console.log(setLastDate);
         } else {
           const setLastDate = moment().add('1', 'M').format(`YYYY-MM-DD HH:00`);
           payDate = moment(setLastDate).unix();
+          console.log(setLastDate);
         }
-
-        console.log('다음 결제일', setLastDate);
       } else {
         const nextYear = moment().add('1', 'Y');
         payDate = moment(nextYear).unix();
