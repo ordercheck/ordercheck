@@ -14,10 +14,26 @@ router.post('/', async (req, res, next) => {
     const { imp_uid, merchant_uid, status } = req.body;
     const getResult = await getPayment(imp_uid);
 
-    const doSchedule = async (pay_type_data) => {
-      console.log(pay_type_data);
+    if (
+      getResult.amount == 1000 ||
+      status == 'cancelled' ||
+      !getResult.buyer_email
+    ) {
+      return res.send({ success: 400 });
+    }
+
+    // 계속 스케줄을 할 때
+    if (status == 'paid') {
+      // 결제 month, yaer 찾기
+
+      const checkMonthYear = await db.plan.findOne({
+        where: { merchant_uid },
+        attributes: ['pay_type'],
+        raw: true,
+      });
+
       let payDate;
-      if (pay_type_data == 'month') {
+      if (checkMonthYear.pay_type == 'month') {
         let payDay = moment().daysInMonth();
         const last = moment().add('1', 'M').daysInMonth();
         if (payDay > last) {
@@ -147,23 +163,6 @@ router.post('/', async (req, res, next) => {
         merchant_uid: newMerchant_uid,
         active: 3,
       });
-    };
-
-    if (
-      getResult.amount == 1000 ||
-      status == 'cancelled' ||
-      !getResult.buyer_email
-    ) {
-      return res.send({ success: 400 });
-    }
-
-    // 계속 스케줄을 할 때
-    if (status == 'paid') {
-      // payType 체크 (month, year)
-
-      getResult.pay_type == 'month'
-        ? await doSchedule('month')
-        : await doSchedule('year');
 
       return res.send({ success: 200 });
     }
