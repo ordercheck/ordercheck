@@ -171,7 +171,6 @@ ${company_url}
       where: { company_subdomain },
     });
 
-    console.log(findCompany.idx);
     const findConfigResult = await db.config.findOne({
       where: { template_name: '팀원', company_idx: findCompany.idx },
     });
@@ -179,7 +178,7 @@ ${company_url}
     const checkCompanyStandBy = await db.userCompany.findOne({
       where: {
         user_idx: check.idx,
-        company_idx: findCompany.company_idx,
+        company_idx: findCompany.idx,
       },
       attributes: ['active', 'standBy'],
     });
