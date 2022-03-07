@@ -29,8 +29,7 @@ module.exports = function (sequelize, DataTypes) {
     },
 
     expiry_date: {
-      allowNull: true,
-      type: DataTypes.STRING(100),
+      type: DataTypes.DATE(),
     },
   });
 };
