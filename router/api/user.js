@@ -84,20 +84,18 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
     await db.card.create(card_data, { transaction: t });
 
     // 시간을 unix형태로 변경(실제)
+    // const Hour = moment().format('HH');
 
-    const Hour = moment().format('HH');
+    // const startDate = plan_data.start_plan.replace(/\./g, '-');
 
-    const startDate = plan_data.start_plan.replace(/\./g, '-');
-
-    const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
+    // const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
     const nextMerchant_uid = generateRandomCode(6);
 
     //  테스트
-    // const now = new Date();
-    // let changeToTime = new Date(now.setSeconds(now.getSeconds() + 30));
-    // changeToUnix = changeToTime.getTime() / 1000;
-    // const nextMerchant_uid = uuid();
+    const now = new Date();
+    let changeToTime = new Date(now.setSeconds(now.getSeconds() + 30));
+    changeToUnix = changeToTime.getTime() / 1000;
 
     // 다음 카드 결제 신청
     await schedulePay(
