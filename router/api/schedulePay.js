@@ -33,18 +33,16 @@ router.post('/', async (req, res, next) => {
       });
 
       let payDate;
+      let nextDate;
       if (checkMonthYear.pay_type == 'month') {
         let payDay = moment().format('DD');
-
         const last = moment().add('1', 'M').daysInMonth();
         if (payDay > last) {
-          const setLastDate = moment()
-            .add('1', 'M')
-            .format(`YYYY-MM-${payDay} HH:00`);
-          payDate = moment(setLastDate).unix();
+          nextDate = moment().add('1', 'M').format(`YYYY-MM-${payDay} HH:00`);
+          payDate = moment(nextDate).unix();
         } else {
-          const setLastDate = moment().add('1', 'M').format(`YYYY-MM-DD HH:00`);
-          payDate = moment(setLastDate).unix();
+          nextDate = moment().add('1', 'M').format(`YYYY-MM-DD HH:00`);
+          payDate = moment(nextDate).unix();
         }
       } else {
         const nextYear = moment().add('1', 'Y');
@@ -66,7 +64,7 @@ router.post('/', async (req, res, next) => {
       // 결제 예정 plan을 active 1
       const findActivePlanResult = await db.plan.findOne({
         where: { merchant_uid, active: 1 },
-        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        attributes: { exclude: ['createdAt', 'updatedAt', 'free_plan'] },
         raw: true,
       });
 
@@ -98,6 +96,11 @@ router.post('/', async (req, res, next) => {
           receipt_kind: '구독',
         });
 
+        const startDate = moment().format('YYYY.MM.DD');
+        nextDate = moment(nextDate).format('YYYY.MM.DD');
+
+        findActivePlanResult.start_plan = startDate;
+        findActivePlanResult.free_plan = nextDate;
         // 새로운 결제 예약
         await db.plan.create({
           ...findActivePlanResult,
@@ -135,7 +138,6 @@ router.post('/', async (req, res, next) => {
           },
           { where: { merchant_uid, active: 3 } }
         );
-        return res.send({ success: 200 });
       }
 
       // 새로운 결제 예약 등록
@@ -175,6 +177,7 @@ router.post('/', async (req, res, next) => {
         merchant_uid: newMerchant_uid,
         active: 3,
       });
+      return res.send({ success: 200 });
     }
     // 정기결제 실패했을 때
     if (status == 'failed') {

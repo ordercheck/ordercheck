@@ -55,23 +55,26 @@ module.exports = {
         },
       });
 
-      const consultingCount = await db.consulting.count({
+      const consultingCount = await db.consulting.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
         },
+        attributes: ['createdAt'],
       });
 
-      const calculateCount = await db.calculate.count({
+      const calculateCount = await db.calculate.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
         },
+        attributes: ['createdAt'],
       });
 
-      const completeConsulting = await db.customer.count({
+      const completeConsulting = await db.customer.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
           contract_possibility: 3,
         },
+        attributes: ['createdAt'],
       });
 
       return res.send({
