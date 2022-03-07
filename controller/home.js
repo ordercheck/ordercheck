@@ -55,26 +55,49 @@ module.exports = {
         },
       });
 
-      const consultingCount = await db.consulting.findAll({
+      const consultingCountArr = await db.consulting.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
         },
-        attributes: ['createdAt'],
+        attributes: [
+          db.sequelize.fn(
+            'date_format',
+            db.sequelize.col('createdAt'),
+            '%Y.%m.%d'
+          ),
+          'createdAt',
+        ],
+        raw: true,
+        nest: true,
       });
 
-      const calculateCount = await db.calculate.findAll({
+      const calculateCountArr = await db.calculate.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
         },
-        attributes: ['createdAt'],
+        attributes: [
+          db.sequelize.fn(
+            'date_format',
+            db.sequelize.col('createdAt'),
+            '%Y.%m.%d'
+          ),
+          'createdAt',
+        ],
       });
 
-      const completeConsulting = await db.customer.findAll({
+      const completeConsultingArr = await db.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
           contract_possibility: 3,
         },
-        attributes: ['createdAt'],
+        attributes: [
+          db.sequelize.fn(
+            'date_format',
+            db.sequelize.col('customer.createdAt'),
+            '%Y.%m.%d'
+          ),
+          'createdAt',
+        ],
       });
 
       return res.send({
