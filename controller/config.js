@@ -267,7 +267,7 @@ module.exports = {
     }
   },
   getCompanyProfileMember: async (req, res, next) => {
-    const { company_idx } = req;
+    const { company_idx, user_idx } = req;
     try {
       const findResult = await findMembers(
         {
@@ -276,7 +276,8 @@ module.exports = {
           active: true,
           standBy: false,
         },
-        ['searchingName', 'ASC']
+        ['searchingName', 'ASC'],
+        user_idx
       );
 
       return res.send({ success: 200, findResult });
