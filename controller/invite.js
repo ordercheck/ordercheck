@@ -9,6 +9,7 @@ const {
   decreasePriceAndHistory,
 } = require('../lib/apiFunctions');
 const sendMail = require('../mail/sendInvite');
+const bcrypt = require('bcrypt');
 const axios = require('axios');
 const db = require('../model/db');
 const { createToken } = require('../lib/jwtfunctions');
