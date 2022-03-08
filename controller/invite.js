@@ -153,7 +153,7 @@ ${company_url}
 
     // 알림 보내기
     const io = req.app.get('io');
-    io.to(findUserCompanyResult.user_idx).emit('invite', true);
+    io.to(findUserCompanyResult.user_idx).emit('invite', 'approve');
     return;
   },
   refuseUser: async (req, res, next) => {
@@ -171,7 +171,7 @@ ${company_url}
 
     // 알림 보내기
     const io = req.app.get('io');
-    io.to(findUserCompanyResult.user_idx).emit('invite', false);
+    io.to(findUserCompanyResult.user_idx).emit('invite', 'refuse');
     return;
   },
   rejoinCompany: async (req, res, next) => {
