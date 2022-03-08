@@ -114,18 +114,35 @@ module.exports = {
         raw: true,
       });
 
-      const consultingCount = [];
-      const calculateCount = [];
-      const completeConsulting = [];
+      // 날짜 구하기
+      const date = moment().format('YYYY.MM.DD');
+      const consultingCount = {};
+      const calculateCount = {};
+      const completeConsulting = {};
 
+      for (let i = 1; i < 7; i++) {
+        const date = moment().subtract(i, 'days').format('YYYY.MM.DD');
+        consultingCount[date] = 0;
+        calculateCount[date] = 0;
+        completeConsulting[date] = 0;
+      }
+
+      consultingCount[date] = 0;
+      calculateCount[date] = 0;
+      completeConsulting[date] = 0;
+
+      consultingCountArr.push({ createdAt: '2022.03.08' });
       for (let i = 0; i < consultingCountArr.length; i++) {
-        consultingCount.push(consultingCountArr[i].createdAt);
+        const data = consultingCountArr[i].createdAt;
+        consultingCount[data] += 1;
       }
       for (let i = 0; i < calculateCountArr.length; i++) {
-        consultingCount.push(consultingCountArr[i].createdAt);
+        const data = calculateCountArr[i].createdAt;
+        calculateCount[data] += 1;
       }
       for (let i = 0; i < completeConsultingArr.length; i++) {
-        consultingCount.push(completeConsultingArr[i].createdAt);
+        const data = completeConsultingArr[i].createdAt;
+        completeConsulting[data] += 1;
       }
 
       return res.send({
