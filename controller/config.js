@@ -174,7 +174,7 @@ module.exports = {
 
       if (body.company_subdomain) {
         const checkDomain = await db.company.count({
-          where: { company_subdomain: body.company_subdomain },
+          where: body,
         });
 
         if (checkDomain !== 1) {
