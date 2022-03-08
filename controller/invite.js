@@ -154,6 +154,8 @@ ${company_url}
     // 팀원에게 알림 보내기
 
     const io = req.app.get('io');
+    console.log(findUserCompanyResult.user_idx);
+    console.log(typeof findUserCompanyResult.user_idx);
     io.to(findUserCompanyResult.user_idx).emit('invite', true);
     return;
   },
