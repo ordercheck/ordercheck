@@ -73,6 +73,7 @@ module.exports = {
             'createdAt',
           ],
         ],
+        order: [['createdAt', 'DESC']],
         raw: true,
       });
 
@@ -90,6 +91,7 @@ module.exports = {
             'createdAt',
           ],
         ],
+        order: [['createdAt', 'DESC']],
         raw: true,
       });
 
@@ -108,6 +110,7 @@ module.exports = {
             'createdAt',
           ],
         ],
+        order: [['createdAt', 'DESC']],
         raw: true,
       });
 

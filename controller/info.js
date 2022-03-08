@@ -214,34 +214,36 @@ module.exports = {
     } = req;
 
     const updateUser = async (updateData) => {
-      await db.user.update(
-        {
-          updateData,
-        },
-        {
-          where: { idx: user_idx },
-        }
-      );
+      await db.user.update(updateData, {
+        where: { idx: user_idx },
+      });
     };
+    try {
+      if (user_name) {
+        await db.userCompany.update(
+          {
+            searchingName: user_name,
+          },
+          {
+            where: { user_idx, company_idx },
+          }
+        );
 
-    if (user_name) {
-      await db.userCompany.update(
-        {
-          searchingName: user_name,
-        },
-        {
-          where: { user_idx, company_idx },
-        }
-      );
+        await updateUser({ user_name });
+      }
 
-      await updateUser(user_name);
-    }
-
-    if (user_password) {
-      await updateUser(user_password);
-    }
-    if (user_email) {
-      await updateUser(user_email);
+      if (user_password) {
+        await updateUser({ user_password });
+      }
+      if (user_email) {
+        await updateUser({ user_email });
+      }
+      return res.send({ success: 200 });
+    } catch (err) {
+      return res.send({
+        success: 400,
+        message: '이미 존재하는 이메일 입니다.',
+      });
     }
   },
 };
