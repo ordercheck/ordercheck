@@ -188,7 +188,7 @@ ${company_url}
     } = req;
     const loginToken = await createToken(user_idx);
     const findCompany = await db.company.findOne(
-      { company_subdomain },
+      { where: { company_subdomain } },
       { attributes: ['idx'] }
     );
 
