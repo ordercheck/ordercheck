@@ -188,7 +188,7 @@ ${company_url}
         user_idx: check.idx,
         company_idx: findCompany.idx,
         standBy: true,
-        active: true,
+        active: false,
         searchingName: check.user_name,
         config_idx: findConfigResult.idx,
       });

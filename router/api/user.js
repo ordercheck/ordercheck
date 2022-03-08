@@ -141,7 +141,7 @@ router.post('/login', async (req, res, next) => {
   });
   if (!findUserCompany) {
     const findCompany = await db.company.findOne(
-      { huidx: check.idx },
+      { where: { huidx: check.idx } },
       { attributes: ['idx'] }
     );
 
@@ -187,7 +187,7 @@ router.post('/login', async (req, res, next) => {
       user_idx: check.idx,
       company_idx: findCompany.idx,
       standBy: true,
-      active: true,
+      active: false,
       searchingName: check.user_name,
       config_idx: findConfigResult.idx,
     });
@@ -318,6 +318,7 @@ router.post('/join/do', async (req, res, next) => {
       }
 
       // subdomain
+
       const findCompany = await db.company.findOne({
         where: { company_subdomain },
       });

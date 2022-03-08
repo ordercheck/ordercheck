@@ -317,7 +317,7 @@ module.exports = {
     const deletedTime = moment().format('YYYY.MM.DD');
     try {
       await db.userCompany.update(
-        { deleted: deletedTime },
+        { deleted: deletedTime, active: false },
         { where: { idx: memberId } }
       );
       return res.send({ success: 200 });
