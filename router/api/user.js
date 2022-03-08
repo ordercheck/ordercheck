@@ -282,6 +282,9 @@ router.post('/join/do', async (req, res, next) => {
       if (!success) {
         return res.send({ success: 400, message: message });
       }
+      const loginToken = await createToken({
+        user_idx: createUserResult.idx,
+      });
 
       if (!company_subdomain) {
         // 랜덤 회사 만들기
@@ -304,10 +307,6 @@ router.post('/join/do', async (req, res, next) => {
 
         // 무료 플랜 만들기
         await createFreePlan(randomCompany.idx);
-
-        const loginToken = await createToken({
-          user_idx: createUserResult.idx,
-        });
 
         // 문자 테이블 만들기
         await db.sms.create({ user_idx: createUserResult.idx });
@@ -335,7 +334,7 @@ router.post('/join/do', async (req, res, next) => {
         config_idx: findConfigResult.idx,
       });
       await db.sms.create({ user_idx: createUserResult.idx });
-      return res.send({ success: 200, message: '가입 신청 완료' });
+      return res.send({ success: 200, loginToken });
     }
   } catch (err) {
     next(err);
