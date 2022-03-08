@@ -4,6 +4,7 @@ require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
 const { Op } = require('sequelize');
 const {} = require('../lib/attributes');
+const { consulting } = require('../model/db');
 
 module.exports = {
   getHomeBoard: async (req, res, next) => {
@@ -116,34 +117,54 @@ module.exports = {
 
       // 날짜 구하기
       const date = moment().format('YYYY.MM.DD');
-      const consultingCount = {};
-      const calculateCount = {};
-      const completeConsulting = {};
+      let consultingCountObject = {};
+      let calculateCountObject = {};
+      let completeConsultingObject = {};
 
+      let consultingCount = [];
+      let calculateCount = [];
+      let completeConsulting = [];
+      let index = 5;
       for (let i = 1; i < 7; i++) {
         const date = moment().subtract(i, 'days').format('YYYY.MM.DD');
-        consultingCount[date] = 0;
-        calculateCount[date] = 0;
-        completeConsulting[date] = 0;
+        consultingCountObject[date] = { count: 0, index };
+        calculateCountObject[date] = { count: 0, index };
+        completeConsultingObject[date] = { count: 0, index };
+        consultingCount[index] = date;
+        calculateCount[index] = date;
+        completeConsulting[index] = date;
+        index -= 1;
       }
 
-      consultingCount[date] = 0;
-      calculateCount[date] = 0;
-      completeConsulting[date] = 0;
+      consultingCountObject[date] = { count: 0, index: 6 };
+      calculateCountObject[date] = { count: 0, index: 6 };
+      completeConsultingObject[date] = { count: 0, index: 6 };
 
-      consultingCountArr.push({ createdAt: '2022.03.08' });
       for (let i = 0; i < consultingCountArr.length; i++) {
         const data = consultingCountArr[i].createdAt;
-        consultingCount[data] += 1;
+        consultingCountObject[data].count += 1;
       }
       for (let i = 0; i < calculateCountArr.length; i++) {
         const data = calculateCountArr[i].createdAt;
-        calculateCount[data] += 1;
+        calculateCountObject[data].count += 1;
       }
       for (let i = 0; i < completeConsultingArr.length; i++) {
         const data = completeConsultingArr[i].createdAt;
-        completeConsulting[data] += 1;
+        completeConsultingObject[data].count += 1;
       }
+
+      consultingCount = consultingCount.map((data) => {
+        data = consultingCountObject[data].count;
+        return data;
+      });
+      calculateCount = calculateCount.map((data) => {
+        data = calculateCountObject[data].count;
+        return data;
+      });
+      completeConsulting = completeConsulting.map((data) => {
+        data = completeConsultingObject[data].count;
+        return data;
+      });
 
       return res.send({
         success: 200,
