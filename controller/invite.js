@@ -180,7 +180,7 @@ ${company_url}
       user_idx,
     } = req;
     const findCompany = await db.company.findOne(
-      { company_subdomain },
+      { where: { company_subdomain } },
       { attributes: ['idx'] }
     );
 
