@@ -1,15 +1,30 @@
 const express = require('express');
 const router = express.Router();
+const { multer_upload_img } = require('../../lib/aws/aws');
 const {
   getUserProfile,
   checkUserCompany,
   delUser,
-} = require('../../controller/profile');
+  exitCompany,
+  addUserProfile,
+  delUserProfile,
+  changeUserProfile,
+} = require('../../controller/info');
 
 const loginCheck = require('../../middleware/auth');
 
 router.get('/user', loginCheck, getUserProfile);
-router.get('/check/del', loginCheck, checkUserCompany);
-router.post('/del', loginCheck, delUser);
+router.patch('/user', loginCheck, changeUserProfile);
+router.get('/user/check/del', loginCheck, checkUserCompany);
+router.post('/user/del', loginCheck, delUser);
+router.post(
+  '/user/profile',
+  loginCheck,
+  multer_upload_img().single('img'),
+  addUserProfile
+);
+router.delete('/user/profile', loginCheck, delUserProfile);
+
+router.post('/company/exit', loginCheck, exitCompany);
 
 module.exports = router;

@@ -37,5 +37,88 @@
  *         description: 성공
  *       '401':
  *         description: 실패
-
+ * /api/info/company/exit:
+ *   post:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       - profile
+ *      summary: 회사 나가기
+ *      requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_password:
+ *                 type: string
+ *             example:
+ *               user_password: "비밀번호"
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/info/user/profile:
+ *   post:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       - profile
+ *      summary: 회사 프로필 이미지 등록하기 (formData)
+ *      requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               img:
+ *                 type: string
+ *             example:
+ *               img: "img"
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/info/user/profile/:
+ *   delete:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       - profile
+ *      summary: 회사 프로필 이미지 삭제하기
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/info/user/:
+ *   patch:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  profile
+ *      summary: 유저 정보 변경
+ *      requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_name:
+ *                 type: string
+ *               user_password:
+ *                 type: string
+ *               user_email:
+ *                 type: string
+ *             example:
+ *               user_name: "이름"
+ *               user_password: "비밀번호"
+ *               user_email: "이메일"
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

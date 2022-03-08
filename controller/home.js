@@ -8,6 +8,7 @@ const {} = require('../lib/attributes');
 module.exports = {
   getHomeBoard: async (req, res, next) => {
     const { company_idx, user_idx } = req;
+    console.log(company_idx);
     try {
       const customerCount = await db.customer.count({
         where: { company_idx, deleted: null },
@@ -24,7 +25,7 @@ module.exports = {
       const unconfirmAlarm = await db.alarm.count({
         where: { company_idx, confirm: false },
       });
-
+      console.log(unconfirmAlarm);
       const userInfo = await db.user.findByPk(user_idx, {
         attributes: ['user_profile', 'user_name'],
       });
