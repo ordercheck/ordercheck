@@ -282,6 +282,13 @@ router.post('/join/do', async (req, res, next) => {
       if (!success) {
         return res.send({ success: 400, message: message });
       }
+
+      const createSmsUserConfig = async () => {
+        // sms 테이블 만들기
+        await db.sms.create({ user_idx: createUserResult.idx });
+        // 유저 설정 테이블 만들기
+        await db.userConfig.create({ user_idx: createUserResult.idx });
+      };
       const loginToken = await createToken({
         user_idx: createUserResult.idx,
       });
@@ -308,16 +315,12 @@ router.post('/join/do', async (req, res, next) => {
         // 무료 플랜 만들기
         await createFreePlan(randomCompany.idx);
 
-        // 문자 테이블 만들기
-        await db.sms.create({ user_idx: createUserResult.idx });
-        // 유저 설정 테이블 만들기
-        await db.userConfig.create({ user_idx: createUserResult.idx });
+        await createSmsUserConfig();
 
         return res.send({ success: 200, loginToken });
       }
 
       // subdomain
-
       const findCompany = await db.company.findOne({
         where: { company_subdomain },
       });
@@ -333,7 +336,8 @@ router.post('/join/do', async (req, res, next) => {
         searchingName: createUserResult.user_name,
         config_idx: findConfigResult.idx,
       });
-      await db.sms.create({ user_idx: createUserResult.idx });
+
+      await createSmsUserConfig();
       return res.send({ success: 200, loginToken });
     }
   } catch (err) {
