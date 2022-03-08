@@ -19,8 +19,17 @@ module.exports = {
         where: { company_idx, deleted: null, status: 4 },
       });
 
-      const monthCount = await db.company.findByPk(company_idx, {
-        attributes: ['form_link_count'],
+      const companyInfo = await db.company.findByPk(company_idx, {
+        attributes: [
+          'company_logo',
+          'company_name',
+          'companyexist',
+          'form_link_count',
+        ],
+      });
+      const planInfo = await db.plan.findOne({
+        where: { company_idx },
+        attributes: ['plan'],
       });
 
       const unconfirmAlarm = await db.alarm.count({
@@ -29,9 +38,6 @@ module.exports = {
 
       const userInfo = await db.user.findByPk(user_idx, {
         attributes: ['user_name'],
-      });
-      const companyInfo = await db.company.findByPk(company_idx, {
-        attributes: ['company_logo', 'company_name', 'companyexist'],
       });
 
       const bread = await db.store.findAll({
@@ -171,7 +177,7 @@ module.exports = {
         success: 200,
         customerCount,
         issueCustomerCount,
-        monthCount,
+
         unconfirmAlarm,
         userInfo,
         companyInfo,
@@ -181,6 +187,7 @@ module.exports = {
         consultingCount,
         calculateCount,
         bread,
+        planInfo,
         completeConsulting,
       });
     } catch (err) {
