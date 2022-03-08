@@ -338,7 +338,7 @@ router.post('/join/do', async (req, res, next) => {
       });
 
       await createSmsUserConfig();
-      return res.send({ success: 200, loginToken });
+      return res.send({ success: 200, loginToken, status: 'standBy' });
     }
   } catch (err) {
     next(err);

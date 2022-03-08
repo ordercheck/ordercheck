@@ -22,13 +22,17 @@ const loginCheck = async (req, res, next) => {
     });
 
     if (!findUserCompanyResult) {
-      return res.send({ success: 400, message: 'user company가 없습니다.' });
+      req.user_idx = data.user_idx;
+      req.token = token;
+      next();
+      return;
     }
 
     req.user_idx = data.user_idx;
     req.company_idx = findUserCompanyResult.company_idx;
     req.token = token;
     next();
+    return;
   } catch (err) {
     console.log(err);
     return res.send({ success: 400, msg: 'token err' });

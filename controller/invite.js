@@ -158,4 +158,23 @@ ${company_url}
     );
     return res.send({ success: 200 });
   },
+  rejoinCompany: async (req, res, next) => {
+    const { company_subdomain, user_idx } = req.body;
+    const findCompany = await db.company.findOne(
+      { company_subdomain },
+      { attributes: ['idx'] }
+    );
+
+    await db.userCompany.update(
+      {
+        active: true,
+      },
+      {
+        where: {
+          company_idx: findCompany.idx,
+          user_idx,
+        },
+      }
+    );
+  },
 };
