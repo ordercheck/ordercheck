@@ -59,7 +59,14 @@ db.folders = sequelize.import(__dirname + '/folders.js');
 db.timeLine = sequelize.import(__dirname + '/consultingTimeLine.js');
 db.formOpen = sequelize.import(__dirname + '/formOpenMember.js');
 db.calculate = sequelize.import(__dirname + '/calculate.js');
+db.store = sequelize.import(__dirname + '/store.js');
 db.customer = sequelize.import(__dirname + '/customer.js');
+
+// usre와 store
+db.user.hasMany(db.store, { foreignKey: 'user_idx' });
+db.store.belongsTo(db.user, {
+  foreignKey: 'user_idx',
+});
 
 // user와 delReason
 db.user.hasOne(db.delReason, { foreignKey: 'user_idx' });

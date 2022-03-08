@@ -65,6 +65,7 @@ const totalRouter = require('./router/api/total');
 const formLinkRouter = require('./router/api/formLink');
 const fileRouter = require('./router/api/fileStore');
 const homeRouter = require('./router/api/home');
+const storeRouter = require('./router/api/store');
 const socketRouter = require('./router/api/socket');
 const s3ControllRouter = require('./router/api/s3');
 const db = require('./model/db');
@@ -179,7 +180,7 @@ class AppServer extends http.Server {
     this.app.use('/api/alarm', alarmRouter);
     this.app.use('/api/info', infoRouter);
     this.app.use('/api/home', homeRouter);
-
+    this.app.use('/api/store', storeRouter);
     this.app.use('/api/schedule/pay', schedulePayRouter);
     this.app.use('/s3', s3ControllRouter);
     this.app.use('/api/invite', inviteRouter);

@@ -12,4 +12,26 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/store/root:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       - home
+ *      summary: 브레드 저장
+ *      requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               bread:
+ *                 type: string
+ *             example:
+ *               bread: "bread"
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */
