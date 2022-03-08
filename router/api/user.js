@@ -136,23 +136,23 @@ router.post('/login', async (req, res, next) => {
   }
 
   //  userCompany를 찾아 없으면 무료 플랜으로 전환
-  let findUserCompany = await db.userCompany.findOne({
-    where: { user_idx: check.idx, active: true },
-  });
-  if (!findUserCompany) {
-    const findCompany = await db.company.findOne(
-      { where: { huidx: check.idx } },
-      { attributes: ['idx'] }
-    );
+  // let findUserCompany = await db.userCompany.findOne({
+  //   where: { user_idx: check.idx, active: true },
+  // });
+  // if (!findUserCompany) {
+  //   const findCompany = await db.company.findOne(
+  //     { where: { huidx: check.idx } },
+  //     { attributes: ['idx'] }
+  //   );
 
-    findUserCompany = await db.userCompany.create({
-      where: {
-        user_idx: check.idx,
-        company_idx: findCompany.idx,
-        searchingName: check.user_name,
-      },
-    });
-  }
+  //   findUserCompany = await db.userCompany.create({
+  //     where: {
+  //       user_idx: check.idx,
+  //       company_idx: findCompany.idx,
+  //       searchingName: check.user_name,
+  //     },
+  //   });
+  // }
 
   const compareResult = await bcrypt.compare(
     user_password,
