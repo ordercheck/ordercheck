@@ -124,21 +124,19 @@ module.exports = {
       let consultingCount = [];
       let calculateCount = [];
       let completeConsulting = [];
-      let index = 5;
-      for (let i = 1; i < 7; i++) {
+      let index = 6;
+      for (let i = 0; i < 7; i++) {
         const date = moment().subtract(i, 'days').format('YYYY.MM.DD');
+        console.log(date);
         consultingCountObject[date] = { count: 0, index };
         calculateCountObject[date] = { count: 0, index };
         completeConsultingObject[date] = { count: 0, index };
+
         consultingCount[index] = date;
         calculateCount[index] = date;
         completeConsulting[index] = date;
         index -= 1;
       }
-
-      consultingCountObject[date] = { count: 0, index: 6 };
-      calculateCountObject[date] = { count: 0, index: 6 };
-      completeConsultingObject[date] = { count: 0, index: 6 };
 
       for (let i = 0; i < consultingCountArr.length; i++) {
         const data = consultingCountArr[i].createdAt;
