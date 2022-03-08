@@ -1,5 +1,5 @@
 const db = require('../model/db');
-
+const { makeSpreadArray } = require('../lib/functions');
 const _f = require('../lib/functions');
 module.exports = {
   getUserProfile: async (req, res, next) => {
@@ -47,11 +47,17 @@ module.exports = {
   },
   checkUserCompany: async (req, res, next) => {
     const { company_idx } = req;
-
-    const findResult = await db.plan.findOne({
-      where: { company_idx },
-      attributes: ['plan'],
-    });
-    return res.send({ success: 200, findResult });
+    try {
+      const findResult = await db.plan.findOne({
+        where: { company_idx },
+        attributes: ['plan'],
+      });
+      return res.send({ success: 200, findResult });
+    } catch (err) {
+      next(err);
+    }
+  },
+  delUser: async (req, res, next) => {
+    // const {body}
   },
 };
