@@ -50,38 +50,6 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/invite/join/company/regist:
- *   post:
- *      tags:
- *       - invite
- *      summary: email받은 팀원 회사 참여 신청 (회원가입으로)
- *      requestBody:
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               user_phone:
- *                 type: string
- *               user_email:
- *                 type: string
- *               user_password:
- *                 type: string
- *               user_name:
- *                 type: string
- *               company_subdomain:
- *                 type: string
- *             example:
- *               user_phone: '010-6719-6919'
- *               user_password: 'rlxo12345'
- *               user_email: 'rlxo6919@naver.com'
- *               user_name: '김기태'
- *               company_subdomain: 'subdomain'
- *      responses:
- *       '200':
- *         description: 성공
- *       '401':
- *         description: 실패
  * /api/invite/join/company/login:
  *   post:
  *      tags:
