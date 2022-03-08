@@ -1,15 +1,15 @@
 module.exports = function (sequelize, DataTypes) {
   //테이블을 정의
-  return sequelize.define('err', {
+  return sequelize.define('delReason', {
     idx: {
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-
-    err: {
-      allowNull: true,
-      type: DataTypes.STRING(100),
+    reason: {
+      allowNull: false,
+      defaultValue: '',
+      type: DataTypes.TEXT,
     },
   });
 };

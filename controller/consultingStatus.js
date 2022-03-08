@@ -193,7 +193,7 @@ module.exports = {
 
       res.send({ success: 200, consultResult });
 
-      // 팀원들에게 알림 보내기
+      // 팀원에게 알림 보내기
 
       const io = req.app.get('io');
 
@@ -211,6 +211,7 @@ module.exports = {
       const alarm = new Alarm(createResult);
 
       io.to(parseInt(createResult.user_idx)).emit('addAlarm', alarm);
+      return;
     } catch (err) {
       next(err);
     }

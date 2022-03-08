@@ -8,6 +8,7 @@ const {
   findMembers,
   decreasePriceAndHistory,
 } = require('../lib/apiFunctions');
+
 const sendMail = require('../mail/sendInvite');
 const bcrypt = require('bcrypt');
 const axios = require('axios');
@@ -148,7 +149,13 @@ ${company_url}
       company_idx: findUserCompanyResult.company_idx,
     });
 
-    return res.send({ success: 200 });
+    res.send({ success: 200 });
+
+    // 팀원에게 알림 보내기
+
+    const io = req.app.get('io');
+    io.to(findUserCompanyResult.user_idx).emit('invite', true);
+    return;
   },
   refuseUser: async (req, res, next) => {
     const { memberId } = req.params;
