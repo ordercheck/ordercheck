@@ -23,7 +23,7 @@ module.exports = {
       });
 
       const unconfirmAlarm = await db.alarm.count({
-        where: { company_idx, confirm: false },
+        where: { user_idx, confirm: false },
       });
       console.log(unconfirmAlarm);
       const userInfo = await db.user.findByPk(user_idx, {
