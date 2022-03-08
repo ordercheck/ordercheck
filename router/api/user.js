@@ -229,57 +229,81 @@ router.post('/check/pw', async (req, res) => {
 });
 
 // 회원가입 라우터
-router.post('/join/do', async (req, res) => {
-  let { token, use_agree, private_agree, marketing_agree } = req.body;
+router.post('/join/do', async (req, res, next) => {
+  let { token, use_agree, private_agree, marketing_agree, company_subdomain } =
+    req.body;
 
-  let user_data = await verify_data(token);
-  // 동의 여부 체크
-  user_data.use_agree = use_agree;
-  user_data.private_agree = private_agree;
-  user_data.marketing_agree = marketing_agree;
+  try {
+    let user_data = await verify_data(token);
+    // 동의 여부 체크
+    user_data.use_agree = use_agree;
+    user_data.private_agree = private_agree;
+    user_data.marketing_agree = marketing_agree;
 
-  if (user_data) {
-    const { createUserResult, success, message } = await joinFunction(
-      user_data
-    );
+    if (user_data) {
+      const { createUserResult, success, message } = await joinFunction(
+        user_data
+      );
 
-    if (!success) {
-      return res.send({ success: 400, message: message });
+      if (!success) {
+        return res.send({ success: 400, message: message });
+      }
+
+      if (!company_subdomain) {
+        // 랜덤 회사 만들기
+        const randomCompany = await createRandomCompany(createUserResult.idx);
+
+        // master template 만들기
+        const createTempalteResult = await giveMasterAuth(randomCompany.idx);
+        // 팀원 template  만들기
+        await db.config.create({
+          company_idx: randomCompany.idx,
+        });
+
+        // 유저 회사에 소속시키기
+        await includeUserToCompany({
+          user_idx: createUserResult.idx,
+          company_idx: randomCompany.idx,
+          searchingName: user_data.user_name,
+          config_idx: createTempalteResult.idx,
+        });
+
+        // 무료 플랜 만들기
+        await createFreePlan(randomCompany.idx);
+
+        const loginToken = await createToken({
+          user_idx: createUserResult.idx,
+        });
+
+        // 문자 테이블 만들기
+        await db.sms.create({ user_idx: createUserResult.idx });
+        // 유저 설정 테이블 만들기
+        await db.userConfig.create({ user_idx: createUserResult.idx });
+
+        return res.send({ success: 200, loginToken });
+      }
+
+      // subdomain
+      const findCompany = await db.company.findOne({
+        where: { company_subdomain },
+      });
+      const findConfigResult = await db.config.findOne({
+        where: { template_name: '팀원', company_idx: findCompany.idx },
+      });
+      // userCompany 만들기 standBy true, active 0
+      await includeUserToCompany({
+        user_idx: createUserResult.idx,
+        company_idx: findCompany.idx,
+        standBy: true,
+        active: false,
+        searchingName: createUserResult.user_name,
+        config_idx: findConfigResult.idx,
+      });
+      await db.sms.create({ user_idx: createUserResult.idx });
+      return res.send({ success: 200, message: '가입 신청 완료' });
     }
-
-    // 랜덤 회사 만들기
-    const randomCompany = await createRandomCompany(createUserResult.idx);
-
-    // master template 만들기
-    const createTempalteResult = await giveMasterAuth(randomCompany.idx);
-    // 팀원 template  만들기
-    await db.config.create({
-      company_idx: randomCompany.idx,
-    });
-
-    // 유저 회사에 소속시키기
-    await includeUserToCompany({
-      user_idx: createUserResult.idx,
-      company_idx: randomCompany.idx,
-      searchingName: user_data.user_name,
-      config_idx: createTempalteResult.idx,
-    });
-
-    // 무료 플랜 만들기
-    await createFreePlan(randomCompany.idx);
-
-    const loginToken = await createToken({
-      user_idx: createUserResult.idx,
-    });
-
-    // 문자 테이블 만들기
-    await db.sms.create({ user_idx: createUserResult.idx });
-    // 유저 설정 테이블 만들기
-    await db.userConfig.create({ user_idx: createUserResult.idx });
-
-    return res.send({ success: 200, loginToken });
-  } else {
-    res.send({ success: 400 });
+  } catch (err) {
+    next(err);
   }
 });
 
