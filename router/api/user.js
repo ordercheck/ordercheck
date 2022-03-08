@@ -187,7 +187,7 @@ router.post('/login', async (req, res, next) => {
       user_idx: check.idx,
       company_idx: findCompany.idx,
       standBy: true,
-      active: false,
+      active: true,
       searchingName: check.user_name,
       config_idx: findConfigResult.idx,
     });
@@ -330,7 +330,7 @@ router.post('/join/do', async (req, res, next) => {
         user_idx: createUserResult.idx,
         company_idx: findCompany.idx,
         standBy: true,
-        active: false,
+        active: true,
         searchingName: createUserResult.user_name,
         config_idx: findConfigResult.idx,
       });
