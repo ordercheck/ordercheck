@@ -9,6 +9,8 @@ const {
   addUserProfile,
   delUserProfile,
   changeUserProfile,
+  showUserAlarmConfig,
+  changeUserAlarmConfig,
 } = require('../../controller/info');
 
 const loginCheck = require('../../middleware/auth');
@@ -24,6 +26,8 @@ router.post(
   addUserProfile
 );
 router.delete('/user/profile', loginCheck, delUserProfile);
+router.get('/user/alarm/config', loginCheck, showUserAlarmConfig);
+router.patch('/user/alarm/config', loginCheck, changeUserAlarmConfig);
 
 router.post('/company/exit', loginCheck, exitCompany);
 

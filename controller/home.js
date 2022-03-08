@@ -116,7 +116,7 @@ module.exports = {
       });
 
       // 날짜 구하기
-      const date = moment().format('YYYY.MM.DD');
+
       let consultingCountObject = {};
       let calculateCountObject = {};
       let completeConsultingObject = {};
@@ -127,11 +127,9 @@ module.exports = {
       let index = 6;
       for (let i = 0; i < 7; i++) {
         const date = moment().subtract(i, 'days').format('YYYY.MM.DD');
-        console.log(date);
         consultingCountObject[date] = { count: 0, index };
         calculateCountObject[date] = { count: 0, index };
         completeConsultingObject[date] = { count: 0, index };
-
         consultingCount[index] = date;
         calculateCount[index] = date;
         completeConsulting[index] = date;

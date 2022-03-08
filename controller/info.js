@@ -31,6 +31,12 @@ const checkUserPassword = async (userIdx, userPassword) => {
   return true;
 };
 
+const updateUser = async (updateData, whereData) => {
+  await db.user.update(updateData, {
+    where: whereData,
+  });
+};
+
 module.exports = {
   getUserProfile: async (req, res, next) => {
     try {
@@ -207,37 +213,29 @@ module.exports = {
     return res.send({ success: 200 });
   },
   changeUserProfile: async (req, res, next) => {
-    const {
-      body: { user_name, user_password, user_email },
-      user_idx,
-      company_idx,
-    } = req;
+    const { body, user_idx, company_idx } = req;
 
-    const updateUser = async (updateData) => {
-      await db.user.update(updateData, {
-        where: { idx: user_idx },
-      });
-    };
     try {
-      if (user_name) {
+      const result = Object.keys(body);
+      result.forEach((data) => {
+        if (!body[data]) {
+          delete body[data];
+        }
+      });
+
+      if (body.user_name) {
         await db.userCompany.update(
           {
-            searchingName: user_name,
+            searchingName: body.user_name,
           },
           {
             where: { user_idx, company_idx },
           }
         );
-
-        await updateUser({ user_name });
       }
 
-      if (user_password) {
-        await updateUser({ user_password });
-      }
-      if (user_email) {
-        await updateUser({ user_email });
-      }
+      await updateUser(body, { idx: user_idx });
+
       return res.send({ success: 200 });
     } catch (err) {
       return res.send({
@@ -245,5 +243,30 @@ module.exports = {
         message: '이미 존재하는 이메일 입니다.',
       });
     }
+  },
+  showUserAlarmConfig: async (req, res, next) => {
+    const { user_idx } = req;
+
+    const findResult = await db.userConfig.findOne({
+      where: { user_idx },
+      attributes: [
+        'productServiceAlarm',
+        'promotionAlarm',
+        'customerStatusAlarm',
+        'addConsultingAlarm',
+      ],
+    });
+    return res.send({ success: 200, findResult });
+  },
+  changeUserAlarmConfig: async (req, res, next) => {
+    const { body } = req;
+    const result = Object.keys(body);
+    result.forEach((data) => {
+      if (!body[data]) {
+        delete body[data];
+      }
+    });
+
+    await updateUser(body, { user_idx });
   },
 };

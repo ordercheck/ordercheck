@@ -159,30 +159,22 @@ module.exports = {
     }
   },
   changeCompanyInfo: async (req, res, next) => {
-    const {
-      body: {
-        company_name,
-        company_subdomain,
-        address,
-        detail_address,
-        business_number,
-      },
-      company_idx,
-    } = req;
-    const updateCompanyInfo = async (updateKey, updateData) => {
-      await db.company.update(
-        { [updateKey]: updateData },
-        { where: { idx: company_idx } }
-      );
+    const { body, company_idx } = req;
+    const updateCompanyInfo = async (updateData) => {
+      await db.company.update(updateData, { where: { idx: company_idx } });
     };
 
     try {
-      if (company_name) {
-        await updateCompanyInfo('company_name', company_name);
-      }
-      if (company_subdomain) {
+      const result = Object.keys(body);
+      result.forEach((data) => {
+        if (!body[data]) {
+          delete body[data];
+        }
+      });
+
+      if (body.company_subdomain) {
         const checkDomain = await db.company.count({
-          where: { company_subdomain },
+          where: { company_subdomain: body.company_subdomain },
         });
 
         if (checkDomain !== 1) {
@@ -191,17 +183,9 @@ module.exports = {
             message: '해당 회사 도메인은 이미 사용되었습니다.',
           });
         }
-        await updateCompanyInfo('company_subdomain', company_subdomain);
       }
-      if (address) {
-        await updateCompanyInfo('address', address);
-      }
-      if (detail_address) {
-        await updateCompanyInfo('detail_address', detail_address);
-      }
-      if (business_number) {
-        await updateCompanyInfo('business_number', business_number);
-      }
+
+      await updateCompanyInfo(body);
 
       return res.send({ success: 200 });
     } catch (err) {

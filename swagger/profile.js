@@ -121,4 +121,47 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/info/user/alarm/config:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  profile
+ *      summary: 알람 설정 보여주기
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/info/user/alarm/config/:
+ *   patch:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  profile
+ *      summary: 알람 설정 수정하기
+ *      requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               productServiceAlarm:
+ *                 type: integer
+ *               promotionAlarm:
+ *                 type: integer
+ *               customerStatusAlarm:
+ *                 type: integer
+ *               addConsultingAlarm:
+ *                 type: integer
+ *             example:
+ *               productServiceAlarm: 1
+ *               promotionAlarm: 1
+ *               customerStatusAlarm: 2
+ *               addConsultingAlarm: 2
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */
