@@ -128,46 +128,80 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
 
 // 로그인 라우터
 router.post('/login', async (req, res, next) => {
-  const { user_phone, user_password } = req.body;
+  const { user_phone, user_password, company_subdomain } = req.body;
 
   let check = await db.user.findOne({ where: { user_phone } });
   if (!check) {
     return res.send({ success: 400, message: '비밀번호 혹은 전화번호 오류' });
   }
 
-  if (check) {
-    //  userCompany를 찾아 없으면 무료 플랜으로 전환
-    let findUserCompany = await db.userCompany.findOne({
-      where: { user_idx: check.idx, deleted: null },
-    });
-    if (!findUserCompany) {
-      const findCompany = await db.company.findOne(
-        { huidx: check.idx },
-        { attributes: ['idx'] }
-      );
-
-      findUserCompany = await db.userCompany.create({
-        where: {
-          user_idx: check.idx,
-          company_idx: findCompany.idx,
-          searchingName: check.user_name,
-        },
-      });
-    }
-
-    const compareResult = await bcrypt.compare(
-      user_password,
-      check.user_password
+  //  userCompany를 찾아 없으면 무료 플랜으로 전환
+  let findUserCompany = await db.userCompany.findOne({
+    where: { user_idx: check.idx, active: true },
+  });
+  if (!findUserCompany) {
+    const findCompany = await db.company.findOne(
+      { huidx: check.idx },
+      { attributes: ['idx'] }
     );
-    if (!compareResult) {
-      return res.send({ success: 400, message: '비밀번호 혹은 전화번호 오류' });
-    }
 
-    const token = await createToken({ user_idx: check.idx });
-    res.send({ success: 200, token });
-  } else {
-    res.send({ success: 400, message: '비밀번호 혹은 전화번호 오류' });
+    findUserCompany = await db.userCompany.create({
+      where: {
+        user_idx: check.idx,
+        company_idx: findCompany.idx,
+        searchingName: check.user_name,
+      },
+    });
   }
+
+  const compareResult = await bcrypt.compare(
+    user_password,
+    check.user_password
+  );
+  if (!compareResult) {
+    return res.send({ success: 400, message: '비밀번호 혹은 전화번호 오류' });
+  }
+  if (!company_subdomain) {
+    const token = await createToken({ user_idx: check.idx });
+    return res.send({ success: 200, token });
+  }
+
+  const findCompany = await db.company.findOne({
+    where: { company_subdomain },
+  });
+
+  const findConfigResult = await db.config.findOne({
+    where: { template_name: '팀원', company_idx: findCompany.idx },
+  });
+
+  const checkCompanyStandBy = await db.userCompany.findOne({
+    where: {
+      user_idx: check.idx,
+      company_idx: findCompany.idx,
+    },
+    attributes: ['active', 'standBy'],
+  });
+  const token = await createToken({ user_idx: check.idx });
+  if (!checkCompanyStandBy) {
+    await includeUserToCompany({
+      user_idx: check.idx,
+      company_idx: findCompany.idx,
+      standBy: true,
+      active: true,
+      searchingName: check.user_name,
+      config_idx: findConfigResult.idx,
+    });
+    return res.send({ success: 200, token });
+  }
+
+  return res.send({
+    success: 200,
+    token,
+    status: {
+      active: checkCompanyStandBy.active,
+      standBy: checkCompanyStandBy.standBy,
+    },
+  });
 });
 // 회원가입 체크 라우터
 router.post('/join/check', async (req, res) => {
