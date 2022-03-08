@@ -159,7 +159,10 @@ ${company_url}
     return res.send({ success: 200 });
   },
   rejoinCompany: async (req, res, next) => {
-    const { company_subdomain, user_idx } = req.body;
+    const {
+      body: { company_subdomain },
+      user_idx,
+    } = req;
     const findCompany = await db.company.findOne(
       { company_subdomain },
       { attributes: ['idx'] }
@@ -176,5 +179,19 @@ ${company_url}
         },
       }
     );
+    return res.send({ success: 200 });
+  },
+  cancelJoinCompany: async (req, res, next) => {
+    const {
+      body: { company_subdomain },
+      user_idx,
+    } = req;
+    const findCompany = await db.company.findOne(
+      { company_subdomain },
+      { attributes: ['idx'] }
+    );
+    await db.userCompany.destroy({
+      where: { company_idx: findCompany.idx, user_idx },
+    });
   },
 };

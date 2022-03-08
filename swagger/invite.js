@@ -120,13 +120,23 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/invite/join:
- *   delete:
+ * /api/invite/join/cancel:
+ *   post:
  *      security:
  *       - bearerAuth: []
  *      tags:
  *       - invite
  *      summary: 요청 취소하기
+ *      requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               company_subdomain:
+ *                 type: string
+ *             example:
+ *               company_subdomain: '서브도메인'
  *      responses:
  *       '200':
  *         description: 성공

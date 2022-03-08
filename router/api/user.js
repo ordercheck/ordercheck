@@ -193,14 +193,21 @@ router.post('/login', async (req, res, next) => {
     });
     return res.send({ success: 200, token });
   }
+  let status;
+  if (checkCompanyStandBy.active && checkCompanyStandBy.standBy) {
+    status = 'standBy';
+  }
+  if (!checkCompanyStandBy.active && checkCompanyStandBy.standBy) {
+    status = 'refused';
+  }
+  if (checkCompanyStandBy.active && !checkCompanyStandBy.standBy) {
+    status = 'access';
+  }
 
   return res.send({
     success: 200,
     token,
-    status: {
-      active: checkCompanyStandBy.active,
-      standBy: checkCompanyStandBy.standBy,
-    },
+    status,
   });
 });
 // 회원가입 체크 라우터
