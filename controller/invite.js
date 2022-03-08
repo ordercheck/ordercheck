@@ -151,21 +151,28 @@ ${company_url}
 
     res.send({ success: 200 });
 
-    // 팀원에게 알림 보내기
-
+    // 알림 보내기
     const io = req.app.get('io');
-    console.log(findUserCompanyResult.user_idx);
-    console.log(typeof findUserCompanyResult.user_idx);
     io.to(findUserCompanyResult.user_idx).emit('invite', true);
     return;
   },
   refuseUser: async (req, res, next) => {
     const { memberId } = req.params;
+
+    const findUserCompanyResult = await db.userCompany.findByPk(memberId, {
+      attributes: ['user_idx'],
+    });
+
     await db.userCompany.update(
       { active: false, standBy: true },
       { where: { idx: memberId } }
     );
-    return res.send({ success: 200 });
+    res.send({ success: 200 });
+
+    // 알림 보내기
+    const io = req.app.get('io');
+    io.to(findUserCompanyResult.user_idx).emit('invite', false);
+    return;
   },
   rejoinCompany: async (req, res, next) => {
     const {
