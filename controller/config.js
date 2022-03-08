@@ -160,37 +160,20 @@ module.exports = {
   },
   changeCompanyInfo: async (req, res, next) => {
     const { body, company_idx } = req;
-    console.log(body);
+
     const updateCompanyInfo = async (updateData) => {
       await db.company.update(updateData, { where: { idx: company_idx } });
     };
 
     try {
-      const result = Object.keys(body);
-      result.forEach((data) => {
-        if (!body[data]) {
-          delete body[data];
-        }
-      });
-
-      if (body.company_subdomain) {
-        const checkDomain = await db.company.count({
-          where: body,
-        });
-
-        if (checkDomain !== 1) {
-          return res.send({
-            success: 400,
-            message: '해당 회사 도메인은 이미 사용되었습니다.',
-          });
-        }
-      }
-
       await updateCompanyInfo(body);
 
       return res.send({ success: 200 });
     } catch (err) {
-      next(err);
+      return res.send({
+        success: 400,
+        message: '해당 회사 도메인은 이미 사용되었습니다.',
+      });
     }
   },
   changeCompanyEnrollment: async (req, res, next) => {
