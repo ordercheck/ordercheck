@@ -13,10 +13,13 @@
  *           schema:
  *             type: object
  *             properties:
- *               password:
+ *               user_password:
+ *                 type: string
+ *               reason:
  *                 type: string
  *             example:
- *               password: "비밀번호"
+ *               user_password: "비밀번호"
+ *               reason: "탈퇴 사유"
  *      responses:
  *       '200':
  *         description: 성공

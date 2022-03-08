@@ -1,5 +1,9 @@
 const db = require('../model/db');
 const { makeSpreadArray } = require('../lib/functions');
+const bcrypt = require('bcrypt');
+const moment = require('moment');
+require('moment-timezone');
+moment.tz.setDefault('Asia/Seoul');
 const _f = require('../lib/functions');
 module.exports = {
   getUserProfile: async (req, res, next) => {
@@ -58,6 +62,52 @@ module.exports = {
     }
   },
   delUser: async (req, res, next) => {
-    // const {body}
+    const {
+      body: { user_password, reason },
+      user_idx,
+      company_idx,
+    } = req;
+
+    try {
+      // 유저 전화번호 먼저 찾기
+      const findUser = await db.user.findByPk(user_idx, {
+        attributes: ['user_password'],
+      });
+
+      const compareResult = await bcrypt.compare(
+        user_password,
+        findUser.user_password
+      );
+
+      //   비밀번호가 일치하지 않을 때
+      if (!compareResult) {
+        return res.send({
+          success: 400,
+          message: '비밀번호가 일치하지 않습니다.',
+        });
+      }
+
+      // 탈퇴사유 생성
+      await db.delReason.create({ reason, user_idx });
+
+      // 계정 delete처리
+
+      const deletedTime = moment().format('YYYY.MM.DD');
+
+      await db.user.update(
+        {
+          deleted: deletedTime,
+        },
+        {
+          where: {
+            idx: user_idx,
+          },
+        }
+      );
+
+      return res.send({ success: 200 });
+    } catch (err) {
+      next(err);
+    }
   },
 };

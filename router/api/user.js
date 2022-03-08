@@ -130,7 +130,7 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
 router.post('/login', async (req, res, next) => {
   const { user_phone, user_password, company_subdomain } = req.body;
 
-  let check = await db.user.findOne({ where: { user_phone } });
+  let check = await db.user.findOne({ where: { user_phone, deleted: null } });
   if (!check) {
     return res.send({ success: 400, message: '비밀번호 혹은 전화번호 오류' });
   }
