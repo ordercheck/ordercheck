@@ -376,6 +376,7 @@ router.post('/company/check', async (req, res, next) => {
         {
           company_name,
           company_subdomain,
+          companyexist: true,
         },
         { where: { huidx: addPlanResult.login_data.user_idx }, transaction: t }
       );

@@ -8,8 +8,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     bread: {
       allowNull: false,
-      defaultValue: 0,
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
 };

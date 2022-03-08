@@ -31,7 +31,12 @@ module.exports = {
         attributes: ['user_name'],
       });
       const companyInfo = await db.company.findByPk(company_idx, {
-        attributes: ['company_logo', 'company_name'],
+        attributes: ['company_logo', 'company_name', 'companyexist'],
+      });
+
+      const bread = await db.store.findAll({
+        where: { user_idx },
+        attributes: ['bread', 'createdAt'],
       });
 
       const standByMember = await db.userCompany.count({
@@ -175,6 +180,7 @@ module.exports = {
         fiftyComplete,
         consultingCount,
         calculateCount,
+        bread,
         completeConsulting,
       });
     } catch (err) {
