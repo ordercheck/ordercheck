@@ -160,6 +160,7 @@ module.exports = {
   },
   changeCompanyInfo: async (req, res, next) => {
     const { body, company_idx } = req;
+    console.log(body);
     const updateCompanyInfo = async (updateData) => {
       await db.company.update(updateData, { where: { idx: company_idx } });
     };

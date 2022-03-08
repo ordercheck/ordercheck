@@ -177,7 +177,6 @@ module.exports = {
         success: 200,
         customerCount,
         issueCustomerCount,
-
         unconfirmAlarm,
         userInfo,
         companyInfo,
