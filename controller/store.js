@@ -6,4 +6,10 @@ module.exports = {
     await db.store.create(body);
     return res.send({ success: 200 });
   },
+
+  delBread: async (req, res, next) => {
+    const { breadId } = req.params;
+    await db.store.destroy({ where: { idx: breadId } });
+    return res.send({ success: 200 });
+  },
 };

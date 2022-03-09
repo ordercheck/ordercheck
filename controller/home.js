@@ -42,7 +42,7 @@ module.exports = {
 
       const bread = await db.store.findAll({
         where: { user_idx },
-        attributes: ['bread', 'createdAt'],
+        attributes: ['bread', 'createdAt', ['idx', 'breadId']],
       });
 
       const standByMember = await db.userCompany.count({
