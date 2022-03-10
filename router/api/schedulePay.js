@@ -53,7 +53,7 @@ router.post('/', async (req, res, next) => {
 
       // free_plan 이용중인지 체크
       const findActivePlanResult = await db.plan.findOne({
-        where: { merchant_uid, active: 1, free_plan: null },
+        where: { merchant_uid, active: 1 },
         attributes: { exclude: ['createdAt', 'updatedAt'] },
         raw: true,
       });
@@ -70,7 +70,7 @@ router.post('/', async (req, res, next) => {
             },
           ],
         });
-        console.log(findCompanyName.company.company_name);
+
         const findCardNumber = await db.card.findOne({
           where: { customer_uid: getResult.customer_uid },
           attributes: ['card_number'],
@@ -79,8 +79,6 @@ router.post('/', async (req, res, next) => {
         const receiptId = generateRandomCode(6);
         delete findActivePlanResult.idx;
 
-        console.log(findActivePlanResult);
-        console.log(findCompanyName.company.company_name);
         await db.receipt.create({
           ...findActivePlanResult,
           card_name: getResult.card_name,
