@@ -94,18 +94,17 @@ router.post('/', async (req, res, next) => {
           // 다음달 마지막 날
           let nextMonthLast = moment(startDate).add('1', 'M').daysInMonth();
           // 결제 당일 마지막 날
-          let monthLast = moment(startDate).daysInMonth();
-
-          if (monthLast > nextMonthLast) {
+          let nowDate = moment(startDate);
+          if (nowDate > nextMonthLast) {
             nextMonthLast -= 1;
             nextExpireDate = moment(startDate)
               .add('1', 'M')
               .format(`YYYY.MM.${nextMonthLast}`);
           } else {
-            monthLast -= 1;
+            nowDate -= 1;
             nextExpireDate = moment(startDate)
               .add('1', 'M')
-              .format(`YYYY.MM.${monthLast}`);
+              .format(`YYYY.MM.${nowDate}`);
           }
         } else {
           nextExpireDate = moment(startDate).add('1', 'Y').format('YYYY.MM.DD');
