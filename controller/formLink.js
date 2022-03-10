@@ -2,7 +2,6 @@ const _f = require('../lib/functions');
 const db = require('../model/db');
 const { delFile } = require('../lib/aws/fileupload').ufile;
 const {
-  errorFunction,
   findWhiteFormDetail,
   getFileName,
   makePureText,
