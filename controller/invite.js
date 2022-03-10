@@ -51,7 +51,6 @@ module.exports = {
       token,
     } = req;
     // 문자 비용 계산(없으면 오류)
-
     if (text_cost < target_phoneNumber.length * 37) {
       return res.send({ success: 400, message: 'LMS 비용이 부족합니다.' });
     }

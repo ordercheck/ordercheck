@@ -9,51 +9,29 @@ AWS.config.update({
 });
 var s3 = new AWS.S3();
 
-// router.post('/', (req, res) => {
-//   var params = {
-//     Bucket: 'ordercheck',
-//     Delimiter: '/fileStore',
-//   };
+router.post('/', (req, res) => {
+  var params = {
+    Bucket: 'ordercheck',
+    Delimiter: '/form2',
+  };
 
-//   s3.listObjects(params, function (err, data) {
-//     data.Contents.forEach((data) => {
-//       // console.log(del);
-//       if (data.Key.includes('fileStore')) {
-//         const [, del] = data.Key.split('/');
-//         if (del !== '') {
-//           delFile(del, 'ordercheck/fileStore', (err, data) => {
-//             if (err) {
-//               console.log(err);
-//             } else {
-//               console.log(data);
-//             }
-//           });
-//         }
-//       }
-//     });
-//   });
-// });
+  s3.listObjects(params, function (err, data) {
+    data.Contents.forEach((data) => {
+      if (data.Key.includes('form2')) {
+        const [, del] = data.Key.split('/');
 
-const axios = require('axios');
-router.post('/', async (req, res) => {
-  // for (let i = 1028; i <= 3000; i++) {
-  //   try {
-  //     const result = await db.customer.create({
-  //       customer_name: i,
-  //       customer_phoneNumber: i,
-  //       address: i,
-  //       detail_address: i,
-  //       room_size: i,
-  //       room_size_kind: i,
-  //       active: i,
-  //       searchingAddress: i,
-  //       searchingPhoneNumber: i,
-  //       company_idx: 18,
-  //     });
-  //     console.log(result);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
+        if (del !== '') {
+          delFile(del, 'ordercheck/form2', (err, data) => {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log(data);
+            }
+          });
+        }
+      }
+    });
+  });
 });
+
 module.exports = router;

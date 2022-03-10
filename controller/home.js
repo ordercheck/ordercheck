@@ -72,6 +72,7 @@ module.exports = {
       const consultingCountArr = await db.consulting.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
+          company_idx,
         },
         attributes: [
           [

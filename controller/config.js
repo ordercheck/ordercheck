@@ -28,8 +28,6 @@ const {
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
 
-const { delFile } = require('../lib/aws/fileupload').ufile;
-
 const updateLogoAndEnrollment = async (
   company_idxData,
   fileData,
