@@ -22,37 +22,27 @@ router.post('/', async (req, res, next) => {
       return res.send({ success: 400 });
     }
 
-    // 계속 스케줄을 할 때
+    // 다음 결제 예약
     if (status == 'paid') {
-      // 결제 month, yaer 찾기
-
-      const checkMonthYear = await db.plan.findOne({
-        where: { merchant_uid },
-        attributes: ['pay_type'],
+      const checkPlan = await db.plan.findOne({
+        where: { merchant_uid, active: 3 },
+        attributes: ['pay_type', 'expire_plan'],
         raw: true,
       });
 
-      let payDate;
-      let nextDate;
-      if (checkMonthYear.pay_type == 'month') {
-        let payDay = moment().format('DD');
-        const last = moment().add('1', 'M').daysInMonth();
-        if (payDay > last) {
-          nextDate = moment().add('1', 'M').format(`YYYY-MM-${payDay} HH:00`);
-          payDate = moment(nextDate).unix();
-        } else {
-          nextDate = moment().add('1', 'M').format(`YYYY-MM-DD HH:00`);
-          payDate = moment(nextDate).unix();
-        }
-      } else {
-        const nextYear = moment().add('1', 'Y');
-        payDate = moment(nextYear).unix();
-      }
+      const expireDate = checkPlan.expire_plan.replace(/\./gi, '-');
+      const hour = moment().format('HH');
+
+      const startDate = moment(expireDate)
+        .add('1', 'day')
+        .format(`YYYY-MM-DD ${hour}:00`);
+
+      const startDateUnix = moment(startDate).unix();
 
       const newMerchant_uid = generateRandomCode(6);
-
+      // 기존의 expireDate를 이용하여 다음 스케쥴 등록
       await schedulePay(
-        payDate,
+        startDateUnix,
         getResult.customer_uid,
         getResult.amount,
         getResult.buyer_name,
@@ -61,17 +51,16 @@ router.post('/', async (req, res, next) => {
         newMerchant_uid
       );
 
-      // 결제 예정 plan을 active 1
+      // free_plan 이용중인지 체크
       const findActivePlanResult = await db.plan.findOne({
-        where: { merchant_uid, active: 1 },
-        attributes: { exclude: ['createdAt', 'updatedAt', 'free_plan'] },
+        where: { merchant_uid, active: 1, free_plan: null },
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
         raw: true,
       });
 
       // 무료체험 끝나고 결제 한 경우
-      if (findActivePlanResult) {
+      if (!findActivePlanResult) {
         // 영수증 발행
-
         const findCompanyName = await db.company.findOne(
           {
             company_idx: findActivePlanResult.idx,
@@ -96,11 +85,33 @@ router.post('/', async (req, res, next) => {
           receipt_kind: '구독',
         });
 
-        const startDate = moment().format('YYYY.MM.DD');
-        nextDate = moment(nextDate).format('YYYY.MM.DD');
+        // 새로운 expireDate 설정 (연결제 or 달결제)
+        let nextExpireDate;
+        if (checkPlan.pay_type == 'month') {
+          // 다음달 마지막 날
+          let nextMonthLast = moment(startDate).add('1', 'M').daysInMonth();
+          // 결제 당일 마지막 날
+          let monthLast = moment(startDate).daysInMonth();
 
-        findActivePlanResult.start_plan = startDate;
-        findActivePlanResult.expire_plan = nextDate;
+          if (monthLast > nextMonthLast) {
+            nextMonthLast -= 1;
+            nextExpireDate = moment(startDate)
+              .add('1', 'M')
+              .format(`YYYY.MM.${nextMonthLast}`);
+          } else {
+            monthLast -= 1;
+            nextExpireDate = moment(startDate)
+              .add('1', 'M')
+              .format(`YYYY.MM.${monthLast}`);
+          }
+        } else {
+          nextExpireDate = moment(startDate).add('1', 'Y').format('YYYY.MM.DD');
+        }
+
+        findActivePlanResult.start_plan =
+          moment(startDate).format('YYYY.MM.DD');
+
+        findActivePlanResult.expire_plan = nextExpireDate;
         // 새로운 결제 예약
         await db.plan.create({
           ...findActivePlanResult,
@@ -170,6 +181,33 @@ router.post('/', async (req, res, next) => {
         company_name: findCompanyName.company_name,
         receipt_kind: '구독',
       });
+
+      // 새로운 expireDate 설정 (연결제 or 달결제)
+      let nextExpireDate;
+      if (checkPlan.pay_type == 'month') {
+        // 다음달 마지막 날
+        let nextMonthLast = moment(startDate).add('1', 'M').daysInMonth();
+        // 결제 당일 마지막 날
+        let monthLast = moment(startDate).daysInMonth();
+
+        if (monthLast > nextMonthLast) {
+          nextMonthLast -= 1;
+          nextExpireDate = moment(startDate)
+            .add('1', 'M')
+            .format(`YYYY.MM.${nextMonthLast}`);
+        } else {
+          monthLast -= 1;
+          nextExpireDate = moment(startDate)
+            .add('1', 'M')
+            .format(`YYYY.MM.${monthLast}`);
+        }
+      } else {
+        nextExpireDate = moment(startDate).add('1', 'Y').format('YYYY.MM.DD');
+      }
+
+      findActivePlanResult.start_plan = moment(startDate).format('YYYY.MM.DD');
+
+      findActivePlanResult.expire_plan = nextExpireDate;
 
       // 플랜 다음 결제 예약
       await db.plan.create({
