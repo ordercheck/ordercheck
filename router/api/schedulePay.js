@@ -60,18 +60,13 @@ router.post('/', async (req, res, next) => {
 
       // 무료체험 끝나고 결제 한 경우
       if (!findActivePlanResult) {
-        console.log('여기 안타나?');
+        console.log(getResult);
         // 영수증 발행
-        const findCompanyName = await db.company.findOne(
-          {
-            company_idx: findActivePlanResult.idx,
-          },
+        const findCompanyName = await db.plan.findOne({
+          where: { merchant_uid },
+          attributes: ['company_idx'],
+        });
 
-          {
-            attributes: ['company_name'],
-          }
-        );
-        console.log('회사 이름', findCompanyName);
         const findCardNumber = await db.card.findOne({
           where: { customer_uid: getResult.customer_uid },
           attributes: ['card_number'],

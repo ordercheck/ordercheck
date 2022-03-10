@@ -587,7 +587,7 @@ router.post('/check/password', async (req, res) => {
 
 router.post('/company/check/later', async (req, res, next) => {
   const { lt, ut, ct, pt } = req.body;
-  console.log(req.body);
+
   // 트랜젝션 시작
   const t = await db.sequelize.transaction();
   const addPlanResult = await addPlanAndSchedule(ut, pt, ct, lt, t);
