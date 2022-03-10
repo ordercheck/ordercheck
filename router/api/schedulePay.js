@@ -58,6 +58,7 @@ router.post('/', async (req, res, next) => {
         raw: true,
       });
 
+      console.log(findActivePlanResult);
       // 무료체험 끝나고 결제 한 경우
       if (!findActivePlanResult) {
         // 영수증 발행
