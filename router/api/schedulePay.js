@@ -78,7 +78,7 @@ router.post('/', async (req, res, next) => {
 
         const receiptId = generateRandomCode(6);
         delete findActivePlanResult.idx;
-
+        console.log('1', findActivePlanResult);
         await db.receipt.create({
           ...findActivePlanResult,
           card_name: getResult.card_name,
@@ -115,7 +115,7 @@ router.post('/', async (req, res, next) => {
           moment(startDate).format('YYYY.MM.DD');
 
         findActivePlanResult.expire_plan = nextExpireDate;
-        console.log(findActivePlanResult);
+        console.log('2', findActivePlanResult);
         // 새로운 결제 예약
         await db.plan.create({
           ...findActivePlanResult,
