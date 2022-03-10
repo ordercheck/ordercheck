@@ -58,7 +58,6 @@ router.post('/', async (req, res, next) => {
         raw: true,
       });
 
-      console.log(findActivePlanResult);
       // 무료체험 끝나고 결제 한 경우
       if (!findActivePlanResult) {
         // 영수증 발행
@@ -71,12 +70,16 @@ router.post('/', async (req, res, next) => {
             attributes: ['company_name'],
           }
         );
+        console.log('회사 이름', findCompanyName);
         const findCardNumber = await db.card.findOne({
           where: { customer_uid: getResult.customer_uid },
           attributes: ['card_number'],
         });
+
+        console.log('카드 번호', findCardNumber);
         const receiptId = generateRandomCode(6);
         delete findActivePlanResult.idx;
+
         await db.receipt.create({
           ...findActivePlanResult,
           card_name: getResult.card_name,
