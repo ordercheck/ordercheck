@@ -60,6 +60,7 @@ router.post('/', async (req, res, next) => {
 
       // 무료체험 끝나고 결제 한 경우
       if (!findActivePlanResult) {
+        console.log('여기 안타나?');
         // 영수증 발행
         const findCompanyName = await db.company.findOne(
           {
