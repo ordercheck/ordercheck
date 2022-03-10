@@ -10,7 +10,7 @@ module.exports = {
 
     try {
       const customerCount = await db.customer.count({
-        where: { company_idx, deleted: null },
+        where: { company_idx, deleted: null, status: 0 },
       });
 
       const issueCustomerCount = await db.customer.count({
@@ -18,13 +18,17 @@ module.exports = {
       });
 
       const companyInfo = await db.company.findByPk(company_idx, {
-        attributes: [
-          'company_logo',
-          'company_name',
-          'companyexist',
-          'form_link_count',
-        ],
+        attributes: ['company_logo', 'company_name', 'companyexist'],
       });
+
+      const firstDate = moment().format('YYYY-MM-01');
+      const secondDate = moment(firstDate).add('1', 'M').format('YYYY-MM-DD');
+
+      const companyMonth = await db.customer.count({
+        where: { company_idx },
+        createdAt: { [Op.between]: [firstDate, secondDate] },
+      });
+
       const planInfo = await db.plan.findOne({
         where: { company_idx },
         attributes: ['plan'],
@@ -186,6 +190,7 @@ module.exports = {
         calculateCount,
         bread,
         planInfo,
+        companyMonth,
         completeConsulting,
       });
     } catch (err) {
