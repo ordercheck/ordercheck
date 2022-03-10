@@ -1,7 +1,7 @@
 const express = require('express');
 const { generateRandomCode } = require('../../lib/functions');
 const router = express.Router();
-
+const schedule = require('node-schedule');
 const { schedulePay, getPayment } = require('../../lib/payFunction');
 const { Alarm } = require('../../lib/class');
 const moment = require('moment');
@@ -142,6 +142,7 @@ router.post('/', async (req, res, next) => {
         const io = req.app.get('io');
         const alarm = new Alarm(createResult);
         io.to(findCompanyName.company.huidx).emit('addAlarm', alarm);
+        return;
       } else {
         const findPlanCompany = await db.plan.findOne(
           { where: { merchant_uid } },
@@ -182,7 +183,7 @@ router.post('/', async (req, res, next) => {
       const findCompanyName = await db.company.findByPk(
         findPlanResult.company_idx,
         {
-          attributes: ['company_name'],
+          attributes: ['company_name', 'huidx'],
         }
       );
 
@@ -235,38 +236,79 @@ router.post('/', async (req, res, next) => {
         merchant_uid: newMerchant_uid,
         active: 3,
       });
-      return res.send({ success: 200 });
+      res.send({ success: 200 });
+
+      //알람 생성
+      const month = moment().format('DD');
+      const money = getResult.amount.toLocaleString();
+      const message = `${month}월 구독료 ${money}원이 결제되었습니다. 오더체크를 이용해주셔서 감사합니다.`;
+      const createResult = await db.alarm.create({
+        message,
+        user_idx: findCompanyName.huidx,
+        alarm_type: 15,
+      });
+      // 알람 보내기
+      const io = req.app.get('io');
+      const alarm = new Alarm(createResult);
+      io.to(findCompanyName.huidx).emit('addAlarm', alarm);
+      return;
     }
     // 정기결제 실패했을 때
     if (status == 'failed') {
-      try {
-        const findPlanResult = await db.plan.findOne(
-          { where: { merchant_uid } },
-          { attributes: ['company_idx'] }
-        );
-        await db.plan.update(
-          { active: 0 },
-          {
-            where: { merchant_uid },
-          }
-        );
+      const findPlanCompany = await db.plan.findOne(
+        { where: { merchant_uid } },
+        { attributes: ['company_idx'] }
+      );
 
-        await db.userCompany.update(
-          {
-            active: false,
-          },
-          {
-            where: {
-              company_idx: findPlanResult.company_idx,
-              standBy: false,
+      const findCompany = await db.company.findByPk(
+        findPlanCompany.company_idx,
+        { attributes: ['huidx'] }
+      );
+
+      //알람 생성
+      const day = moment().add('1', 'day').format(' YY/MM/DD');
+
+      const message = `결제 실패로 ${day} 부터 이용이 제한됩니다. `;
+      const createResult = await db.alarm.create({
+        message,
+        user_idx: findCompany.huidx,
+        alarm_type: 9,
+      });
+      // 알람 보내기
+      const io = req.app.get('io');
+      const alarm = new Alarm(createResult);
+      io.to(findCompany.huidx).emit('addAlarm', alarm);
+      const cancelldDate = '0 0 1 * * *';
+      const cancelPay = schedule.scheduleJob(cancelldDate, async function () {
+        try {
+          const findPlanResult = await db.plan.findOne(
+            { where: { merchant_uid } },
+            { attributes: ['company_idx'] }
+          );
+          await db.plan.update(
+            { active: 0 },
+            {
+              where: { merchant_uid },
+            }
+          );
+
+          await db.userCompany.update(
+            {
+              active: false,
             },
-          }
-        );
-
-        return res.send({ success: 200, message: '플랜 비활성화 성공' });
-      } catch (err) {
-        return res.send({ success: 400, message: err.message });
-      }
+            {
+              where: {
+                company_idx: findPlanResult.company_idx,
+                standBy: false,
+              },
+            }
+          );
+          cancelPay.cancel();
+          return;
+        } catch (err) {
+          return res.send({ success: 400, message: err.message });
+        }
+      });
     }
   } catch (err) {
     next(err);
