@@ -1,7 +1,9 @@
 const express = require('express');
 const { generateRandomCode } = require('../../lib/functions');
 const router = express.Router();
+
 const { schedulePay, getPayment } = require('../../lib/payFunction');
+const { Alarm } = require('../../lib/class');
 const moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
@@ -66,7 +68,7 @@ router.post('/', async (req, res, next) => {
           include: [
             {
               model: db.company,
-              attributes: ['company_name'],
+              attributes: ['company_name', 'huidx'],
             },
           ],
         });
@@ -125,7 +127,21 @@ router.post('/', async (req, res, next) => {
 
         // 이전 결제 예약은 제거
         await db.plan.destroy({ where: { merchant_uid, active: 3 } });
-        return res.send({ success: 200 });
+        res.send({ success: 200 });
+
+        //알람 생성
+        const month = moment().format('DD');
+        const money = getResult.amount.toLocaleString();
+        const message = `${month}월 구독료 ${money}원이 결제되었습니다. 오더체크를 이용해주셔서 감사합니다.`;
+        const createResult = await db.alarm.create({
+          message,
+          user_idx: findCompanyName.company.huidx,
+          alarm_type: 15,
+        });
+        // 알람 보내기
+        const io = req.app.get('io');
+        const alarm = new Alarm(createResult);
+        io.to(findCompanyName.company.huidx).emit('addAlarm', alarm);
       } else {
         const findPlanCompany = await db.plan.findOne(
           { where: { merchant_uid } },
@@ -163,7 +179,6 @@ router.post('/', async (req, res, next) => {
       });
 
       // 영수증 발행
-
       const findCompanyName = await db.company.findByPk(
         findPlanResult.company_idx,
         {
