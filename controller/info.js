@@ -5,7 +5,6 @@ const {
   giveMasterAuth,
   includeUserToCompany,
   createFreePlan,
-  getFileName,
 } = require('../lib/apiFunctions');
 const bcrypt = require('bcrypt');
 const moment = require('moment');

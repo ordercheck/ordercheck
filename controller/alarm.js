@@ -5,7 +5,7 @@ moment.tz.setDefault('Asia/Seoul');
 const { Alarm } = require('../lib/class');
 const { createExpireDate } = require('../lib/apiFunctions');
 const { alarmAttributes } = require('../lib/attributes');
-const _f = require('../lib/functions');
+
 module.exports = {
   delAlarm: async (req, res, next) => {
     const {

@@ -1,6 +1,4 @@
 const {
-  checkUserCompany,
-  joinFunction,
   includeUserToCompany,
   createRandomCompany,
   giveMasterAuth,
@@ -10,11 +8,11 @@ const {
 } = require('../lib/apiFunctions');
 
 const sendMail = require('../mail/sendInvite');
-const bcrypt = require('bcrypt');
+
 const axios = require('axios');
 const db = require('../model/db');
 const { createToken } = require('../lib/jwtfunctions');
-const { find } = require('cheerio/lib/api/traversing');
+
 module.exports = {
   sendEmail: async (req, res, next) => {
     const {

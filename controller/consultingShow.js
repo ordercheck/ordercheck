@@ -1,12 +1,11 @@
 const {
-  checkUserCompany,
   checkPage,
   addUserId,
   getDetailCustomerInfo,
 } = require('../lib/apiFunctions');
-const { changeDate } = require('../lib/apiFunctions');
+
 const db = require('../model/db');
-const { Op } = require('sequelize');
+
 const {
   showIntegratedUserAttributes,
   customerAttributes,
@@ -132,8 +131,6 @@ module.exports = {
   showCustomers: async (req, res, next) => {
     const {
       params: { form_link },
-      user_idx,
-      company_idx,
     } = req;
     try {
       const result = await db.customer.findAll({

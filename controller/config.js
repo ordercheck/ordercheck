@@ -1,12 +1,7 @@
 const db = require('../model/db');
 const { makeSpreadArray } = require('../lib/functions');
 const _f = require('../lib/functions');
-const {
-  getFileName,
-  findMembers,
-  findMember,
-  checkTitle,
-} = require('../lib/apiFunctions');
+const { findMembers, findMember, checkTitle } = require('../lib/apiFunctions');
 const { Op } = require('sequelize');
 const { createConfig } = require('../lib/standardTemplate');
 

@@ -3,8 +3,6 @@ const moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
 const { Op } = require('sequelize');
-const {} = require('../lib/attributes');
-const { consulting } = require('../model/db');
 
 module.exports = {
   getHomeBoard: async (req, res, next) => {

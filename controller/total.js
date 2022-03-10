@@ -1,6 +1,5 @@
 const db = require('../model/db');
-const axios = require('axios');
-const _f = require('../lib/functions');
+
 const {
   makePureText,
   searchFileandFolder,

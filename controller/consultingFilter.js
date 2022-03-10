@@ -1,8 +1,4 @@
-const {
-  checkUserCompany,
-  checkPage,
-  addUserId,
-} = require('../lib/apiFunctions');
+const { checkPage, addUserId } = require('../lib/apiFunctions');
 const { changeDate, makePureText } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { Op } = require('sequelize');

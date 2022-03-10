@@ -9,15 +9,12 @@ const { random5 } = require('../lib/functions');
 const { Op } = require('sequelize');
 const { copyAndDelete, s3_get, s3_delete_objects } = require('../lib/aws/aws');
 const { delFile } = require('../lib/aws/fileupload').ufile;
-const url = require('url');
+
 const {
   showDetailFileFolderAttributes,
   showFilesAttributes,
-  searchCustomersAttributes,
-  searchFileStoreFoldersAttributes,
-  searchFileStoreFilesAttributes,
 } = require('../lib/attributes');
-const { customerFile } = require('../model/db');
+
 const { fileStoreSort } = require('../lib/checkData');
 
 const deleteFileToS3 = async (title, req) => {
@@ -493,7 +490,7 @@ module.exports = {
   },
   getAllFolders: async (req, res, next) => {
     const {
-      body: { uuid, path },
+      body: { uuid },
       params: { customerFile_idx },
     } = req;
     const findResult = await db.files.findAll({
