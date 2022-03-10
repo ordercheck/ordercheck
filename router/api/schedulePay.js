@@ -76,10 +76,11 @@ router.post('/', async (req, res, next) => {
           attributes: ['card_number'],
         });
 
-        console.log('카드 번호', findCardNumber);
         const receiptId = generateRandomCode(6);
         delete findActivePlanResult.idx;
 
+        console.log(findActivePlanResult);
+        console.log(findCompanyName.company.company_name);
         await db.receipt.create({
           ...findActivePlanResult,
           card_name: getResult.card_name,
