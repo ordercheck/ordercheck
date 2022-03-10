@@ -95,15 +95,13 @@ router.post('/', async (req, res, next) => {
           let nextMonthLast = moment(startDate).add('1', 'M').daysInMonth();
           // 결제 당일 마지막 날
           let nowDate = moment(startDate).format('DD');
-          console.log(nowDate);
+
           if (parseInt(nowDate) > nextMonthLast) {
-            console.log('여기 타면 안돼');
             nextMonthLast -= 1;
             nextExpireDate = moment(startDate)
               .add('1', 'M')
               .format(`YYYY.MM.${nextMonthLast}`);
           } else {
-            console.log('여기 타야해');
             nowDate -= 1;
             nextExpireDate = moment(startDate)
               .add('1', 'M')
@@ -194,9 +192,10 @@ router.post('/', async (req, res, next) => {
         // 다음달 마지막 날
         let nextMonthLast = moment(startDate).add('1', 'M').daysInMonth();
         // 결제 당일 마지막 날
-        let monthLast = moment(startDate).daysInMonth();
 
-        if (monthLast > nextMonthLast) {
+        let nowDate = moment(startDate).format('DD');
+
+        if (parseInt(nowDate) > nextMonthLast) {
           nextMonthLast -= 1;
           nextExpireDate = moment(startDate)
             .add('1', 'M')
@@ -237,9 +236,17 @@ router.post('/', async (req, res, next) => {
           }
         );
 
-        await db.userCompany.destroy({
-          where: { company_idx: findPlanResult.company_idx },
-        });
+        await db.userCompany.update(
+          {
+            active: false,
+          },
+          {
+            where: {
+              company_idx: findPlanResult.company_idx,
+              standBy: false,
+            },
+          }
+        );
 
         return res.send({ success: 200, message: '플랜 비활성화 성공' });
       } catch (err) {
