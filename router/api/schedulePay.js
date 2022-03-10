@@ -70,7 +70,7 @@ router.post('/', async (req, res, next) => {
             },
           ],
         });
-        console.log(findCompanyName.company);
+
         const findCardNumber = await db.card.findOne({
           where: { customer_uid: getResult.customer_uid },
           attributes: ['card_number'],
@@ -85,7 +85,7 @@ router.post('/', async (req, res, next) => {
           card_name: getResult.card_name,
           receiptId,
           card_number: findCardNumber.card_number,
-          company_name: findCompanyName.company_name,
+          company_name: findCompanyName.company.company_name,
           receipt_kind: '구독',
         });
 
