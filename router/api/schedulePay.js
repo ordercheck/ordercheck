@@ -5,7 +5,7 @@ const { schedulePay, getPayment } = require('../../lib/payFunction');
 const moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
-const _f = require('../../lib/functions');
+
 const db = require('../../model/db');
 
 // 정기 결제 완료 후 다음달 결제 예약
