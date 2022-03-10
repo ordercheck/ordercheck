@@ -11,6 +11,8 @@ const {
   searchFileStore,
   showDetailFileFolder,
   getAllFolders,
+  findUserFolders,
+  findIncludeFolders,
 } = require('../../controller/fileStore');
 
 const { multer_file_store_upload } = require('../../lib/aws/aws');
@@ -42,5 +44,7 @@ router.get(
   showDetailFileFolder
 );
 router.get('/search', loginCheck, searchFileStore);
+router.get('/folders/root/:customerFile_idx', loginCheck, findUserFolders);
+router.get('/folders/:uuid', loginCheck, findIncludeFolders);
 
 module.exports = router;

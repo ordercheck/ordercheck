@@ -511,4 +511,85 @@ module.exports = {
 
     return res.send(findResult);
   },
+  findUserFolders: async (req, res, next) => {
+    const { customerFile_idx } = req.params;
+    try {
+      let findFolders = await db.folders.findAll({
+        where: { customerFile_idx, root: true },
+        include: [
+          {
+            model: db.files,
+            where: { isfolder: true },
+            required: false,
+            attributes: ['uuid'],
+          },
+        ],
+        attributes: ['uuid', 'title', 'path'],
+        order: [['title', 'ASC']],
+      });
+
+      findFolders = JSON.parse(JSON.stringify(findFolders));
+
+      findFolders.map((data) => {
+        if (data.files.length == 0) {
+          data.underFolders = false;
+          delete data.files;
+          return data;
+        } else {
+          data.underFolders = true;
+          delete data.files;
+          return data;
+        }
+      });
+
+      return res.send({ success: 200, findFolders });
+    } catch (err) {
+      next(err);
+    }
+  },
+  findIncludeFolders: async (req, res, next) => {
+    const {
+      params: { uuid },
+    } = req;
+
+    try {
+      const findFolders = await db.folders.findAll({
+        where: { uuid },
+        include: [
+          {
+            model: db.files,
+            where: { isfolder: true },
+            required: false,
+            attributes: ['uuid', 'title', 'path'],
+          },
+        ],
+        attributes: ['title'],
+        raw: true,
+        nest: true,
+        order: [['title', 'ASC']],
+      });
+
+      const checkResult = await Promise.all(
+        findFolders.map(async (data) => {
+          const result = await db.files.findOne({
+            where: {
+              folder_uuid: data.files.uuid,
+            },
+            attributes: ['uuid', 'title', 'path'],
+            raw: true,
+          });
+          if (result) {
+            data.underFolders = true;
+            return data;
+          }
+          data.underFolders = false;
+          return data;
+        })
+      );
+
+      return res.send({ success: 200, checkResult });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

@@ -265,4 +265,40 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/file/store/folders/root/{customerFile_idx}:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       -  FileStore
+ *     summary: 고객 root폴더 보여주기(폴더이동)
+ *     parameters:
+ *         - in: path
+ *           name: customerFile_idx
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/file/store/folders/{uuid}:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       -  FileStore
+ *     summary: 폴더 안의 폴더 보여주기
+ *     parameters:
+ *         - in: path
+ *           name: uuid
+ *           schema:
+ *             type: string
+ *           example: sldfsnd
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */
