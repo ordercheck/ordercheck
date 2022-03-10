@@ -69,6 +69,7 @@ router.post('/', async (req, res, next) => {
               attributes: ['company_name'],
             },
           ],
+          raw: true,
         });
 
         const findCardNumber = await db.card.findOne({
