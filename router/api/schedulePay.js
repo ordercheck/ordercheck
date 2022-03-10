@@ -71,7 +71,7 @@ router.post('/', async (req, res, next) => {
           ],
           raw: true,
         });
-
+        console.log(findCompanyName);
         const findCardNumber = await db.card.findOne({
           where: { customer_uid: getResult.customer_uid },
           attributes: ['card_number'],
