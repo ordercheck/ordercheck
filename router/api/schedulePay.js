@@ -69,7 +69,6 @@ router.post('/', async (req, res, next) => {
               attributes: ['company_name'],
             },
           ],
-          raw: true,
         });
 
         const findCardNumber = await db.card.findOne({
@@ -116,6 +115,7 @@ router.post('/', async (req, res, next) => {
           moment(startDate).format('YYYY.MM.DD');
 
         findActivePlanResult.expire_plan = nextExpireDate;
+        console.log(findActivePlanResult);
         // 새로운 결제 예약
         await db.plan.create({
           ...findActivePlanResult,
