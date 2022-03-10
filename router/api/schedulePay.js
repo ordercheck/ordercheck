@@ -96,11 +96,13 @@ router.post('/', async (req, res, next) => {
           // 결제 당일 마지막 날
           let nowDate = moment(startDate);
           if (nowDate > nextMonthLast) {
+            console.log('여기 타면 안돼');
             nextMonthLast -= 1;
             nextExpireDate = moment(startDate)
               .add('1', 'M')
               .format(`YYYY.MM.${nextMonthLast}`);
           } else {
+            console.log('여기 타야해');
             nowDate -= 1;
             nextExpireDate = moment(startDate)
               .add('1', 'M')
