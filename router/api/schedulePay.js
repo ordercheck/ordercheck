@@ -64,7 +64,12 @@ router.post('/', async (req, res, next) => {
         // 영수증 발행
         const findCompanyName = await db.plan.findOne({
           where: { merchant_uid },
-          attributes: ['company_idx'],
+          include: [
+            {
+              model: db.company,
+              attributes: ['company_name'],
+            },
+          ],
         });
 
         const findCardNumber = await db.card.findOne({
