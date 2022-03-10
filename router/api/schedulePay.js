@@ -94,8 +94,9 @@ router.post('/', async (req, res, next) => {
           // 다음달 마지막 날
           let nextMonthLast = moment(startDate).add('1', 'M').daysInMonth();
           // 결제 당일 마지막 날
-          let nowDate = moment(startDate);
-          if (nowDate > nextMonthLast) {
+          let nowDate = moment(startDate).format('DD');
+          console.log(nowDate);
+          if (parseInt(nowDate) > nextMonthLast) {
             console.log('여기 타면 안돼');
             nextMonthLast -= 1;
             nextExpireDate = moment(startDate)
