@@ -200,7 +200,7 @@ module.exports = {
 
       const message = `[${consultResult.customer_name}]님의 담당자로 지정되었습니다.`;
 
-      const createResult = createAlarm({
+      const createResult = await createAlarm({
         message,
         user_idx: contract_person,
         company_idx,
