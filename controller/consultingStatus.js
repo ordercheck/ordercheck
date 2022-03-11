@@ -56,7 +56,8 @@ module.exports = {
     try {
       // url을 string으로 연결
       const { body, files } = req;
-      console.log(body);
+      console.log('파일입니다.', files);
+      console.log('바디입니다', body);
       const createConsultingAndIncrement = async (bodyData) => {
         try {
           await db.consulting.create(bodyData, { transaction: t });
