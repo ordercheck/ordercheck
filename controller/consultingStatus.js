@@ -662,13 +662,12 @@ module.exports = {
 
     const findMembers = await findMemberExceptMe(company_idx, user_idx);
     const alarmMessage = `${findSender.user_name}님이 [${customerFindResult.customer_name} ${now}] 고객님께 ${calculateFindResult.calculateNumber}차 견적서를 발송했습니다.`;
-    const expiry_date = createExpireDate();
+
     const data = {
       customer_idx: customerFindResult.idx,
       message: alarmMessage,
       company_idx,
       alarm_type: 3,
-      expiry_date,
     };
 
     await sendCompanyAlarm(data, findMembers, io);
@@ -798,14 +797,11 @@ module.exports = {
 
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
 
-      const expiry_date = createExpireDate();
-
       const insertData = {
         message,
         company_idx,
         alarm_type: 4,
         customer_idx: findCustomer.idx,
-        expiry_date,
       };
       await sendCompanyAlarm(insertData, findMembers, io);
       return;

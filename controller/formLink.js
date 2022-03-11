@@ -8,7 +8,6 @@ const {
   searchingByTitle,
   checkTitle,
   sendCompanyAlarm,
-  createExpireDate,
   findMemberExceptMe,
 } = require('../lib/apiFunctions');
 
@@ -51,13 +50,12 @@ module.exports = {
       const io = req.app.get('io');
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
       const message = `${findUserNameResult.user_name}님이 새로운 신청폼 [${title}]을 등록하였습니다.`;
-      const expiry_date = createExpireDate();
+
       const data = {
         form_idx: createResult.idx,
         message,
         company_idx,
         alarm_type: 7,
-        expiry_date,
       };
 
       await sendCompanyAlarm(data, findMembers, io);
@@ -115,13 +113,11 @@ module.exports = {
 
       const message = `${findUser.user_name}님이 [${formDetail.title}] 신청폼을 수정하였습니다.`;
 
-      const expiry_date = createExpireDate();
       const data = {
         form_idx: formId,
         message,
         company_idx,
         alarm_type: 5,
-        expiry_date,
       };
 
       await sendCompanyAlarm(data, findMembers, io);
@@ -184,13 +180,11 @@ module.exports = {
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
       const message = `${findUser.user_name}님이 [${formTitle.title}] 신청폼을 삭제하였습니다.`;
 
-      const expiry_date = createExpireDate();
       const data = {
         form_idx: formId,
         message,
         company_idx,
         alarm_type: 8,
-        expiry_date,
       };
 
       await sendCompanyAlarm(data, findMembers, io);
@@ -293,13 +287,11 @@ module.exports = {
 
       const message = `${findUser.user_name}님이 [${formTitle.title}] 신청폼을 수정하였습니다.`;
 
-      const expiry_date = createExpireDate();
       const data = {
         form_idx: formId,
         message,
         company_idx,
         alarm_type: 5,
-        expiry_date,
       };
 
       await sendCompanyAlarm(data, findMembers, io);
