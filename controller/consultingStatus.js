@@ -454,9 +454,9 @@ module.exports = {
       params: { calculate_idx },
     } = req;
 
-    console.log(body);
-
     const addCalculateLogic = async (bodyData) => {
+      console.log(bodyData);
+      console.log(calculate_idx);
       await db.calculate.update(bodyData, {
         where: { idx: calculate_idx },
       });
