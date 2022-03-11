@@ -68,12 +68,6 @@ module.exports = {
     ) {
       req.formClose = true;
       return next();
-    } else if (
-      findCompanyData.form_link_count ==
-      limitPlan[findPlanResult.plan].form_link_count
-    ) {
-      req.formClose = true;
-      return next();
     }
     req.formClose = false;
     return next();

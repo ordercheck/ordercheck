@@ -27,6 +27,7 @@ module.exports = {
       const companyMonth = await db.customer.count({
         where: { company_idx },
         createdAt: { [Op.between]: [firstDate, secondDate] },
+        deleted: null,
       });
 
       const planInfo = await db.plan.findOne({

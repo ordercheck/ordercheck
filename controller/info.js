@@ -43,6 +43,7 @@ module.exports = {
         .query(
           `SELECT user.idx, personal_code, user_phone, userCompany.company_idx, user_profile, 
               user_email, user_name, plan, calculateReload, config_idx,
+              whiteLabelChecked,chatChecked,analysticChecked,
               date_format(user.createdAt, '%Y.%m.%d') as createdAt
               FROM user 
               LEFT JOIN userCompany ON user.idx = userCompany.user_idx 
@@ -75,6 +76,7 @@ module.exports = {
       });
       userProfile[0].fileStoreSize = fileStoreSize;
       userProfile[0].authList = findConfig;
+
       return res.send({ success: 200, userProfile: userProfile[0] });
     } catch (err) {
       next(err);
