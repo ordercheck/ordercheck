@@ -3,6 +3,7 @@ const moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
 const { Op } = require('sequelize');
+const { consultingCountArrAttributes } = require('../lib/attributes');
 
 module.exports = {
   getHomeBoard: async (req, res, next) => {
@@ -81,16 +82,7 @@ module.exports = {
           createdAt: { [Op.between]: [daysAgo, now] },
           company_idx,
         },
-        attributes: [
-          [
-            db.sequelize.fn(
-              'date_format',
-              db.sequelize.col('createdAt'),
-              '%Y.%m.%d'
-            ),
-            'createdAt',
-          ],
-        ],
+        attributes: consultingCountArrAttributes,
         order: [['createdAt', 'DESC']],
         raw: true,
       });
@@ -99,16 +91,7 @@ module.exports = {
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
         },
-        attributes: [
-          [
-            db.sequelize.fn(
-              'date_format',
-              db.sequelize.col('createdAt'),
-              '%Y.%m.%d'
-            ),
-            'createdAt',
-          ],
-        ],
+        attributes: consultingCountArrAttributes,
         order: [['createdAt', 'DESC']],
         raw: true,
       });
@@ -118,16 +101,7 @@ module.exports = {
           createdAt: { [Op.between]: [daysAgo, now] },
           contract_possibility: 3,
         },
-        attributes: [
-          [
-            db.sequelize.fn(
-              'date_format',
-              db.sequelize.col('createdAt'),
-              '%Y.%m.%d'
-            ),
-            'createdAt',
-          ],
-        ],
+        attributes: consultingCountArrAttributes,
         order: [['createdAt', 'DESC']],
         raw: true,
       });

@@ -250,12 +250,7 @@ module.exports = {
 
     const findResult = await db.userConfig.findOne({
       where: { user_idx },
-      attributes: [
-        'productServiceAlarm',
-        'promotionAlarm',
-        'customerStatusAlarm',
-        'addConsultingAlarm',
-      ],
+      attributes: showUserAlarmConfigAttributes,
     });
     return res.send({ success: 200, findResult });
   },
