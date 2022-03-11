@@ -165,7 +165,6 @@ module.exports = function (sequelize, DataTypes) {
     },
     elv: {
       allowNull: true,
-      default: false,
       type: DataTypes.BOOLEAN,
     },
     etc: {

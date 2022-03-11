@@ -150,7 +150,7 @@ module.exports = {
       title: duplicateForm.title,
       form_link: duplicateForm.form_link,
       expression: duplicateForm.expression,
-      pathUrl: `${duplicateForm.form_link}/${duplicateForm.expression}`,
+      urlPath: `${duplicateForm.form_link}/${duplicateForm.expression}`,
       createdAt,
     };
 
