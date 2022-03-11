@@ -92,7 +92,7 @@ module.exports = {
           analysticChecked
           FROM userCompany 
           LEFT JOIN company ON userCompany.company_idx = company.idx
-          LEFT JOIN plan ON userCompany.company_idx = company.idx
+          LEFT JOIN plan ON userCompany.company_idx = plan.company.idx
           LEFT JOIN user ON company.huidx = user.idx
           WHERE userCompany.user_idx = ${req.user_idx}`
         )
