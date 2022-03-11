@@ -543,8 +543,10 @@ module.exports = {
 
     const sharedDate = moment().format('YYYY.MM.DD');
 
+    const customer_phoneNumber =
+      customerFindResult.customer_phoneNumber.replace(/\./g, '');
     const { kakaoPushResult, message } = await customerkakaoPushNewCal(
-      customerFindResult.customer_phoneNumber,
+      customer_phoneNumber,
       companyFindResult.company_name,
       customerFindResult.customer_name,
       calculateFindResult.calculateNumber,
