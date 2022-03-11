@@ -467,9 +467,6 @@ module.exports = {
     // 파일이 있을때
     if (file) {
       try {
-        const findCalculateResult = await db.calculate.findByPk(calculate_idx, {
-          attributes: ['file_name'],
-        });
         // s3에서 삭제
         delFile(file.originalname, `ordercheck/calculate/${body.customer_idx}`);
         body.file_name = file.originalname;
