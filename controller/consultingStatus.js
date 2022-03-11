@@ -93,13 +93,10 @@ module.exports = {
               },
             ],
             attributes: ['user_idx'],
-            raw: true,
-            nest: true,
           });
 
           getMembers.forEach(async (data) => {
-            console.log(data);
-            const user_phone = data.user.replace(/\./g, '');
+            const user_phone = data.user.user_phone.replace(/\./g, '');
 
             await TeamkakaoPushNewForm(
               user_phone,
