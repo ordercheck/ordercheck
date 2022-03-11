@@ -9,13 +9,10 @@ const smsCheck = require('../../middleware/smsCheck');
 const { Filter, searchCustomer } = require('../../controller/consultingFilter');
 const {
   showTotalConsultingDefault,
-  showCustomers,
   showDetailConsulting,
   showCompanyMembers,
   showIntegratedUser,
   showCalculate,
-
-  sortRouter,
 } = require('../../controller/consultingShow');
 const {
   addConsultingForm,
@@ -30,12 +27,8 @@ const {
   doIntegratedUser,
   patchCalculate,
   setMainCalculate,
-  addConsultingFormFiles,
 } = require('../../controller/consultingStatus');
-const {
-  checkFormLimit,
-  checkCustomerLimit,
-} = require('../../middleware/checkLimit');
+const { checkCustomerLimit } = require('../../middleware/checkLimit');
 // *****************************filter*********************************
 // 상담 필터링
 router.post('/filter/:limit/:page', loginCheck, Filter);
@@ -74,7 +67,6 @@ router.get(
 
 // 유저 리스트 sorting
 // router.get('/sort', loginCheck, sortRouter);
-
 // *****************************changeStatus*********************************
 // 컨설팅 상태 수정 및 메모
 router.patch('/status/:customer_idx', loginCheck, patchConsultingStatus);

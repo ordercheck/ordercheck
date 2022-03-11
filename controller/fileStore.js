@@ -13,6 +13,7 @@ const { delFile } = require('../lib/aws/fileupload').ufile;
 const {
   showDetailFileFolderAttributes,
   showFilesAttributes,
+  getUserListAttributes,
 } = require('../lib/attributes');
 
 const { fileStoreSort } = require('../lib/checkData');
@@ -68,11 +69,7 @@ module.exports = {
       // 파일저장소 고객찾기
       const findAllCustomers = await db.customerFile.findAll({
         where: { company_idx: req.company_idx },
-        attributes: [
-          ['idx', 'customerFile_idx'],
-          'customer_phoneNumber',
-          'customer_name',
-        ],
+        attributes: getUserListAttributes,
         order: [['customer_name', 'ASC']],
       });
 
@@ -230,7 +227,7 @@ module.exports = {
   },
   showFiles: async (req, res, next) => {
     try {
-      let { customerFile_idx, sort_field, sort } = req.params;
+      let { sort_field, sort } = req.params;
 
       const checkResult = fileStoreSort(sort_field, sort);
 
@@ -437,18 +434,7 @@ module.exports = {
 
       const findFolderResult = await db.folders.findOne({
         where: { uuid, customerFile_idx },
-        attributes: [
-          'title',
-          'upload_people',
-          [
-            db.sequelize.fn(
-              'date_format',
-              db.sequelize.col('createdAt'),
-              '%Y.%m.%d'
-            ),
-            'createdAt',
-          ],
-        ],
+        attributes: showDetailFileFolderAttributes,
 
         raw: true,
         nest: true,

@@ -12,7 +12,10 @@ const {
   findMemberExceptMe,
 } = require('../lib/apiFunctions');
 
-const { createFormLinkAttributes } = require('../lib/attributes');
+const {
+  createFormLinkAttributes,
+  getFormLinkInfoAttributes,
+} = require('../lib/attributes');
 module.exports = {
   createFormLink: async (req, res, next) => {
     const {
@@ -339,13 +342,14 @@ module.exports = {
     try {
       const findResult = await db.formLink.findOne({
         where: { form_link },
-        attributes: ['whiteLabelChecked', 'expression', 'tempType'],
+        attributes: getFormLinkInfoAttributes,
       });
 
       if (!findResult) {
         next({ message: '없는 링크입니다.' });
       }
       findResult.dataValues.formClose = formClose;
+
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
