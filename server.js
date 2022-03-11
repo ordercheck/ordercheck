@@ -37,6 +37,12 @@ io.on('connection', (socket) => {
       if (moment.duration(now.diff(targetDate)).asMinutes() < 0) {
         continue;
       } else {
+        if (findAllAlarms[i].repeat_time) {
+          await db.alarm.update(
+            { repeat_time: null },
+            { where: { idx: findAllAlarms[i].alarmId } }
+          );
+        }
         scheduleAlarm.push(findAllAlarms[i]);
       }
     }

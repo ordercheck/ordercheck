@@ -86,11 +86,14 @@ module.exports = {
 
       const reAlertMs = afterTime * 60000;
 
-      setTimeout(() => {
+      setTimeout(async () => {
         const io = req.app.get('io');
         const alarm = new Alarm(createResult);
-
         io.to(parseInt(user_idx)).emit('addAlarm', alarm);
+        await db.alarm.update(
+          { repeat_time: null },
+          { where: { idx: createResult.idx } }
+        );
       }, reAlertMs);
     } catch (err) {
       next(err);

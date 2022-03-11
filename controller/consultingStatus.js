@@ -200,7 +200,7 @@ module.exports = {
 
       const message = `[${consultResult.customer_name}]님의 담당자로 지정되었습니다.`;
 
-      const createResult = createAlarm({
+      const createResult = await createAlarm({
         message,
         user_idx: contract_person,
         company_idx,
@@ -209,7 +209,7 @@ module.exports = {
       });
 
       const alarm = new Alarm(createResult);
-
+      console.log(alarm);
       io.to(parseInt(createResult.user_idx)).emit('addAlarm', alarm);
       return;
     } catch (err) {
@@ -467,17 +467,9 @@ module.exports = {
     // 파일이 있을때
     if (file) {
       try {
-        const file_name = getFileName(file.key);
-
-        const findCalculateResult = await db.calculate.findByPk(calculate_idx, {
-          attributes: ['file_name'],
-        });
         // s3에서 삭제
-        delFile(
-          findCalculateResult.file_name,
-          `ordercheck/calculate/${body.customer_idx}`
-        );
-        body.file_name = file_name;
+        delFile(file.originalname, `ordercheck/calculate/${body.customer_idx}`);
+        body.file_name = file.originalname;
         body.file_url = file.location;
 
         const findResult = await addCalculateLogic(body);
@@ -509,7 +501,7 @@ module.exports = {
       return res.send({ success: 200, findResult });
     }
     // 파일이 변함 없을 때
-    const findResult = await addCalculateLogic();
+    const findResult = await addCalculateLogic(body);
     return res.send({ success: 200, findResult });
   },
 
