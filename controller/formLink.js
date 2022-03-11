@@ -331,7 +331,11 @@ module.exports = {
     }
   },
   getFormLinkInfo: async (req, res, next) => {
-    const { form_link } = req.params;
+    const {
+      params: { form_link },
+      formClose,
+    } = req;
+
     try {
       const findResult = await db.formLink.findOne({
         where: { form_link },
@@ -341,6 +345,8 @@ module.exports = {
       if (!findResult) {
         next({ message: '없는 링크입니다.' });
       }
+
+      findResult.dataValues.formClose = formClose;
 
       return res.send({ success: 200, findResult });
     } catch (err) {

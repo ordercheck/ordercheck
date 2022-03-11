@@ -10,6 +10,7 @@ const checkCustomerCount = async (company_idx, data) => {
     where: { company_idx, active: 1 },
     attributes: ['plan'],
   });
+
   return {
     findCompanyData,
     findPlanResult,
@@ -28,6 +29,7 @@ const check = async (reqData, data) => {
         message: '존재하지 않는 링크 입니다',
       };
     }
+
     const { findCompanyData, findPlanResult } = await checkCustomerCount(
       findCompanyByLink.company_idx,
       data
@@ -47,8 +49,12 @@ const check = async (reqData, data) => {
 
 module.exports = {
   checkFormLimit: async (req, res, next) => {
+    const {
+      params: { form_link },
+    } = req;
+
     const { success, findCompanyData, findPlanResult, message } = await check(
-      req.body.form_link,
+      form_link,
       'form_link_count'
     );
 
@@ -83,19 +89,16 @@ module.exports = {
         console.log(err);
       }
 
-      return res.send({
-        success: 400,
-        message: '이달 상담 신청 건수가 초과하였습니다.',
-      });
+      req.formClose = true;
+      return next();
     } else if (
       findCompanyData.form_link_count ==
       limitPlan[findPlanResult.plan].form_link_count
     ) {
-      return res.send({
-        success: 400,
-        message: '이달 상담 신청 건수가 초과하였습니다.',
-      });
+      req.formClose = true;
+      return next();
     }
+    req.formClose = false;
     return next();
   },
   checkCustomerLimit: async (req, res, next) => {

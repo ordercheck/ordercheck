@@ -202,7 +202,7 @@
  *         - in: path
  *           name: form_link
  *           schema:
- *             type: integer
+ *             type: string
  *     responses:
  *       '200':
  *         description: 성공
