@@ -352,6 +352,8 @@ module.exports = {
       params: { customer_idx },
     } = req;
 
+    console.log('바디', req.body);
+
     const consultResult = await checkDetailCustomerUpdateField(
       customer_idx,
       room_size_kind,
