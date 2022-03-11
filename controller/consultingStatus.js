@@ -115,6 +115,8 @@ module.exports = {
         attributes: ['company_idx', 'title', 'tempType'],
       });
 
+      console.log(formLinkCompany);
+
       body.company_name = formLinkCompany.company.company_name;
       body.title = formLinkCompany.title;
       body.company_idx = formLinkCompany.company_idx;
@@ -152,7 +154,6 @@ module.exports = {
       // 이미지나 파일이 없을 때  간편 Form
       if (bodyClass.bodyData.tempType == 1) {
         bodyClass.bodyData.choice = bodyClass.bodyData.choice.join(', ');
-
         createConsultingAndIncrement(bodyClass.bodyData);
         return;
       }
@@ -164,6 +165,7 @@ module.exports = {
         imgUrlString,
         conceptUrlString
       );
+      console.log(formBodyData);
 
       await createConsultingAndIncrement(formBodyData);
 
