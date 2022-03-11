@@ -101,27 +101,6 @@ module.exports = {
           return makeSpreadArray(r);
         });
 
-      if (companyProfile[0].whiteLabelChecked == 1) {
-        companyProfile[0].whiteLabelChecked = true;
-      }
-
-      if (companyProfile[0].chatChecked == 1) {
-        companyProfile[0].chatChecked = true;
-      }
-      if (companyProfile[0].analysticChecked == 1) {
-        companyProfile[0].analysticChecked = true;
-      }
-
-      if (companyProfile[0].whiteLabelChecked == 0) {
-        companyProfile[0].whiteLabelChecked = false;
-      }
-      if (companyProfile[0].chatChecked == 0) {
-        companyProfile[0].chatChecked = false;
-      }
-      if (companyProfile[0].analysticChecked == 0) {
-        companyProfile[0].analysticChecked = false;
-      }
-
       return res.send({ success: 200, companyProfile: companyProfile[0] });
     } catch (err) {
       next(err);
