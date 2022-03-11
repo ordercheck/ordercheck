@@ -349,10 +349,9 @@ module.exports = {
         memo,
         status,
       },
+      company_idx,
       params: { customer_idx },
     } = req;
-
-    console.log('바디', req.body);
 
     const consultResult = await checkDetailCustomerUpdateField(
       customer_idx,
@@ -364,6 +363,7 @@ module.exports = {
       customer_phoneNumber,
       customer_name,
       memo,
+      company_idx,
       status,
       next
     );
