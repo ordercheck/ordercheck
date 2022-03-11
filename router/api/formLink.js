@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { multer_upload_img } = require('../../lib/aws/aws');
 const loginCheck = require('../../middleware/auth');
+const { checkFormLimit } = require('../../middleware/checkLimit');
 
 const {
   createFormLink,
@@ -50,7 +51,7 @@ router.delete('/:formId', loginCheck, delFormLink);
 router.get('/search/:title', loginCheck, searchFormLink);
 
 // formlink로 정보 가져오기
-router.get('/info/:form_link', getFormLinkInfo);
+router.get('/info/:form_link', checkFormLimit, getFormLinkInfo);
 
 // form 상세보기
 router.get('/:formId', loginCheck, showFormDetail);

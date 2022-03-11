@@ -75,7 +75,7 @@ module.exports = {
         return res.send({ success: 400, message: '등록된 폼이 없습니다' });
       }
       formList = formList.map((data) => {
-        data.urlPath = `${data.form_link}/${data.expression}`;
+        data.urlPath = data.form_link;
         return data;
       });
       return res.send({ success: 200, formList });
@@ -150,7 +150,7 @@ module.exports = {
       title: duplicateForm.title,
       form_link: duplicateForm.form_link,
       expression: duplicateForm.expression,
-      urlPath: `${duplicateForm.form_link}/${duplicateForm.expression}`,
+      urlPath: duplicateForm.form_link,
       createdAt,
     };
 
@@ -323,7 +323,7 @@ module.exports = {
       const formDetail = await db.formLink.findByPk(formId, {
         attributes: createFormLinkAttributes,
       });
-      formDetail.urlPath = `${formDetail.form_link}/${formDetail.expression}`;
+      formDetail.urlPath = formDetail.form_link;
 
       return res.send({ success: 200, formDetail });
     } catch (err) {
