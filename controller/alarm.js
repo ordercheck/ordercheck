@@ -3,7 +3,7 @@ const moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
 const { Alarm } = require('../lib/class');
-const { createExpireDate } = require('../lib/apiFunctions');
+const { createAlarm } = require('../lib/apiFunctions');
 const { alarmAttributes } = require('../lib/attributes');
 
 module.exports = {
@@ -74,16 +74,14 @@ module.exports = {
       );
 
       delete findAlarmResult.createdAt;
-      const expiry_date = createExpireDate();
-      findAlarmResult.expiry_date = expiry_date;
-      findAlarmResult.confirm = false;
 
-      const createResult = await db.alarm.create({
-        ...findAlarmResult,
-        repeat_time: time,
-        user_idx,
-        company_idx,
-      });
+      findAlarmResult.confirm = false;
+      findAlarmResult.repeat_time = time;
+      findAlarmResult.user_idx = user_idx;
+      findAlarmResult.company_idx = company_idx;
+
+      const createResult = await createAlarm(findAlarmResult);
+
       res.send({ success: 200 });
 
       const reAlertMs = afterTime * 60000;
