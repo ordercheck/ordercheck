@@ -339,13 +339,19 @@ module.exports = {
     try {
       const findResult = await db.formLink.findOne({
         where: { form_link },
-        attributes: ['whiteLabelChecked', 'expression', 'tempType'],
+        attributes: [
+          'whiteLabelChecked',
+          'expression',
+          'tempType',
+          'thumbNail',
+        ],
       });
 
       if (!findResult) {
         next({ message: '없는 링크입니다.' });
       }
       findResult.dataValues.formClose = formClose;
+
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
