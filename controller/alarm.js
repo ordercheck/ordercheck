@@ -12,19 +12,22 @@ module.exports = {
       body: { alarmId },
       user_idx,
     } = req;
+    try {
+      alarmId.forEach(async (idx) => {
+        await db.alarm.destroy({ where: { idx } });
+      });
 
-    alarmId.forEach(async (idx) => {
-      await db.alarm.destroy({ where: { idx } });
-    });
+      await db.alarm.findAll({
+        where: { user_idx, repeat_time: null },
+        attributes: alarmAttributes,
+        order: [['createdAt', 'DESC']],
+        raw: true,
+      });
 
-    await db.alarm.findAll({
-      where: { user_idx, repeat_time: null },
-      attributes: alarmAttributes,
-      order: [['createdAt', 'DESC']],
-      raw: true,
-    });
-
-    return res.send({ success: 200 });
+      return res.send({ success: 200 });
+    } catch (err) {
+      next(err);
+    }
   },
 
   confirmAlarm: async (req, res, next) => {
@@ -32,19 +35,24 @@ module.exports = {
       body: { alarmId },
       user_idx,
     } = req;
+    try {
+      for (let i = 0; i < alarmId.length; i++) {
+        await db.alarm.update(
+          { confirm: true },
+          { where: { idx: alarmId[i] } }
+        );
+      }
+      await db.alarm.findAll({
+        where: { user_idx, repeat_time: null },
+        attributes: alarmAttributes,
+        order: [['createdAt', 'DESC']],
+        raw: true,
+      });
 
-    for (let i = 0; i < alarmId.length; i++) {
-      await db.alarm.update({ confirm: true }, { where: { idx: alarmId[i] } });
+      return res.send({ success: 200 });
+    } catch (err) {
+      next(err);
     }
-    await db.alarm.findAll({
-      where: { user_idx, repeat_time: null },
-      attributes: alarmAttributes,
-      order: [['createdAt', 'DESC']],
-      raw: true,
-    });
-    res.send({ success: 200 });
-
-    return;
   },
   repeatAlarm: async (req, res, next) => {
     const {
@@ -52,39 +60,42 @@ module.exports = {
       user_idx,
       company_idx,
     } = req;
+    try {
+      const findAlarmResult = await db.alarm.findByPk(alarmId, {
+        attributes: alarmAttributes,
+        raw: true,
+      });
 
-    const findAlarmResult = await db.alarm.findByPk(alarmId, {
-      attributes: alarmAttributes,
-      raw: true,
-    });
+      await db.alarm.update(
+        { confirm: true },
+        {
+          where: { idx: alarmId },
+        }
+      );
 
-    await db.alarm.update(
-      { confirm: true },
-      {
-        where: { idx: alarmId },
-      }
-    );
+      delete findAlarmResult.createdAt;
+      const expiry_date = createExpireDate();
+      findAlarmResult.expiry_date = expiry_date;
+      findAlarmResult.confirm = false;
 
-    delete findAlarmResult.createdAt;
-    const expiry_date = createExpireDate();
-    findAlarmResult.expiry_date = expiry_date;
-    findAlarmResult.confirm = false;
+      const createResult = await db.alarm.create({
+        ...findAlarmResult,
+        repeat_time: time,
+        user_idx,
+        company_idx,
+      });
+      res.send({ success: 200 });
 
-    const createResult = await db.alarm.create({
-      ...findAlarmResult,
-      repeat_time: time,
-      user_idx,
-      company_idx,
-    });
-    res.send({ success: 200 });
+      const reAlertMs = afterTime * 60000;
 
-    const reAlertMs = afterTime * 60000;
+      setTimeout(() => {
+        const io = req.app.get('io');
+        const alarm = new Alarm(createResult);
 
-    setTimeout(() => {
-      const io = req.app.get('io');
-      const alarm = new Alarm(createResult);
-
-      io.to(parseInt(user_idx)).emit('addAlarm', alarm);
-    }, reAlertMs);
+        io.to(parseInt(user_idx)).emit('addAlarm', alarm);
+      }, reAlertMs);
+    } catch (err) {
+      next(err);
+    }
   },
 };

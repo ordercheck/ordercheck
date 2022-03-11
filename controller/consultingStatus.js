@@ -430,8 +430,9 @@ module.exports = {
       next(err);
     }
   },
-  delCalculate: async (req, res, next) => {
+  delCalculate: async (req, res) => {
     const { customer_idx, calculate_idx } = req.params;
+
     // 견적서 내용 찾기
     const findCalculateResult = await db.calculate.findByPk(calculate_idx, {
       attributes: ['file_name'],

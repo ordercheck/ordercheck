@@ -132,20 +132,23 @@ module.exports = {
   },
   changeCompanyInfo: async (req, res, next) => {
     const { body, company_idx } = req;
-
-    const updateCompanyInfo = async (updateData) => {
-      await db.company.update(updateData, { where: { idx: company_idx } });
-    };
-
     try {
-      await updateCompanyInfo(body);
+      const updateCompanyInfo = async (updateData) => {
+        await db.company.update(updateData, { where: { idx: company_idx } });
+      };
 
-      return res.send({ success: 200 });
+      try {
+        await updateCompanyInfo(body);
+
+        return res.send({ success: 200 });
+      } catch (err) {
+        return res.send({
+          success: 400,
+          message: '해당 회사 도메인은 이미 사용되었습니다.',
+        });
+      }
     } catch (err) {
-      return res.send({
-        success: 400,
-        message: '해당 회사 도메인은 이미 사용되었습니다.',
-      });
+      next(err);
     }
   },
   changeCompanyEnrollment: async (req, res, next) => {
@@ -228,48 +231,61 @@ module.exports = {
       company_idx,
       user_idx,
     } = req;
+    try {
+      const Title = await checkTitle(
+        db.config,
+        { template_name: title, company_idx },
+        title,
+        req.body
+      );
 
-    const Title = await checkTitle(
-      db.config,
-      { template_name: title, company_idx },
-      title,
-      req.body
-    );
+      const findUser = await db.user.findByPk(user_idx, {
+        attributes: ['user_name'],
+      });
 
-    const findUser = await db.user.findByPk(user_idx, {
-      attributes: ['user_name'],
-    });
+      createConfig.template_name = Title.title;
+      createConfig.create_people = findUser.user_name;
+      createConfig.company_idx = company_idx;
 
-    createConfig.template_name = Title.title;
-    createConfig.create_people = findUser.user_name;
-    createConfig.company_idx = company_idx;
+      const createdResult = await db.config.create(createConfig);
 
-    const createdResult = await db.config.create(createConfig);
-
-    return res.send({ success: 200, templateId: createdResult.idx });
+      return res.send({ success: 200, templateId: createdResult.idx });
+    } catch (err) {
+      next(err);
+    }
   },
   showTemplateList: async (req, res, next) => {
     const { company_idx } = req;
-    const findResult = await db.config.findAll({
-      where: { company_idx },
-      attributes: showTemplateListAttributes,
-      raw: true,
-    });
 
-    let No = 1;
-    findResult.map((data) => {
-      data.No = No;
-      No++;
-    });
+    try {
+      const findResult = await db.config.findAll({
+        where: { company_idx },
+        attributes: showTemplateListAttributes,
+        raw: true,
+      });
 
-    return res.send({ success: 200, findResult });
+      let No = 1;
+      findResult.map((data) => {
+        data.No = No;
+        No++;
+      });
+
+      return res.send({ success: 200, findResult });
+    } catch (err) {
+      next(err);
+    }
   },
   showDetailTemplate: async (req, res, next) => {
     const { templateId } = req.params;
-    const findResult = await db.config.findByPk(templateId, {
-      attributes: { exclude: showDetailTemplateConfig },
-    });
-    return res.send({ success: 200, findResult });
+
+    try {
+      const findResult = await db.config.findByPk(templateId, {
+        attributes: { exclude: showDetailTemplateConfig },
+      });
+      return res.send({ success: 200, findResult });
+    } catch (err) {
+      next(err);
+    }
   },
   changeTemplate: async (req, res, next) => {
     const {
@@ -323,30 +339,34 @@ module.exports = {
   },
   showPlan: async (req, res, next) => {
     const { company_idx } = req;
-    const findPlanResult = await db.plan.findOne({
-      where: { idx: company_idx, active: 1 },
-      include: [
-        {
-          model: db.company,
-          attributes: ['form_link_count'],
-        },
-      ],
-      attributes: showPlanAttributes,
-    });
+    try {
+      const findPlanResult = await db.plan.findOne({
+        where: { idx: company_idx, active: 1 },
+        include: [
+          {
+            model: db.company,
+            attributes: ['form_link_count'],
+          },
+        ],
+        attributes: showPlanAttributes,
+      });
 
-    // 남은 날짜 구하기
-    if (!findPlanResult.free_plan) {
+      // 남은 날짜 구하기
+      if (!findPlanResult.free_plan) {
+        return res.send(findPlanResult);
+      }
+      let now = moment().format('YYYY-MM-DD');
+      now = moment(now);
+      const freePlan = moment(findPlanResult.start_plan.replace(/\./g, '-'));
+      let diffTime = moment(freePlan.diff(now)).format('DD');
+      diffTime = parseInt(diffTime) - 1;
+
+      console.log(findPlanResult);
+
       return res.send(findPlanResult);
+    } catch (err) {
+      next(err);
     }
-    let now = moment().format('YYYY-MM-DD');
-    now = moment(now);
-    const freePlan = moment(findPlanResult.start_plan.replace(/\./g, '-'));
-    let diffTime = moment(freePlan.diff(now)).format('DD');
-    diffTime = parseInt(diffTime) - 1;
-
-    console.log(findPlanResult);
-
-    return res.send(findPlanResult);
   },
   showPlanHistory: async (req, res, next) => {
     const { company_idx } = req;
@@ -363,19 +383,28 @@ module.exports = {
   },
   showDetailPlan: async (req, res, next) => {
     const { planId } = req.params;
-    const findPlanResult = await db.plan.findOne({
-      where: { merchant_uid: planId },
-      attributes: showDetailPlanAttributes,
-    });
-    return res.send({ success: 200, findPlanResult });
+    try {
+      const findPlanResult = await db.plan.findOne({
+        where: { merchant_uid: planId },
+        attributes: showDetailPlanAttributes,
+      });
+      return res.send({ success: 200, findPlanResult });
+    } catch (err) {
+      next(err);
+    }
   },
   showSmsInfo: async (req, res, next) => {
     const { user_idx } = req;
-    const findResult = await db.sms.findOne({
-      where: { user_idx },
-      attributes: ['text_cost', 'repay', 'auto_price', 'auto_min'],
-    });
-    return res.send({ success: 200, findResult });
+
+    try {
+      const findResult = await db.sms.findOne({
+        where: { user_idx },
+        attributes: ['text_cost', 'repay', 'auto_price', 'auto_min'],
+      });
+      return res.send({ success: 200, findResult });
+    } catch (err) {
+      next(err);
+    }
   },
   changeSms: async (req, res, next) => {
     const { user_idx } = req;
@@ -505,52 +534,56 @@ module.exports = {
       company_idx,
       params: { cardId },
     } = req;
-    // 메인으로 설정되어있는 카드 false로 변경
 
-    const findMainCardResult = await db.card.findOne(
-      { where: { user_idx, main: true } },
-      { attributes: ['idx', 'customer_uid'] }
-    );
+    try {
+      // 메인으로 설정되어있는 카드 false로 변경
+      const findMainCardResult = await db.card.findOne(
+        { where: { user_idx, main: true } },
+        { attributes: ['idx', 'customer_uid'] }
+      );
 
-    await db.card.update(
-      { main: false },
-      { where: { idx: findMainCardResult.idx } }
-    );
+      await db.card.update(
+        { main: false },
+        { where: { idx: findMainCardResult.idx } }
+      );
 
-    //타겟 카드를 true로 변경
-    await db.card.update({ main: true }, { where: { idx: cardId } });
+      //타겟 카드를 true로 변경
+      await db.card.update({ main: true }, { where: { idx: cardId } });
 
-    // 기존의 아임포트 결제 예약 취소
+      // 기존의 아임포트 결제 예약 취소
 
-    await cancelSchedule(findMainCardResult.customer_uid);
+      await cancelSchedule(findMainCardResult.customer_uid);
 
-    // 새로운 카드로 결제 예약
+      // 새로운 카드로 결제 예약
 
-    const findPlanResult = await db.plan.findOne({
-      where: { company_idx, active: 3 },
-    });
+      const findPlanResult = await db.plan.findOne({
+        where: { company_idx, active: 3 },
+      });
 
-    const findCardResult = await db.card.findByPk(cardId);
+      const findCardResult = await db.card.findByPk(cardId);
 
-    const findUserResult = await db.user.findByPk(user_idx);
+      const findUserResult = await db.user.findByPk(user_idx);
 
-    const Hour = moment().format('HH');
+      const Hour = moment().format('HH');
 
-    const startDate = findPlanResult.start_plan.replace(/\./g, '-');
+      const startDate = findPlanResult.start_plan.replace(/\./g, '-');
 
-    const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
+      const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
-    await schedulePay(
-      changeToUnix,
-      findCardResult.customer_uid,
-      findPlanResult.result_price_levy,
-      findUserResult.user_name,
-      findUserResult.user_phone,
-      findUserResult.user_email,
-      findPlanResult.merchant_uid
-    );
+      await schedulePay(
+        changeToUnix,
+        findCardResult.customer_uid,
+        findPlanResult.result_price_levy,
+        findUserResult.user_name,
+        findUserResult.user_phone,
+        findUserResult.user_email,
+        findPlanResult.merchant_uid
+      );
 
-    return res.send({ success: 200 });
+      return res.send({ success: 200 });
+    } catch (err) {
+      next(err);
+    }
   },
 
   getReceiptList: async (req, res, next) => {
@@ -597,86 +630,103 @@ module.exports = {
       params: { receiptId },
     } = req;
 
-    const findResult = await db.receipt.findOne({
-      where: { receiptId },
-      attributes: { exclude: ['idx', 'updatedAt'] },
-      raw: true,
-    });
+    try {
+      const findResult = await db.receipt.findOne({
+        where: { receiptId },
+        attributes: { exclude: ['idx', 'updatedAt'] },
+        raw: true,
+      });
 
-    findResult.tax_price =
-      findResult.result_price_levy - findResult.result_price;
+      findResult.tax_price =
+        findResult.result_price_levy - findResult.result_price;
 
-    return res.send({ success: 200, findResult });
+      return res.send({ success: 200, findResult });
+    } catch (err) {
+      next(err);
+    }
   },
   showFormList: async (req, res, next) => {
     const { company_idx } = req;
 
-    const findResult = await db.formLink.findAll({
-      where: { company_idx },
-      include: [
-        {
-          model: db.formOpen,
-          attributes: ['user_name'],
-        },
-      ],
-      attributes: showFormListAttributes,
-    });
-    return res.send({ success: 200, findResult });
+    try {
+      const findResult = await db.formLink.findAll({
+        where: { company_idx },
+        include: [
+          {
+            model: db.formOpen,
+            attributes: ['user_name'],
+          },
+        ],
+        attributes: showFormListAttributes,
+      });
+      return res.send({ success: 200, findResult });
+    } catch (err) {
+      next(err);
+    }
   },
   setFormOpenMembers: async (req, res, next) => {
     const {
       params: { formId },
       body: { members },
-      company_idx,
     } = req;
 
-    members.forEach(async (data) => {
-      const findUserNameResult = await db.user.findByPk(data, {
-        attributes: ['user_name'],
-      });
+    try {
+      members.forEach(async (data) => {
+        const findUserNameResult = await db.user.findByPk(data, {
+          attributes: ['user_name'],
+        });
 
-      await db.formOpen.create({
-        formLink_idx: formId,
-        user_name: findUserNameResult.user_name,
-        user_idx: data,
+        await db.formOpen.create({
+          formLink_idx: formId,
+          user_name: findUserNameResult.user_name,
+          user_idx: data,
+        });
       });
-    });
-    return res.send({ success: 200 });
+      return res.send({ success: 200 });
+    } catch (err) {
+      next(err);
+    }
   },
   showChatTemplate: async (req, res, next) => {
     const { company_idx } = req;
-    const findResult = await db.chatTemplate.findAll({
-      where: { company_idx },
-      attributes: ['title', 'contents', 'edit'],
-    });
-    return res.send({ success: 200, findResult });
+    try {
+      const findResult = await db.chatTemplate.findAll({
+        where: { company_idx },
+        attributes: ['title', 'contents', 'edit'],
+      });
+      return res.send({ success: 200, findResult });
+    } catch (err) {
+      next(err);
+    }
   },
   changeMemberInfo: async (req, res, next) => {
     const {
       body: { user_name, user_email, templateId },
       params: { memberId },
-      company_idx,
     } = req;
+    try {
+      // 검색용 usre_name 변경, config 변경
+      await db.userCompany.update(
+        { searchingName: user_name, config_idx: templateId },
+        { where: { idx: memberId } }
+      );
+      // user찾기
+      const findUserResult = await db.userCompany.findByPk(memberId, {
+        attributes: ['user_idx'],
+      });
+      // user 정보 변경
+      await db.user.update(
+        { user_name, user_email },
+        { where: { idx: findUserResult.user_idx } }
+      );
 
-    // 검색용 usre_name 변경, config 변경
-    await db.userCompany.update(
-      { searchingName: user_name, config_idx: templateId },
-      { where: { idx: memberId } }
-    );
-    // user찾기
-    const findUserResult = await db.userCompany.findByPk(memberId, {
-      attributes: ['user_idx'],
-    });
-    // user 정보 변경
-    await db.user.update(
-      { user_name, user_email },
-      { where: { idx: findUserResult.user_idx } }
-    );
+      const findResult = await findMember({
+        idx: memberId,
+      });
 
-    const findResult = await findMember({
-      idx: memberId,
-    });
-
-    return res.send({ success: 200, findResult });
+      return res.send({ success: 200, findResult });
+    } catch (err) {
+      next(err);
+    }
   },
 };
