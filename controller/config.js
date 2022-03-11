@@ -333,6 +333,19 @@ module.exports = {
       ],
       attributes: showPlanAttributes,
     });
+
+    // 남은 날짜 구하기
+    if (!findPlanResult.free_plan) {
+      return res.send(findPlanResult);
+    }
+    let now = moment().format('YYYY-MM-DD');
+    now = moment(now);
+    const freePlan = moment(findPlanResult.start_plan.replace(/\./g, '-'));
+    let diffTime = moment(freePlan.diff(now)).format('DD');
+    diffTime = parseInt(diffTime) - 1;
+
+    console.log(findPlanResult);
+
     return res.send(findPlanResult);
   },
   showPlanHistory: async (req, res, next) => {
