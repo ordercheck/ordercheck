@@ -455,8 +455,6 @@ module.exports = {
     } = req;
 
     const addCalculateLogic = async (bodyData) => {
-      console.log(bodyData);
-      console.log(calculate_idx);
       await db.calculate.update(bodyData, {
         where: { idx: calculate_idx },
       });
@@ -511,7 +509,7 @@ module.exports = {
       return res.send({ success: 200, findResult });
     }
     // 파일이 변함 없을 때
-    const findResult = await addCalculateLogic();
+    const findResult = await addCalculateLogic(body);
     return res.send({ success: 200, findResult });
   },
 
