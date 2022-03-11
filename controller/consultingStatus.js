@@ -296,7 +296,7 @@ module.exports = {
       }
       db.company.increment({ customer_count: 1 }, { where: { idx: user_idx } });
       await t.commit();
-
+      console.log('hi');
       res.send({ success: 200 });
 
       // 팀원들에게 알람 보내기
@@ -319,15 +319,13 @@ module.exports = {
 
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
 
-      const expiry_date = createExpireDate();
-
       const insertData = {
         message,
         company_idx,
         alarm_type: 1,
         customer_idx: findCustomer.idx,
-        expiry_date,
       };
+
       await sendCompanyAlarm(insertData, findMembers, io);
       return;
     } catch (err) {
