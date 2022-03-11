@@ -12,15 +12,15 @@ const swaggerDefinition = {
       "free_plan": "2021.12.26",
       "start_plan": "2022.01.09",
       "expire_plan": "2022.02.08",
-      "result_price": "1,000", 
-      "result_price_levy":"1,010"
-      "plan_price":"1,000",
+      "result_price": 1000, 
+      "result_price_levy": 1010,
+      "plan_price": 1000,
       "whiteLabelChecked": false,
       "chatChecked": true,     
       "analysticChecked": true,
-      "whiteLabel_price": "1,000",
-      "chat_price": "1,000",
-      "analystic_price": "1,000",
+      "whiteLabel_price": 1000,
+      "chat_price": 1000,
+      "analystic_price": 1000,
       "pay_type": "year",
      }
      일반카드

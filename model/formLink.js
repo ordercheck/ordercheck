@@ -9,7 +9,7 @@ module.exports = function (sequelize, DataTypes) {
     thumbNail: {
       allowNull: true,
       defaultValue:
-        'https://ordercheck.s3.ap-northeast-2.amazonaws.com/thumb/ordercheckForm.png',
+        'https://ordercheck.s3.ap-northeast-2.amazonaws.com/original/ordercheckForm.png',
       type: DataTypes.TEXT(),
     },
     thumbNail_title: {
