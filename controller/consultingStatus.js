@@ -468,7 +468,7 @@ module.exports = {
     if (file) {
       try {
         const file_name = getFileName(file.key);
-
+        console.log(file);
         const findCalculateResult = await db.calculate.findByPk(calculate_idx, {
           attributes: ['file_name'],
         });
