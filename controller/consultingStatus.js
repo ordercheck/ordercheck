@@ -69,9 +69,14 @@ module.exports = {
           );
           res.send({ success: 200 });
 
+          const customer_phoneNumber = bodyData.customer_phoneNumber.replace(
+            /\./g,
+            ''
+          );
+
           // 고객 카카오 푸쉬 보내기
           await customerkakaoPushNewForm(
-            bodyData.customer_phoneNumber,
+            customer_phoneNumber,
             bodyData.company_name,
             bodyData.customer_name,
             '접수 내용 확인',
@@ -90,10 +95,11 @@ module.exports = {
             attributes: ['user_idx'],
           });
 
-          console.log(getMembers);
           getMembers.forEach(async (data) => {
+            const user_phone = data.user.replace(/\./g, '');
+
             await TeamkakaoPushNewForm(
-              data.user.user_phone,
+              user_phone,
               bodyData.title,
               bodyData.customer_name,
               '확인하기',
