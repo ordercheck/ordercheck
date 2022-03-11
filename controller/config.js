@@ -94,13 +94,11 @@ module.exports = {
           LEFT JOIN company ON userCompany.company_idx = company.idx
           LEFT JOIN plan ON userCompany.company_idx = company.idx
           LEFT JOIN user ON company.huidx = user.idx
-          WHERE userCompany.user_idx = ${req.user_idx}
-   `
+          WHERE userCompany.user_idx = ${req.user_idx}`
         )
         .spread((r) => {
           return makeSpreadArray(r);
         });
-
       return res.send({ success: 200, companyProfile: companyProfile[0] });
     } catch (err) {
       next(err);
@@ -108,7 +106,6 @@ module.exports = {
   },
   changeCompanyLogo: async (req, res, next) => {
     const { company_idx, file } = req;
-
     try {
       const result = await updateLogoAndEnrollment(company_idx, file, 'logo');
       if (result) {

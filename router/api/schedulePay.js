@@ -4,6 +4,7 @@ const router = express.Router();
 const schedule = require('node-schedule');
 const { schedulePay, getPayment } = require('../../lib/payFunction');
 const { Alarm } = require('../../lib/class');
+const { createAlarm } = require('../../lib/apiFunctions');
 const moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
@@ -133,11 +134,13 @@ router.post('/', async (req, res, next) => {
         const month = moment().format('DD');
         const money = getResult.amount.toLocaleString();
         const message = `${month}월 구독료 ${money}원이 결제되었습니다. 오더체크를 이용해주셔서 감사합니다.`;
-        const createResult = await db.alarm.create({
+
+        const createResult = await createAlarm({
           message,
           user_idx: findCompanyName.company.huidx,
           alarm_type: 15,
         });
+
         // 알람 보내기
         const io = req.app.get('io');
         const alarm = new Alarm(createResult);
@@ -242,11 +245,13 @@ router.post('/', async (req, res, next) => {
       const month = moment().format('MM');
       const money = getResult.amount.toLocaleString();
       const message = `${month}월 구독료 ${money}원이 결제되었습니다. 오더체크를 이용해주셔서 감사합니다.`;
-      const createResult = await db.alarm.create({
+
+      const createResult = await createAlarm({
         message,
         user_idx: findCompanyName.huidx,
         alarm_type: 15,
       });
+
       // 알람 보내기
       const io = req.app.get('io');
       const alarm = new Alarm(createResult);
@@ -269,11 +274,13 @@ router.post('/', async (req, res, next) => {
       const day = moment().add('1', 'day').format(' YY/MM/DD');
 
       const message = `결제 실패로 ${day} 부터 이용이 제한됩니다. `;
-      const createResult = await db.alarm.create({
+
+      const createResult = await createAlarm({
         message,
         user_idx: findCompany.huidx,
         alarm_type: 9,
       });
+
       // 알람 보내기
       const io = req.app.get('io');
       const alarm = new Alarm(createResult);

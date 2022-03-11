@@ -5,7 +5,7 @@ const {
   getDetailCustomerInfo,
   sendCompanyAlarm,
   findMemberExceptMe,
-  createExpireDate,
+  createAlarm,
   decreasePriceAndHistory,
 } = require('../lib/apiFunctions');
 const { Alarm, Form, Customer } = require('../lib/class');
@@ -199,14 +199,13 @@ module.exports = {
       const io = req.app.get('io');
 
       const message = `[${consultResult.customer_name}]님의 담당자로 지정되었습니다.`;
-      const expiry_date = createExpireDate();
-      const createResult = await db.alarm.create({
+
+      const createResult = createAlarm({
         message,
         user_idx: contract_person,
         company_idx,
         alarm_type: 2,
         customer_idx: consultResult.idx,
-        expiry_date,
       });
 
       const alarm = new Alarm(createResult);
@@ -349,6 +348,7 @@ module.exports = {
         memo,
         status,
       },
+      company_idx,
       params: { customer_idx },
     } = req;
 
@@ -362,6 +362,7 @@ module.exports = {
       customer_phoneNumber,
       customer_name,
       memo,
+      company_idx,
       status,
       next
     );
