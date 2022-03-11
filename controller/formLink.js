@@ -250,13 +250,12 @@ module.exports = {
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
 
       const message = `${findUser.user_name}님이 [${title}] 신청폼을 수정하였습니다.`;
-      const expiry_date = createExpireDate();
+
       const data = {
         form_idx: formId,
         message,
         company_idx,
         alarm_type: 5,
-        expiry_date,
       };
 
       await sendCompanyAlarm(data, findMembers, io);
