@@ -89,6 +89,8 @@ module.exports = {
             ],
             attributes: ['user_idx'],
           });
+
+          console.log(getMembers);
           getMembers.forEach(async (data) => {
             await TeamkakaoPushNewForm(
               data.user.user_phone,
