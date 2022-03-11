@@ -39,7 +39,7 @@ module.exports = {
       });
 
       const unconfirmAlarm = await db.alarm.count({
-        where: { user_idx, confirm: false },
+        where: { user_idx, confirm: false, repeat_time: null },
       });
 
       const userInfo = await db.user.findByPk(user_idx, {
