@@ -344,6 +344,7 @@ module.exports = {
           'expression',
           'tempType',
           'thumbNail',
+          'title',
         ],
       });
 
