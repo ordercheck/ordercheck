@@ -93,6 +93,8 @@ module.exports = {
               },
             ],
             attributes: ['user_idx'],
+            raw: true,
+            nest: true,
           });
 
           getMembers.forEach(async (data) => {
