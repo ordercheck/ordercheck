@@ -209,7 +209,7 @@ module.exports = {
       });
 
       const alarm = new Alarm(createResult);
-
+      console.log(alarm);
       io.to(parseInt(createResult.user_idx)).emit('addAlarm', alarm);
       return;
     } catch (err) {
