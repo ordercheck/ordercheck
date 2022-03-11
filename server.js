@@ -38,7 +38,6 @@ io.on('connection', (socket) => {
         continue;
       } else {
         if (findAllAlarms[i].repeat_time) {
-          console.log('리핏 있음');
           await db.alarm.update(
             { repeat_time: null },
             { where: { idx: findAllAlarms[i].alarmId } }
