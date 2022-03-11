@@ -64,31 +64,8 @@ module.exports = {
 
     if (
       findCompanyData.form_link_count ==
-        limitPlan[findPlanResult.plan].form_link_count &&
-      req.files.img &&
-      req.files.concept
+      limitPlan[findPlanResult.plan].form_link_count
     ) {
-      try {
-        req.files.img.forEach((data) => {
-          const [, name] = data.key.split('/');
-          delFile(name, 'ordercheck/form2', (err, data) => {
-            if (err) {
-              console.log(err);
-            }
-          });
-        });
-        req.files.concept.forEach((data) => {
-          const [, name] = data.key.split('/');
-          delFile(name, 'ordercheck/form2', (err, data) => {
-            if (err) {
-              console.log(err);
-            }
-          });
-        });
-      } catch (err) {
-        console.log(err);
-      }
-
       req.formClose = true;
       return next();
     } else if (
