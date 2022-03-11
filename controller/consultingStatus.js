@@ -68,7 +68,6 @@ module.exports = {
             { where: { idx: formLinkCompany.company_idx } }
           );
           res.send({ success: 200 });
-
           const customer_phoneNumber = bodyData.customer_phoneNumber.replace(
             /\./g,
             ''
@@ -97,7 +96,6 @@ module.exports = {
 
           getMembers.forEach(async (data) => {
             const user_phone = data.user.user_phone.replace(/\./g, '');
-
             await TeamkakaoPushNewForm(
               user_phone,
               bodyData.title,
@@ -122,8 +120,6 @@ module.exports = {
         ],
         attributes: ['company_idx', 'title', 'tempType'],
       });
-
-      console.log(formLinkCompany);
 
       body.company_name = formLinkCompany.company.company_name;
       body.title = formLinkCompany.title;
@@ -151,32 +147,25 @@ module.exports = {
         createCustomerResult.idx,
         searchingPhoneNumber
       );
-
       // 파일 보관함 db 생성
       const createFileStoreResult = await createFileStore(fileStoreData, t);
       if (!createFileStoreResult.success) {
         next(createFileStoreResult.err);
         return;
       }
-
       // 이미지나 파일이 없을 때  간편 Form
       if (bodyClass.bodyData.tempType == 1) {
         bodyClass.bodyData.choice = bodyClass.bodyData.choice.join(', ');
         createConsultingAndIncrement(bodyClass.bodyData);
         return;
       }
-
       const imgUrlString = selectUrl(files.floor_plan);
       const conceptUrlString = selectUrl(files.hope_concept);
-
       const formBodyData = bodyClass.createNewUrl(
         imgUrlString,
         conceptUrlString
       );
-      console.log(formBodyData);
-
       await createConsultingAndIncrement(formBodyData);
-
       return;
     } catch (err) {
       await t.rollback();
