@@ -37,6 +37,10 @@ const checkFile = (
   beforePath,
   afterPath
 ) => {
+  console.log(beforePath);
+  console.log(afterPath);
+  beforePath = beforePath == undefined ? null : beforePath;
+  afterPath = afterPath == undefined ? null : afterPath;
   // 파일 안일 경우
   let CopySource = encodeURI(
     `ordercheck/fileStore/${req.params.customerFile_idx}/${beforePath}/${beforeTitle}`
