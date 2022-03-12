@@ -578,6 +578,7 @@ module.exports = {
   moveFile: async (req, res, next) => {
     const {
       params: { fileUuid, folderUuid },
+      query: { path },
     } = req;
     try {
       db.files.update(
@@ -593,14 +594,32 @@ module.exports = {
         ACL: 'public-read',
       };
 
+      const findFilesResult = await db.files.findOne({
+        where: { uuid: fileUuid },
+        raw: true,
+      });
+
       params = checkFile(
         req,
         params,
         `${findFilesResult.uniqueKey}${findFilesResult.title}`,
-        `${findFilesResult.uniqueKey}${newTitle}`
+        `${findFilesResult.uniqueKey}${findFilesResult.title}`
       );
 
-      await copyAndDelete(params);
+      let Bucket = '';
+      if (path) {
+        file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${path}/${findFilesResult.uniqueKey}${newTitle}`;
+        Bucket = encodeURI(`ordercheck/fileStore/${customerFile_idx}/${path}`);
+      } else {
+        file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${findFilesResult.uniqueKey}${newTitle}`;
+        Bucket = encodeURI(`ordercheck/fileStore/${customerFile_idx}`);
+      }
+
+      await copyAndDelete(
+        params,
+        Bucket,
+        `${findFilesResult.uniqueKey}${findFilesResult.title}`
+      );
     } catch (err) {
       next(err);
     }
