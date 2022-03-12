@@ -47,6 +47,10 @@ router.get(
 router.get('/search', loginCheck, searchFileStore);
 router.get('/folders/root/:customerFile_idx', loginCheck, findUserFolders);
 router.get('/folders/:uuid', loginCheck, findIncludeFolders);
-router.get('/folders/move/:fileUuid/:folderUuid', loginCheck, moveFile);
+router.get(
+  '/folders/move/:customerFile_idx/:fileUuid/:folderUuid',
+  loginCheck,
+  moveFile
+);
 
 module.exports = router;
