@@ -29,19 +29,26 @@ const deleteFileToS3 = async (title, req) => {
   }
 };
 
-const checkFile = (req, params, beforeTitle, newTitle) => {
+const checkFile = (
+  req,
+  params,
+  beforeTitle,
+  newTitle,
+  beforePath,
+  afterPath
+) => {
   // 파일 안일 경우
-  if (req.query.path) {
-    (params.CopySource = encodeURI(
-      `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}/${beforeTitle}`
-    )),
-      (params.Key = `fileStore/${req.params.customerFile_idx}/${req.query.path}/${newTitle}`);
-  } else {
-    (params.CopySource = encodeURI(
-      `ordercheck/fileStore/${req.params.customerFile_idx}/${beforeTitle}`
-    )),
-      (params.Key = `fileStore/${req.params.customerFile_idx}/${newTitle}`);
-  }
+  let CopySource = encodeURI(
+    `ordercheck/fileStore/${req.params.customerFile_idx}/${beforePath}/${beforeTitle}`
+  );
+  let Key = `fileStore/${req.params.customerFile_idx}/${afterPath}/${newTitle}`;
+
+  CopySource = CopySource.replace('/null', '');
+  Key = Key.replace('/null', '');
+
+  params.CopySource = CopySource;
+  params.Key = Key;
+
   return params;
 };
 const getFolderPath = async (pathData, customerFile_idx, joinData) => {
@@ -360,26 +367,25 @@ module.exports = {
 
         const newTitle = `${title}.${titleExtend[titleExtend.length - 1]}`;
 
-        let file_url = '';
         //  params만들기
         params = checkFile(
           req,
           params,
           `${findFilesResult.uniqueKey}${findFilesResult.title}`,
-          `${findFilesResult.uniqueKey}${newTitle}`
+          `${findFilesResult.uniqueKey}${newTitle}`,
+          path,
+          path
         );
 
         // 파일삭제
-        let Bucket = '';
-        if (path) {
-          file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${path}/${findFilesResult.uniqueKey}${newTitle}`;
-          Bucket = encodeURI(
-            `ordercheck/fileStore/${customerFile_idx}/${path}`
-          );
-        } else {
-          file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${findFilesResult.uniqueKey}${newTitle}`;
-          Bucket = encodeURI(`ordercheck/fileStore/${customerFile_idx}`);
-        }
+
+        let file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${path}/${findFilesResult.uniqueKey}${newTitle}`;
+        let Bucket = encodeURI(
+          `ordercheck/fileStore/${customerFile_idx}/${path}`
+        );
+
+        file_url = file_url.replace('/null', '');
+        Bucket = Bucket.replace('/null', '');
 
         const copyResult = await copyAndDelete(
           params,
@@ -581,9 +587,25 @@ module.exports = {
       query: { path },
     } = req;
     try {
+      // path가 있을 때
+      let newPath = null;
+      if (path) {
+        const folder = db.folders.findOne({
+          where: { uuid: folderUuid },
+          attributes: ['path'],
+        });
+        newPath = folder.path;
+      }
+
+      const beforePath = db.files.findOne({
+        where: { uuid: fileUuid },
+        attributes: ['path'],
+      });
+
       db.files.update(
         {
           folder_uuid: folderUuid,
+          path: folderPath,
         },
         { where: { uuid: fileUuid } }
       );
@@ -603,17 +625,16 @@ module.exports = {
         req,
         params,
         `${findFilesResult.uniqueKey}${findFilesResult.title}`,
-        `${findFilesResult.uniqueKey}${findFilesResult.title}`
+        `${findFilesResult.uniqueKey}${findFilesResult.title}`,
+        beforePath.path,
+        newPath
       );
 
-      let Bucket = '';
-      if (path) {
-        file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${path}/${findFilesResult.uniqueKey}${newTitle}`;
-        Bucket = encodeURI(`ordercheck/fileStore/${customerFile_idx}/${path}`);
-      } else {
-        file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${findFilesResult.uniqueKey}${newTitle}`;
-        Bucket = encodeURI(`ordercheck/fileStore/${customerFile_idx}`);
-      }
+      let Bucket = encodeURI(
+        `ordercheck/fileStore/${customerFile_idx}/${beforePath.path}`
+      );
+
+      Bucket = Bucket.replace('/null', '');
 
       await copyAndDelete(
         params,

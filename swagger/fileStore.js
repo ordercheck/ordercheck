@@ -301,7 +301,7 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/file/store/folders/move/{fileUuid}/{folderUuid}:
+ * /api/file/store/folders/move/{customerFile_idx}/{fileUuid}/{folderUuid}:
  *   get:
  *     security:
  *       - bearerAuth: []
@@ -319,6 +319,11 @@
  *           schema:
  *             type: string
  *           example: sldfsnd
+ *         - in: path
+ *           name: customerFile_idx
+ *           schema:
+ *             type: integer
+ *           example: 1
  *         - in: query
  *           name: folderPath
  *           schema:
