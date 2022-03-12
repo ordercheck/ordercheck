@@ -37,11 +37,6 @@ const checkFile = (
   beforePath,
   afterPath
 ) => {
-  beforePath = beforePath == 'undefined' ? null : beforePath;
-  afterPath = afterPath == 'undefined' ? null : afterPath;
-
-  console.log(beforePath);
-  console.log(afterPath);
   // 파일 안일 경우
   let CopySource = encodeURI(
     `ordercheck/fileStore/${req.params.customerFile_idx}/${beforePath}/${beforeTitle}`
@@ -336,7 +331,7 @@ module.exports = {
   },
   changeFileTitle: async (req, res, next) => {
     try {
-      const {
+      let {
         body: { uuid, title, isFolder },
         params: { customerFile_idx },
         query: { path },
@@ -371,6 +366,8 @@ module.exports = {
         const titleExtend = findFilesResult.title.split('.');
 
         const newTitle = `${title}.${titleExtend[titleExtend.length - 1]}`;
+
+        path = path == 'undefined' ? null : path;
 
         //  params만들기
         params = checkFile(
