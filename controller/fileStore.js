@@ -599,15 +599,6 @@ module.exports = {
         newPath = folder.path;
       }
 
-      db.files.update(
-        {
-          folder_uuid: folderUuid,
-          path: newPath,
-        },
-        { where: { uuid: fileUuid } }
-      );
-      res.send({ success: 200 });
-
       const beforePath = db.files.findOne({
         where: { uuid: fileUuid },
         attributes: ['path'],
@@ -634,14 +625,24 @@ module.exports = {
       let Bucket = encodeURI(
         `ordercheck/fileStore/${customerFile_idx}/${beforePath.path}`
       );
-
+      let file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${newPath}/${findFilesResult.uniqueKey}${findFilesResult.title}`;
       Bucket = Bucket.replace('/null', '');
-
+      file_url = file_url.replace('/null', '');
       await copyAndDelete(
         params,
         Bucket,
         `${findFilesResult.uniqueKey}${findFilesResult.title}`
       );
+
+      db.files.update(
+        {
+          folder_uuid: folderUuid,
+          path: newPath,
+          file_url,
+        },
+        { where: { uuid: fileUuid } }
+      );
+      return res.send({ success: 200 });
     } catch (err) {
       next(err);
     }
