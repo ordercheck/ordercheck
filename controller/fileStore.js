@@ -367,7 +367,7 @@ module.exports = {
 
         const newTitle = `${title}.${titleExtend[titleExtend.length - 1]}`;
 
-        path = path == 'undefined' ? null : path;
+        path == 'undefined' ? (path = null) : path;
         console.log(path);
         //  params만들기
         params = checkFile(
