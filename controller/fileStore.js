@@ -576,7 +576,9 @@ module.exports = {
     }
   },
   moveFile: async (req, res, next) => {
-    const { fileUuid, folderUuid } = req.params;
+    const {
+      params: { fileUuid, folderUuid },
+    } = req;
     try {
       db.files.update(
         {
@@ -584,8 +586,21 @@ module.exports = {
         },
         { where: { uuid: fileUuid } }
       );
+      res.send({ success: 200 });
 
-      return res.send({ success: 200 });
+      const params = {
+        Bucket: 'ordercheck',
+        ACL: 'public-read',
+      };
+
+      params = checkFile(
+        req,
+        params,
+        `${findFilesResult.uniqueKey}${findFilesResult.title}`,
+        `${findFilesResult.uniqueKey}${newTitle}`
+      );
+
+      await copyAndDelete(params);
     } catch (err) {
       next(err);
     }

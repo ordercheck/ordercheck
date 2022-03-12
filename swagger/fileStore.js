@@ -319,6 +319,11 @@
  *           schema:
  *             type: string
  *           example: sldfsnd
+ *         - in: query
+ *           name: folderPath
+ *           schema:
+ *             type: string
+ *           example: DFJS/SDOD
  *     responses:
  *       '200':
  *         description: 성공
