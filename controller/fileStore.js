@@ -388,7 +388,8 @@ module.exports = {
 
         file_url = file_url.replace('/null', '');
         Bucket = Bucket.replace('/null', '');
-
+        console.log(file_url);
+        console.log(Bucket);
         const copyResult = await copyAndDelete(
           params,
           Bucket,
