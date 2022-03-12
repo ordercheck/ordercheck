@@ -597,20 +597,19 @@ module.exports = {
         newPath = folder.path;
       }
 
-      const beforePath = db.files.findOne({
-        where: { uuid: fileUuid },
-        attributes: ['path'],
-      });
-
       db.files.update(
         {
           folder_uuid: folderUuid,
-          path: folderPath,
+          path: newPath,
         },
         { where: { uuid: fileUuid } }
       );
       res.send({ success: 200 });
 
+      const beforePath = db.files.findOne({
+        where: { uuid: fileUuid },
+        attributes: ['path'],
+      });
       const params = {
         Bucket: 'ordercheck',
         ACL: 'public-read',
