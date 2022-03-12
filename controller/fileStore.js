@@ -575,4 +575,19 @@ module.exports = {
       next(err);
     }
   },
+  moveFile: async (req, res, next) => {
+    const { fileUuid, folderUuid } = req.params;
+    try {
+      db.files.update(
+        {
+          folder_uuid: folderUuid,
+        },
+        { where: { uuid: fileUuid } }
+      );
+
+      return res.send({ success: 200 });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

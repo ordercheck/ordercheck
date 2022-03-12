@@ -359,8 +359,6 @@ module.exports = {
       let diffTime = moment(freePlan.diff(now)).format('DD');
       diffTime = parseInt(diffTime) - 1;
 
-      console.log(findPlanResult);
-
       return res.send(findPlanResult);
     } catch (err) {
       next(err);

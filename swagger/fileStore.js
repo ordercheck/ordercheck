@@ -301,4 +301,27 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/file/store/folders/move/{fileUuid}/{folderUuid}:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       -  FileStore
+ *     summary: 폴더 이동하기
+ *     parameters:
+ *         - in: path
+ *           name: fileUuid
+ *           schema:
+ *             type: string
+ *           example: sldfsnd
+ *         - in: path
+ *           name: folderUuid
+ *           schema:
+ *             type: string
+ *           example: sldfsnd
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */
