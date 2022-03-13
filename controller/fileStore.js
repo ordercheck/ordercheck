@@ -569,6 +569,9 @@ module.exports = {
             attributes: ['uuid', 'title', 'path'],
             raw: true,
           });
+          data = {...data.files}
+       
+          // console.log(data[`${...data.files}`]);
           if (result) {
             data.underFolders = true;
             return data;
