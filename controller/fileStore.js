@@ -588,8 +588,8 @@ module.exports = {
       query: { path },
     } = req;
 
-    console.log(params);
-    console.log(query);
+    console.log(req.params);
+    console.log(req.query);
 
 
     try {
