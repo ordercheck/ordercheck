@@ -587,6 +587,11 @@ module.exports = {
       params: { fileUuid, folderUuid,customerFile_idx },
       query: { path },
     } = req;
+
+    console.log(params);
+    console.log(query);
+
+
     try {
       // path가 있을 때
       let newPath = null;
