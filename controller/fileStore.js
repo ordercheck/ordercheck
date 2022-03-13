@@ -630,6 +630,11 @@ module.exports = {
       Bucket = Bucket.replace('/null', '');
       file_url = file_url.replace('/null', '');
   
+
+      console.log('이것은 버킷',Bucket);
+      console.log('이것은 파람',params);
+
+
       await copyAndDelete(
         params,
         Bucket,
