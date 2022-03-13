@@ -594,14 +594,10 @@ module.exports = {
 
     try {
       // path가 있을 때
-      let newPath = null;
-      if (path) {
-        const folder = await db.folders.findOne({
-          where: { uuid: folderUuid },
-          attributes: ['path'],
-        });
-        newPath = folder.path;
-      }
+      let newPath = path
+     if(newPath==undefined){
+       newPath = null
+     }
 
       const beforePath = await db.files.findOne({
         where: { uuid: fileUuid },
