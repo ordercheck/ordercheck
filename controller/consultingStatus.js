@@ -136,7 +136,7 @@ module.exports = {
       body.title = formLinkCompany.title;
       body.company_idx = formLinkCompany.company_idx;
       body.tempType = formLinkCompany.tempType;
-      console.log(body);
+
       const bodyClass = new Form(body);
 
       const { searchingAddress, searchingPhoneNumber } = changeToSearch(
@@ -147,6 +147,7 @@ module.exports = {
         searchingAddress,
         searchingPhoneNumber
       );
+      console.log(customerData);
 
       const createCustomerResult = await db.customer.create(customerData, {
         transaction: t,
