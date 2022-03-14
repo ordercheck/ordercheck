@@ -569,12 +569,11 @@ module.exports = {
             attributes: ['uuid', 'title', 'path'],
             raw: true,
           });
-          if (result) {
-            data.underFolders = true;
-            return data;
-          }
-          data.underFolders = false;
-          return data;
+          data = {...data.files}
+       
+          result ?  data.underFolders = true :  data.underFolders = false
+          
+          return data
         })
       );
 
@@ -585,25 +584,27 @@ module.exports = {
   },
   moveFile: async (req, res, next) => {
     const {
-      params: { fileUuid, folderUuid },
+      params: { fileUuid, folderUuid,customerFile_idx },
       query: { path },
     } = req;
+
+    console.log(req.params);
+    console.log(req.query);
+
+
     try {
       // path가 있을 때
-      let newPath = null;
-      if (path) {
-        const folder = db.folders.findOne({
-          where: { uuid: folderUuid },
-          attributes: ['path'],
-        });
-        newPath = folder.path;
-      }
+      let newPath = path
+     if(newPath==undefined){
+       newPath = null
+     }
 
-      const beforePath = db.files.findOne({
+      const beforePath = await db.files.findOne({
         where: { uuid: fileUuid },
         attributes: ['path'],
       });
-      const params = {
+
+      let params = {
         Bucket: 'ordercheck',
         ACL: 'public-read',
       };
@@ -612,6 +613,7 @@ module.exports = {
         where: { uuid: fileUuid },
         raw: true,
       });
+
 
       params = checkFile(
         req,
@@ -628,6 +630,11 @@ module.exports = {
       let file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${newPath}/${findFilesResult.uniqueKey}${findFilesResult.title}`;
       Bucket = Bucket.replace('/null', '');
       file_url = file_url.replace('/null', '');
+  
+
+
+
+
       await copyAndDelete(
         params,
         Bucket,
@@ -644,7 +651,7 @@ module.exports = {
       );
       return res.send({ success: 200 });
     } catch (err) {
-      next(err);
+      // next(err);
     }
   },
 };
