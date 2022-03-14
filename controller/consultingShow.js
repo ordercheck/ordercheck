@@ -158,6 +158,8 @@ module.exports = {
         return;
       }
 
+      console.log(consultResult);
+
       return res.send({ success: 200, consultResult });
     } catch (err) {
       next(err);
