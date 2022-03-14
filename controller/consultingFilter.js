@@ -14,8 +14,6 @@ module.exports = {
       company_idx,
     } = req;
 
-    console.log(req.body);
-
     // userId가 빈 배열일 때
     if ((userId && userId.length == 0) || date == '') {
       return res.send({
@@ -210,7 +208,7 @@ module.exports = {
           intlimit,
           start
         );
-    console.log(logicResult);
+
     return res.send({
       success: 200,
       findResult: confirm ? logicResult.findFilteredUsersData : logicResult,
