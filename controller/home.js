@@ -105,6 +105,7 @@ module.exports = {
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
           contract_possibility: 3,
+          company_idx,
         },
         attributes: consultingCountArrAttributes,
         order: [['createdAt', 'DESC']],
