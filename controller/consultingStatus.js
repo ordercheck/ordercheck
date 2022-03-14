@@ -390,6 +390,7 @@ module.exports = {
       file,
     } = req;
     body.customer_idx = customer_idx;
+    body.company_idx = company_idx;
     const addCalculateLogic = async () => {
       // 몇차 인지 체크
       const findCalculate = await db.calculate.findOne({

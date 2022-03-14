@@ -91,16 +91,11 @@ module.exports = {
         raw: true,
       });
 
-      const calculateCountArr = await db.customer.findAll({
+      const calculateCountArr = await db.calculate.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
           company_idx,
         },
-        // include: [
-        //   {
-        //     model: db.calculate,
-        //   },
-        // ],
         attributes: consultingCountArrAttributes,
         order: [['createdAt', 'DESC']],
         raw: true,

@@ -166,6 +166,12 @@ db.calculate.belongsTo(db.customer, {
   foreignKey: 'customer_idx',
 });
 
+// company와 calculate
+db.company.hasMany(db.calculate, { foreignKey: 'company_idx' });
+db.calculate.belongsTo(db.company, {
+  foreignKey: 'company_idx',
+});
+
 // formOpen과 user
 db.formOpen.belongsTo(db.user, {
   foreignKey: 'user_idx',
