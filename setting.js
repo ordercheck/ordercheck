@@ -1,6 +1,6 @@
 const { createServer } = require('./app.js');
 const config = {
-  port: 5000,
+  port: 80,
 };
 const server = createServer(config);
 

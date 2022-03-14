@@ -62,7 +62,6 @@ module.exports = {
             transaction: t,
           });
 
-          console.log(result);
           await t.commit();
 
           db.company.increment(
