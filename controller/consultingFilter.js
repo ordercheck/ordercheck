@@ -208,7 +208,6 @@ module.exports = {
           intlimit,
           start
         );
-    console.log(logicResult);
 
     return res.send({
       success: 200,
