@@ -190,5 +190,10 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: 0,
       type: DataTypes.INTEGER,
     },
+    tempType: {
+      allowNull: true,
+      defaultValue: null,
+      type: DataTypes.INTEGER,
+    },
   });
 };

@@ -33,7 +33,7 @@ router.post(
   addFile
 );
 router.patch('/update/title/:customerFile_idx', loginCheck, changeFileTitle);
-router.post('/:customerFile_idx', loginCheck, showFiles);
+router.post('/:customerFile_idx/:sort_field/:sort', loginCheck, showFiles);
 router.delete(
   '/file/:customerFile_idx/:isfolder/:uuid',
   loginCheck,

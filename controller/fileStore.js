@@ -96,6 +96,7 @@ module.exports = {
 
     const folders = await db.folders.findAll({
       where: { customerFile_idx, root: true },
+      order: [[sort_field, sort]],
     });
 
     const files = await db.files.findAll({
@@ -244,6 +245,7 @@ module.exports = {
       let findFilesResult = await db.files.findAll({
         where: { folder_uuid: req.body.uuid },
         attributes: showFilesAttributes,
+        order: [[sort_field, sort]],
       });
 
       findFilesResult = JSON.parse(
@@ -569,11 +571,11 @@ module.exports = {
             attributes: ['uuid', 'title', 'path'],
             raw: true,
           });
-          data = {...data.files}
-       
-          result ?  data.underFolders = true :  data.underFolders = false
-          
-          return data
+          data = { ...data.files };
+
+          result ? (data.underFolders = true) : (data.underFolders = false);
+
+          return data;
         })
       );
 
@@ -584,20 +586,19 @@ module.exports = {
   },
   moveFile: async (req, res, next) => {
     const {
-      params: { fileUuid, folderUuid,customerFile_idx },
+      params: { fileUuid, folderUuid, customerFile_idx },
       query: { path },
     } = req;
 
     console.log(req.params);
     console.log(req.query);
 
-
     try {
       // path가 있을 때
-      let newPath = path
-     if(newPath==undefined){
-       newPath = null
-     }
+      let newPath = path;
+      if (newPath == undefined) {
+        newPath = null;
+      }
 
       const beforePath = await db.files.findOne({
         where: { uuid: fileUuid },
@@ -614,7 +615,6 @@ module.exports = {
         raw: true,
       });
 
-
       params = checkFile(
         req,
         params,
@@ -630,10 +630,6 @@ module.exports = {
       let file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${newPath}/${findFilesResult.uniqueKey}${findFilesResult.title}`;
       Bucket = Bucket.replace('/null', '');
       file_url = file_url.replace('/null', '');
-  
-
-
-
 
       await copyAndDelete(
         params,

@@ -73,7 +73,6 @@ module.exports = {
             /\./g,
             ''
           );
-
           // 고객 카카오 푸쉬 보내기
           const { kakaoPushResult, message } = await customerkakaoPushNewForm(
             customer_phoneNumber,
@@ -161,12 +160,14 @@ module.exports = {
         createCustomerResult.idx,
         searchingPhoneNumber
       );
+
       // 파일 보관함 db 생성
       const createFileStoreResult = await createFileStore(fileStoreData, t);
       if (!createFileStoreResult.success) {
         next(createFileStoreResult.err);
         return;
       }
+
       // 이미지나 파일이 없을 때  간편 Form
       if (bodyClass.bodyData.tempType == 1) {
         bodyClass.bodyData.choice = bodyClass.bodyData.choice.join(', ');
@@ -390,6 +391,7 @@ module.exports = {
       file,
     } = req;
     body.customer_idx = customer_idx;
+    body.company_idx = company_idx;
     const addCalculateLogic = async () => {
       // 몇차 인지 체크
       const findCalculate = await db.calculate.findOne({
@@ -551,6 +553,8 @@ module.exports = {
       attributes: ['file_url', 'calculateNumber'],
     });
 
+    const [calculateNumber] = calculateFindResult.calculateNumber.split('차');
+
     const fileUrl = !calculateFindResult.file_url
       ? `orderchecktest.s3-website.ap-northeast-2.amazonaws.com/signin`
       : calculateFindResult.file_url.split('//')[1];
@@ -563,7 +567,7 @@ module.exports = {
       customer_phoneNumber,
       companyFindResult.company_name,
       customerFindResult.customer_name,
-      calculateFindResult.calculateNumber,
+      calculateNumber,
       '견적서 확인',
       fileUrl
     );
@@ -608,7 +612,6 @@ module.exports = {
           sms_idx,
           'LMS',
           message,
-          37,
           findSender.user_phone,
           customerFindResult.customer_phoneNumber
         );
