@@ -58,8 +58,11 @@ module.exports = {
       const { body, files, user_idx } = req;
       const createConsultingAndIncrement = async (bodyData) => {
         try {
-          console.log(bodyData);
-          await db.consulting.create(bodyData, { transaction: t });
+          const result = await db.consulting.create(bodyData, {
+            transaction: t,
+          });
+
+          console.log(result);
           await t.commit();
 
           db.company.increment(
