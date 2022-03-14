@@ -58,6 +58,7 @@ module.exports = {
       const { body, files, user_idx } = req;
       const createConsultingAndIncrement = async (bodyData) => {
         try {
+          console.log(bodyData);
           await db.consulting.create(bodyData, { transaction: t });
           await t.commit();
 
@@ -151,8 +152,6 @@ module.exports = {
       const createCustomerResult = await db.customer.create(customerData, {
         transaction: t,
       });
-
-      console.log(createCustomerResult);
 
       const fileStoreData = bodyClass.fileStoreData(
         createCustomerResult.customer_phoneNumber,
