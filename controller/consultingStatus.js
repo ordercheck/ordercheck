@@ -147,11 +147,12 @@ module.exports = {
         searchingAddress,
         searchingPhoneNumber
       );
-      console.log(customerData);
 
       const createCustomerResult = await db.customer.create(customerData, {
         transaction: t,
       });
+
+      console.log(createCustomerResult);
 
       const fileStoreData = bodyClass.fileStoreData(
         createCustomerResult.customer_phoneNumber,
