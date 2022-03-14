@@ -55,7 +55,7 @@ module.exports = {
     };
     try {
       // url을 string으로 연결
-      const { body, files, user_idx, text_cost, repay, sms_idx, token } = req;
+      const { body, files, user_idx, text_cost } = req;
       const createConsultingAndIncrement = async (bodyData) => {
         try {
           await db.consulting.create(bodyData, { transaction: t });
@@ -83,64 +83,15 @@ module.exports = {
             attributes: ['user_phone'],
           });
 
-          // 알림톡 보낸 결과 조회
-          if (kakaoPushResult) {
-            const checkKakaoPromise = () => {
-              return new Promise(function (resolve, reject) {
-                setTimeout(async () => {
-                  const sendResult = await checkKakaoPushResult(
-                    kakaoPushResult
-                  );
-                  resolve(sendResult);
-                }, 1000);
-              });
-            };
-            const sendResult = await checkKakaoPromise();
-            //문자 다시 보내기
-
-            // 메시지 전송못할때 3018 (차단, 카톡 없을때)
-            // 전화번호 오류 3008
-            // 정상발송 0000
-            if (sendResult.sendResult === '3018') {
-              // 문자 보내기 전 문자 비용 체크
-
-              if (text_cost - 10 < 37) {
-                return res.send({ success: 400, message: 'LMS 비용 부족' });
-              }
-
-              // LMS 비용 차감 후 저장
-              decreasePriceAndHistory(
-                { text_cost: 37 },
-                sms_idx,
-                'LMS',
-                message,
-                37,
-                findSender.user_phone,
-                customerFindResult.customer_phoneNumber
-              );
-
-              user_phone = customerFindResult.customer_phoneNumber.replace(
-                /\./g,
-                '-'
-              );
-              await axios({
-                url: '/api/send/sms',
-                method: 'post', // POST method
-                headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
-                data: { user_phone, message, type: 'LMS' },
-              });
-            }
-          }
-
           // 알림톡 비용 차감 후 저장
-          decreasePriceAndHistory(
-            { text_cost: 10 },
-            sms_idx,
-            '알림톡',
-            message,
-            findSender.user_phone,
-            bodyData.customer_phoneNumber
-          );
+          // decreasePriceAndHistory(
+          //   { text_cost: 10 },
+          //   sms_idx,
+          //   '알림톡',
+          //   message,
+          //   findSender.user_phone,
+          //   bodyData.customer_phoneNumber
+          // );
 
           // 팀원 카카오 푸쉬 보내기
           const getMembers = await db.userCompany.findAll({
