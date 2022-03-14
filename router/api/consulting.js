@@ -126,6 +126,7 @@ router.post(
     { name: 'floor_plan' },
     { name: 'hope_concept' },
   ]),
+  smsCheck,
   addConsultingForm
 );
 // 고객등록 api
