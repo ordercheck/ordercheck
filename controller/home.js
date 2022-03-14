@@ -62,6 +62,7 @@ module.exports = {
       const zeroFiftyPossibility = await db.customer.count({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
+          company_idx,
           contract_possibility: {
             [Op.or]: [0, 1],
           },
@@ -71,6 +72,7 @@ module.exports = {
       const fiftyComplete = await db.customer.count({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
+          company_idx,
           contract_possibility: {
             [Op.or]: [2, 3],
           },
