@@ -129,7 +129,7 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
 // 로그인 라우터
 router.post('/login', async (req, res, next) => {
   const { user_phone, user_password, company_subdomain } = req.body;
-  console.log('로그인 함');
+
   let check = await db.user.findOne({ where: { user_phone, deleted: null } });
   if (!check) {
     return res.send({ success: 400, message: '비밀번호 혹은 전화번호 오류' });
