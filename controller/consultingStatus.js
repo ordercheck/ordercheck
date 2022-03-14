@@ -551,6 +551,8 @@ module.exports = {
       attributes: ['file_url', 'calculateNumber'],
     });
 
+    const [calculateNumber] = calculateFindResult.calculateNumber.split('차');
+
     const fileUrl = !calculateFindResult.file_url
       ? `orderchecktest.s3-website.ap-northeast-2.amazonaws.com/signin`
       : calculateFindResult.file_url.split('//')[1];
@@ -563,7 +565,7 @@ module.exports = {
       customer_phoneNumber,
       companyFindResult.company_name,
       customerFindResult.customer_name,
-      calculateFindResult.calculateNumber,
+      calculateNumber,
       '견적서 확인',
       fileUrl
     );
