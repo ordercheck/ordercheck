@@ -160,12 +160,14 @@ module.exports = {
         createCustomerResult.idx,
         searchingPhoneNumber
       );
+
       // 파일 보관함 db 생성
       const createFileStoreResult = await createFileStore(fileStoreData, t);
       if (!createFileStoreResult.success) {
         next(createFileStoreResult.err);
         return;
       }
+
       // 이미지나 파일이 없을 때  간편 Form
       if (bodyClass.bodyData.tempType == 1) {
         bodyClass.bodyData.choice = bodyClass.bodyData.choice.join(', ');
@@ -610,7 +612,6 @@ module.exports = {
           sms_idx,
           'LMS',
           message,
-          37,
           findSender.user_phone,
           customerFindResult.customer_phoneNumber
         );
