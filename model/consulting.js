@@ -179,7 +179,6 @@ module.exports = function (sequelize, DataTypes) {
 
     contact_time: {
       allowNull: true,
-
       type: DataTypes.STRING(100),
     },
     etc_question: {
@@ -188,7 +187,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     status: {
       allowNull: false,
-      default: 0,
+      defaultValue: 0,
       type: DataTypes.INTEGER,
     },
   });
