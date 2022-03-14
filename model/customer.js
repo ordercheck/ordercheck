@@ -67,7 +67,7 @@ module.exports = function (sequelize, DataTypes) {
     },
 
     tempType: {
-      allowNull: false,
+      allowNull: true,
       defaultValue: null,
       type: DataTypes.INTEGER,
     },
