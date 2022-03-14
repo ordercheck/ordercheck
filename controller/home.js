@@ -96,17 +96,16 @@ module.exports = {
           createdAt: { [Op.between]: [daysAgo, now] },
           company_idx,
         },
-        include: [
-          {
-            model: db.calculate,
-          },
-        ],
+        // include: [
+        //   {
+        //     model: db.calculate,
+        //   },
+        // ],
         attributes: consultingCountArrAttributes,
         order: [['createdAt', 'DESC']],
         raw: true,
       });
 
-      console.log(calculateCountArr);
       const completeConsultingArr = await db.customer.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
