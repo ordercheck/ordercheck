@@ -73,7 +73,6 @@ module.exports = {
             /\./g,
             ''
           );
-
           // 고객 카카오 푸쉬 보내기
           const { kakaoPushResult, message } = await customerkakaoPushNewForm(
             customer_phoneNumber,

@@ -245,6 +245,7 @@ module.exports = {
       let findFilesResult = await db.files.findAll({
         where: { folder_uuid: req.body.uuid },
         attributes: showFilesAttributes,
+        order: [[sort_field, sort]],
       });
 
       findFilesResult = JSON.parse(
