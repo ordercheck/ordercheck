@@ -69,6 +69,8 @@ module.exports = {
         },
       });
 
+      console.log(zeroFiftyPossibility);
+
       const fiftyComplete = await db.customer.count({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
