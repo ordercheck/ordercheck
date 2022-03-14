@@ -12,6 +12,7 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: '',
       type: DataTypes.STRING(100),
     },
+
     customer_phoneNumber: {
       allowNull: false,
       defaultValue: '',
@@ -63,6 +64,12 @@ module.exports = function (sequelize, DataTypes) {
     deleted: {
       allowNull: true,
       type: DataTypes.STRING(100),
+    },
+
+    tempType: {
+      allowNull: false,
+      defaultValue: null,
+      type: DataTypes.INTEGER,
     },
   });
 };
