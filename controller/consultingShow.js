@@ -55,7 +55,7 @@ module.exports = {
       if (!No && !Name && !Address && !Date) {
         getCustomerDataResult = await getCustomerData(
           'createdAt',
-          'ASC',
+          'DESC',
           totalData - intlimit * intPage + intlimit,
           'minus'
         );
