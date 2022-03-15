@@ -349,6 +349,8 @@ module.exports = {
         if (findFoldersResult.upperFolder == undefined) {
           findFoldersResult.upperFolder = null;
         }
+
+        console.log('upperFolder', findFoldersResult.upperFolder);
         const findFolderResult = await db.folders.findOne({
           where: { title, upperFolder: findFoldersResult.upperFolder },
           attributes: ['duplicateCount'],
