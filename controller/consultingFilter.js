@@ -14,11 +14,6 @@ module.exports = {
       company_idx,
     } = req;
 
-    console.log('이것은 바디', req.body);
-
-    // if (isEmptyObj(req.query)) {
-
-    // }
     if ((userId && userId.length == 0) || date == '') {
       // userId가 빈 배열일 때
       return res.send({
@@ -213,8 +208,6 @@ module.exports = {
           intlimit,
           start
         );
-
-    console.log('이것은 결과', logicResult);
 
     return res.send({
       success: 200,

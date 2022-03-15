@@ -128,7 +128,6 @@ module.exports = {
   },
   duplicateForm: async (req, res, next) => {
     // copyCount 1증가
-
     const findFormLink = await db.formLink.findByPk(req.params.formId, {
       attributes: { exclude: ['idx', 'createdAt', 'updatedAt'] },
     });
@@ -144,14 +143,9 @@ module.exports = {
       .split('T')[0]
       .replace(/-/g, '.');
 
-    const duplicateResult = {
-      formId: duplicateForm.idx,
-      title: duplicateForm.title,
-      form_link: duplicateForm.form_link,
-      expression: duplicateForm.expression,
-      urlPath: duplicateForm.form_link,
-      createdAt,
-    };
+    duplicateForm.dataValues.createdAt = createdAt;
+
+    let duplicateResult = { ...duplicateForm.dataValues };
 
     return res.send({
       success: 200,
