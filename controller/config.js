@@ -4,6 +4,7 @@ const _f = require('../lib/functions');
 const { findMembers, findMember, checkTitle } = require('../lib/apiFunctions');
 const { Op } = require('sequelize');
 const { Company } = require('../lib/classes/CompanyClass');
+const { Template } = require('../lib/classes/TemplateClass');
 const { createConfig } = require('../lib/standardTemplate');
 
 const {
@@ -185,22 +186,20 @@ module.exports = {
       user_idx,
     } = req;
     try {
-      const Title = await checkTitle(
-        db.config,
-        { template_name: title, company_idx },
-        title,
-        req.body
-      );
-
+      const template = new Template({});
+      const checkTitleResult = await template.checkTitle({
+        template_name: title,
+      });
       const findUser = await db.user.findByPk(user_idx, {
         attributes: ['user_name'],
       });
 
-      createConfig.template_name = Title.title;
-      createConfig.create_people = findUser.user_name;
-      createConfig.company_idx = company_idx;
-
-      const createdResult = await db.config.create(createConfig);
+      const createConfigClass = new Template(createConfig);
+      const createdResult = createConfigClass.createConfig(
+        checkTitleResult.title,
+        findUser.user_name,
+        company_idx
+      );
 
       return res.send({ success: 200, templateId: createdResult.idx });
     } catch (err) {

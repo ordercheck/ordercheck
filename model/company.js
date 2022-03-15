@@ -62,6 +62,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     company_logo_title: {
       allowNull: true,
+      defaultValue: '',
       type: DataTypes.STRING(100),
     },
     active: {
