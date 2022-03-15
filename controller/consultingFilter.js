@@ -16,9 +16,9 @@ module.exports = {
 
     console.log('이것은 바디', req.body);
 
-    if (isEmptyObj(req.query)) {
-      return;
-    }
+    // if (isEmptyObj(req.query)) {
+
+    // }
     if ((userId && userId.length == 0) || date == '') {
       // userId가 빈 배열일 때
       return res.send({
