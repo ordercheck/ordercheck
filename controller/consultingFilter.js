@@ -14,7 +14,12 @@ module.exports = {
       company_idx,
     } = req;
 
-    if ((userId && userId.length == 0) || date == '') {
+    if (
+      (userId && userId.length == 0) ||
+      date == '' ||
+      status.length == 0 ||
+      contract_possibility.length == 0
+    ) {
       // userId가 빈 배열일 때
       return res.send({
         success: 200,
@@ -28,8 +33,8 @@ module.exports = {
       company_idx
     );
 
-    let countArr = [0, 1, 2, 3, 4];
-    let countPossibility = [0, 1, 2, 3];
+    let countArr;
+    let countPossibility;
     let contractPerson;
     const countCustomers = async (
       statusData,

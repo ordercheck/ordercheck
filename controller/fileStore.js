@@ -342,7 +342,6 @@ module.exports = {
       // 폴더일 경우
       if (isFolder) {
         // 이전에 같은 이름의 폴더를 찾음
-
         const findFoldersResult = await db.folders.findOne({
           where: { uuid, customerFile_idx },
           attributes: ['root', 'upperFolder'],
@@ -353,9 +352,9 @@ module.exports = {
           attributes: ['duplicateCount'],
         });
 
-        console.log(findFolderResult);
         // 이미 같은 이름의 폴더가 없을 때
         if (!findFolderResult) {
+          console.log('같은폴더 없을 때');
           const pureTitle = makePureText(title);
           await db.folders.update(
             { title, searchingTitle: pureTitle, duplicateCount: 1 },
@@ -367,7 +366,8 @@ module.exports = {
             await db.files.update({ title: title }, { where: { uuid } });
           }
         } else {
-          title = `title_${findFolderResult.duplicateCount}`;
+          console.log('같은폴더 있을 때');
+          title = `${title}_${findFolderResult.duplicateCount}`;
           const pureTitle = makePureText(title);
           await db.folders.update(
             { title, searchingTitle: pureTitle },
