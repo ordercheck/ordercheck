@@ -231,7 +231,7 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      const pureText = search.replace(/\./g, '');
+      const pureText = search.replace(/\./g, '').replace(/ /gi, '');
 
       const { start, intlimit, intPage } = await checkPage(
         limit,
