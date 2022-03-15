@@ -393,6 +393,7 @@ module.exports = {
             await db.files.update({ title: title }, { where: { uuid } });
           }
         }
+        return res.send({ success: 200, newTitle: title });
       } else {
         const findFilesResult = await db.files.findOne({
           where: { uuid },
@@ -455,7 +456,6 @@ module.exports = {
           return res.send({ success: 200, updatedFileResult });
         }
       }
-      return res.send({ success: 200 });
     } catch (err) {
       next(err);
     }
