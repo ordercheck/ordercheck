@@ -143,9 +143,14 @@ module.exports = {
       .split('T')[0]
       .replace(/-/g, '.');
 
-    duplicateForm.dataValues.createdAt = createdAt;
-
-    let duplicateResult = { ...duplicateForm.dataValues };
+    const duplicateResult = {
+      formId: duplicateForm.idx,
+      title: duplicateForm.title,
+      form_link: duplicateForm.form_link,
+      expression: duplicateForm.expression,
+      urlPath: duplicateForm.form_link,
+      createdAt,
+    };
 
     return res.send({
       success: 200,

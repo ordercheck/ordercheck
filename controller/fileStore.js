@@ -341,18 +341,47 @@ module.exports = {
 
       // 폴더일 경우
       if (isFolder) {
-        const pureTitle = makePureText(title);
-        await db.folders.update(
-          { title, searchingTitle: pureTitle },
-          { where: { uuid, customerFile_idx } }
-        );
+        // 이전에 같은 이름의 폴더를 찾음
 
         const findFoldersResult = await db.folders.findOne({
           where: { uuid, customerFile_idx },
-          attributes: ['root'],
+          attributes: ['root', 'upperFolder'],
         });
-        if (!findFoldersResult.root) {
-          await db.files.update({ title: title }, { where: { uuid } });
+
+        const findFolderResult = await db.folders.findOne({
+          where: { title, upperFolder: findFoldersResult.upperFolder },
+          attributes: ['duplicateCount'],
+        });
+
+        // 이미 같은 이름의 폴더가 없을 때
+        if (!findFolderResult) {
+          const pureTitle = makePureText(title);
+          await db.folders.update(
+            { title, searchingTitle: pureTitle, duplicateCount: 1 },
+            { where: { uuid, customerFile_idx } }
+          );
+
+          // 루트폴더 아닐 때
+          if (!findFoldersResult.root) {
+            await db.files.update({ title: title }, { where: { uuid } });
+          }
+        } else {
+          title = `title_${findFolderResult.duplicateCount}`;
+
+          const pureTitle = makePureText(title);
+          await db.folders.update(
+            { title, searchingTitle: pureTitle },
+            { where: { uuid, customerFile_idx } }
+          );
+
+          const findFoldersResult = await db.folders.findOne({
+            where: { uuid, customerFile_idx },
+            attributes: ['root'],
+          });
+          // 루트폴더 아닐 때
+          if (!findFoldersResult.root) {
+            await db.files.update({ title: title }, { where: { uuid } });
+          }
         }
       } else {
         const findFilesResult = await db.files.findOne({

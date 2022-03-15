@@ -10,20 +10,11 @@ module.exports = {
   delAlarm: async (req, res, next) => {
     const {
       body: { alarmId },
-      user_idx,
     } = req;
     try {
-      alarmId.forEach(async (idx) => {
-        await db.alarm.destroy({ where: { idx } });
-      });
+      const alarm = new Alarm({});
 
-      await db.alarm.findAll({
-        where: { user_idx, repeat_time: null },
-        attributes: alarmAttributes,
-        order: [['createdAt', 'DESC']],
-        raw: true,
-      });
-
+      alarm.delAlarms(alarmId);
       return res.send({ success: 200 });
     } catch (err) {
       next(err);

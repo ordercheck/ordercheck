@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /api/alarm:
+ * /api/alarm/del:
  *   post:
  *      security:
  *       - bearerAuth: []
