@@ -1,5 +1,5 @@
 const { checkPage, addUserId } = require('../lib/apiFunctions');
-const { changeDate, makePureText } = require('../lib/apiFunctions');
+const { changeDate, makePureText, isEmptyObj } = require('../lib/apiFunctions');
 const db = require('../model/db');
 const { Op } = require('sequelize');
 const { sortElements, giveNumbering } = require('../lib/checkData');
@@ -14,8 +14,11 @@ module.exports = {
       company_idx,
     } = req;
 
-    // userId가 빈 배열일 때
+    if (isEmptyObj(req.query)) {
+      return;
+    }
     if ((userId && userId.length == 0) || date == '') {
+      // userId가 빈 배열일 때
       return res.send({
         success: 200,
         findResult: confirm ? [] : 0,
