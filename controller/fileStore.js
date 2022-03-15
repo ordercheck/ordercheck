@@ -353,6 +353,7 @@ module.exports = {
           attributes: ['duplicateCount'],
         });
 
+        console.log(findFolderResult);
         // 이미 같은 이름의 폴더가 없을 때
         if (!findFolderResult) {
           const pureTitle = makePureText(title);
@@ -367,7 +368,6 @@ module.exports = {
           }
         } else {
           title = `title_${findFolderResult.duplicateCount}`;
-
           const pureTitle = makePureText(title);
           await db.folders.update(
             { title, searchingTitle: pureTitle },
