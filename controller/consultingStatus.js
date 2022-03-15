@@ -5,7 +5,7 @@ const {
   getDetailCustomerInfo,
   sendCompanyAlarm,
   findMemberExceptMe,
-  createAlarm,
+
   decreasePriceAndHistory,
 } = require('../lib/apiFunctions');
 const { Alarm, Form, Customer } = require('../lib/class');
@@ -214,18 +214,16 @@ module.exports = {
       const io = req.app.get('io');
 
       const message = `[${consultResult.customer_name}]님의 담당자로 지정되었습니다.`;
-
-      const createResult = await createAlarm({
+      const alarm = new Alarm({});
+      const createResult = await alarm.createAlarm({
         message,
         user_idx: contract_person,
         company_idx,
         alarm_type: 2,
         customer_idx: consultResult.idx,
       });
-
-      const alarm = new Alarm(createResult);
-      console.log(alarm);
-      io.to(parseInt(createResult.user_idx)).emit('addAlarm', alarm);
+      const sendAlarm = new Alarm(createResult);
+      io.to(parseInt(createResult.user_idx)).emit('addAlarm', sendAlarm);
       return;
     } catch (err) {
       next(err);

@@ -4,7 +4,7 @@ const router = express.Router();
 const schedule = require('node-schedule');
 const { schedulePay, getPayment } = require('../../lib/payFunction');
 const { Alarm } = require('../../lib/class');
-const { createAlarm } = require('../../lib/apiFunctions');
+
 const moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
@@ -27,6 +27,7 @@ router.post('/', async (req, res, next) => {
 
     // 다음 결제 예약
     if (status == 'paid') {
+      const alarm = new Alarm({});
       const checkPlan = await db.plan.findOne({
         where: { merchant_uid, active: 3 },
         attributes: ['pay_type', 'expire_plan'],
@@ -135,7 +136,7 @@ router.post('/', async (req, res, next) => {
         const money = getResult.amount.toLocaleString();
         const message = `${month}월 구독료 ${money}원이 결제되었습니다. 오더체크를 이용해주셔서 감사합니다.`;
 
-        const createResult = await createAlarm({
+        const createResult = await alarm.createAlarm({
           message,
           user_idx: findCompanyName.company.huidx,
           alarm_type: 15,
@@ -143,8 +144,8 @@ router.post('/', async (req, res, next) => {
 
         // 알람 보내기
         const io = req.app.get('io');
-        const alarm = new Alarm(createResult);
-        io.to(findCompanyName.company.huidx).emit('addAlarm', alarm);
+        const sendAlarm = new Alarm(createResult);
+        io.to(findCompanyName.company.huidx).emit('addAlarm', sendAlarm);
         return;
       } else {
         const findPlanCompany = await db.plan.findOne(
@@ -246,7 +247,7 @@ router.post('/', async (req, res, next) => {
       const money = getResult.amount.toLocaleString();
       const message = `${month}월 구독료 ${money}원이 결제되었습니다. 오더체크를 이용해주셔서 감사합니다.`;
 
-      const createResult = await createAlarm({
+      const createResult = await alarm.createAlarm({
         message,
         user_idx: findCompanyName.huidx,
         alarm_type: 15,
@@ -254,12 +255,13 @@ router.post('/', async (req, res, next) => {
 
       // 알람 보내기
       const io = req.app.get('io');
-      const alarm = new Alarm(createResult);
-      io.to(findCompanyName.huidx).emit('addAlarm', alarm);
+      const sendAlarm = new Alarm(createResult);
+      io.to(findCompanyName.huidx).emit('addAlarm', sendAlarm);
       return;
     }
     // 정기결제 실패했을 때
     if (status == 'failed') {
+      const alarm = new Alarm({});
       const findPlanCompany = await db.plan.findOne(
         { where: { merchant_uid } },
         { attributes: ['company_idx'] }
@@ -275,7 +277,7 @@ router.post('/', async (req, res, next) => {
 
       const message = `결제 실패로 ${day} 부터 이용이 제한됩니다. `;
 
-      const createResult = await createAlarm({
+      const createResult = await alarm.createAlarm({
         message,
         user_idx: findCompany.huidx,
         alarm_type: 9,
@@ -283,8 +285,8 @@ router.post('/', async (req, res, next) => {
 
       // 알람 보내기
       const io = req.app.get('io');
-      const alarm = new Alarm(createResult);
-      io.to(findCompany.huidx).emit('addAlarm', alarm);
+      const sendAlarm = new Alarm(createResult);
+      io.to(findCompany.huidx).emit('addAlarm', sendAlarm);
       const cancelldDate = '0 0 1 * * *';
       const cancelPay = schedule.scheduleJob(cancelldDate, async function () {
         try {
