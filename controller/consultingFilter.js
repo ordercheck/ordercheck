@@ -14,6 +14,8 @@ module.exports = {
       company_idx,
     } = req;
 
+    console.log('이것은 바디', req.body);
+
     if (isEmptyObj(req.query)) {
       return;
     }
@@ -212,6 +214,8 @@ module.exports = {
           start
         );
 
+    console.log('이것은 결과', logicResult);
+
     return res.send({
       success: 200,
       findResult: confirm ? logicResult.findFilteredUsersData : logicResult,
@@ -231,7 +235,7 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      const pureText = search.replace(/\./g, '').replace(/ /gi, '');
+      const pureText = search.replace(/[. ]/g, '');
 
       const { start, intlimit, intPage } = await checkPage(
         limit,
