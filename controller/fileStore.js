@@ -463,6 +463,7 @@ module.exports = {
   searchFileStore: async (req, res, next) => {
     const pureText = req.query.search.replace(/[. ]/g, '');
     const totalFindResult = await searchFileandFolder(req, pureText);
+
     res.send(totalFindResult);
   },
   showDetailFileFolder: async (req, res, next) => {

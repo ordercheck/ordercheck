@@ -2,7 +2,7 @@ const db = require('../model/db');
 const moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
-const { Alarm } = require('../lib/class');
+const { Alarm } = require('../lib/classes/AlarmClass');
 
 module.exports = {
   delAlarm: async (req, res, next) => {

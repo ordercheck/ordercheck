@@ -5,10 +5,11 @@ const {
   getDetailCustomerInfo,
   sendCompanyAlarm,
   findMemberExceptMe,
-
   decreasePriceAndHistory,
 } = require('../lib/apiFunctions');
-const { Alarm, Form, Customer } = require('../lib/class');
+const { Form } = require('../lib/classes/FormClass');
+const { Customer } = require('../lib/classes/CustomerClass');
+const { Alarm } = require('../lib/classes/AlarmClass');
 const axios = require('axios');
 
 const moment = require('moment');

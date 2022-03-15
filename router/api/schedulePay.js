@@ -3,7 +3,7 @@ const { generateRandomCode } = require('../../lib/functions');
 const router = express.Router();
 const schedule = require('node-schedule');
 const { schedulePay, getPayment } = require('../../lib/payFunction');
-const { Alarm } = require('../../lib/class');
+const { Alarm } = require('../../lib/classes/AlarmClass');
 
 const moment = require('moment');
 require('moment-timezone');

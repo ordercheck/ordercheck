@@ -3,6 +3,7 @@ const { makeSpreadArray } = require('../lib/functions');
 const _f = require('../lib/functions');
 const { findMembers, findMember, checkTitle } = require('../lib/apiFunctions');
 const { Op } = require('sequelize');
+const { Company } = require('../lib/classes/CompanyClass');
 const { createConfig } = require('../lib/standardTemplate');
 
 const {
@@ -27,58 +28,6 @@ const {
 
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
-
-const updateLogoAndEnrollment = async (
-  company_idxData,
-  fileData,
-  changeData
-) => {
-  const updateCompanyLogo = async (UrlData, TitleData, change) => {
-    let updateKey;
-    change == 'logo'
-      ? (updateKey = 'company_logo')
-      : (updateKey = 'business_enrollment');
-
-    const updateKeyTitle = `${updateKey}_title`;
-
-    await db.company.update(
-      {
-        [updateKey]: UrlData,
-        [updateKeyTitle]: TitleData,
-      },
-      { where: { idx: company_idxData } }
-    );
-  };
-  try {
-    // 로고를 삭제하는 경우
-    if (!fileData && changeData == 'logo') {
-      await updateCompanyLogo('', '', changeData);
-    }
-    // 로고를 바꾸는 경우
-    else if (fileData && changeData == 'logo') {
-      const originalUrl = fileData.location;
-      const thumbNail = originalUrl.replace(/\/original\//, '/thumb/');
-      await updateCompanyLogo(thumbNail, fileData.originalname, changeData);
-    }
-
-    //사업자 등록증 새로 등록
-    else if (fileData && changeData == 'enrollment') {
-      await updateCompanyLogo(
-        fileData.location,
-        fileData.originalname,
-        changeData
-      );
-    }
-    // 사업자 등록증 삭제
-    else if (!fileData && changeData == 'enrollment') {
-      await updateCompanyLogo(null, null, changeData);
-    }
-
-    return true;
-  } catch (err) {
-    return false;
-  }
-};
 
 module.exports = {
   getCompanyProfile: async (req, res, next) => {
@@ -107,8 +56,13 @@ module.exports = {
   },
   changeCompanyLogo: async (req, res, next) => {
     const { company_idx, file } = req;
+    const company = new Company({});
     try {
-      const result = await updateLogoAndEnrollment(company_idx, file, 'logo');
+      const result = await company.updateLogoAndEnrollment(
+        company_idx,
+        file,
+        'logo'
+      );
       if (result) {
         return res.send({ success: 200 });
       }
@@ -119,8 +73,13 @@ module.exports = {
 
   delCompanyLogo: async (req, res, next) => {
     const { company_idx, file } = req;
+    const company = new Company({});
     try {
-      const result = await updateLogoAndEnrollment(company_idx, file, 'logo');
+      const result = await company.updateLogoAndEnrollment(
+        company_idx,
+        file,
+        'logo'
+      );
       if (result) {
         return res.send({ success: 200 });
       }
@@ -130,13 +89,10 @@ module.exports = {
   },
   changeCompanyInfo: async (req, res, next) => {
     const { body, company_idx } = req;
+    const company = new Company({});
     try {
-      const updateCompanyInfo = async (updateData) => {
-        await db.company.update(updateData, { where: { idx: company_idx } });
-      };
-
       try {
-        await updateCompanyInfo(body);
+        await company.updateCompany(body, { idx: company_idx });
 
         return res.send({ success: 200 });
       } catch (err) {
@@ -151,8 +107,9 @@ module.exports = {
   },
   changeCompanyEnrollment: async (req, res, next) => {
     const { company_idx, file } = req;
+    const company = new Company({});
     try {
-      const result = await updateLogoAndEnrollment(
+      const result = await company.updateLogoAndEnrollment(
         company_idx,
         file,
         'enrollment'
@@ -166,8 +123,9 @@ module.exports = {
   },
   getCompanyProfileMember: async (req, res, next) => {
     const { company_idx, user_idx } = req;
+    const company = new Company({});
     try {
-      const findResult = await findMembers(
+      const findResult = await company.findMembers(
         {
           company_idx,
           deleted: null,
@@ -177,7 +135,6 @@ module.exports = {
         ['searchingName', 'ASC'],
         user_idx
       );
-
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
@@ -189,7 +146,8 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      const findResult = await findMembers(
+      const company = new Company({});
+      const findResult = await company.findMembers(
         {
           searchingName: {
             [Op.like]: `%${search}%`,
@@ -212,12 +170,9 @@ module.exports = {
     const {
       params: { memberId },
     } = req;
-    const deletedTime = moment().format('YYYY.MM.DD');
+    const company = new Company({});
     try {
-      await db.userCompany.update(
-        { deleted: deletedTime, active: false },
-        { where: { idx: memberId } }
-      );
+      await company.delCompanyMember(memberId);
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
