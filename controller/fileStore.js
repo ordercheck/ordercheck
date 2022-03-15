@@ -346,7 +346,9 @@ module.exports = {
           where: { uuid, customerFile_idx },
           attributes: ['root', 'upperFolder'],
         });
-
+        if (findFoldersResult.upperFolder == undefined) {
+          findFoldersResult.upperFolder = null;
+        }
         const findFolderResult = await db.folders.findOne({
           where: { title, upperFolder: findFoldersResult.upperFolder },
           attributes: ['duplicateCount'],
