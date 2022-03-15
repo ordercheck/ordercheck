@@ -30,7 +30,7 @@ const {
   checkKakaoPushResult,
 } = require('../lib/kakaoPush');
 const changeToSearch = (body) => {
-  const searchingPhoneNumber = body.customer_phoneNumber.replace(/-/g, '');
+  const searchingPhoneNumber = body.customer_phoneNumber.replace(/\./g, '');
   const searchingAddress = `${body.address.replace(
     / /g,
     ''

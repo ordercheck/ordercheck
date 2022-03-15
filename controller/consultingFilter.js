@@ -231,7 +231,7 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      const pureText = makePureText(search);
+      const pureText = search.replace(/\./g, '');
 
       const { start, intlimit, intPage } = await checkPage(
         limit,
