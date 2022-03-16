@@ -59,6 +59,7 @@ const getFolderPath = async (pathData, customerFile_idx, joinData) => {
   const findTitleResult = await db.folders.findAll({
     where: { uuid: { [Op.in]: pathArr }, customerFile_idx },
     attributes: ['title'],
+    order: [['createdAt', 'ASC']],
     raw: true,
     nest: true,
   });
@@ -476,8 +477,6 @@ module.exports = {
       params: { customerFile_idx, uuid, isFolder },
       query: { path },
     } = req;
-    
-    
    
     // 폴더일때
     if (isFolder == 1) {
@@ -492,10 +491,11 @@ module.exports = {
       const findFolderResult = await db.folders.findOne({
         where: { uuid, customerFile_idx },
         attributes: showDetailFolderAttributes,
-
         raw: true,
         nest: true,
       });
+
+      console.log('before findFolderResult',findFolderResult);
 
       let addFileSize = 0;
       findTitleResult.forEach((data) => {
@@ -512,7 +512,7 @@ module.exports = {
       console.log('결과', getDetailResult);
       findFolderResult.path = getDetailResult;
       findFolderResult.folder_size = addFileSize;
-
+      console.log('after findFolderResult',findFolderResult);
       return res.send({ succes: 200, findFolderResult });
     }
 
