@@ -471,6 +471,8 @@ module.exports = {
       params: { customerFile_idx, uuid, isFolder },
       query: { path },
     } = req;
+    console.log( '쿼리',req.query);
+    console.log( '파라미터',req.params);
 
     // 폴더일때
     if (isFolder == 1) {
