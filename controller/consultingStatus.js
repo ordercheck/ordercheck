@@ -151,12 +151,15 @@ module.exports = {
                 bodyData.customer_phoneNumber
               );
 
-              user_phone = bodyData.customer_phoneNumber.replace(/\./g, "-");
               await axios({
                 url: "/api/send/sms",
                 method: "post", // POST method
                 headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
-                data: { user_phone, message, type: "SMS" },
+                data: {
+                  user_phone: customer_phoneNumber,
+                  message,
+                  type: "SMS",
+                },
               });
             }
           }
@@ -231,10 +234,6 @@ module.exports = {
                     bodyData.customer_phoneNumber
                   );
 
-                  user_phone = bodyData.customer_phoneNumber.replace(
-                    /\./g,
-                    "-"
-                  );
                   await axios({
                     url: "/api/send/sms",
                     method: "post", // POST method
