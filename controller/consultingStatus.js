@@ -101,6 +101,7 @@ module.exports = {
             attributes: ["user_phone"],
           });
 
+          console.log(findSender);
           // 알림톡 비용 차감 후 저장
           decreasePriceAndHistory(
             { text_cost: 10 },
@@ -110,6 +111,7 @@ module.exports = {
             findSender.user_phone,
             bodyData.customer_phoneNumber
           );
+
           if (text_cost < 10) {
             return;
           }
