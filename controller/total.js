@@ -1,11 +1,11 @@
-const db = require('../model/db');
-
+const db = require("../model/db");
+const { Op } = require("sequelize");
 const {
   makePureText,
   searchFileandFolder,
   searchingByTitle,
-} = require('../lib/apiFunctions');
-const { customerAttributes } = require('../lib/attributes');
+} = require("../lib/apiFunctions");
+const { customerAttributes } = require("../lib/attributes");
 module.exports = {
   totalSearch: async (req, res, next) => {
     const {
@@ -36,7 +36,7 @@ module.exports = {
         include: [
           {
             model: db.user,
-            attributes: ['idx', 'user_name'],
+            attributes: ["idx", "user_name"],
           },
         ],
         attributes: customerAttributes,
