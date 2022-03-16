@@ -591,7 +591,6 @@ module.exports = {
       sms_idx,
       "알림톡",
       message,
-      10,
       findSender.user_phone,
       customerFindResult.customer_phoneNumber
     );

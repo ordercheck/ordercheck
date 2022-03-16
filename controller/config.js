@@ -348,12 +348,16 @@ module.exports = {
   },
   showSmsInfo: async (req, res, next) => {
     const { user_idx } = req;
-
     try {
       const findResult = await db.sms.findOne({
         where: { user_idx },
         attributes: ["text_cost", "repay", "auto_price", "auto_min"],
       });
+
+      findResult.dataValues.text_cost = findResult.text_cost.toLocaleString();
+      findResult.dataValues.auto_price = findResult.auto_price.toLocaleString();
+      findResult.dataValues.auto_min = findResult.auto_min.toLocaleString();
+
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
@@ -433,6 +437,7 @@ module.exports = {
       const findResult = await db.smsHistory.findAll({
         where: { sms_idx: findSms.idx },
         attributes: showSmsHistoryAttributes,
+        order: [["createdAt", "DESC"]],
       });
 
       return res.send({ success: 200, findResult });
