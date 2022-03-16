@@ -144,7 +144,7 @@ module.exports = {
               // LMS 비용 차감 후 저장
               decreasePriceAndHistory(
                 { text_cost: 11 },
-                findSms.sms_idx,
+                findSms.idx,
                 "SMS",
                 message,
                 findSender.user_phone,
