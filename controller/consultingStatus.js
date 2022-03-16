@@ -189,29 +189,36 @@ module.exports = {
                 "확인하기",
                 bodyData.customer_phoneNumber
               );
-              decreasePriceAndHistory(
-                { text_cost: 10 },
-                findSms.idx,
-                "알림톡",
-                message,
-                data.user.user_phone,
-                bodyData.customer_phoneNumber
-              );
+
               console.log("1");
               if (kakaoPushResult) {
                 console.log("2");
-
-                const sendResult = await checkKakaoPushResult(kakaoPushResult);
-
+                const checkKakaoPromise = () => {
+                  return new Promise(function (resolve, reject) {
+                    setTimeout(async () => {
+                      const sendResult = await checkKakaoPushResult(
+                        kakaoPushResult
+                      );
+                      resolve(sendResult);
+                    }, 1000);
+                  });
+                };
+                const sendResult = await checkKakaoPromise();
                 console.log("3");
                 // 알림톡 비용 차감 후 저장
-
+                decreasePriceAndHistory(
+                  { text_cost: 10 },
+                  findSms.idx,
+                  "알림톡",
+                  message,
+                  data.user.user_phone,
+                  bodyData.customer_phoneNumber
+                );
                 //문자 다시 보내기
 
                 // 메시지 전송못할때 3018 (차단, 카톡 없을때)
                 // 전화번호 오류 3008
                 // 정상발송 0000
-                console.log(sendResult);
                 if (sendResult.sendResult === "3018") {
                   // 문자 보내기 전 문자 비용 체크
 
