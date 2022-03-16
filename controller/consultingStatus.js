@@ -204,7 +204,7 @@ module.exports = {
                   });
                 };
                 const sendResult = await checkKakaoPromise();
-                console.log("3");
+
                 // 알림톡 비용 차감 후 저장
                 decreasePriceAndHistory(
                   { text_cost: 10 },
@@ -237,12 +237,13 @@ module.exports = {
                     bodyData.customer_phoneNumber
                   );
 
-                  await axios({
+                  const result = await axios({
                     url: "/api/send/sms",
                     method: "post", // POST method
                     headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
                     data: { user_phone, message, type: "SMS" },
                   });
+                  console.log(result);
                 }
               }
             }
