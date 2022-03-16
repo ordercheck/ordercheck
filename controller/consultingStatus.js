@@ -162,6 +162,7 @@ module.exports = {
         createCustomerResult.idx,
         searchingPhoneNumber
       );
+      console.log("hi");
 
       // 파일 보관함 db 생성
       const createFileStoreResult = await createFileStore(fileStoreData, t);
