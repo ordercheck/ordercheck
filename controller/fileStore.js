@@ -226,8 +226,6 @@ module.exports = {
 
         req.body.uuid = random5();
 
-        console.log("바디바디", req.body);
-
         const createResult = await db.files.create(req.body);
 
         createFileResult.push(createResult.toJSON());
