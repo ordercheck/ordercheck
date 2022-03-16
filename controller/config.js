@@ -1,19 +1,19 @@
-const db = require('../model/db');
-const { makeSpreadArray } = require('../lib/functions');
-const _f = require('../lib/functions');
-const { findMembers, findMember, checkTitle } = require('../lib/apiFunctions');
-const { Op } = require('sequelize');
-const { Company } = require('../lib/classes/CompanyClass');
-const { Template } = require('../lib/classes/TemplateClass');
-const { createConfig } = require('../lib/standardTemplate');
+const db = require("../model/db");
+const { makeSpreadArray } = require("../lib/functions");
+const _f = require("../lib/functions");
+const { findMembers, findMember, checkTitle } = require("../lib/apiFunctions");
+const { Op } = require("sequelize");
+const { Company } = require("../lib/classes/CompanyClass");
+const { Template } = require("../lib/classes/TemplateClass");
+const { createConfig } = require("../lib/standardTemplate");
 
 const {
   payNow,
   delCardPort,
   cancelSchedule,
   schedulePay,
-} = require('../lib/payFunction');
-const moment = require('moment');
+} = require("../lib/payFunction");
+const moment = require("moment");
 const {
   showTemplateListAttributes,
   showPlanAttributes,
@@ -25,10 +25,10 @@ const {
   showDetailTemplateConfig,
   getReceiptListAttributes,
   showFormListAttributes,
-} = require('../lib/attributes');
+} = require("../lib/attributes");
 
-require('moment-timezone');
-moment.tz.setDefault('Asia/Seoul');
+require("moment-timezone");
+moment.tz.setDefault("Asia/Seoul");
 
 module.exports = {
   getCompanyProfile: async (req, res, next) => {
@@ -62,7 +62,7 @@ module.exports = {
       const result = await company.updateLogoAndEnrollment(
         company_idx,
         file,
-        'logo'
+        "logo"
       );
       if (result) {
         return res.send({ success: 200 });
@@ -79,7 +79,7 @@ module.exports = {
       const result = await company.updateLogoAndEnrollment(
         company_idx,
         file,
-        'logo'
+        "logo"
       );
       if (result) {
         return res.send({ success: 200 });
@@ -99,7 +99,7 @@ module.exports = {
       } catch (err) {
         return res.send({
           success: 400,
-          message: '해당 회사 도메인은 이미 사용되었습니다.',
+          message: "해당 회사 도메인은 이미 사용되었습니다.",
         });
       }
     } catch (err) {
@@ -113,7 +113,7 @@ module.exports = {
       const result = await company.updateLogoAndEnrollment(
         company_idx,
         file,
-        'enrollment'
+        "enrollment"
       );
       if (result) {
         return res.send({ success: 200 });
@@ -133,7 +133,7 @@ module.exports = {
           active: true,
           standBy: false,
         },
-        ['searchingName', 'ASC'],
+        ["searchingName", "ASC"],
         user_idx
       );
       return res.send({ success: 200, findResult });
@@ -159,7 +159,7 @@ module.exports = {
           standBy: false,
         },
 
-        ['searchingName', 'ASC']
+        ["searchingName", "ASC"]
       );
 
       return res.send(findResult);
@@ -191,7 +191,7 @@ module.exports = {
         template_name: title,
       });
       const findUser = await db.user.findByPk(user_idx, {
-        attributes: ['user_name'],
+        attributes: ["user_name"],
       });
 
       const createConfigClass = new Template(createConfig);
@@ -208,12 +208,10 @@ module.exports = {
   },
   showTemplateList: async (req, res, next) => {
     const { company_idx } = req;
-
+    const template = new Template({});
     try {
-      const findResult = await db.config.findAll({
+      const findResult = await template.findAllConfig({
         where: { company_idx },
-        attributes: showTemplateListAttributes,
-        raw: true,
       });
 
       let No = 1;
@@ -231,9 +229,10 @@ module.exports = {
     const { templateId } = req.params;
 
     try {
-      const findResult = await db.config.findByPk(templateId, {
-        attributes: { exclude: showDetailTemplateConfig },
-      });
+      const template = new Template({});
+
+      const findResult = template.findConfigFindByPk(templateId);
+
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
@@ -246,17 +245,21 @@ module.exports = {
       user_idx,
       params: { templateId },
     } = req;
+    const template = new Template({});
     try {
       const findUserResult = await db.user.findByPk(user_idx, {
-        attributes: ['user_name'],
+        attributes: ["user_name"],
       });
 
-      const updatedDate = moment().format('YYYY.MM.DD HH:mm');
+      const updatedDate = moment().format("YYYY.MM.DD HH:mm");
 
       const update_people = `${updatedDate} ${findUserResult.user_name}`;
+
       body.update_people = update_people;
       body.company_idx = company_idx;
-      await db.config.update(body, { where: { idx: templateId } });
+
+      await template.updateConfig(body, { idx: templateId });
+
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
@@ -274,8 +277,8 @@ module.exports = {
         nest: true,
       });
       const findConfigResult = await db.config.findOne({
-        where: { company_idx, template_name: '팀원' },
-        attributes: ['idx'],
+        where: { company_idx, template_name: "팀원" },
+        attributes: ["idx"],
       });
       findUserResult.forEach(async (data) => {
         await db.userCompany.update(
@@ -297,7 +300,7 @@ module.exports = {
         include: [
           {
             model: db.company,
-            attributes: ['form_link_count'],
+            attributes: ["form_link_count"],
           },
         ],
         attributes: showPlanAttributes,
@@ -307,10 +310,10 @@ module.exports = {
       if (!findPlanResult.free_plan) {
         return res.send(findPlanResult);
       }
-      let now = moment().format('YYYY-MM-DD');
+      let now = moment().format("YYYY-MM-DD");
       now = moment(now);
-      const freePlan = moment(findPlanResult.start_plan.replace(/\./g, '-'));
-      let diffTime = moment(freePlan.diff(now)).format('DD');
+      const freePlan = moment(findPlanResult.start_plan.replace(/\./g, "-"));
+      let diffTime = moment(freePlan.diff(now)).format("DD");
       diffTime = parseInt(diffTime) - 1;
 
       return res.send(findPlanResult);
@@ -324,7 +327,7 @@ module.exports = {
       const findPlanResult = await db.plan.findAll({
         where: { company_idx },
         attributes: showPlanHistoryAttributes,
-        order: [['createdAt', 'DESC']],
+        order: [["createdAt", "DESC"]],
       });
       return res.send({ success: 200, findPlanResult });
     } catch (err) {
@@ -349,7 +352,7 @@ module.exports = {
     try {
       const findResult = await db.sms.findOne({
         where: { user_idx },
-        attributes: ['text_cost', 'repay', 'auto_price', 'auto_min'],
+        attributes: ["text_cost", "repay", "auto_price", "auto_min"],
       });
       return res.send({ success: 200, findResult });
     } catch (err) {
@@ -379,7 +382,7 @@ module.exports = {
       where: { user_idx, main: true },
     });
     if (!findCardResult) {
-      return res.send({ success: 400, message: '등록된 카드가 없습니다.' });
+      return res.send({ success: 400, message: "등록된 카드가 없습니다." });
     }
 
     const merchant_uid = _f.random5();
@@ -388,7 +391,7 @@ module.exports = {
       findCardResult.customer_uid,
       text_cost,
       merchant_uid,
-      '문자 충전'
+      "문자 충전"
     );
 
     if (!payResult.success) {
@@ -397,7 +400,7 @@ module.exports = {
 
     const findSmsResult = await db.sms.findOne({
       where: { user_idx },
-      attributes: ['text_cost'],
+      attributes: ["text_cost"],
     });
 
     const beforeCost = findSmsResult.text_cost;
@@ -415,7 +418,7 @@ module.exports = {
       }
     );
 
-    res.send({ success: 200, message: '충전 완료' });
+    res.send({ success: 200, message: "충전 완료" });
 
     // 영수증 등록
   },
@@ -457,21 +460,22 @@ module.exports = {
       next(err);
     }
   },
+
   delCard: async (req, res, next) => {
     const { cardId } = req.params;
     // 삭제 하려는 카드가 main 카드인지 체크
     try {
       const findCardResult = await db.card.findByPk(cardId, {
-        attributes: ['main'],
+        attributes: ["main"],
       });
       if (findCardResult.main == true) {
-        next({ message: '기본 결제 카드로 지정된 카드 입니다.' });
+        next({ message: "기본 결제 카드로 지정된 카드 입니다." });
       }
 
       // db 카드 삭제
       await db.card.destroy({ where: { idx: cardId } });
 
-      res.send({ success: 200, message: '카드 삭제 완료' });
+      res.send({ success: 200, message: "카드 삭제 완료" });
       //아임포트 카드 삭제
       await delCardPort(findCardResult.customer_uid);
     } catch (err) {
@@ -489,7 +493,7 @@ module.exports = {
       // 메인으로 설정되어있는 카드 false로 변경
       const findMainCardResult = await db.card.findOne(
         { where: { user_idx, main: true } },
-        { attributes: ['idx', 'customer_uid'] }
+        { attributes: ["idx", "customer_uid"] }
       );
 
       await db.card.update(
@@ -514,9 +518,9 @@ module.exports = {
 
       const findUserResult = await db.user.findByPk(user_idx);
 
-      const Hour = moment().format('HH');
+      const Hour = moment().format("HH");
 
-      const startDate = findPlanResult.start_plan.replace(/\./g, '-');
+      const startDate = findPlanResult.start_plan.replace(/\./g, "-");
 
       const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
@@ -541,7 +545,7 @@ module.exports = {
       const findReceiptListResult = await db.receipt.findAll({
         where: whereData,
         attributes: getReceiptListAttributes,
-        order: [['createdAt', 'DESC']],
+        order: [["createdAt", "DESC"]],
       });
       return findReceiptListResult;
     };
@@ -561,13 +565,13 @@ module.exports = {
       if (category == 1) {
         findResult = await findReceiptList({
           company_idx,
-          receipt_kind: '구독',
+          receipt_kind: "구독",
         });
       }
       if (category == 2) {
         findResult = await findReceiptList({
           company_idx,
-          receipt_kind: '자동문자',
+          receipt_kind: "자동문자",
         });
       }
       return res.send({ success: 200, findResult });
@@ -583,7 +587,7 @@ module.exports = {
     try {
       const findResult = await db.receipt.findOne({
         where: { receiptId },
-        attributes: { exclude: ['idx', 'updatedAt'] },
+        attributes: { exclude: ["idx", "updatedAt"] },
         raw: true,
       });
 
@@ -604,7 +608,7 @@ module.exports = {
         include: [
           {
             model: db.formOpen,
-            attributes: ['user_name'],
+            attributes: ["user_name"],
           },
         ],
         attributes: showFormListAttributes,
@@ -623,7 +627,7 @@ module.exports = {
     try {
       members.forEach(async (data) => {
         const findUserNameResult = await db.user.findByPk(data, {
-          attributes: ['user_name'],
+          attributes: ["user_name"],
         });
 
         await db.formOpen.create({
@@ -642,7 +646,7 @@ module.exports = {
     try {
       const findResult = await db.chatTemplate.findAll({
         where: { company_idx },
-        attributes: ['title', 'contents', 'edit'],
+        attributes: ["title", "contents", "edit"],
       });
       return res.send({ success: 200, findResult });
     } catch (err) {
@@ -662,7 +666,7 @@ module.exports = {
       );
       // user찾기
       const findUserResult = await db.userCompany.findByPk(memberId, {
-        attributes: ['user_idx'],
+        attributes: ["user_idx"],
       });
       // user 정보 변경
       await db.user.update(

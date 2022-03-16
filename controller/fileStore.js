@@ -473,7 +473,6 @@ module.exports = {
     return res.send([]);
   }    
 
-
     const totalFindResult = await searchFileandFolder(req, pureText);
 
     return res.send(totalFindResult);

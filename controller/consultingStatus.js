@@ -6,36 +6,36 @@ const {
   sendCompanyAlarm,
   findMemberExceptMe,
   decreasePriceAndHistory,
-} = require('../lib/apiFunctions');
-const { Form } = require('../lib/classes/FormClass');
-const { Customer } = require('../lib/classes/CustomerClass');
-const { Alarm } = require('../lib/classes/AlarmClass');
-const axios = require('axios');
+} = require("../lib/apiFunctions");
+const { Form } = require("../lib/classes/FormClass");
+const { Customer } = require("../lib/classes/CustomerClass");
+const { Alarm } = require("../lib/classes/AlarmClass");
+const axios = require("axios");
 
-const moment = require('moment');
-require('moment-timezone');
-moment.tz.setDefault('Asia/Seoul');
+const moment = require("moment");
+require("moment-timezone");
+moment.tz.setDefault("Asia/Seoul");
 const {
   patchCalculateAttributes,
   findSameUserAttributes,
   showCalculateAttributes,
-} = require('../lib/attributes');
-const db = require('../model/db');
-const { checkDetailCustomerUpdateField } = require('../lib/checkData');
-const { s3_get } = require('../lib/aws/aws');
-const { delFile } = require('../lib/aws/fileupload').ufile;
+} = require("../lib/attributes");
+const db = require("../model/db");
+const { checkDetailCustomerUpdateField } = require("../lib/checkData");
+const { s3_get } = require("../lib/aws/aws");
+const { delFile } = require("../lib/aws/fileupload").ufile;
 const {
   TeamkakaoPushNewForm,
   customerkakaoPushNewForm,
   customerkakaoPushNewCal,
   checkKakaoPushResult,
-} = require('../lib/kakaoPush');
+} = require("../lib/kakaoPush");
 const changeToSearch = (body) => {
-  const searchingPhoneNumber = body.customer_phoneNumber.replace(/\./g, '');
+  const searchingPhoneNumber = body.customer_phoneNumber.replace(/\./g, "");
   const searchingAddress = `${body.address.replace(
     / /g,
-    ''
-  )}${body.detail_address.replace(/ /g, '')}`;
+    ""
+  )}${body.detail_address.replace(/ /g, "")}`;
   return {
     searchingPhoneNumber,
     searchingAddress,
@@ -72,7 +72,7 @@ module.exports = {
           res.send({ success: 200 });
           const customer_phoneNumber = bodyData.customer_phoneNumber.replace(
             /\./g,
-            ''
+            ""
           );
           // 고객 카카오 푸쉬 보내기
           const { kakaoPushResult, message } = await customerkakaoPushNewForm(
@@ -83,7 +83,7 @@ module.exports = {
           );
 
           const findSender = await db.user.findByPk(user_idx, {
-            attributes: ['user_phone'],
+            attributes: ["user_phone"],
           });
 
           // 알림톡 비용 차감 후 저장
@@ -102,19 +102,19 @@ module.exports = {
             include: [
               {
                 model: db.user,
-                attributes: ['user_phone'],
+                attributes: ["user_phone"],
               },
             ],
-            attributes: ['user_idx'],
+            attributes: ["user_idx"],
           });
 
           getMembers.forEach(async (data) => {
-            const user_phone = data.user.user_phone.replace(/\./g, '');
+            const user_phone = data.user.user_phone.replace(/\./g, "");
             await TeamkakaoPushNewForm(
               user_phone,
               bodyData.title,
               bodyData.customer_name,
-              '확인하기',
+              "확인하기",
               bodyData.customer_phoneNumber
             );
           });
@@ -129,10 +129,10 @@ module.exports = {
         include: [
           {
             model: db.company,
-            attributes: ['company_name'],
+            attributes: ["company_name"],
           },
         ],
-        attributes: ['company_idx', 'title', 'tempType'],
+        attributes: ["company_idx", "title", "tempType"],
       });
 
       body.company_name = formLinkCompany.company.company_name;
@@ -171,7 +171,7 @@ module.exports = {
 
       // 이미지나 파일이 없을 때  간편 Form
       if (bodyClass.bodyData.tempType == 1) {
-        bodyClass.bodyData.choice = bodyClass.bodyData.choice.join(', ');
+        bodyClass.bodyData.choice = bodyClass.bodyData.choice.join(", ");
         createConsultingAndIncrement(bodyClass.bodyData);
         return;
       }
@@ -212,7 +212,7 @@ module.exports = {
 
       // 팀원에게 알림 보내기
 
-      const io = req.app.get('io');
+      const io = req.app.get("io");
 
       const message = `[${consultResult.customer_name}]님의 담당자로 지정되었습니다.`;
       const alarm = new Alarm({});
@@ -224,7 +224,7 @@ module.exports = {
         customer_idx: consultResult.idx,
       });
       const sendAlarm = new Alarm(createResult);
-      io.to(parseInt(createResult.user_idx)).emit('addAlarm', sendAlarm);
+      io.to(parseInt(createResult.user_idx)).emit("addAlarm", sendAlarm);
       return;
     } catch (err) {
       next(err);
@@ -241,9 +241,9 @@ module.exports = {
       const findCustomerResult = await db.customer.findByPk(
         customer_idx,
 
-        { attributes: ['customer_phoneNumber'] }
+        { attributes: ["customer_phoneNumber"] }
       );
-      const deletedTime = moment().format('YYYY.MM.DD');
+      const deletedTime = moment().format("YYYY.MM.DD");
       // 고객 지우기
       await db.customer.update(
         { deleted: deletedTime },
@@ -276,7 +276,7 @@ module.exports = {
   },
   addCompanyCustomer: async (req, res, next) => {
     const { body, user_idx, company_idx } = req;
-    if (body.contact_person == '') {
+    if (body.contact_person == "") {
       body.contact_person = null;
     }
 
@@ -297,6 +297,19 @@ module.exports = {
         transaction: t,
       });
 
+      const consultingData = {
+        ...customerData,
+        tempType: 3,
+        customer_idx: createCustomerResult.idx,
+        company_idx,
+      };
+      console.log(consultingData);
+      delete consultingData.idx;
+
+      await db.consulting.create(consultingData, {
+        transaction: t,
+      });
+
       const fileStoreData = classBody.fileStoreData(
         createCustomerResult.customer_phoneNumber,
         createCustomerResult.customer_name,
@@ -310,26 +323,26 @@ module.exports = {
       }
       db.company.increment({ customer_count: 1 }, { where: { idx: user_idx } });
       await t.commit();
-      console.log('hi');
+
       res.send({ success: 200 });
 
       // 팀원들에게 알람 보내기
       const findCustomer = await db.customer.findByPk(
         createCustomerResult.idx,
         {
-          attributes: ['customer_name', 'idx'],
+          attributes: ["customer_name", "idx"],
         }
       );
 
       const findUser = await db.user.findByPk(user_idx, {
-        attributes: ['user_name'],
+        attributes: ["user_name"],
       });
 
-      const now = moment().format('YY.MM.DD');
+      const now = moment().format("YY.MM.DD");
 
       const message = `${findUser.user_name}님이 [${findCustomer.customer_name} ${now}]을 신규 등록했습니다.`;
 
-      const io = req.app.get('io');
+      const io = req.app.get("io");
 
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
 
@@ -344,6 +357,7 @@ module.exports = {
       return;
     } catch (err) {
       await t.rollback();
+
       next(err);
     }
   },
@@ -395,17 +409,17 @@ module.exports = {
       // 몇차 인지 체크
       const findCalculate = await db.calculate.findOne({
         where: { customer_idx },
-        order: [['createdAt', 'DESC']],
-        attributes: ['calculateNumber'],
+        order: [["createdAt", "DESC"]],
+        attributes: ["calculateNumber"],
       });
       let calculateCreateResult;
       if (!findCalculate) {
         calculateCreateResult = await db.calculate.create(body);
       } else {
         // 견적서 차수 +1씩 올리기
-        let splitCalculateResult = findCalculate.calculateNumber.split('차');
+        let splitCalculateResult = findCalculate.calculateNumber.split("차");
         splitCalculateResult[0] = parseInt(splitCalculateResult[0]) + 1;
-        splitCalculateResult = splitCalculateResult.join('차');
+        splitCalculateResult = splitCalculateResult.join("차");
         body.calculateNumber = splitCalculateResult;
         calculateCreateResult = await db.calculate.create(body);
       }
@@ -422,8 +436,8 @@ module.exports = {
         status: calculateCreateResult.status,
         createdAt: new Date(calculateCreateResult.createdAt)
           .toISOString()
-          .split('T')[0]
-          .replace(/-/g, '.'),
+          .split("T")[0]
+          .replace(/-/g, "."),
       };
       return findResult;
     };
@@ -449,7 +463,7 @@ module.exports = {
 
     // 견적서 내용 찾기
     const findCalculateResult = await db.calculate.findByPk(calculate_idx, {
-      attributes: ['file_name'],
+      attributes: ["file_name"],
     });
     // s3에서 삭제
     delFile(
@@ -500,7 +514,7 @@ module.exports = {
       const findFilename = await db.calculate.findByPk(
         req.params.calculate_idx,
         {
-          attributes: ['file_name'],
+          attributes: ["file_name"],
         }
       );
       // s3에서 삭제
@@ -533,41 +547,41 @@ module.exports = {
     } = req;
     // 알림톡 보내기 전 알림톡 비용 체크
     if (text_cost < 10) {
-      return res.send({ success: 400, message: '알림톡 비용 부족' });
+      return res.send({ success: 400, message: "알림톡 비용 부족" });
     }
 
     const customerFindResult = await db.customer.findByPk(customer_idx, {
-      attributes: ['customer_phoneNumber', 'customer_name', 'idx'],
+      attributes: ["customer_phoneNumber", "customer_name", "idx"],
     });
 
     const findSender = await db.user.findByPk(user_idx, {
-      attributes: ['user_phone', 'user_name'],
+      attributes: ["user_phone", "user_name"],
     });
 
     const companyFindResult = await db.company.findByPk(req.company_idx, {
-      attributes: ['company_name'],
+      attributes: ["company_name"],
     });
 
     const calculateFindResult = await db.calculate.findByPk(calculate_idx, {
-      attributes: ['file_url', 'calculateNumber'],
+      attributes: ["file_url", "calculateNumber"],
     });
 
-    const [calculateNumber] = calculateFindResult.calculateNumber.split('차');
+    const [calculateNumber] = calculateFindResult.calculateNumber.split("차");
 
     const fileUrl = !calculateFindResult.file_url
       ? `orderchecktest.s3-website.ap-northeast-2.amazonaws.com/signin`
-      : calculateFindResult.file_url.split('//')[1];
+      : calculateFindResult.file_url.split("//")[1];
 
-    const sharedDate = moment().format('YYYY.MM.DD');
+    const sharedDate = moment().format("YYYY.MM.DD");
 
     const customer_phoneNumber =
-      customerFindResult.customer_phoneNumber.replace(/\./g, '');
+      customerFindResult.customer_phoneNumber.replace(/\./g, "");
     const { kakaoPushResult, message } = await customerkakaoPushNewCal(
       customer_phoneNumber,
       companyFindResult.company_name,
       customerFindResult.customer_name,
       calculateNumber,
-      '견적서 확인',
+      "견적서 확인",
       fileUrl
     );
 
@@ -575,7 +589,7 @@ module.exports = {
     decreasePriceAndHistory(
       { text_cost: 10 },
       sms_idx,
-      '알림톡',
+      "알림톡",
       message,
       10,
       findSender.user_phone,
@@ -598,18 +612,18 @@ module.exports = {
       // 메시지 전송못할때 3018 (차단, 카톡 없을때)
       // 전화번호 오류 3008
       // 정상발송 0000
-      if (sendResult.sendResult === '3018') {
+      if (sendResult.sendResult === "3018") {
         // 문자 보내기 전 문자 비용 체크
 
         if (text_cost - 10 < 37) {
-          return res.send({ success: 400, message: 'LMS 비용 부족' });
+          return res.send({ success: 400, message: "LMS 비용 부족" });
         }
 
         // LMS 비용 차감 후 저장
         decreasePriceAndHistory(
           { text_cost: 37 },
           sms_idx,
-          'LMS',
+          "LMS",
           message,
           findSender.user_phone,
           customerFindResult.customer_phoneNumber
@@ -617,13 +631,13 @@ module.exports = {
 
         user_phone = customerFindResult.customer_phoneNumber.replace(
           /\./g,
-          '-'
+          "-"
         );
         await axios({
-          url: '/api/send/sms',
-          method: 'post', // POST method
-          headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
-          data: { user_phone, message, type: 'LMS' },
+          url: "/api/send/sms",
+          method: "post", // POST method
+          headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
+          data: { user_phone, message, type: "LMS" },
         });
       }
     }
@@ -631,15 +645,15 @@ module.exports = {
     // 문자 자동 충전
     if (repay) {
       const autoSms = await db.sms.findByPk(sms_idx, {
-        attributes: ['text_cost', 'auto_min', 'auto_price'],
+        attributes: ["text_cost", "auto_min", "auto_price"],
       });
 
       if (autoSms.text_cost < autoSms.auto_min) {
         await axios({
-          url: '/api/config/company/sms/pay',
-          method: 'post', // POST method
+          url: "/api/config/company/sms/pay",
+          method: "post", // POST method
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token} `,
           }, // "Content-Type": "application/json"
           data: { text_cost: autoSms.auto_price },
@@ -648,7 +662,7 @@ module.exports = {
     }
 
     // 견적서 다시보기 동의여부
-    if (calculateReload !== '') {
+    if (calculateReload !== "") {
       await db.userConfig.update(
         { calculateReload },
         { where: { user_idx: req.user_idx } }
@@ -667,8 +681,8 @@ module.exports = {
 
     // 팀원들에게 알람 보내기
 
-    const io = req.app.get('io');
-    const now = moment().format('YY/MM/DD');
+    const io = req.app.get("io");
+    const now = moment().format("YY/MM/DD");
 
     const findMembers = await findMemberExceptMe(company_idx, user_idx);
     const alarmMessage = `${findSender.user_name}님이 [${customerFindResult.customer_name} ${now}] 고객님께 ${calculateFindResult.calculateNumber}차 견적서를 발송했습니다.`;
@@ -715,8 +729,8 @@ module.exports = {
   },
   downCalculate: async (req, res, next) => {
     var params = {
-      Bucket: 'ordercheck',
-      Delimiter: '/',
+      Bucket: "ordercheck",
+      Delimiter: "/",
       Prefix: `fileStore/10/`,
     };
 
@@ -726,7 +740,7 @@ module.exports = {
   },
   doIntegratedUser: async (req, res, next) => {
     const { body, company_idx, user_idx } = req;
-    const deletedTime = moment().format('YYYY.MM.DD');
+    const deletedTime = moment().format("YYYY.MM.DD");
     try {
       // 대표 상담폼과 병합
       await body.target_idx.forEach(async (data) => {
@@ -769,7 +783,7 @@ module.exports = {
       });
 
       const findCustomerResult = await db.customer.findByPk(body.main_idx, {
-        attributes: ['customer_phoneNumber', 'customer_name'],
+        attributes: ["customer_phoneNumber", "customer_name"],
       });
 
       const findSameUser = await db.customer.findAll({
@@ -798,12 +812,12 @@ module.exports = {
 
       // 팀원들에게 알람 보내기
       const findCustomer = await db.customer.findByPk(body.main_idx, {
-        attributes: ['customer_name', 'idx'],
+        attributes: ["customer_name", "idx"],
       });
 
       const message = `[${findCustomer.customer_name}] 고객님의 고객 연동이 완료되었습니다.`;
 
-      const io = req.app.get('io');
+      const io = req.app.get("io");
 
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
 
