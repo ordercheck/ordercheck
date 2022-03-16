@@ -189,8 +189,9 @@ module.exports = {
                 "확인하기",
                 bodyData.customer_phoneNumber
               );
-
+              console.log("1");
               if (kakaoPushResult) {
+                console.log("2");
                 const checkKakaoPromise = () => {
                   return new Promise(function (resolve, reject) {
                     setTimeout(async () => {
@@ -202,6 +203,7 @@ module.exports = {
                   });
                 };
                 const sendResult = await checkKakaoPromise();
+                console.log("3");
                 // 알림톡 비용 차감 후 저장
                 decreasePriceAndHistory(
                   { text_cost: 10 },
