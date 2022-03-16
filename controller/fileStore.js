@@ -55,7 +55,7 @@ const checkFile = (
 };
 const getFolderPath = async (pathData, customerFile_idx, joinData) => {
   const pathArr = pathData.split('/');
-
+  console.log('pathArr',pathArr);
   const findTitleResult = await db.folders.findAll({
     where: { uuid: { [Op.in]: pathArr }, customerFile_idx },
     attributes: ['title'],
@@ -63,8 +63,11 @@ const getFolderPath = async (pathData, customerFile_idx, joinData) => {
     nest: true,
   });
 
+  console.log('findTitleResult',findTitleResult);
+
   const path = [];
   findTitleResult.forEach((data) => {
+    console.log('data',data);
     path.push(data.title);
   });
 
@@ -474,6 +477,7 @@ module.exports = {
       query: { path },
     } = req;
     
+    
    
     // 폴더일때
     if (isFolder == 1) {
@@ -498,12 +502,14 @@ module.exports = {
         addFileSize += data.file_size;
       });
 
+      console.log('path',path);
       const getDetailResult = await getFolderPath(
         path,
         customerFile_idx,
         ' | '
       );
 
+      console.log('결과', getDetailResult);
       findFolderResult.path = getDetailResult;
       findFolderResult.folder_size = addFileSize;
 
