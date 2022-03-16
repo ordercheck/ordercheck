@@ -70,6 +70,7 @@ module.exports = {
             { where: { idx: formLinkCompany.company_idx } }
           );
           res.send({ success: 200 });
+
           const customer_phoneNumber = bodyData.customer_phoneNumber.replace(
             /\./g,
             ""
