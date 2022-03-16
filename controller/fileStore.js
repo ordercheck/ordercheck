@@ -206,6 +206,7 @@ module.exports = {
         const findUserResult = await db.user.findByPk(req.user_idx, {
           attributes: ["user_name"],
         });
+        console.log(findUserResult);
         req.body.path = req.query.path;
         req.body.upload_people = findUserResult.user_name;
         req.body.file_url = files[i].location;
@@ -224,6 +225,8 @@ module.exports = {
         req.body.file_size = files[i].size / 1e6;
 
         req.body.uuid = random5();
+
+        console.log("바디바디", req.body);
 
         const createResult = await db.files.create(req.body);
 
