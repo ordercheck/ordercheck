@@ -226,8 +226,14 @@ module.exports = {
                     return;
                   }
 
-                  text_cost -= 11;
-                  // LMS 비용 차감 후 저장
+                  const result = await axios({
+                    url: "/api/send/sms",
+                    method: "post", // POST method
+                    headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
+                    data: { user_phone, message, type: "SMS" },
+                  });
+                  console.log(result);
+
                   decreasePriceAndHistory(
                     { text_cost: 11 },
                     findSms.idx,
@@ -236,14 +242,6 @@ module.exports = {
                     data.user.user_phone,
                     bodyData.customer_phoneNumber
                   );
-
-                  const result = await axios({
-                    url: "/api/send/sms",
-                    method: "post", // POST method
-                    headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
-                    data: { user_phone, message, type: "SMS" },
-                  });
-                  console.log(result);
                 }
               }
             }
