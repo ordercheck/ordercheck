@@ -189,7 +189,7 @@ module.exports = {
               // 알림톡 비용 차감 후 저장
               decreasePriceAndHistory(
                 { text_cost: 10 },
-                findSms.sms_idx,
+                findSms.idx,
                 "알림톡",
                 message,
                 data.user.user_phone,
@@ -224,7 +224,7 @@ module.exports = {
                   // LMS 비용 차감 후 저장
                   decreasePriceAndHistory(
                     { text_cost: 11 },
-                    findSms.sms_idx,
+                    findSms.idx,
                     "SMS",
                     message,
                     data.user.user_phone,
