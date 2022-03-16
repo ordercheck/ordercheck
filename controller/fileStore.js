@@ -471,8 +471,6 @@ module.exports = {
       params: { customerFile_idx, uuid, isFolder },
       query: { path },
     } = req;
-    console.log( '쿼리',req.query);
-    console.log( '파라미터',req.params);
 
     // 폴더일때
     if (isFolder == 1) {
@@ -508,6 +506,7 @@ module.exports = {
 
       return res.send({ succes: 200, findFolderResult });
     }
+
     // 파일일때
     const getFileResult = await db.files.findOne({
       where: { uuid, customerFile_idx },
@@ -515,6 +514,7 @@ module.exports = {
     });
     // 파일이 폴더 밖에 있을때
     if (!path) {
+      
       return res.send({ succes: 200, getFileResult });
     }
     const getTitleRootResult = await getFolderPath(
@@ -523,7 +523,7 @@ module.exports = {
       ' | '
     );
     getFileResult.path = getTitleRootResult;
-
+      
     return res.send({ succes: 200, getFileResult });
   },
   getAllFolders: async (req, res, next) => {
