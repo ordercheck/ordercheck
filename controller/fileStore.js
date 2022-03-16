@@ -55,7 +55,7 @@ const checkFile = (
 };
 const getFolderPath = async (pathData, customerFile_idx, joinData) => {
   const pathArr = pathData.split('/');
-  console.log('pathArr',pathArr);
+
   const findTitleResult = await db.folders.findAll({
     where: { uuid: { [Op.in]: pathArr }, customerFile_idx },
     attributes: ['title'],
@@ -64,11 +64,10 @@ const getFolderPath = async (pathData, customerFile_idx, joinData) => {
     nest: true,
   });
 
-  console.log('findTitleResult',findTitleResult);
 
   const path = [];
   findTitleResult.forEach((data) => {
-    console.log('data',data);
+  
     path.push(data.title);
   });
 
@@ -467,10 +466,17 @@ module.exports = {
     }
   },
   searchFileStore: async (req, res, next) => {
-    const pureText = req.query.search.replace(/[. ]/g, '');
+    
+    const pureText = req.query.search.replace(/[. ]/g, '').replace(/%/g, '1010')
+
+  if(pureText == ''){
+    return res.send([]);
+  }    
+
+
     const totalFindResult = await searchFileandFolder(req, pureText);
 
-    res.send(totalFindResult);
+    return res.send(totalFindResult);
   },
   showDetailFileFolder: async (req, res, next) => {
     const {
@@ -478,8 +484,9 @@ module.exports = {
       query: { path },
     } = req;
    
-    console.log('params',req.params);
-    console.log('query',req.query);
+
+try {
+  
     // 폴더일때
     if (isFolder == 1) {
       // 폴더 용량 구하기
@@ -497,24 +504,23 @@ module.exports = {
         nest: true,
       });
 
-      console.log('before findFolderResult',findFolderResult);
 
       let addFileSize = 0;
       findTitleResult.forEach((data) => {
         addFileSize += data.file_size;
       });
 
-      console.log('path',path);
+ 
       const getDetailResult = await getFolderPath(
         path,
         customerFile_idx,
         ' | '
       );
 
-      console.log('결과', getDetailResult);
+
       findFolderResult.path = getDetailResult;
       findFolderResult.folder_size = addFileSize;
-      console.log('after findFolderResult',findFolderResult);
+  
       return res.send({ succes: 200, findFolderResult });
     }
 
@@ -536,6 +542,10 @@ module.exports = {
     getFileResult.path = getTitleRootResult;
       
     return res.send({ succes: 200, getFileResult });
+} catch (err) {
+  next(err)
+}
+
   },
   getAllFolders: async (req, res, next) => {
     const {
@@ -643,8 +653,7 @@ module.exports = {
       query: { path },
     } = req;
 
-    console.log(req.params);
-    console.log(req.query);
+ 
 
     try {
       // path가 있을 때
