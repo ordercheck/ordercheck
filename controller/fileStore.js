@@ -11,7 +11,9 @@ const { copyAndDelete, s3_get, s3_delete_objects } = require('../lib/aws/aws');
 const { delFile } = require('../lib/aws/fileupload').ufile;
 
 const {
-  showDetailFileFolderAttributes,
+  
+  showDetailFileAttributes,
+  showDetailFolderAttributes,
   showFilesAttributes,
   getUserListAttributes,
 } = require('../lib/attributes');
@@ -471,7 +473,8 @@ module.exports = {
       params: { customerFile_idx, uuid, isFolder },
       query: { path },
     } = req;
-
+    
+   
     // 폴더일때
     if (isFolder == 1) {
       // 폴더 용량 구하기
@@ -484,7 +487,7 @@ module.exports = {
 
       const findFolderResult = await db.folders.findOne({
         where: { uuid, customerFile_idx },
-        attributes: showDetailFileFolderAttributes,
+        attributes: showDetailFolderAttributes,
 
         raw: true,
         nest: true,
@@ -510,7 +513,7 @@ module.exports = {
     // 파일일때
     const getFileResult = await db.files.findOne({
       where: { uuid, customerFile_idx },
-      attributes: showDetailFileFolderAttributes,
+      attributes: showDetailFileAttributes,
     });
     // 파일이 폴더 밖에 있을때
     if (!path) {
