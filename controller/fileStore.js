@@ -478,6 +478,8 @@ module.exports = {
       query: { path },
     } = req;
    
+    console.log('params',req.params);
+    console.log('query',req.query);
     // 폴더일때
     if (isFolder == 1) {
       // 폴더 용량 구하기
