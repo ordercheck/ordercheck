@@ -211,7 +211,7 @@ module.exports = {
     const template = new Template({});
     try {
       const findResult = await template.findAllConfig({
-        where: { company_idx },
+        company_idx,
       });
 
       let No = 1;
