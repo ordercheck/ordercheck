@@ -189,15 +189,6 @@ module.exports = {
                 "확인하기",
                 bodyData.customer_phoneNumber
               );
-              // 알림톡 비용 차감 후 저장
-              decreasePriceAndHistory(
-                { text_cost: 10 },
-                findSms.idx,
-                "알림톡",
-                message,
-                data.user.user_phone,
-                bodyData.customer_phoneNumber
-              );
 
               if (kakaoPushResult) {
                 const checkKakaoPromise = () => {
@@ -211,6 +202,15 @@ module.exports = {
                   });
                 };
                 const sendResult = await checkKakaoPromise();
+                // 알림톡 비용 차감 후 저장
+                decreasePriceAndHistory(
+                  { text_cost: 10 },
+                  findSms.idx,
+                  "알림톡",
+                  message,
+                  data.user.user_phone,
+                  bodyData.customer_phoneNumber
+                );
                 //문자 다시 보내기
 
                 // 메시지 전송못할때 3018 (차단, 카톡 없을때)
