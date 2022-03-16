@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes) {
   //테이블을 정의
-  return sequelize.define('smsHistory', {
+  return sequelize.define("smsHistory", {
     idx: {
       autoIncrement: true,
       primaryKey: true,
@@ -25,7 +25,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     price: {
       allowNull: false,
-      type: DataTypes.STRING(100),
+      type: DataTypes.INTEGER,
     },
   });
 };
