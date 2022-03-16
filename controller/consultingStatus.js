@@ -103,13 +103,9 @@ module.exports = {
 
           // 알림톡 비용 차감 후 저장
 
-          console.log(findSms.sms_idx);
-          console.log(message);
-          console.log(findSender.user_phone);
-          console.log(bodyData.customer_phoneNumber);
           decreasePriceAndHistory(
             { text_cost: 10 },
-            findSms.sms_idx,
+            findSms.idx,
             "알림톡",
             message,
             findSender.user_phone,
