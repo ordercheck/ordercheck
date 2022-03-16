@@ -1,8 +1,8 @@
-const db = require('../model/db');
-const moment = require('moment');
-require('moment-timezone');
-moment.tz.setDefault('Asia/Seoul');
-const { Alarm } = require('../lib/classes/AlarmClass');
+const db = require("../model/db");
+const moment = require("moment");
+require("moment-timezone");
+moment.tz.setDefault("Asia/Seoul");
+const { Alarm } = require("../lib/classes/AlarmClass");
 
 module.exports = {
   delAlarm: async (req, res, next) => {
@@ -57,9 +57,9 @@ module.exports = {
       const reAlertMs = afterTime * 60000;
 
       setTimeout(async () => {
-        const io = req.app.get('io');
+        const io = req.app.get("io");
         const sendAlarm = new Alarm(createResult);
-        io.to(parseInt(user_idx)).emit('addAlarm', sendAlarm);
+        io.to(parseInt(user_idx)).emit("addAlarm", sendAlarm.alarmData);
         await alarm.updateAlarms(
           { repeat_time: null },
           { idx: createResult.idx }

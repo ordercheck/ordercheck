@@ -1,21 +1,23 @@
-const db = require('../model/db');
-const { makeSpreadArray } = require('../lib/functions');
+const db = require("../model/db");
+const { makeSpreadArray } = require("../lib/functions");
 const {
   createRandomCompany,
-  giveMasterAuth,
   includeUserToCompany,
   createFreePlan,
-} = require('../lib/apiFunctions');
-const bcrypt = require('bcrypt');
-const moment = require('moment');
-require('moment-timezone');
-moment.tz.setDefault('Asia/Seoul');
-const _f = require('../lib/functions');
+} = require("../lib/apiFunctions");
+const { masterConfig } = require("../lib/standardTemplate");
+const { Template } = require("../lib/classes/TemplateClass");
+
+const bcrypt = require("bcrypt");
+const moment = require("moment");
+require("moment-timezone");
+moment.tz.setDefault("Asia/Seoul");
+const _f = require("../lib/functions");
 
 const checkUserPassword = async (userIdx, userPassword) => {
   // 유저 전화번호 먼저 찾기
   const findUser = await db.user.findByPk(userIdx, {
-    attributes: ['user_password'],
+    attributes: ["user_password"],
   });
 
   const compareResult = await bcrypt.compare(
@@ -38,6 +40,7 @@ const updateUser = async (updateData, whereData) => {
 
 module.exports = {
   getUserProfile: async (req, res, next) => {
+    const template = new Template({});
     try {
       let userProfile = await db.sequelize
         .query(
@@ -60,7 +63,7 @@ module.exports = {
           company_idx: userProfile[0].company_idx,
           isFolder: false,
         },
-        attributes: ['file_size'],
+        attributes: ["file_size"],
         raw: true,
       });
 
@@ -69,11 +72,10 @@ module.exports = {
         fileStoreSize += data.file_size;
       });
 
-      const findConfig = await db.config.findByPk(userProfile[0].config_idx, {
-        attributes: {
-          exclude: ['createdAt', 'updatedAt', 'company_idx', 'duplicateCount'],
-        },
+      await template.findConfigFindByPk(userProfile[0].config_idx, {
+        exclude: ["createdAt", "updatedAt", "company_idx", "duplicateCount"],
       });
+
       userProfile[0].fileStoreSize = fileStoreSize;
       userProfile[0].authList = findConfig;
 
@@ -87,7 +89,7 @@ module.exports = {
     try {
       const findResult = await db.plan.findOne({
         where: { company_idx },
-        attributes: ['plan'],
+        attributes: ["plan"],
       });
       return res.send({ success: 200, findResult });
     } catch (err) {
@@ -105,7 +107,7 @@ module.exports = {
       if (!checkResult) {
         res.send({
           success: 400,
-          message: '비밀번호가 일치하지 않습니다.',
+          message: "비밀번호가 일치하지 않습니다.",
         });
       }
       // 탈퇴사유 생성
@@ -113,7 +115,7 @@ module.exports = {
 
       // 계정 delete처리
 
-      const deletedTime = moment().format('YYYY.MM.DD');
+      const deletedTime = moment().format("YYYY.MM.DD");
 
       await db.user.update(
         {
@@ -137,12 +139,13 @@ module.exports = {
       user_idx,
       company_idx,
     } = req;
+    const template = new Template({});
 
     const checkResult = await checkUserPassword(user_idx, user_password);
     if (!checkResult) {
       res.send({
         success: 400,
-        message: '비밀번호가 일치하지 않습니다.',
+        message: "비밀번호가 일치하지 않습니다.",
       });
     }
 
@@ -159,14 +162,18 @@ module.exports = {
       const randomCompany = await createRandomCompany(user_idx);
 
       // master template 만들기
-      const createTempalteResult = await giveMasterAuth(randomCompany.idx);
+      masterConfig.company_idx = randomCompany.idx;
+      const createTempalteResult = await template.createConfig({
+        masterConfig,
+      });
       // 팀원 template  만들기
-      await db.config.create({
+
+      await template.createConfig({
         company_idx: randomCompany.idx,
       });
 
       const findUser = await db.user.findByPk(user_idx, {
-        attributes: ['user_name'],
+        attributes: ["user_name"],
       });
 
       // 유저 회사에 소속시키기
@@ -196,7 +203,7 @@ module.exports = {
 
     const originalUrl = file.location;
 
-    const thumbNail = originalUrl.replace(/\/original\//, '/thumb/');
+    const thumbNail = originalUrl.replace(/\/original\//, "/thumb/");
 
     await db.user.update(
       {
@@ -210,7 +217,7 @@ module.exports = {
 
   delUserProfile: async (req, res, next) => {
     const { user_idx } = req;
-    await db.user.update({ user_profile: '' }, { where: { idx: user_idx } });
+    await db.user.update({ user_profile: "" }, { where: { idx: user_idx } });
     return res.send({ success: 200 });
   },
   changeUserProfile: async (req, res, next) => {
@@ -241,7 +248,7 @@ module.exports = {
     } catch (err) {
       return res.send({
         success: 400,
-        message: '이미 존재하는 이메일 입니다.',
+        message: "이미 존재하는 이메일 입니다.",
       });
     }
   },

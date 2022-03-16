@@ -14,7 +14,9 @@ module.exports = {
     } = req;
 
     try {
-      const pureText = makePureText(search);
+      const pureText = req.query.search
+        .replace(/[. ]/g, "")
+        .replace(/%/g, "1010");
 
       // customer search
       let searchCustomer = await db.customer.findAll({

@@ -1,17 +1,18 @@
 const {
   includeUserToCompany,
   createRandomCompany,
-  giveMasterAuth,
+
   createFreePlan,
   findMembers,
   decreasePriceAndHistory,
 } = require("../lib/apiFunctions");
-
+const { masterConfig } = require("../lib/standardTemplate");
 const sendMail = require("../mail/sendInvite");
 
 const axios = require("axios");
 const db = require("../model/db");
 const { createToken } = require("../lib/jwtfunctions");
+const { Template } = require("../lib/classes/TemplateClass");
 
 module.exports = {
   sendEmail: async (req, res, next) => {
@@ -134,12 +135,13 @@ ${company_url}
       attributes: ["user_idx", "company_idx"],
     });
 
+    const template = new Template({});
+
     await db.userCompany.update(
       { active: true, standBy: false },
       { where: { idx: memberId } }
     );
-
-    await db.config.create({
+    await template.createConfig({
       user_idx: findUserCompanyResult.user_idx,
       company_idx: findUserCompanyResult.company_idx,
     });
@@ -197,6 +199,7 @@ ${company_url}
       body: { company_subdomain },
       user_idx,
     } = req;
+    const template = new Template({});
     try {
       const loginToken = await createToken(user_idx);
       const findCompany = await db.company.findOne(
@@ -222,9 +225,15 @@ ${company_url}
         const randomCompany = await createRandomCompany(user_idx);
 
         // master template 만들기
-        const createTempalteResult = await giveMasterAuth(randomCompany.idx);
+
+        masterConfig.company_idx = randomCompany.idx;
+
+        const createTempalteResult = await template.createConfig({
+          masterConfig,
+        });
+
         // 팀원 template  만들기
-        await db.config.create({
+        await template.createConfig({
           company_idx: randomCompany.idx,
         });
 

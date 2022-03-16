@@ -1,19 +1,21 @@
-const express = require('express');
-const uuid = require('uuid').v1;
+const express = require("express");
+const uuid = require("uuid").v1;
 const router = express.Router();
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const {
   addCard,
   payNow,
   refund,
   schedulePay,
-} = require('../../lib/payFunction');
-const db = require('../../model/db');
-const moment = require('moment');
-require('moment-timezone');
-moment.tz.setDefault('Asia/Seoul');
-const _f = require('../../lib/functions');
-const { verify_data, createToken } = require('../../lib/jwtfunctions');
+} = require("../../lib/payFunction");
+const { masterConfig } = require("../../lib/standardTemplate");
+const db = require("../../model/db");
+const { Template } = require("../../lib/classes/TemplateClass");
+const moment = require("moment");
+require("moment-timezone");
+moment.tz.setDefault("Asia/Seoul");
+const _f = require("../../lib/functions");
+const { verify_data, createToken } = require("../../lib/jwtfunctions");
 
 const user_session_check = (req, res, next) => {
   next();
@@ -22,38 +24,37 @@ const {
   joinFunction,
   createRandomCompany,
   includeUserToCompany,
-  giveMasterAuth,
   createFreePlan,
-} = require('../../lib/apiFunctions');
-const jwt = require('jsonwebtoken');
-const fileUpload = require('../../lib/aws/fileupload.js');
-const multiparty = require('multiparty');
-const axios = require('axios');
-const aws = require('../../lib/aws/aws');
-const request = require('request');
-const Cryptr = require('cryptr');
-const cryptr = new Cryptr('myTotalySecretKey');
-const jusoKey = 'devU01TX0FVVEgyMDIxMDUwNjE1Mjg1MzExMTEzNDQ=';
+} = require("../../lib/apiFunctions");
+const jwt = require("jsonwebtoken");
+const fileUpload = require("../../lib/aws/fileupload.js");
+const multiparty = require("multiparty");
+const axios = require("axios");
+const aws = require("../../lib/aws/aws");
+const request = require("request");
+const Cryptr = require("cryptr");
+const cryptr = new Cryptr("myTotalySecretKey");
+const jusoKey = "devU01TX0FVVEgyMDIxMDUwNjE1Mjg1MzExMTEzNDQ=";
 
-const db_config = require('../../lib/config/db_config');
+const db_config = require("../../lib/config/db_config");
 
-const { Expo } = require('expo-server-sdk');
+const { Expo } = require("expo-server-sdk");
 const {
   makeArray,
 
   generateRandomCode,
-} = require('../../lib/functions');
-const functions = require('../../lib/functions');
-const { checkCard } = require('../../model/db');
-const attributes = require('../../lib/attributes');
-const { next } = require('cheerio/lib/api/traversing');
+} = require("../../lib/functions");
+const functions = require("../../lib/functions");
+const { checkCard } = require("../../model/db");
+const attributes = require("../../lib/attributes");
+const { next } = require("cheerio/lib/api/traversing");
 
 let global_uidx = 0;
 
 const check_data = (req, res, next) => {
   jwt.verify(req.query.token, process.env.tokenSecret, function (err, decoded) {
     if (err) {
-      res.redirect('/admin');
+      res.redirect("/admin");
     } else {
       next();
     }
@@ -70,7 +71,7 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
     // 각 데이터에 필요한 key, value
     const findCompanyData = await db.userCompany.findOne({
       where: { user_idx: login_data.user_idx, deleted: null },
-      attributes: ['company_idx'],
+      attributes: ["company_idx"],
     });
 
     card_data.user_idx = login_data.user_idx;
@@ -85,9 +86,9 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
     await db.card.create(card_data, { transaction: t });
 
     // 시간을 unix형태로 변경(실제)
-    const Hour = moment().format('HH');
+    const Hour = moment().format("HH");
 
-    const startDate = plan_data.start_plan.replace(/\./g, '-');
+    const startDate = plan_data.start_plan.replace(/\./g, "-");
 
     const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
@@ -127,12 +128,12 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
 };
 
 // 로그인 라우터
-router.post('/login', async (req, res, next) => {
+router.post("/login", async (req, res, next) => {
   const { user_phone, user_password, company_subdomain } = req.body;
-
+  const template = new Template({});
   let check = await db.user.findOne({ where: { user_phone, deleted: null } });
   if (!check) {
-    return res.send({ success: 400, message: '비밀번호 혹은 전화번호 오류' });
+    return res.send({ success: 400, message: "비밀번호 혹은 전화번호 오류" });
   }
 
   //  userCompany를 찾아 없으면 무료 플랜으로 전환
@@ -159,7 +160,7 @@ router.post('/login', async (req, res, next) => {
     check.user_password
   );
   if (!compareResult) {
-    return res.send({ success: 400, message: '비밀번호 혹은 전화번호 오류' });
+    return res.send({ success: 400, message: "비밀번호 혹은 전화번호 오류" });
   }
   if (!company_subdomain) {
     const token = await createToken({ user_idx: check.idx });
@@ -170,16 +171,20 @@ router.post('/login', async (req, res, next) => {
     where: { company_subdomain },
   });
 
-  const findConfigResult = await db.config.findOne({
-    where: { template_name: '팀원', company_idx: findCompany.idx },
-  });
+  const findConfigResult = await template.findConfig(
+    {
+      template_name: "팀원",
+      company_idx: findCompany.idx,
+    },
+    ["idx"]
+  );
 
   const checkCompanyStandBy = await db.userCompany.findOne({
     where: {
       user_idx: check.idx,
       company_idx: findCompany.idx,
     },
-    attributes: ['active', 'standBy'],
+    attributes: ["active", "standBy"],
   });
   const token = await createToken({ user_idx: check.idx });
   if (!checkCompanyStandBy) {
@@ -195,13 +200,13 @@ router.post('/login', async (req, res, next) => {
   }
   let status;
   if (checkCompanyStandBy.active && checkCompanyStandBy.standBy) {
-    status = 'standBy';
+    status = "standBy";
   }
   if (!checkCompanyStandBy.active && checkCompanyStandBy.standBy) {
-    status = 'refused';
+    status = "refused";
   }
   if (checkCompanyStandBy.active && !checkCompanyStandBy.standBy) {
-    status = 'access';
+    status = "access";
   }
 
   return res.send({
@@ -211,7 +216,7 @@ router.post('/login', async (req, res, next) => {
   });
 });
 // 회원가입 체크 라우터
-router.post('/join/check', async (req, res) => {
+router.post("/join/check", async (req, res) => {
   let { user_email, user_phone } = req.body;
   const randomNumber = generateRandomCode(6);
   const message = `[인증번호:${randomNumber}] 오더체크 인증번호입니다.\n오더체크와 편리한 고객응대를 시작해보세요.`;
@@ -222,7 +227,7 @@ router.post('/join/check', async (req, res) => {
     });
 
   if (phoneCheck.length > 0) {
-    return res.send({ success: 400, type: 'phone' });
+    return res.send({ success: 400, type: "phone" });
   }
   let emailCheck = await db.user
     .findAll({ where: { user_email } })
@@ -230,38 +235,38 @@ router.post('/join/check', async (req, res) => {
       return makeArray(r);
     });
   if (emailCheck.length > 0) {
-    return res.send({ success: 400, type: 'email' });
+    return res.send({ success: 400, type: "email" });
   }
 
-  user_phone = user_phone.replace(/\./g, '-');
+  user_phone = user_phone.replace(/\./g, "-");
 
   let result = await axios({
-    url: '/api/send/sms',
-    method: 'post', // POST method
-    headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
-    data: { user_phone, message, type: 'SMS' },
+    url: "/api/send/sms",
+    method: "post", // POST method
+    headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
+    data: { user_phone, message, type: "SMS" },
   });
 
   if (result.data.success == 200) {
     res.send({ success: 200, number: randomNumber });
   } else {
-    res.send({ success: 400, type: 'code' });
+    res.send({ success: 400, type: "code" });
   }
 });
 // 비밀번호 찾기 인증번호
-router.post('/check/pw', async (req, res) => {
+router.post("/check/pw", async (req, res) => {
   let { user_phone } = req.body;
 
   const randomNumber = generateRandomCode(6);
   const message = `[인증번호: ${randomNumber}] \n 오더체크 인증번호입니다.`;
-  user_phone = user_phone.replace(/\./g, '-');
+  user_phone = user_phone.replace(/\./g, "-");
 
   try {
     await axios({
-      url: '/api/send/sms',
-      method: 'post', // POST method
-      headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
-      data: { user_phone, message, type: 'SMS' },
+      url: "/api/send/sms",
+      method: "post", // POST method
+      headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
+      data: { user_phone, message, type: "SMS" },
     });
     return res.send({ success: 200, number: randomNumber });
   } catch (err) {
@@ -270,10 +275,10 @@ router.post('/check/pw', async (req, res) => {
 });
 
 // 회원가입 라우터
-router.post('/join/do', async (req, res, next) => {
+router.post("/join/do", async (req, res, next) => {
   let { token, use_agree, private_agree, marketing_agree, company_subdomain } =
     req.body;
-
+  const template = new Template({});
   try {
     let user_data = await verify_data(token);
     // 동의 여부 체크
@@ -305,9 +310,13 @@ router.post('/join/do', async (req, res, next) => {
         const randomCompany = await createRandomCompany(createUserResult.idx);
 
         // master template 만들기
-        const createTempalteResult = await giveMasterAuth(randomCompany.idx);
+
+        masterConfig.company_idx = randomCompany.idx;
+        const createTempalteResult = await template.createConfig(masterConfig);
+
         // 팀원 template  만들기
-        await db.config.create({
+
+        await template.createConfig({
           company_idx: randomCompany.idx,
         });
 
@@ -331,9 +340,12 @@ router.post('/join/do', async (req, res, next) => {
       const findCompany = await db.company.findOne({
         where: { company_subdomain },
       });
-      const findConfigResult = await db.config.findOne({
-        where: { template_name: '팀원', company_idx: findCompany.idx },
-      });
+
+      const findConfigResult = await template.findConfig(
+        { template_name: "팀원", company_idx: findCompany.idx },
+        ["idx"]
+      );
+
       // userCompany 만들기 standBy true, active 0
       await includeUserToCompany({
         user_idx: createUserResult.idx,
@@ -345,7 +357,7 @@ router.post('/join/do', async (req, res, next) => {
       });
 
       await createSmsUserConfig();
-      return res.send({ success: 200, loginToken, status: 'standBy' });
+      return res.send({ success: 200, loginToken, status: "standBy" });
     }
   } catch (err) {
     next(err);
@@ -353,7 +365,7 @@ router.post('/join/do', async (req, res, next) => {
 });
 
 //회사 등록 라우터
-router.post('/company/check', async (req, res, next) => {
+router.post("/company/check", async (req, res, next) => {
   const { lt, ut, ct, pt, company_name, company_subdomain } = req.body;
 
   // 트랜젝션 시작
@@ -365,7 +377,7 @@ router.post('/company/check', async (req, res, next) => {
       return makeArray(r);
     });
   if (check_domain.length > 0) {
-    return res.send({ success: 400, type: 'domain' });
+    return res.send({ success: 400, type: "domain" });
   }
 
   const addPlanResult = await addPlanAndSchedule(ut, pt, ct, lt, t);
@@ -381,7 +393,7 @@ router.post('/company/check', async (req, res, next) => {
         { where: { huidx: addPlanResult.login_data.user_idx }, transaction: t }
       );
       await t.commit();
-      return res.send({ success: 200, message: '회사 등록 완료' });
+      return res.send({ success: 200, message: "회사 등록 완료" });
     } catch (err) {
       // create과정에서 오류가 뜨면 롤백
       await t.rollback();
@@ -392,7 +404,7 @@ router.post('/company/check', async (req, res, next) => {
   next(addPlanResult.err);
 });
 // 핸드폰 등록 여부 확인 라우터
-router.post('/phone/check', async (req, res) => {
+router.post("/phone/check", async (req, res) => {
   const { user_phone } = req.body;
   let check = await db.user.findAll({ where: { user_phone } }).then((r) => {
     return makeArray(r);
@@ -404,7 +416,7 @@ router.post('/phone/check', async (req, res) => {
   }
 });
 // 패스워드 수정 라우터
-router.post('/password/reset', async (req, res) => {
+router.post("/password/reset", async (req, res) => {
   const { user_phone, user_password } = req.body;
   let check = await db.user.findOne({ where: { user_phone } });
   if (check) {
@@ -421,12 +433,12 @@ router.post('/password/reset', async (req, res) => {
     return res.send({
       success: 400,
       message:
-        '사용자 정보가 잘못되었습니다.\n비밀번호 재설정 초기화면으로 돌아가 다시 시작해주시기 바랍니다.',
+        "사용자 정보가 잘못되었습니다.\n비밀번호 재설정 초기화면으로 돌아가 다시 시작해주시기 바랍니다.",
     });
   }
 });
 // 회원 정보로 token 만들기
-router.post('/create/token', async (req, res) => {
+router.post("/create/token", async (req, res) => {
   const { user_phone, user_email, user_password, user_name } = req.body;
   try {
     let token = await createToken({
@@ -443,7 +455,7 @@ router.post('/create/token', async (req, res) => {
   }
 });
 // body 데이터를 토큰으로 만들기
-router.post('/create/token/data', async (req, res, next) => {
+router.post("/create/token/data", async (req, res, next) => {
   const { card_number, expiry, pwd_2digit, birth, business_number } = req.body;
 
   try {
@@ -470,7 +482,7 @@ router.post('/create/token/data', async (req, res, next) => {
         customer_uid,
         1000,
         merchant_uid,
-        '카드 입출금 확인'
+        "카드 입출금 확인"
       );
       if (!success) {
         return res.send({ success: 400, message });
@@ -493,39 +505,39 @@ router.post('/create/token/data', async (req, res, next) => {
     next(err);
   }
 });
-router.post('/decode/token/data', async (req, res) => {
+router.post("/decode/token/data", async (req, res) => {
   const { token } = req.body;
   let data = await verify_data(token);
   return res.send({ success: 200, data });
 });
 // sms 보내기
-router.post('/send/sms', async (req, res) => {
+router.post("/send/sms", async (req, res) => {
   const { user_phone, message, type } = req.body;
   let result = await _f.smsPush(user_phone, message, type);
   return res.send(result);
 });
 // 중복된 핸드폰 번호 여부 확인
-router.post('/duplicate/phoneNumber', async (req, res) => {
+router.post("/duplicate/phoneNumber", async (req, res) => {
   const { user_phone } = req.body;
   try {
     const result = await db.user.findOne({ where: { user_phone } });
 
     if (!result) {
       return res.send({ success: 200 });
-    } else res.send({ success: 400, msg: '이미 존재하는 핸드폰 번호입니다' });
+    } else res.send({ success: 400, msg: "이미 존재하는 핸드폰 번호입니다" });
   } catch (err) {
     const Err = err.message;
     return res.send({ success: 500, Err });
   }
 });
 // 중복된 이메일 여부 확인
-router.post('/duplicate/email', async (req, res) => {
+router.post("/duplicate/email", async (req, res) => {
   const { user_email } = req.body;
   try {
     const result = await db.user.findOne({ where: { user_email } });
     if (!result) {
       return res.send({ success: 200 });
-    } else res.send({ success: 400, msg: '이미 존재하는 이메일입니다' });
+    } else res.send({ success: 400, msg: "이미 존재하는 이메일입니다" });
   } catch (err) {
     const Err = err.message;
     return res.send({ success: 500, Err });
@@ -533,17 +545,17 @@ router.post('/duplicate/email', async (req, res) => {
 });
 
 // 중복된 회사 서브도메인 확인
-router.post('/check/subdomain', async (req, res) => {
+router.post("/check/subdomain", async (req, res) => {
   const { company_subdomain } = req.body;
   try {
     const result = await db.company.findOne({ where: { company_subdomain } });
     if (!result) {
-      return res.send({ success: 400, msg: '존재하지 않는 도메인입니다.' });
+      return res.send({ success: 400, msg: "존재하지 않는 도메인입니다." });
     } else
       res.send({
         success: 200,
         company_name: result.company_name,
-        msg: '존재하는 도메인입니다.',
+        msg: "존재하는 도메인입니다.",
       });
   } catch (err) {
     const Err = err.message;
@@ -551,13 +563,13 @@ router.post('/check/subdomain', async (req, res) => {
   }
 });
 // 중복된 회사 이름 확인
-router.post('/check/company-name', async (req, res) => {
+router.post("/check/company-name", async (req, res) => {
   const { company_name } = req.body;
   try {
     const result = await db.company.findOne({ where: { company_name } });
     if (!result) {
       return res.send({ success: 200 });
-    } else res.send({ success: 400, msg: '이미 존재하는 회사 이름입니다.' });
+    } else res.send({ success: 400, msg: "이미 존재하는 회사 이름입니다." });
   } catch (err) {
     const Err = err.message;
     return res.send({ success: 500, Err });
@@ -565,7 +577,7 @@ router.post('/check/company-name', async (req, res) => {
 });
 
 // 중복된 비밀번호 확인
-router.post('/check/password', async (req, res) => {
+router.post("/check/password", async (req, res) => {
   const { user_password, user_phone } = req.body;
   try {
     const findUserResult = await db.user.findOne({ where: { user_phone } });
@@ -576,16 +588,16 @@ router.post('/check/password', async (req, res) => {
     );
 
     if (comparePasswordResult) {
-      return res.send({ success: 200, message: '이전 비밀번호와 같습니다.' });
+      return res.send({ success: 200, message: "이전 비밀번호와 같습니다." });
     }
-    return res.send({ success: 400, message: '이전 비밀번호와 다릅니다.' });
+    return res.send({ success: 400, message: "이전 비밀번호와 다릅니다." });
   } catch (err) {
     const Err = err.message;
     return res.send({ success: 500, Err });
   }
 });
 
-router.post('/company/check/later', async (req, res, next) => {
+router.post("/company/check/later", async (req, res, next) => {
   const { lt, ut, ct, pt } = req.body;
 
   // 트랜젝션 시작
@@ -595,7 +607,7 @@ router.post('/company/check/later', async (req, res, next) => {
   if (addPlanResult.success) {
     try {
       await t.commit();
-      return res.send({ success: 200, message: '회사 등록 완료' });
+      return res.send({ success: 200, message: "회사 등록 완료" });
     } catch (err) {
       // create과정에서 오류가 뜨면 롤백
       await t.rollback();

@@ -195,7 +195,7 @@ module.exports = {
       });
 
       const createConfigClass = new Template(createConfig);
-      const createdResult = createConfigClass.createConfig(
+      const createdResult = createConfigClass.createPrivateConfig(
         checkTitleResult.title,
         findUser.user_name,
         company_idx
@@ -210,9 +210,12 @@ module.exports = {
     const { company_idx } = req;
     const template = new Template({});
     try {
-      const findResult = await template.findAllConfig({
-        company_idx,
-      });
+      const findResult = await template.findAllConfig(
+        {
+          company_idx,
+        },
+        showTemplateListAttributes
+      );
 
       let No = 1;
       findResult.map((data) => {
@@ -231,7 +234,9 @@ module.exports = {
     try {
       const template = new Template({});
 
-      const findResult = template.findConfigFindByPk(templateId);
+      const findResult = template.findConfigFindByPk(templateId, {
+        exclude: showDetailTemplateConfig,
+      });
 
       return res.send({ success: 200, findResult });
     } catch (err) {
@@ -271,22 +276,28 @@ module.exports = {
       company_idx,
     } = req;
     try {
+      const template = new Template({});
+
       const findUserResult = await db.userCompany.findAll({
         where: { config_idx: templateId },
         raw: true,
         nest: true,
       });
-      const findConfigResult = await db.config.findOne({
-        where: { company_idx, template_name: "팀원" },
-        attributes: ["idx"],
-      });
+
+      const findConfigResult = await template.findConfig(
+        { company_idx, template_name: "팀원" },
+        ["idx"]
+      );
+
       findUserResult.forEach(async (data) => {
         await db.userCompany.update(
           { config_idx: findConfigResult.idx },
           { where: { idx: data.idx } }
         );
       });
-      await db.config.destroy({ where: { idx: templateId } });
+
+      await template.destroyConfig({ idx: templateId });
+
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
