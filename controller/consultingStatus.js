@@ -101,8 +101,12 @@ module.exports = {
             attributes: ["user_phone"],
           });
 
-          console.log(findSender);
           // 알림톡 비용 차감 후 저장
+
+          console.log(findSms.sms_idx);
+          console.log(message);
+          console.log(findSender.user_phone);
+          console.log(bodyData.customer_phoneNumber);
           decreasePriceAndHistory(
             { text_cost: 10 },
             findSms.sms_idx,
