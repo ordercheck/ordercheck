@@ -303,7 +303,7 @@ module.exports = {
         customer_idx: createCustomerResult.idx,
         company_idx,
       };
-      console.log(consultingData);
+
       delete consultingData.idx;
 
       await db.consulting.create(consultingData, {

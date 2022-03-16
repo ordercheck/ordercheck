@@ -425,10 +425,16 @@ module.exports = {
   showSmsHistory: async (req, res, next) => {
     const { user_idx } = req;
     try {
-      const findResult = await db.smsHistory.findAll({
+      // 해당 유저의 sms조회
+      const findSms = await db.sms.findOne({
         where: { user_idx },
+      });
+
+      const findResult = await db.smsHistory.findAll({
+        where: { sms_idx: findSms.idx },
         attributes: showSmsHistoryAttributes,
       });
+
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
