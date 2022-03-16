@@ -59,7 +59,6 @@ module.exports = {
       const { body, files, user_idx } = req;
       const createConsultingAndIncrement = async (bodyData) => {
         try {
-          console.log(bodyData);
           await db.consulting.create(bodyData, {
             transaction: t,
           });
@@ -71,7 +70,7 @@ module.exports = {
             { where: { idx: formLinkCompany.company_idx } }
           );
           res.send({ success: 200 });
-          console.log(text_cost);
+
           // 총 문자 비용 계산
 
           const customer_phoneNumber = bodyData.customer_phoneNumber.replace(
