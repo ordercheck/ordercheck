@@ -72,9 +72,12 @@ module.exports = {
         fileStoreSize += data.file_size;
       });
 
-      await template.findConfigFindByPk(userProfile[0].config_idx, {
-        exclude: ["createdAt", "updatedAt", "company_idx", "duplicateCount"],
-      });
+      const findConfig = await template.findConfigFindByPk(
+        userProfile[0].config_idx,
+        {
+          exclude: ["createdAt", "updatedAt", "company_idx", "duplicateCount"],
+        }
+      );
 
       userProfile[0].fileStoreSize = fileStoreSize;
       userProfile[0].authList = findConfig;

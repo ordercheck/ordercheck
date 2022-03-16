@@ -1,6 +1,6 @@
-const _f = require('../lib/functions');
-const db = require('../model/db');
-
+const _f = require("../lib/functions");
+const db = require("../model/db");
+const { Form } = require("../lib/classes/FormClass");
 const {
   findWhiteFormDetail,
   getFileName,
@@ -9,29 +9,25 @@ const {
   checkTitle,
   sendCompanyAlarm,
   findMemberExceptMe,
-} = require('../lib/apiFunctions');
+} = require("../lib/apiFunctions");
 
 const {
   createFormLinkAttributes,
   getFormLinkInfoAttributes,
-} = require('../lib/attributes');
+} = require("../lib/attributes");
 module.exports = {
   createFormLink: async (req, res, next) => {
+    const form = new Form({});
     const {
       body: { title },
       company_idx,
       user_idx,
     } = req;
     try {
-      const insertData = await checkTitle(
-        db.formLink,
-        { title, company_idx },
-        title,
-        req.body
-      );
+      const insertData = await form.checkTitle({ title, company_idx });
 
       const findUserNameResult = await db.user.findByPk(user_idx, {
-        attributes: ['user_name'],
+        attributes: ["user_name"],
       });
 
       const pureText = makePureText(insertData.title);
@@ -43,11 +39,11 @@ module.exports = {
       res.send({
         success: 200,
         formId: createResult.idx,
-        message: '폼 생성 ',
+        message: "폼 생성 ",
       });
       // 팀원들에게 알람 보내기
 
-      const io = req.app.get('io');
+      const io = req.app.get("io");
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
       const message = `${findUserNameResult.user_name}님이 새로운 신청폼 [${title}]을 등록하였습니다.`;
 
@@ -69,11 +65,11 @@ module.exports = {
       let formList = await db.formLink.findAll({
         where: { company_idx },
         attributes: createFormLinkAttributes,
-        order: [['createdAt', 'DESC']],
+        order: [["createdAt", "DESC"]],
         raw: true,
       });
       if (!formList) {
-        return res.send({ success: 400, message: '등록된 폼이 없습니다' });
+        return res.send({ success: 400, message: "등록된 폼이 없습니다" });
       }
       formList = formList.map((data) => {
         data.urlPath = data.form_link;
@@ -90,7 +86,7 @@ module.exports = {
 
       const originalUrl = req.file.location;
       const thumbNail_title = getFileName(originalUrl);
-      const thumbNail = originalUrl.replace(/\/original\//, '/thumb/');
+      const thumbNail = originalUrl.replace(/\/original\//, "/thumb/");
 
       await db.formLink.update(
         {
@@ -105,10 +101,10 @@ module.exports = {
 
       // 팀원들에게 알람 보내기
       const findUser = await db.user.findByPk(user_idx, {
-        attributes: ['user_name'],
+        attributes: ["user_name"],
       });
 
-      const io = req.app.get('io');
+      const io = req.app.get("io");
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
 
       const message = `${findUser.user_name}님이 [${formDetail.title}] 신청폼을 수정하였습니다.`;
@@ -129,7 +125,7 @@ module.exports = {
   duplicateForm: async (req, res, next) => {
     // copyCount 1증가
     const findFormLink = await db.formLink.findByPk(req.params.formId, {
-      attributes: { exclude: ['idx', 'createdAt', 'updatedAt'] },
+      attributes: { exclude: ["idx", "createdAt", "updatedAt"] },
     });
     // 복사본 제목 생성
     const duplicateTitle = `${findFormLink.title}_copy`;
@@ -140,8 +136,8 @@ module.exports = {
     // 시간 형태에 맞게 변형
     const createdAt = duplicateForm.createdAt
       .toISOString()
-      .split('T')[0]
-      .replace(/-/g, '.');
+      .split("T")[0]
+      .replace(/-/g, ".");
 
     const duplicateResult = {
       formId: duplicateForm.idx,
@@ -165,17 +161,17 @@ module.exports = {
     } = req;
     try {
       const formTitle = await db.formLink.findByPk(formId, {
-        attributes: ['title'],
+        attributes: ["title"],
       });
       await db.formLink.destroy({ where: { idx: formId } });
-      res.send({ success: 200, message: '삭제 성공' });
+      res.send({ success: 200, message: "삭제 성공" });
 
       // 팀원들에게 알람 보내기
       const findUser = await db.user.findByPk(user_idx, {
-        attributes: ['user_name'],
+        attributes: ["user_name"],
       });
       //
-      const io = req.app.get('io');
+      const io = req.app.get("io");
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
       const message = `${findUser.user_name}님이 [${formTitle.title}] 신청폼을 삭제하였습니다.`;
 
@@ -236,10 +232,10 @@ module.exports = {
 
       // 팀원들에게 알람 보내기
       const findUser = await db.user.findByPk(user_idx, {
-        attributes: ['user_name'],
+        attributes: ["user_name"],
       });
 
-      const io = req.app.get('io');
+      const io = req.app.get("io");
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
 
       const message = `${findUser.user_name}님이 [${title}] 신청폼을 수정하였습니다.`;
@@ -266,22 +262,22 @@ module.exports = {
       } = req;
       // formLink thumbNail, thumbNail_title 초기화
       await db.formLink.update(
-        { thumbNail: '', thumbNail_title: null },
+        { thumbNail: "", thumbNail_title: null },
         { where: { idx: formId } }
       );
 
-      res.send({ success: 200, message: '썸네일 삭제 ' });
+      res.send({ success: 200, message: "썸네일 삭제 " });
 
       // 팀원들에게 알람 보내기
       const findUser = await db.user.findByPk(user_idx, {
-        attributes: ['user_name'],
+        attributes: ["user_name"],
       });
 
       const formTitle = await db.formLink.findByPk(formId, {
-        attributes: ['title'],
+        attributes: ["title"],
       });
 
-      const io = req.app.get('io');
+      const io = req.app.get("io");
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
 
       const message = `${findUser.user_name}님이 [${formTitle.title}] 신청폼을 수정하였습니다.`;
@@ -336,7 +332,7 @@ module.exports = {
       });
 
       if (!findResult) {
-        next({ message: '없는 링크입니다.' });
+        next({ message: "없는 링크입니다." });
       }
       findResult.dataValues.formClose = formClose;
 
