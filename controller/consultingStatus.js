@@ -56,7 +56,7 @@ module.exports = {
     };
     try {
       // url을 string으로 연결
-      const { body, files, user_idx } = req;
+      const { body, files } = req;
       const createConsultingAndIncrement = async (bodyData) => {
         try {
           await db.consulting.create(bodyData, {
@@ -97,7 +97,7 @@ module.exports = {
             bodyData.customer_name,
             bodyData.title
           );
-          const findSender = await db.user.findByPk(user_idx, {
+          const findSender = await db.user.findByPk(findCompany.huidx, {
             attributes: ["user_phone"],
           });
 
