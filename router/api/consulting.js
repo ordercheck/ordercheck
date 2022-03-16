@@ -126,7 +126,7 @@ router.post(
     { name: "floor_plan" },
     { name: "hope_concept" },
   ]),
-
+  // checkFormSns,
   addConsultingForm
 );
 // 고객등록 api

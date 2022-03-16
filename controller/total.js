@@ -14,9 +14,7 @@ module.exports = {
     } = req;
 
     try {
-      const pureText = req.query.search
-        .replace(/[. ]/g, "")
-        .replace(/%/g, "1010");
+      const pureText = search.replace(/[. ]/g, "").replace(/%/g, "1010");
 
       // customer search
       let searchCustomer = await db.customer.findAll({
@@ -46,6 +44,7 @@ module.exports = {
       // fileStore search
 
       const searchFileStore = await searchFileandFolder(req, pureText);
+
       const searchForm = await searchingByTitle(pureText);
       return res.send({
         success: 200,

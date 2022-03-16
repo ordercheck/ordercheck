@@ -1,3 +1,4 @@
+const attributes = require("../lib/attributes");
 const db = require("../model/db");
 const smsCheck = async (req, res, next) => {
   //  소유주의 문자 남은 비용을 체크
@@ -17,4 +18,21 @@ const smsCheck = async (req, res, next) => {
   next();
 };
 
-module.exports = { smsCheck };
+const checkFormSns = async (req, res, next) => {
+  const { company_idx } = req.body;
+  const findCompany = await db.company.findByPk(company_idx, {
+    attributes: ["huidx"],
+  });
+  const findSms = await db.sms.findOne({
+    where: { user_idx: findCompany.huidx },
+  });
+
+  req.text_cost = findSms.text_cost;
+  req.repay = findSms.repay;
+  req.auto_min = findSms.auto_min;
+  req.auto_price = findSms.auto_price;
+
+  next();
+};
+
+module.exports = { smsCheck, checkFormSns };

@@ -19,7 +19,7 @@ module.exports = {
   createFormLink: async (req, res, next) => {
     const form = new Form({});
     const {
-      body: { title },
+      body: { title, tempType },
       company_idx,
       user_idx,
     } = req;
@@ -35,14 +35,16 @@ module.exports = {
       insertData.company_idx = company_idx;
       insertData.searchingTitle = pureText;
       insertData.create_people = findUserNameResult.user_name;
-      const createResult = await db.formLink.create(insertData);
+      insertData.tempType = tempType;
+
+      const createResult = await form.createFormLink(insertData);
+
       res.send({
         success: 200,
         formId: createResult.idx,
         message: "폼 생성 ",
       });
       // 팀원들에게 알람 보내기
-
       const io = req.app.get("io");
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
       const message = `${findUserNameResult.user_name}님이 새로운 신청폼 [${title}]을 등록하였습니다.`;
@@ -61,13 +63,13 @@ module.exports = {
   },
   showFormLink: async (req, res, next) => {
     const { company_idx } = req;
+    const form = new Form({});
     try {
-      let formList = await db.formLink.findAll({
-        where: { company_idx },
-        attributes: createFormLinkAttributes,
-        order: [["createdAt", "DESC"]],
-        raw: true,
-      });
+      let formList = await form.findAllLink(
+        { company_idx },
+        createFormLinkAttributes
+      );
+
       if (!formList) {
         return res.send({ success: 400, message: "등록된 폼이 없습니다" });
       }

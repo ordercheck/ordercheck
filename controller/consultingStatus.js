@@ -59,7 +59,8 @@ module.exports = {
       const { body, files, user_idx } = req;
       const createConsultingAndIncrement = async (bodyData) => {
         try {
-          const result = await db.consulting.create(bodyData, {
+          console.log(bodyData);
+          await db.consulting.create(bodyData, {
             transaction: t,
           });
 
@@ -70,6 +71,8 @@ module.exports = {
             { where: { idx: formLinkCompany.company_idx } }
           );
           res.send({ success: 200 });
+          console.log(text_cost);
+          // 총 문자 비용 계산
 
           const customer_phoneNumber = bodyData.customer_phoneNumber.replace(
             /\./g,
@@ -172,7 +175,7 @@ module.exports = {
 
       // 이미지나 파일이 없을 때  간편 Form
       if (bodyClass.bodyData.tempType == 1) {
-        bodyClass.bodyData.choice = bodyClass.bodyData.choice.join(", ");
+        // bodyClass.bodyData.choice = bodyClass.bodyData.choice.join(", ");
         createConsultingAndIncrement(bodyClass.bodyData);
         return;
       }
