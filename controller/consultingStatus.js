@@ -188,17 +188,18 @@ module.exports = {
               console.log("1");
               if (kakaoPushResult) {
                 console.log("2");
-                const checkKakaoPromise = async () => {
-                  return new Promise(function (resolve, reject) {
-                    // setTimeout(async () => {
-                    //   const sendResult = await checkKakaoPushResult(
-                    //     kakaoPushResult
-                    //   );
-                    //   resolve(sendResult);
-                    // }, 1000);
-                  });
-                };
-                const sendResult = await checkKakaoPromise();
+                sleep(1000);
+                // const checkKakaoPromise = async () => {
+                //   return new Promise(function (resolve, reject) {
+                //     // setTimeout(async () => {
+                //     //   const sendResult = await checkKakaoPushResult(
+                //     //     kakaoPushResult
+                //     //   );
+                //     //   resolve(sendResult);
+                //     // }, 1000);
+                //   });
+                // };
+                await checkKakaoPromise();
                 console.log("3");
                 //문자 다시 보내기
 
