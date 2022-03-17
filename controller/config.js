@@ -459,10 +459,19 @@ module.exports = {
   showCardsInfo: async (req, res, next) => {
     const { user_idx } = req;
     try {
-      const findResult = await db.card.findAll({
+      let findResult = await db.card.findAll({
         where: { user_idx },
         attributes: showCardsInfoAttributes,
+        raw: true,
       });
+
+      for (let i = 0; i < findResult.length; i++) {
+        const second = findResult[i].card_number.substring(4, 8);
+        const third = findResult[i].card_number.substring(8, 12);
+
+        findResult[i].card_number = `**** ${second} ${third} ****`;
+      }
+
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
