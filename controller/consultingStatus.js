@@ -101,8 +101,14 @@ module.exports = {
               attributes: ["user_phone"],
             });
             const checkKakaoPromise = async () => {
-              const sendResult = await checkKakaoPushResult(kakaoPushResult);
-              return sendResult;
+              return new Promise(function (resolve, reject) {
+                setTimeout(async () => {
+                  const sendResult = await checkKakaoPushResult(
+                    kakaoPushResult
+                  );
+                  resolve(sendResult);
+                }, 1000);
+              });
             };
             const sendResult = await checkKakaoPromise();
             //문자 다시 보내기
@@ -182,12 +188,15 @@ module.exports = {
               console.log("1");
               if (kakaoPushResult) {
                 console.log("2");
-
                 const checkKakaoPromise = async () => {
-                  const sendResult = await checkKakaoPushResult(
-                    kakaoPushResult
-                  );
-                  return sendResult;
+                  return new Promise(function (resolve, reject) {
+                    setTimeout(async () => {
+                      const sendResult = await checkKakaoPushResult(
+                        kakaoPushResult
+                      );
+                      resolve(sendResult);
+                    }, 1000);
+                  });
                 };
                 const sendResult = await checkKakaoPromise();
                 console.log("3");
@@ -203,8 +212,7 @@ module.exports = {
                     return;
                   }
 
-                  const result = await _f.smsPush(user_phone, message, "SMS");
-                  console.log(result);
+                  await _f.smsPush(user_phone, message, "SMS");
                   console.log(4);
                   decreasePriceAndHistory(
                     { text_cost: 11 },
