@@ -89,32 +89,12 @@ module.exports = {
             ""
           );
 
-          text_cost -= 10;
-          // 고객 카카오 푸쉬 보내기
           const { kakaoPushResult, message } = await customerkakaoPushNewForm(
             customer_phoneNumber,
             bodyData.company_name,
             bodyData.customer_name,
             bodyData.title
           );
-          const findSender = await db.user.findByPk(findCompany.huidx, {
-            attributes: ["user_phone"],
-          });
-
-          // 알림톡 비용 차감 후 저장
-
-          decreasePriceAndHistory(
-            { text_cost: 10 },
-            findSms.idx,
-            "알림톡",
-            message,
-            findSender.user_phone,
-            bodyData.customer_phoneNumber
-          );
-
-          if (text_cost < 10) {
-            return;
-          }
 
           if (kakaoPushResult) {
             const checkKakaoPromise = () => {
@@ -161,6 +141,24 @@ module.exports = {
                   type: "SMS",
                 },
               });
+            } else {
+              const findSender = await db.user.findByPk(findCompany.huidx, {
+                attributes: ["user_phone"],
+              });
+
+              // 알림톡 비용 차감 후 저장
+              decreasePriceAndHistory(
+                { text_cost: 10 },
+                findSms.idx,
+                "알림톡",
+                message,
+                findSender.user_phone,
+                bodyData.customer_phoneNumber
+              );
+
+              if (text_cost < 10) {
+                return;
+              }
             }
           }
 
