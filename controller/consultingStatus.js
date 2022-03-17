@@ -97,6 +97,9 @@ module.exports = {
           );
 
           if (kakaoPushResult) {
+            const findSender = await db.user.findByPk(findCompany.huidx, {
+              attributes: ["user_phone"],
+            });
             const checkKakaoPromise = () => {
               return new Promise(function (resolve, reject) {
                 setTimeout(async () => {
@@ -142,10 +145,6 @@ module.exports = {
                 },
               });
             } else {
-              const findSender = await db.user.findByPk(findCompany.huidx, {
-                attributes: ["user_phone"],
-              });
-
               // 알림톡 비용 차감 후 저장
               decreasePriceAndHistory(
                 { text_cost: 10 },
