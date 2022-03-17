@@ -11,7 +11,7 @@ const { Form } = require("../lib/classes/FormClass");
 const { Customer } = require("../lib/classes/CustomerClass");
 const { Alarm } = require("../lib/classes/AlarmClass");
 const axios = require("axios");
-
+const _f = require("../lib/functions");
 const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
@@ -100,7 +100,7 @@ module.exports = {
             const findSender = await db.user.findByPk(findCompany.huidx, {
               attributes: ["user_phone"],
             });
-            const checkKakaoPromise = () => {
+            const checkKakaoPromise = async () => {
               return new Promise(function (resolve, reject) {
                 setTimeout(async () => {
                   const sendResult = await checkKakaoPushResult(
@@ -188,7 +188,7 @@ module.exports = {
               console.log("1");
               if (kakaoPushResult) {
                 console.log("2");
-                const checkKakaoPromise = () => {
+                const checkKakaoPromise = async () => {
                   return new Promise(function (resolve, reject) {
                     setTimeout(async () => {
                       const sendResult = await checkKakaoPushResult(
@@ -212,12 +212,8 @@ module.exports = {
                     return;
                   }
 
-                  await axios({
-                    url: "/api/send/sms",
-                    method: "post", // POST method
-                    headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
-                    data: { user_phone, message, type: "SMS" },
-                  });
+                  const result = await _f.smsPush(user_phone, message, "SMS");
+                  console.log(result);
                   console.log(4);
                   decreasePriceAndHistory(
                     { text_cost: 11 },
