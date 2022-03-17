@@ -188,7 +188,7 @@ module.exports = {
               console.log("1");
               if (kakaoPushResult) {
                 console.log("2");
-                sleep(1000);
+
                 // const checkKakaoPromise = async () => {
                 //   return new Promise(function (resolve, reject) {
                 //     // setTimeout(async () => {
@@ -199,7 +199,7 @@ module.exports = {
                 //     // }, 1000);
                 //   });
                 // };
-                await checkKakaoPromise();
+                // await checkKakaoPromise();
                 console.log("3");
                 //문자 다시 보내기
 
