@@ -579,7 +579,15 @@ module.exports = {
         where: whereData,
         attributes: getReceiptListAttributes,
         order: [["createdAt", "DESC"]],
+        raw: true,
       });
+
+      // 돈에 , 붙이기
+      for (let i = 0; i < findReceiptListResult.length; i++) {
+        findReceiptListResult[i].result_price_levy =
+          findReceiptListResult[i].result_price_levy.toLocaleString();
+      }
+
       return findReceiptListResult;
     };
 
@@ -587,7 +595,7 @@ module.exports = {
       params: { category },
       company_idx,
     } = req;
-    console.log(category);
+
     try {
       let findResult;
       if (category == undefined) {

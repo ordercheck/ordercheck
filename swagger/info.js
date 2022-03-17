@@ -539,7 +539,7 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/config/company/card/receipt/list:
+ * /api/config/company/card/receipt/list/{category}:
  *   get:
  *      security:
  *       - bearerAuth: []
@@ -547,7 +547,7 @@
  *       -  config
  *      summary: 영수증 리스트 보여주기 (전체 :0, 구독:1, 자동 문자 충전:2)
  *      parameters:
- *         - in: query
+ *         - in: path
  *           name: category
  *           schema:
  *             type: integer

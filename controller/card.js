@@ -23,7 +23,6 @@ module.exports = {
     // 카드 정보 등록 후
 
     const createResult = await db.card.create(card_data);
-    console.log(createResult);
 
     const cardInfo = {};
     cardInfo.cardId = createResult.idx;
