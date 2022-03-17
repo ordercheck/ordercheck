@@ -199,7 +199,7 @@ module.exports = {
                   });
                 };
                 const sendResult = await checkKakaoPromise();
-
+                console.log("3");
                 //문자 다시 보내기
 
                 // 메시지 전송못할때 3018 (차단, 카톡 없을때)
@@ -218,6 +218,7 @@ module.exports = {
                     headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
                     data: { user_phone, message, type: "SMS" },
                   });
+                  console.log(4);
                   decreasePriceAndHistory(
                     { text_cost: 11 },
                     findSms.idx,
@@ -226,6 +227,7 @@ module.exports = {
                     data.user.user_phone,
                     bodyData.customer_phoneNumber
                   );
+                  console.log(5);
                 } else {
                   // 알림톡 비용 차감 후 저장
                   decreasePriceAndHistory(
