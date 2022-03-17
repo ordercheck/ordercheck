@@ -334,7 +334,10 @@ module.exports = {
       });
       const sendAlarm = new Alarm(createResult);
       console.log(sendAlarm);
-      io.to(parseInt(createResult.user_idx)).emit("addAlarm", sendAlarm);
+      io.to(parseInt(createResult.user_idx)).emit(
+        "addAlarm",
+        sendAlarm.alarmData
+      );
       return;
     } catch (err) {
       next(err);
