@@ -13,6 +13,7 @@ const axios = require("axios");
 const db = require("../model/db");
 const { createToken } = require("../lib/jwtfunctions");
 const { Template } = require("../lib/classes/TemplateClass");
+const attributes = require("../lib/attributes");
 
 module.exports = {
   sendEmail: async (req, res, next) => {
@@ -135,16 +136,26 @@ ${company_url}
       attributes: ["user_idx", "company_idx"],
     });
 
-    const template = new Template({});
+    const fondBeforeCompanyUser = await db.userCompany.findOne({
+      where: {
+        user_idx: findUserCompanyResult.user_idx,
+        active: true,
+        deleted: null,
+        standBy: false,
+      },
+      attributes: ["idx"],
+    });
+    if (fondBeforeCompanyUser) {
+      await db.userCompany.update(
+        { active: false },
+        { where: { idx: fondBeforeCompanyUser.idx } }
+      );
+    }
 
     await db.userCompany.update(
       { active: true, standBy: false },
       { where: { idx: memberId } }
     );
-    await template.createConfig({
-      user_idx: findUserCompanyResult.user_idx,
-      company_idx: findUserCompanyResult.company_idx,
-    });
 
     res.send({ success: 200 });
 
