@@ -181,9 +181,7 @@ module.exports = {
                 bodyData.customer_phoneNumber
               );
 
-              console.log("1");
               if (kakaoPushResult) {
-                console.log("2");
                 const checkKakaoPromise = async () => {
                   return new Promise(function (resolve, reject) {
                     setTimeout(async () => {
@@ -195,7 +193,7 @@ module.exports = {
                   });
                 };
                 const sendResult = await checkKakaoPromise();
-                console.log("3");
+
                 //문자 다시 보내기
 
                 // 메시지 전송못할때 3018 (차단, 카톡 없을때)
@@ -208,19 +206,17 @@ module.exports = {
                     return;
                   }
 
-                  setTimeout(async () => {
-                    await _f.smsPush(user_phone, message, "SMS");
-                    console.log(4);
-                    decreasePriceAndHistory(
-                      { text_cost: 11 },
-                      findSms.idx,
-                      "SMS",
-                      message,
-                      data.user.user_phone,
-                      bodyData.customer_phoneNumber
-                    );
-                    console.log(5);
-                  }, 1000);
+                  await _f.smsPush(user_phone, message, "LMS");
+
+                  decreasePriceAndHistory(
+                    { text_cost: 11 },
+                    findSms.idx,
+                    "SMS",
+                    message,
+                    data.user.user_phone,
+                    bodyData.customer_phoneNumber
+                  );
+                  console.log(5);
                 } else {
                   // 알림톡 비용 차감 후 저장
                   decreasePriceAndHistory(
