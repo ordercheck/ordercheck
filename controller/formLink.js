@@ -241,7 +241,7 @@ module.exports = {
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
 
       const message = `${findUser.user_name}님이 [${title}] 신청폼을 수정하였습니다.`;
-      console.log(message);
+
       const data = {
         form_idx: formId,
         message,
