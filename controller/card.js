@@ -5,8 +5,11 @@ const axios = require("axios");
 const _f = require("../lib/functions");
 module.exports = {
   enrollmentCard: async (req, res, next) => {
-    const { user_idx } = req;
-    let card_data = await verify_data(ct);
+    const {
+      user_idx,
+      body: { token },
+    } = req;
+    let card_data = await verify_data(token);
 
     card_data.user_idx = user_idx;
     // 법인카드 유무 확인 후 체크
