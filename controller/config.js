@@ -582,7 +582,7 @@ module.exports = {
     };
 
     const {
-      query: { category },
+      params: { category },
       company_idx,
     } = req;
 
