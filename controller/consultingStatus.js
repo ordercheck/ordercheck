@@ -101,14 +101,8 @@ module.exports = {
               attributes: ["user_phone"],
             });
             const checkKakaoPromise = async () => {
-              return new Promise(function (resolve, reject) {
-                setTimeout(async () => {
-                  const sendResult = await checkKakaoPushResult(
-                    kakaoPushResult
-                  );
-                  resolve(sendResult);
-                }, 1000);
-              });
+              const sendResult = await checkKakaoPushResult(kakaoPushResult);
+              return sendResult;
             };
             const sendResult = await checkKakaoPromise();
             //문자 다시 보내기
@@ -190,17 +184,12 @@ module.exports = {
                 console.log("2");
 
                 const checkKakaoPromise = async () => {
-                  console.log("기다려");
-                  // return new Promise(function (resolve, reject) {
-                  // setTimeout(async () => {
-                  //   const sendResult = await checkKakaoPushResult(
-                  //     kakaoPushResult
-                  //   );
-                  //   resolve(sendResult);
-                  // }, 1000);
-                  // });
+                  const sendResult = await checkKakaoPushResult(
+                    kakaoPushResult
+                  );
+                  return sendResult;
                 };
-                await checkKakaoPromise();
+                const sendResult = await checkKakaoPromise();
                 console.log("3");
                 //문자 다시 보내기
 
