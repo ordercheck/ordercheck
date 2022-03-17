@@ -468,8 +468,10 @@ module.exports = {
       for (let i = 0; i < findResult.length; i++) {
         const second = findResult[i].card_number.substring(4, 8);
         const third = findResult[i].card_number.substring(8, 12);
-
         findResult[i].card_number = `**** ${second} ${third} ****`;
+
+        let [year, month] = findResult[i].expiry.split("-");
+        findResult[i].expiry = `${month}/${year.slice(-2)}`;
       }
 
       return res.send({ success: 200, findResult });
