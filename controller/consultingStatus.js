@@ -118,7 +118,7 @@ module.exports = {
             // 정상발송 0000
             if (sendResult.sendResult === "3018") {
               // 문자 보내기 전 문자 비용 체크
-
+              console.log("다시 문자 보내야함");
               if (text_cost < 11) {
                 return;
               }
