@@ -190,12 +190,12 @@ module.exports = {
                 console.log("2");
                 const checkKakaoPromise = async () => {
                   return new Promise(function (resolve, reject) {
-                    setTimeout(async () => {
-                      const sendResult = await checkKakaoPushResult(
-                        kakaoPushResult
-                      );
-                      resolve(sendResult);
-                    }, 1000);
+                    // setTimeout(async () => {
+                    //   const sendResult = await checkKakaoPushResult(
+                    //     kakaoPushResult
+                    //   );
+                    //   resolve(sendResult);
+                    // }, 1000);
                   });
                 };
                 const sendResult = await checkKakaoPromise();
