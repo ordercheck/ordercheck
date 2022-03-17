@@ -1,54 +1,21 @@
-const db = require('../model/db');
-const { payNow, refund, addCard } = require('../lib/payFunction');
-const _f = require('../lib/functions');
+const db = require("../model/db");
+const { payNow, refund, addCard } = require("../lib/payFunction");
+const { verify_data } = require("../lib/jwtfunctions");
+const axios = require("axios");
+const _f = require("../lib/functions");
 module.exports = {
   enrollmentCard: async (req, res, next) => {
-    const {
-      card_number,
-      expiry,
-      birth,
-      pwd_2digit,
-      customer_uid,
-      business_number,
-    } = req.body;
-    // 동일한 카드가 있는지 체크
-    const checkCardResult = await db.card.findOne({
-      where: { card_number, user_idx: req.user_idx },
-    });
+    const { user_idx } = req;
+    let card_data = await verify_data(ct);
 
-    if (checkCardResult) {
-      return res.send({ success: 400, messsage: '이미 등록된 카드입니다' });
-    }
+    card_data.user_idx = user_idx;
+    // 법인카드 유무 확인 후 체크
+    card_data.birth
+      ? (card_data.corporation_yn = false)
+      : (card_data.corporation_yn = true);
 
-    const cardAddResult = await addCard(
-      card_number,
-      expiry,
-      birth,
-      pwd_2digit,
-      customer_uid,
-      business_number
-    );
+    // 카드 정보 등록 후
 
-    // 카드 등록 실패
-    if (!cardAddResult.success) {
-      return res.send({ success: 400, message: cardAddResult.message });
-    }
-    const merchant_uid = _f.randomString9();
-    const { success, imp_uid, card_name, message } = await payNow(
-      customer_uid,
-      1000,
-      merchant_uid
-    );
-    if (!success) {
-      return res.send({ success: 400, message });
-    }
-    rea.body.card_name = card_name;
-    const refundResult = await refund(imp_uid, 1000);
-
-    if (!refundResult.success) {
-      return res.send({ success: 400, message: refundResult.message });
-    }
-    await db.card.create(req.body);
-    return res.send({ success: 200, message: '카드 등록 완료' });
+    await db.card.create(card_data);
   },
 };
