@@ -45,7 +45,7 @@ module.exports = {
 
       const searchFileStore = await searchFileandFolder(req, pureText);
 
-      const searchForm = await searchingByTitle(pureText);
+      const searchForm = await searchingByTitle(pureText, company_idx);
       return res.send({
         success: 200,
         searchCustomer,

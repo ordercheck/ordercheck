@@ -201,7 +201,7 @@ module.exports = {
   searchFormLink: async (req, res, next) => {
     try {
       const pureText = makePureText(req.params.title);
-      const searchResult = await searchingByTitle(pureText);
+      const searchResult = await searchingByTitle(pureText, req.company_idx);
       return res.send({ success: 200, searchResult });
     } catch (err) {
       next(err);
