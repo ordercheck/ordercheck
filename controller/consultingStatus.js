@@ -73,16 +73,16 @@ module.exports = {
           res.send({ success: 200 });
 
           // 총 문자 비용 계산
-          const findCompany = await db.company.findByPk(bodyData.company_idx, {
-            attributes: ["huidx"],
-          });
-          const findSms = await db.sms.findOne({
-            where: { user_idx: findCompany.huidx },
-          });
-          let text_cost = findSms.text_cost;
-          if (text_cost < 10) {
-            return;
-          }
+          // const findCompany = await db.company.findByPk(bodyData.company_idx, {
+          //   attributes: ["huidx"],
+          // });
+          // const findSms = await db.sms.findOne({
+          //   where: { user_idx: findCompany.huidx },
+          // });
+          // let text_cost = findSms.text_cost;
+          // if (text_cost < 10) {
+          //   return;
+          // }
 
           const customer_phoneNumber = bodyData.customer_phoneNumber.replace(
             /\./g,
@@ -119,11 +119,11 @@ module.exports = {
             if (sendResult.sendResult === "3018") {
               // 문자 보내기 전 문자 비용 체크
 
-              if (text_cost < 11) {
-                return;
-              }
+              // if (text_cost < 11) {
+              //   return;
+              // }
 
-              text_cost -= 11;
+              // text_cost -= 11;
               // LMS 비용 차감 후 저장
 
               const SMSResult = await _f.smsPush(
@@ -153,9 +153,9 @@ module.exports = {
             }
           }
 
-          if (text_cost < 10) {
-            return;
-          }
+          // if (text_cost < 10) {
+          //   return;
+          // }
           // 팀원 카카오 푸쉬 보내기
           const getMembers = await db.userCompany.findAll({
             where: { company_idx: bodyData.company_idx, deleted: null },
@@ -169,67 +169,67 @@ module.exports = {
           });
 
           getMembers.forEach(async (data) => {
-            if (text_cost < 10) {
-              return;
-            } else {
-              const user_phone = data.user.user_phone.replace(/\./g, "");
-              const { kakaoPushResult, message } = await TeamkakaoPushNewForm(
-                user_phone,
-                bodyData.title,
-                bodyData.customer_name,
-                "확인하기",
-                bodyData.customer_phoneNumber
-              );
+            // if (text_cost < 10) {
+            //   return;
+            // } else {
+            const user_phone = data.user.user_phone.replace(/\./g, "");
+            const { kakaoPushResult, message } = await TeamkakaoPushNewForm(
+              user_phone,
+              bodyData.title,
+              bodyData.customer_name,
+              "확인하기",
+              bodyData.customer_phoneNumber
+            );
 
-              if (kakaoPushResult) {
-                const checkKakaoPromise = async () => {
-                  return new Promise(function (resolve, reject) {
-                    setTimeout(async () => {
-                      const sendResult = await checkKakaoPushResult(
-                        kakaoPushResult
-                      );
-                      resolve(sendResult);
-                    }, 1000);
-                  });
-                };
-                const sendResult = await checkKakaoPromise();
+            if (kakaoPushResult) {
+              const checkKakaoPromise = async () => {
+                return new Promise(function (resolve, reject) {
+                  setTimeout(async () => {
+                    const sendResult = await checkKakaoPushResult(
+                      kakaoPushResult
+                    );
+                    resolve(sendResult);
+                  }, 1000);
+                });
+              };
+              const sendResult = await checkKakaoPromise();
 
-                //문자 다시 보내기
+              //문자 다시 보내기
 
-                // 메시지 전송못할때 3018 (차단, 카톡 없을때)
-                // 전화번호 오류 3008
-                // 정상발송 0000
-                if (sendResult.sendResult === "3018") {
-                  // 문자 보내기 전 문자 비용 체크
+              // 메시지 전송못할때 3018 (차단, 카톡 없을때)
+              // 전화번호 오류 3008
+              // 정상발송 0000
+              if (sendResult.sendResult === "3018") {
+                // 문자 보내기 전 문자 비용 체크
 
-                  if (text_cost < 11) {
-                    return;
-                  }
+                // if (text_cost < 11) {
+                //   return;
+                // }
 
-                  await _f.smsPush(user_phone, message, "LMS");
+                await _f.smsPush(user_phone, message, "LMS");
 
-                  decreasePriceAndHistory(
-                    { text_cost: 11 },
-                    findSms.idx,
-                    "SMS",
-                    message,
-                    data.user.user_phone,
-                    bodyData.customer_phoneNumber
-                  );
-                  console.log(5);
-                } else {
-                  // 알림톡 비용 차감 후 저장
-                  decreasePriceAndHistory(
-                    { text_cost: 10 },
-                    findSms.idx,
-                    "알림톡",
-                    message,
-                    data.user.user_phone,
-                    bodyData.customer_phoneNumber
-                  );
-                }
+                decreasePriceAndHistory(
+                  { text_cost: 11 },
+                  findSms.idx,
+                  "LMS",
+                  message,
+                  data.user.user_phone,
+                  bodyData.customer_phoneNumber
+                );
+                console.log(5);
+              } else {
+                // 알림톡 비용 차감 후 저장
+                decreasePriceAndHistory(
+                  { text_cost: 10 },
+                  findSms.idx,
+                  "알림톡",
+                  message,
+                  data.user.user_phone,
+                  bodyData.customer_phoneNumber
+                );
               }
             }
+            // }
           });
         } catch (err) {
           await t.rollback();
