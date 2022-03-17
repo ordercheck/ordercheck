@@ -44,9 +44,16 @@ module.exports = {
       });
       // fileStore search
 
-      const searchFileStore = await searchFileandFolder(req, pureText);
+      let searchFileStore = await searchFileandFolder(req, pureText);
 
+      searchFileStore = searchFileStore.sort(function date_descending(a, b) {
+        var dateA = new Date(a["날짜"]).getTime();
+        var dateB = new Date(b["날짜"]).getTime();
+        return dateA < dateB ? 1 : -1;
+      });
+      console.log(searchFileStore);
       const searchForm = await searchingByTitle(pureText, company_idx);
+
       return res.send({
         success: 200,
         searchCustomer,
