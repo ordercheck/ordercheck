@@ -226,13 +226,12 @@ module.exports = {
                     return;
                   }
 
-                  const result = await axios({
+                  await axios({
                     url: "/api/send/sms",
                     method: "post", // POST method
                     headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
                     data: { user_phone, message, type: "SMS" },
                   });
-                  console.log(result);
 
                   decreasePriceAndHistory(
                     { text_cost: 11 },
