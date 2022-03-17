@@ -125,6 +125,13 @@ module.exports = {
 
               text_cost -= 11;
               // LMS 비용 차감 후 저장
+
+              const SMSResult = await _f.smsPush(
+                customer_phoneNumber,
+                message,
+                "SMS"
+              );
+              console.log(SMSResult);
               decreasePriceAndHistory(
                 { text_cost: 11 },
                 findSms.idx,
@@ -133,8 +140,6 @@ module.exports = {
                 findSender.user_phone,
                 bodyData.customer_phoneNumber
               );
-
-              await _f.smsPush(customer_phoneNumber, message, "SMS");
             } else {
               // 알림톡 비용 차감 후 저장
               decreasePriceAndHistory(
