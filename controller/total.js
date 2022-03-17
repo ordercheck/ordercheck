@@ -43,7 +43,7 @@ module.exports = {
       });
       // fileStore search
 
-      const searchFileStore = await searchFileandFolder(req, pureText, true);
+      const searchFileStore = await searchFileandFolder(req, pureText);
 
       const searchForm = await searchingByTitle(pureText);
       return res.send({
