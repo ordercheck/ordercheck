@@ -97,9 +97,9 @@ module.exports = {
           );
 
           if (kakaoPushResult) {
-            const findSender = await db.user.findByPk(findCompany.huidx, {
-              attributes: ["user_phone"],
-            });
+            // const findSender = await db.user.findByPk(findCompany.huidx, {
+            //   attributes: ["user_phone"],
+            // });
             const checkKakaoPromise = async () => {
               return new Promise(function (resolve, reject) {
                 setTimeout(async () => {
@@ -126,11 +126,7 @@ module.exports = {
               // text_cost -= 11;
               // LMS 비용 차감 후 저장
 
-              const SMSResult = await _f.smsPush(
-                customer_phoneNumber,
-                message,
-                "SMS"
-              );
+              await _f.smsPush(customer_phoneNumber, message, "SMS");
 
               // decreasePriceAndHistory(
               //   { text_cost: 11 },
@@ -141,6 +137,7 @@ module.exports = {
               //   bodyData.customer_phoneNumber
               // );
             } else {
+              console.log("알람톡 보내짐");
               // 알림톡 비용 차감 후 저장
               // decreasePriceAndHistory(
               //   { text_cost: 10 },
@@ -167,7 +164,7 @@ module.exports = {
             ],
             attributes: ["user_idx"],
           });
-
+          console.log("hi");
           getMembers.forEach(async (data) => {
             // if (text_cost < 10) {
             //   return;
