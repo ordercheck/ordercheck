@@ -39,6 +39,7 @@ module.exports = {
             attributes: ["idx", "user_name"],
           },
         ],
+        order: [["createdAt", "DESC"]],
         attributes: customerAttributes,
       });
       // fileStore search

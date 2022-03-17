@@ -588,7 +588,9 @@ module.exports = {
 
     try {
       let findResult;
-
+      if (category == undefined) {
+        findResult = [];
+      }
       if (category == 0) {
         findResult = await findReceiptList({ company_idx });
       }

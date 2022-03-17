@@ -1,9 +1,9 @@
-const db = require('../model/db');
-const moment = require('moment');
-require('moment-timezone');
-moment.tz.setDefault('Asia/Seoul');
-const { Op } = require('sequelize');
-const { consultingCountArrAttributes } = require('../lib/attributes');
+const db = require("../model/db");
+const moment = require("moment");
+require("moment-timezone");
+moment.tz.setDefault("Asia/Seoul");
+const { Op } = require("sequelize");
+const { consultingCountArrAttributes } = require("../lib/attributes");
 
 module.exports = {
   getHomeBoard: async (req, res, next) => {
@@ -19,11 +19,11 @@ module.exports = {
       });
 
       const companyInfo = await db.company.findByPk(company_idx, {
-        attributes: ['company_logo', 'company_name', 'companyexist'],
+        attributes: ["company_logo", "company_name", "companyexist"],
       });
 
-      const firstDate = moment().format('YYYY-MM-01');
-      const secondDate = moment(firstDate).add('1', 'M').format('YYYY-MM-DD');
+      const firstDate = moment().format("YYYY-MM-01");
+      const secondDate = moment(firstDate).add("1", "M").format("YYYY-MM-DD");
 
       const companyMonth = await db.customer.count({
         where: {
@@ -35,7 +35,7 @@ module.exports = {
 
       const planInfo = await db.plan.findOne({
         where: { company_idx },
-        attributes: ['plan'],
+        attributes: ["plan"],
       });
 
       const unconfirmAlarm = await db.alarm.count({
@@ -43,13 +43,13 @@ module.exports = {
       });
 
       const userInfo = await db.user.findByPk(user_idx, {
-        attributes: ['user_name'],
+        attributes: ["user_name"],
       });
 
       const bread = await db.store.findAll({
         where: { user_idx },
-        attributes: ['bread', 'createdAt', ['idx', 'breadId']],
-        order: [['createdAt', 'DESC']],
+        attributes: ["bread", "createdAt", ["idx", "breadId"]],
+        order: [["createdAt", "DESC"]],
       });
 
       const standByMember = await db.userCompany.count({
@@ -57,8 +57,8 @@ module.exports = {
       });
 
       // 시간 계산
-      const now = moment().add('1', 'day').format('YYYY-MM-DD');
-      const daysAgo = moment().subtract(6, 'day').format('YYYY-MM-DD');
+      const now = moment().add("1", "day").format("YYYY-MM-DD");
+      const daysAgo = moment().subtract(6, "day").format("YYYY-MM-DD");
 
       const zeroFiftyPossibility = await db.customer.count({
         where: {
@@ -88,7 +88,7 @@ module.exports = {
           company_idx,
         },
         attributes: consultingCountArrAttributes,
-        order: [['createdAt', 'DESC']],
+        order: [["createdAt", "DESC"]],
         raw: true,
       });
 
@@ -98,7 +98,7 @@ module.exports = {
           company_idx,
         },
         attributes: consultingCountArrAttributes,
-        order: [['createdAt', 'DESC']],
+        order: [["createdAt", "DESC"]],
         raw: true,
       });
 
@@ -109,7 +109,7 @@ module.exports = {
           company_idx,
         },
         attributes: consultingCountArrAttributes,
-        order: [['createdAt', 'DESC']],
+        order: [["createdAt", "DESC"]],
         raw: true,
       });
 
@@ -124,7 +124,7 @@ module.exports = {
       let index = 6;
 
       for (let i = 0; i < 7; i++) {
-        const date = moment().subtract(i, 'days').format('YYYY.MM.DD');
+        const date = moment().subtract(i, "days").format("YYYY.MM.DD");
         consultingCountObject[date] = { count: 0, index };
         calculateCountObject[date] = { count: 0, index };
         completeConsultingObject[date] = { count: 0, index };
@@ -151,10 +151,12 @@ module.exports = {
         data = consultingCountObject[data].count;
         return data;
       });
+
       calculateCount = calculateCount.map((data) => {
         data = calculateCountObject[data].count;
         return data;
       });
+
       completeConsulting = completeConsulting.map((data) => {
         data = completeConsultingObject[data].count;
         return data;
