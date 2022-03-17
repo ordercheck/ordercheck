@@ -336,7 +336,7 @@ module.exports = {
       console.log(sendAlarm);
       io.to(parseInt(createResult.user_idx)).emit(
         "addAlarm",
-        sendAlarm.alarmData
+        sendAlarm.alarmData.dataValues
       );
       return;
     } catch (err) {
