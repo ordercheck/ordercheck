@@ -132,24 +132,24 @@ module.exports = {
                 "SMS"
               );
 
-              decreasePriceAndHistory(
-                { text_cost: 11 },
-                findSms.idx,
-                "SMS",
-                message,
-                findSender.user_phone,
-                bodyData.customer_phoneNumber
-              );
+              // decreasePriceAndHistory(
+              //   { text_cost: 11 },
+              //   findSms.idx,
+              //   "SMS",
+              //   message,
+              //   findSender.user_phone,
+              //   bodyData.customer_phoneNumber
+              // );
             } else {
               // 알림톡 비용 차감 후 저장
-              decreasePriceAndHistory(
-                { text_cost: 10 },
-                findSms.idx,
-                "알림톡",
-                message,
-                findSender.user_phone,
-                bodyData.customer_phoneNumber
-              );
+              // decreasePriceAndHistory(
+              //   { text_cost: 10 },
+              //   findSms.idx,
+              //   "알림톡",
+              //   message,
+              //   findSender.user_phone,
+              //   bodyData.customer_phoneNumber
+              // );
             }
           }
 
@@ -208,25 +208,24 @@ module.exports = {
 
                 await _f.smsPush(user_phone, message, "LMS");
 
-                decreasePriceAndHistory(
-                  { text_cost: 11 },
-                  findSms.idx,
-                  "LMS",
-                  message,
-                  data.user.user_phone,
-                  bodyData.customer_phoneNumber
-                );
-                console.log(5);
+                // decreasePriceAndHistory(
+                //   { text_cost: 11 },
+                //   findSms.idx,
+                //   "LMS",
+                //   message,
+                //   data.user.user_phone,
+                //   bodyData.customer_phoneNumber
+                // );
               } else {
                 // 알림톡 비용 차감 후 저장
-                decreasePriceAndHistory(
-                  { text_cost: 10 },
-                  findSms.idx,
-                  "알림톡",
-                  message,
-                  data.user.user_phone,
-                  bodyData.customer_phoneNumber
-                );
+                // decreasePriceAndHistory(
+                //   { text_cost: 10 },
+                //   findSms.idx,
+                //   "알림톡",
+                //   message,
+                //   data.user.user_phone,
+                //   bodyData.customer_phoneNumber
+                // );
               }
             }
             // }
