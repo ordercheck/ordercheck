@@ -59,7 +59,10 @@ module.exports = {
       setTimeout(async () => {
         const io = req.app.get("io");
         const sendAlarm = new Alarm(createResult);
-        io.to(parseInt(user_idx)).emit("addAlarm", sendAlarm.alarmData);
+        io.to(parseInt(user_idx)).emit(
+          "addAlarm",
+          sendAlarm.alarmData.dataValues
+        );
         await alarm.updateAlarms(
           { repeat_time: null },
           { idx: createResult.idx }
