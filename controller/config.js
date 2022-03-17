@@ -585,7 +585,7 @@ module.exports = {
       params: { category },
       company_idx,
     } = req;
-
+    console.log(category);
     try {
       let findResult;
       if (category == undefined) {
