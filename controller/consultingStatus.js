@@ -333,6 +333,7 @@ module.exports = {
         customer_idx: consultResult.idx,
       });
       const sendAlarm = new Alarm(createResult);
+      console.log(sendAlarm);
       io.to(parseInt(createResult.user_idx)).emit("addAlarm", sendAlarm);
       return;
     } catch (err) {
