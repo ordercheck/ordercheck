@@ -472,7 +472,7 @@ module.exports = {
       return res.send([]);
     }
 
-    const totalFindResult = await searchFileandFolder(req, pureText);
+    const totalFindResult = await searchFileandFolder(req, pureText, false);
 
     return res.send(totalFindResult);
   },
