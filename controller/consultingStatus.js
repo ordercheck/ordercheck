@@ -154,94 +154,92 @@ module.exports = {
                 findSender.user_phone,
                 bodyData.customer_phoneNumber
               );
-
-              if (text_cost < 10) {
-                return;
-              }
             }
           }
 
-          // // 팀원 카카오 푸쉬 보내기
-          // const getMembers = await db.userCompany.findAll({
-          //   where: { company_idx: bodyData.company_idx, deleted: null },
-          //   include: [
-          //     {
-          //       attributes: ["user_phone"],
-          //       model: db.user,
-          //     },
-          //   ],
-          //   attributes: ["user_idx"],
-          // });
+          if (text_cost < 10) {
+            return;
+          }
+          // 팀원 카카오 푸쉬 보내기
+          const getMembers = await db.userCompany.findAll({
+            where: { company_idx: bodyData.company_idx, deleted: null },
+            include: [
+              {
+                attributes: ["user_phone"],
+                model: db.user,
+              },
+            ],
+            attributes: ["user_idx"],
+          });
 
-          // getMembers.forEach(async (data) => {
-          //   if (text_cost < 10) {
-          //     return;
-          //   } else {
-          //     text_cost -= 10;
-          //     const user_phone = data.user.user_phone.replace(/\./g, "");
-          //     const { kakaoPushResult, message } = await TeamkakaoPushNewForm(
-          //       user_phone,
-          //       bodyData.title,
-          //       bodyData.customer_name,
-          //       "확인하기",
-          //       bodyData.customer_phoneNumber
-          //     );
+          getMembers.forEach(async (data) => {
+            if (text_cost < 10) {
+              return;
+            } else {
+              const user_phone = data.user.user_phone.replace(/\./g, "");
+              const { kakaoPushResult, message } = await TeamkakaoPushNewForm(
+                user_phone,
+                bodyData.title,
+                bodyData.customer_name,
+                "확인하기",
+                bodyData.customer_phoneNumber
+              );
 
-          //     console.log("1");
-          //     if (kakaoPushResult) {
-          //       console.log("2");
-          //       const checkKakaoPromise = () => {
-          //         return new Promise(function (resolve, reject) {
-          //           setTimeout(async () => {
-          //             const sendResult = await checkKakaoPushResult(
-          //               kakaoPushResult
-          //             );
-          //             resolve(sendResult);
-          //           }, 1000);
-          //         });
-          //       };
-          //       const sendResult = await checkKakaoPromise();
+              console.log("1");
+              if (kakaoPushResult) {
+                console.log("2");
+                const checkKakaoPromise = () => {
+                  return new Promise(function (resolve, reject) {
+                    setTimeout(async () => {
+                      const sendResult = await checkKakaoPushResult(
+                        kakaoPushResult
+                      );
+                      resolve(sendResult);
+                    }, 1000);
+                  });
+                };
+                const sendResult = await checkKakaoPromise();
 
-          //       // 알림톡 비용 차감 후 저장
-          //       decreasePriceAndHistory(
-          //         { text_cost: 10 },
-          //         findSms.idx,
-          //         "알림톡",
-          //         message,
-          //         data.user.user_phone,
-          //         bodyData.customer_phoneNumber
-          //       );
-          //       //문자 다시 보내기
+                //문자 다시 보내기
 
-          //       // 메시지 전송못할때 3018 (차단, 카톡 없을때)
-          //       // 전화번호 오류 3008
-          //       // 정상발송 0000
-          //       if (sendResult.sendResult === "3018") {
-          //         // 문자 보내기 전 문자 비용 체크
+                // 메시지 전송못할때 3018 (차단, 카톡 없을때)
+                // 전화번호 오류 3008
+                // 정상발송 0000
+                if (sendResult.sendResult === "3018") {
+                  // 문자 보내기 전 문자 비용 체크
 
-          //         if (text_cost < 11) {
-          //           return;
-          //         }
+                  if (text_cost < 11) {
+                    return;
+                  }
 
-          //         await axios({
-          //           url: "/api/send/sms",
-          //           method: "post", // POST method
-          //           headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
-          //           data: { user_phone, message, type: "SMS" },
-          //         });
-
-          //         decreasePriceAndHistory(
-          //           { text_cost: 11 },
-          //           findSms.idx,
-          //           "SMS",
-          //           message,
-          //           data.user.user_phone,
-          //           bodyData.customer_phoneNumber
-          //         );
-          //       }
-          // }
-          // }
-          // });
+                  await axios({
+                    url: "/api/send/sms",
+                    method: "post", // POST method
+                    headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
+                    data: { user_phone, message, type: "SMS" },
+                  });
+                  decreasePriceAndHistory(
+                    { text_cost: 11 },
+                    findSms.idx,
+                    "SMS",
+                    message,
+                    data.user.user_phone,
+                    bodyData.customer_phoneNumber
+                  );
+                } else {
+                  // 알림톡 비용 차감 후 저장
+                  decreasePriceAndHistory(
+                    { text_cost: 10 },
+                    findSms.idx,
+                    "알림톡",
+                    message,
+                    data.user.user_phone,
+                    bodyData.customer_phoneNumber
+                  );
+                }
+              }
+            }
+          });
         } catch (err) {
           await t.rollback();
           next(err);
