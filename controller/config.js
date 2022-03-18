@@ -524,13 +524,13 @@ module.exports = {
       }
 
       const findPlan = await db.plan.findOne({
-        where: { company_idx, active: 1 },
-        attributes: ["expire_plan"],
+        where: { company_idx, active: 3 },
+        attributes: ["start_plan"],
       });
 
       let expirePlan = findPlan.expire_plan.replace(/\./g, "-");
 
-      expirePlan = moment(expirePlan).add("1", "d").format("YYYY.MM.DD");
+      expirePlan = moment(expirePlan).format("YYYY.MM.DD");
 
       const findResult = { findCardInfo, expirePlan, cardEmail };
       return res.send({ success: 200, findResult });
