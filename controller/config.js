@@ -527,10 +527,13 @@ module.exports = {
         where: { company_idx, active: 3 },
         attributes: ["start_plan"],
       });
+      let expirePlan = null;
 
-      let expirePlan = findPlan.expire_plan.replace(/\./g, "-");
+      if (findPlan) {
+        expirePlan = findPlan.expire_plan.replace(/\./g, "-");
 
-      expirePlan = moment(expirePlan).format("YYYY.MM.DD");
+        expirePlan = moment(expirePlan).format("YYYY.MM.DD");
+      }
 
       const findResult = { findCardInfo, expirePlan, cardEmail };
       return res.send({ success: 200, findResult });
