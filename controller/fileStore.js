@@ -466,7 +466,7 @@ module.exports = {
   searchFileStore: async (req, res, next) => {
     const pureText = req.query.search
       .replace(/[. ]/g, "")
-      .replace(/[ \{\}\[\]\/?,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi, "1010");
+      .replace(/[\{\}\[\]\/?,;:|\*~`!^\-_+┼<>@\#$%&\'\"\\\=]/gi, "1010");
     if (pureText == "") {
       return res.send([]);
     }
