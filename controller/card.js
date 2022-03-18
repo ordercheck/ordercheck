@@ -9,7 +9,7 @@ module.exports = {
       user_idx,
       body: { token },
     } = req;
-
+    console.log(token);
     let card_data = await verify_data(token);
 
     // console.log(card_data);
