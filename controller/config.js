@@ -617,6 +617,7 @@ module.exports = {
           receipt_kind: "자동문자",
         });
       }
+
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
