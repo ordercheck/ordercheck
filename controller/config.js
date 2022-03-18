@@ -513,6 +513,7 @@ module.exports = {
 
       let cardEmail;
       for (let i = 0; i < findCardInfo.length; i++) {
+        // 메인 카드 이메일 찾기
         if (findCardInfo[i].main == true) {
           cardEmail = findCardInfo[i].card_email;
         }
@@ -522,16 +523,14 @@ module.exports = {
         let [year, month] = findCardInfo[i].expiry.split("-");
         findCardInfo[i].expiry = `${month}/${year.slice(-2)}`;
       }
-
+      // 플랜 다음 결제일 체크
       const findPlan = await db.plan.findOne({
         where: { company_idx, active: 3 },
         attributes: ["start_plan"],
       });
       let expirePlan = null;
-
       if (findPlan) {
         expirePlan = findPlan.expire_plan.replace(/\./g, "-");
-
         expirePlan = moment(expirePlan).format("YYYY.MM.DD");
       }
 
