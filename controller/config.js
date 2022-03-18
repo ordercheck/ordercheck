@@ -382,7 +382,17 @@ module.exports = {
           user_idx,
         },
       });
-      return res.send({ success: 200 });
+
+      const findResult = await db.sms.findOne({
+        where: { user_idx },
+        attributes: ["text_cost", "repay", "auto_price", "auto_min"],
+      });
+
+      findResult.dataValues.text_cost = findResult.text_cost.toLocaleString();
+      findResult.dataValues.auto_price = findResult.auto_price.toLocaleString();
+      findResult.dataValues.auto_min = findResult.auto_min.toLocaleString();
+
+      return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
     }
