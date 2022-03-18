@@ -661,7 +661,7 @@
  *       - bearerAuth: []
  *      tags:
  *       -  config
- *      summary: 카드 이메일 변경하기 
+ *      summary: 카드 이메일 변경하기
  *      parameters:
  *         - in: path
  *           name: cardId
@@ -674,20 +674,13 @@
  *           schema:
  *             type: object
  *             properties:
- *               user_name:
+ *               card_email:
  *                 type: string
- *               user_email:
- *                 type: string
- *               templateId:
- *                 type: integer
  *             example:
- *               user_name: '김철수'
- *               user_email: "김철수@naver.com"
- *               templateId: 1
+ *               card_email: "김철수@naver.com"
  *      responses:
  *       '200':
  *         description: 성공
  *       '401':
  *         description: 실패
-
  */

@@ -790,4 +790,13 @@ module.exports = {
       next(err);
     }
   },
+  changeMainCardEmail: async (req, res, next) => {
+    const {
+      params: { cardId },
+      body,
+    } = req;
+    await db.card.update(body, { whre: { idx: cardId } });
+
+    return res.send({ success: 200 });
+  },
 };

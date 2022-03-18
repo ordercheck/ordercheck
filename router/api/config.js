@@ -30,6 +30,7 @@ const {
   showChatTemplate,
   delCompanyLogo,
   changeMemberInfo,
+  changeMainCardEmail,
   addTemplate,
 } = require("../../controller/config");
 const {
@@ -64,6 +65,8 @@ router.get(
   loginCheck,
   getReceiptDetail
 );
+
+router.patch("/company/card/email/:cardId", loginCheck, changeMainCardEmail);
 
 router.get("/company/sms/history", loginCheck, showSmsHistory);
 
