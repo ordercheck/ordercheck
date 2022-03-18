@@ -506,7 +506,9 @@ module.exports = {
       next
     );
 
-    return res.send({ success: 200, consultResult });
+    res.send({ success: 200, consultResult });
+
+    // 파일 보관함 있는지 체크
   },
 
   addCalculate: async (req, res, next) => {

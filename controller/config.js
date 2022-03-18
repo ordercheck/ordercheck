@@ -36,12 +36,13 @@ module.exports = {
       let companyProfile = await db.sequelize
         .query(
           `SELECT plan, company_name, company_logo, company_subdomain, address, 
-          detail_address, business_number, business_enrollment, business_enrollment_title, user_name,
+          detail_address, company.business_number, business_enrollment, business_enrollment_title, user_name,
           whiteLabelChecked,  
           chatChecked, 
           analysticChecked
           FROM userCompany 
           LEFT JOIN company ON userCompany.company_idx = company.idx
+          LEFT JOIN card ON card.user_idx = user.idx
           LEFT JOIN plan ON userCompany.company_idx = plan.company_idx
           LEFT JOIN user ON company.huidx = user.idx
           WHERE userCompany.user_idx = ${req.user_idx}`
@@ -420,7 +421,7 @@ module.exports = {
     );
 
     if (!payResult.success) {
-      return next(payResult.message);
+      return res.send({ success: 400, message: "충전 실패" });
     }
 
     const findSmsResult = await db.sms.findOne({
