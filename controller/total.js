@@ -1,7 +1,6 @@
 const db = require("../model/db");
 const { Op } = require("sequelize");
 const {
-  makePureText,
   searchFileandFolder,
   searchingByTitle,
 } = require("../lib/apiFunctions");

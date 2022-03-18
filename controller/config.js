@@ -2,6 +2,7 @@ const db = require("../model/db");
 const { makeSpreadArray } = require("../lib/functions");
 const _f = require("../lib/functions");
 const { findMembers, findMember, checkTitle } = require("../lib/apiFunctions");
+const { generateRandomCode } = require("../lib/functions");
 const { Op } = require("sequelize");
 const { Company } = require("../lib/classes/CompanyClass");
 const { Template } = require("../lib/classes/TemplateClass");
@@ -401,11 +402,13 @@ module.exports = {
   paySms: async (req, res, next) => {
     const {
       user_idx,
+      company_idx,
       body: { text_cost },
     } = req;
 
     const findCardResult = await db.card.findOne({
       where: { user_idx, main: true },
+      attributes: ["idx", "customer_uid", "card_number", ""],
     });
     if (!findCardResult) {
       return res.send({ success: 400, message: "등록된 카드가 없습니다." });
@@ -421,8 +424,28 @@ module.exports = {
     );
 
     if (!payResult.success) {
-      console.log(payResult.message);
-      return res.send({ success: 400, message: "문자 충전 실패" });
+      await db.sms.update(
+        {
+          active: false,
+        },
+        {
+          where: {
+            idx: findCardResult.idx,
+          },
+        }
+      );
+      res.send({ success: 400, message: "문자 충전 실패" });
+      const receiptId = generateRandomCode(6);
+
+      await db.receipt.create({
+        result_price_levy: text_cost,
+        receiptId,
+        status: false,
+        company_name: findCompany.company_name,
+        receipt_kind: "자동 문자 충전",
+        card_number: findCompany.card_number,
+      });
+      return;
     }
 
     const findSmsResult = await db.sms.findOne({
@@ -445,11 +468,21 @@ module.exports = {
       }
     );
 
-    // 영수증 로직
-
     res.send({ success: 200, message: "충전 완료" });
+    // 영수증 등록 로직
+    const findCompany = await db.company.findByPk(company_idx, {
+      attributes: ["company_name"],
+    });
 
-    // 영수증 등록
+    const receiptId = generateRandomCode(6);
+
+    await db.receipt.create({
+      result_price_levy: text_cost,
+      receiptId,
+      company_name: findCompany.company_name,
+      receipt_kind: "자동 문자 충전",
+      card_number: findCompany.card_number,
+    });
   },
   showSmsHistory: async (req, res, next) => {
     const { user_idx } = req;
