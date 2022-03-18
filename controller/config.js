@@ -700,6 +700,14 @@ module.exports = {
 
       findResult.tax_price =
         findResult.result_price_levy - findResult.result_price;
+      findResult.createdAt = findResult.createdAt
+        .split(" ")[0]
+        .replace(/-/g, ".");
+
+      const second = findResult.card_number.substring(4, 8);
+      const third = findResult.card_number.substring(8, 12);
+
+      findResult.card_number = `**** ${second} ${third}  ****`;
 
       return res.send({ success: 200, findResult });
     } catch (err) {
