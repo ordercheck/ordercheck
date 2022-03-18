@@ -407,7 +407,7 @@ module.exports = {
 
     const findCardResult = await db.card.findOne({
       where: { user_idx, main: true },
-      attributes: ["idx", "customer_uid", "card_number", ""],
+      attributes: ["idx", "customer_uid", "card_number"],
     });
     if (!findCardResult) {
       return res.send({ success: 400, message: "등록된 카드가 없습니다." });

@@ -145,6 +145,7 @@ ${company_url}
       },
       attributes: ["idx"],
     });
+
     if (fondBeforeCompanyUser) {
       await db.userCompany.update(
         { active: false },
