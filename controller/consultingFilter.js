@@ -1,9 +1,9 @@
-const { checkPage, addUserId } = require('../lib/apiFunctions');
-const { changeDate, makePureText, isEmptyObj } = require('../lib/apiFunctions');
-const db = require('../model/db');
-const { Op } = require('sequelize');
-const { sortElements, giveNumbering } = require('../lib/checkData');
-const { customerAttributes } = require('../lib/attributes');
+const { checkPage, addUserId } = require("../lib/apiFunctions");
+const { changeDate, makePureText, isEmptyObj } = require("../lib/apiFunctions");
+const db = require("../model/db");
+const { Op } = require("sequelize");
+const { sortElements, giveNumbering } = require("../lib/checkData");
+const { customerAttributes } = require("../lib/attributes");
 // 0이 오름차순,1이 내림차순 (ASC는 오름차순)
 module.exports = {
   Filter: async (req, res, next) => {
@@ -16,7 +16,7 @@ module.exports = {
 
     if (
       (userId && userId.length == 0) ||
-      date == '' ||
+      date == "" ||
       status.length == 0 ||
       contract_possibility.length == 0
     ) {
@@ -108,7 +108,7 @@ module.exports = {
             include: [
               {
                 model: db.user,
-                attributes: ['idx', 'user_name'],
+                attributes: ["idx", "user_name"],
               },
             ],
             attributes: customerAttributes,
@@ -158,7 +158,7 @@ module.exports = {
             include: [
               {
                 model: db.user,
-                attributes: ['idx', 'user_name'],
+                attributes: ["idx", "user_name"],
               },
             ],
             attributes: customerAttributes,
@@ -233,8 +233,16 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      const pureText = search.replace(/[. ]/g, '');
-
+      const pureText = search.replace(/[. ]/g, "").replace(/%/g, "1010");
+      if (pureText == "" || pureText == "-") {
+        return res.send({
+          success: 200,
+          customerData: [],
+          page: 1,
+          totalUser: 0,
+          totalPage: 0,
+        });
+      }
       const { start, intlimit, intPage } = await checkPage(
         limit,
         page,
@@ -268,7 +276,7 @@ module.exports = {
         include: [
           {
             model: db.user,
-            attributes: ['idx', 'user_name'],
+            attributes: ["idx", "user_name"],
           },
         ],
         attributes: customerAttributes,

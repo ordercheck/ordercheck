@@ -15,7 +15,14 @@ module.exports = {
 
     try {
       const pureText = search.replace(/[. ]/g, "").replace(/%/g, "1010");
-
+      if (pureText == "" || pureText == "-") {
+        return res.send({
+          success: 200,
+          searchCustomer: [],
+          searchFileStore: [],
+          searchForm: [],
+        });
+      }
       // customer search
       let searchCustomer = await db.customer.findAll({
         where: {

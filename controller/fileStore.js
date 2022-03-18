@@ -468,7 +468,7 @@ module.exports = {
       .replace(/[. ]/g, "")
       .replace(/%/g, "1010");
 
-    if (pureText == "") {
+    if (pureText == "" || pureText == "-") {
       return res.send([]);
     }
 
