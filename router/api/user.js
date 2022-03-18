@@ -462,7 +462,11 @@ router.post("/create/token", async (req, res) => {
 // body 데이터를 토큰으로 만들기
 router.post("/create/token/data", async (req, res, next) => {
   const { card_number, expiry, pwd_2digit, birth, business_number } = req.body;
-  console.log(pwd_2digit);
+
+  if (pwd_2digit.length !== 2) {
+    return res.send({ success: 400, message: "비밀번호가 2자리 이하입니다." });
+  }
+
   try {
     // 카드를 등록하는 경우
     if (req.body.card_number) {
