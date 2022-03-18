@@ -528,9 +528,10 @@ module.exports = {
         where: { company_idx, active: 3 },
         attributes: ["start_plan"],
       });
+
       let expirePlan = null;
       if (findPlan) {
-        expirePlan = findPlan.expire_plan.replace(/\./g, "-");
+        expirePlan = findPlan.start_plan.replace(/\./g, "-");
         expirePlan = moment(expirePlan).format("YYYY.MM.DD");
       }
 
