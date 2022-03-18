@@ -421,6 +421,7 @@ module.exports = {
     );
 
     if (!payResult.success) {
+      console.log(payResult.message);
       return res.send({ success: 400, message: "문자 충전 실패" });
     }
 
@@ -443,6 +444,8 @@ module.exports = {
         },
       }
     );
+
+    // 영수증 로직
 
     res.send({ success: 200, message: "충전 완료" });
 
