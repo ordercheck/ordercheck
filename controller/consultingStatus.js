@@ -97,9 +97,6 @@ module.exports = {
           );
 
           if (kakaoPushResult) {
-            // const findSender = await db.user.findByPk(findCompany.huidx, {
-            //   attributes: ["user_phone"],
-            // });
             const checkKakaoPromise = async () => {
               return new Promise(function (resolve, reject) {
                 setTimeout(async () => {
@@ -133,7 +130,6 @@ module.exports = {
               //   findSms.idx,
               //   "SMS",
               //   message,
-              //   findSender.user_phone,
               //   bodyData.customer_phoneNumber
               // );
             } else {
@@ -144,7 +140,6 @@ module.exports = {
               //   findSms.idx,
               //   "알림톡",
               //   message,
-              //   findSender.user_phone,
               //   bodyData.customer_phoneNumber
               // );
             }
@@ -210,7 +205,6 @@ module.exports = {
                 //   findSms.idx,
                 //   "LMS",
                 //   message,
-                //   data.user.user_phone,
                 //   bodyData.customer_phoneNumber
                 // );
               } else {
@@ -220,7 +214,6 @@ module.exports = {
                 //   findSms.idx,
                 //   "알림톡",
                 //   message,
-                //   data.user.user_phone,
                 //   bodyData.customer_phoneNumber
                 // );
               }
@@ -505,10 +498,13 @@ module.exports = {
       status,
       next
     );
-
+    if (!consultResult) {
+      return;
+    }
     res.send({ success: 200, consultResult });
 
     // 파일 보관함 있는지 체크
+    // await
   },
 
   addCalculate: async (req, res, next) => {
@@ -706,7 +702,6 @@ module.exports = {
       sms_idx,
       "알림톡",
       message,
-      findSender.user_phone,
       customerFindResult.customer_phoneNumber
     );
 
@@ -739,7 +734,6 @@ module.exports = {
           sms_idx,
           "LMS",
           message,
-          findSender.user_phone,
           customerFindResult.customer_phoneNumber
         );
 

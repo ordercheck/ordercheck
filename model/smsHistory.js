@@ -8,6 +8,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     sender_phoneNumber: {
       allowNull: false,
+      defaultValue: "02.1588.2100",
       type: DataTypes.STRING(100),
     },
 
