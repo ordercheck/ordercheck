@@ -61,20 +61,24 @@ const check_data = (req, res, next) => {
   });
 };
 
-const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
+const addPlanAndSchedule = async (ut, pt, ct, t) => {
   try {
     let user_data = await verify_data(ut);
     let plan_data = await verify_data(pt);
     let card_data = await verify_data(ct);
-    let login_data = await verify_data(lt);
+    // user idx 찾기
+    const findUser = await db.user.findOne({
+      where: { user_phone: user_data.user_phone },
+      attributes: ["idx"],
+    });
 
     // 각 데이터에 필요한 key, value
     const findCompanyData = await db.userCompany.findOne({
-      where: { user_idx: login_data.user_idx, deleted: null },
+      where: { user_idx: findUser.idx, deleted: null },
       attributes: ["company_idx"],
     });
 
-    card_data.user_idx = login_data.user_idx;
+    card_data.user_idx = findUser.idx;
 
     // 법인카드 유무 확인 후 체크
     card_data.birth
@@ -121,7 +125,7 @@ const addPlanAndSchedule = async (ut, pt, ct, lt, t) => {
       where: { company_idx: findCompanyData.company_idx },
       transaction: t,
     });
-    return { success: true, login_data };
+    return { success: true, login_data: findUser.idx };
   } catch (err) {
     return { success: false, err };
   }
@@ -334,7 +338,7 @@ router.post("/join/do", async (req, res, next) => {
 
         await createSmsUserConfig();
 
-        return res.send({ success: 200, loginToken });
+        return res.send({ success: 200 });
       }
 
       // subdomain
@@ -367,7 +371,7 @@ router.post("/join/do", async (req, res, next) => {
 
 //회사 등록 라우터
 router.post("/company/check", async (req, res, next) => {
-  const { lt, ut, ct, pt, company_name, company_subdomain } = req.body;
+  const { ut, ct, pt, company_name, company_subdomain } = req.body;
 
   // 트랜젝션 시작
   const t = await db.sequelize.transaction();
@@ -381,7 +385,7 @@ router.post("/company/check", async (req, res, next) => {
     return res.send({ success: 400, type: "domain" });
   }
 
-  const addPlanResult = await addPlanAndSchedule(ut, pt, ct, lt, t);
+  const addPlanResult = await addPlanAndSchedule(ut, pt, ct, t);
 
   if (addPlanResult.success) {
     try {
@@ -391,7 +395,7 @@ router.post("/company/check", async (req, res, next) => {
           company_subdomain,
           companyexist: true,
         },
-        { where: { huidx: addPlanResult.login_data.user_idx }, transaction: t }
+        { where: { huidx: addPlanResult.login_data }, transaction: t }
       );
       await t.commit();
       return res.send({ success: 200, message: "회사 등록 완료" });
@@ -600,11 +604,11 @@ router.post("/check/password", async (req, res) => {
 });
 
 router.post("/company/check/later", async (req, res, next) => {
-  const { lt, ut, ct, pt } = req.body;
+  const { ut, ct, pt } = req.body;
 
   // 트랜젝션 시작
   const t = await db.sequelize.transaction();
-  const addPlanResult = await addPlanAndSchedule(ut, pt, ct, lt, t);
+  const addPlanResult = await addPlanAndSchedule(ut, pt, ct, t);
 
   if (addPlanResult.success) {
     try {
@@ -618,6 +622,21 @@ router.post("/company/check/later", async (req, res, next) => {
   }
   await t.rollback();
   next(addPlanResult.err);
+});
+router.post("/token/login", async (req, res, next) => {
+  const { ut } = req.body;
+  try {
+    const user_data = await verify_data(ut);
+    const findUser = await db.user.findOne({
+      where: { user_phone: user_data.user_phone },
+      attributes: ["idx"],
+    });
+    const token = await createToken({ user_idx: findUser.idx });
+
+    return res.send({ success: 200, token });
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;
