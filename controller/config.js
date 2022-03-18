@@ -234,10 +234,10 @@ module.exports = {
     try {
       const template = new Template({});
 
-      const findResult = template.findConfigFindByPk(templateId, {
+      const findResult = await template.findConfigFindByPk(templateId, {
         exclude: showDetailTemplateConfig,
       });
-
+      console.log(findResult);
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
