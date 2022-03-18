@@ -463,13 +463,15 @@ router.post("/create/token", async (req, res) => {
 router.post("/create/token/data", async (req, res, next) => {
   const { card_number, expiry, pwd_2digit, birth, business_number } = req.body;
 
-  if (pwd_2digit.length !== 2) {
-    return res.send({ success: 400, message: "비밀번호가 2자리 이하입니다." });
-  }
-
   try {
     // 카드를 등록하는 경우
     if (req.body.card_number) {
+      if (pwd_2digit.length !== 2) {
+        return res.send({
+          success: 400,
+          message: "비밀번호가 2자리 이하입니다.",
+        });
+      }
       // 랜덤 string + 카드 뒤에 4자리
       const customer_uid = `${_f.random5()}${card_number.slice(-4)}`;
       req.body.customer_uid = customer_uid;

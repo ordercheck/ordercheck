@@ -655,5 +655,39 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/config/company/card/email/{cardId}/:
+ *   patch:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  config
+ *      summary: 카드 이메일 변경하기 
+ *      parameters:
+ *         - in: path
+ *           name: cardId
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *      requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_name:
+ *                 type: string
+ *               user_email:
+ *                 type: string
+ *               templateId:
+ *                 type: integer
+ *             example:
+ *               user_name: '김철수'
+ *               user_email: "김철수@naver.com"
+ *               templateId: 1
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
 
  */

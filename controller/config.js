@@ -590,6 +590,10 @@ module.exports = {
         { attributes: ["idx", "customer_uid"] }
       );
 
+      const findPlanResult = await db.plan.findOne({
+        where: { company_idx, active: 3 },
+      });
+
       await db.card.update(
         { main: false },
         { where: { idx: findMainCardResult.idx } }
@@ -600,19 +604,16 @@ module.exports = {
 
       // 기존의 아임포트 결제 예약 취소
 
-      await cancelSchedule(findMainCardResult.customer_uid);
+      await cancelSchedule(
+        findMainCardResult.customer_uid,
+        findPlanResult.merchant_uid
+      );
 
       // 새로운 카드로 결제 예약
-
-      const findPlanResult = await db.plan.findOne({
-        where: { company_idx, active: 3 },
-      });
 
       const findCardResult = await db.card.findByPk(cardId);
 
       const findUserResult = await db.user.findByPk(user_idx);
-
-      const Hour = moment().format("HH");
 
       const startDate = findPlanResult.start_plan.replace(/\./g, "-");
 
