@@ -233,8 +233,10 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      const pureText = search.replace(/[. ]/g, "").replace(/%/g, "1010");
-      if (pureText == "" || pureText == "-") {
+      const pureText = search
+        .replace(/[. ]/g, "")
+        .replace(/[ \{\}\[\]\/?,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi, "1010");
+      if (pureText == "") {
         return res.send({
           success: 200,
           customerData: [],

@@ -466,12 +466,10 @@ module.exports = {
   searchFileStore: async (req, res, next) => {
     const pureText = req.query.search
       .replace(/[. ]/g, "")
-      .replace(/%/g, "1010");
-
-    if (pureText == "" || pureText == "-") {
+      .replace(/[ \{\}\[\]\/?,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi, "1010");
+    if (pureText == "") {
       return res.send([]);
     }
-
     const totalFindResult = await searchFileandFolder(req, pureText);
 
     return res.send(totalFindResult);
