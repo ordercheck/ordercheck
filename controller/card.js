@@ -10,9 +10,10 @@ module.exports = {
       body: { token },
     } = req;
 
-    console.log("hihihihihihihihihihihi");
-
     let card_data = await verify_data(token);
+
+    // 카드 유효성 체크
+    await db.card.count({ where: { card_number: card_data.card_number } });
 
     // console.log(card_data);
     card_data.user_idx = user_idx;
@@ -40,6 +41,7 @@ module.exports = {
     cardInfo.cardId = createResult.idx;
     cardInfo.active = createResult.active;
     cardInfo.card_email = createResult.card_email;
+    cardInfo.card_code = createResult.card_code;
     cardInfo.main = createResult.main;
 
     return res.send({ success: 200, cardInfo });
