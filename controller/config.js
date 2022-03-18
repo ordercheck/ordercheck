@@ -530,7 +530,7 @@ module.exports = {
 
       let expirePlan = findPlan.expire_plan.replace(/\./g, "-");
 
-      expirePlan = moment(expire_plan).add("1", "d").format("YYYY.MM.DD");
+      expirePlan = moment(expirePlan).add("1", "d").format("YYYY.MM.DD");
 
       const findResult = { findCardInfo, expirePlan, cardEmail };
       return res.send({ success: 200, findResult });
