@@ -503,23 +503,36 @@ module.exports = {
     }
   },
   showCardsInfo: async (req, res, next) => {
-    const { user_idx } = req;
+    const { user_idx, company_idx } = req;
     try {
-      let findResult = await db.card.findAll({
+      let findCardInfo = await db.card.findAll({
         where: { user_idx },
         attributes: showCardsInfoAttributes,
         raw: true,
       });
 
-      for (let i = 0; i < findResult.length; i++) {
-        const second = findResult[i].card_number.substring(4, 8);
-        const third = findResult[i].card_number.substring(8, 12);
-        findResult[i].card_number = `**** ${second} ${third} ****`;
-
-        let [year, month] = findResult[i].expiry.split("-");
-        findResult[i].expiry = `${month}/${year.slice(-2)}`;
+      let cardEmail;
+      for (let i = 0; i < findCardInfo.length; i++) {
+        if (findCardInfo[i].main == true) {
+          cardEmail = findCardInfo[i].card_email;
+        }
+        const second = findCardInfo[i].card_number.substring(4, 8);
+        const third = findCardInfo[i].card_number.substring(8, 12);
+        findCardInfo[i].card_number = `**** ${second} ${third} ****`;
+        let [year, month] = findCardInfo[i].expiry.split("-");
+        findCardInfo[i].expiry = `${month}/${year.slice(-2)}`;
       }
 
+      const findPlan = await db.plan.findOne({
+        where: { company_idx, active: 1 },
+        attributes: ["expire_plan"],
+      });
+
+      let expirePlan = findPlan.expire_plan.replace(/\./g, "-");
+
+      expirePlan = moment(expire_plan).add("1", "d").format("YYYY.MM.DD");
+
+      const findResult = { findCardInfo, expirePlan, cardEmail };
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);

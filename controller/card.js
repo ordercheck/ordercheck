@@ -13,7 +13,13 @@ module.exports = {
     let card_data = await verify_data(token);
 
     // 카드 유효성 체크
-    await db.card.count({ where: { card_number: card_data.card_number } });
+    const countCard = await db.card.count({
+      where: { card_number: card_data.card_number, user_idx },
+    });
+
+    if (countCard !== 0) {
+      return res.send({ success: 400, message: "이미 등록된 카드 입니다." });
+    }
 
     // console.log(card_data);
     card_data.user_idx = user_idx;
