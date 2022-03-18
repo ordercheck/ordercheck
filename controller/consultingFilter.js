@@ -235,7 +235,7 @@ module.exports = {
     try {
       const pureText = search
         .replace(/[. ]/g, "")
-        .replace(/[\{\}\[\]\/?,;:|\*~`!^\-_+┼<>@\#$%&\'\"\\\=]/gi, "1010");
+        .replace(/[\{\}\[\]\/?,;:|\*~`!^\-_+┼<>@\#$%&\'\"\\\=]/gi, "disjcn");
 
       if (pureText == "") {
         return res.send({
