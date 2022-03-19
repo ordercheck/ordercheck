@@ -65,6 +65,7 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: "",
       type: DataTypes.STRING(100),
     },
+
     deleted: {
       allowNull: true,
       type: DataTypes.DATE(),

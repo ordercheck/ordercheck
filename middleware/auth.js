@@ -14,7 +14,6 @@ const loginCheck = async (req, res, next) => {
     const findUserCompanyResult = await db.userCompany.findOne({
       where: {
         user_idx: data.user_idx,
-
         active: true,
         standBy: false,
       },

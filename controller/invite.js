@@ -118,7 +118,7 @@ ${company_url}
 
   showStandbyUser: async (req, res, next) => {
     const { company_idx } = req;
-    console.log("company_idx", company_idx);
+
     const standbyUser = await findMembers(
       {
         company_idx,

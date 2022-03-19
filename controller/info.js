@@ -113,12 +113,21 @@ module.exports = {
           message: "비밀번호가 일치하지 않습니다.",
         });
       }
+
+      // 먼저 현재 플랜이 FREE인지 체크
+      const findPlan = await db.plan.findOne({
+        where: { company_idx },
+        attributes: ["plan"],
+      });
+      if (findPlan.plan !== "FREE") {
+        return res.send({ success: 400, message: "FREE Plan이 아닙니다." });
+      }
       // 탈퇴사유 생성
       await db.delReason.create({ reason, user_idx });
 
       // 계정 delete처리
 
-      const deletedTime = moment()
+      const deletedTime = moment();
 
       await db.user.update(
         {
