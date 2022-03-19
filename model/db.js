@@ -248,12 +248,13 @@ db.company.hasMany(db.consulting, {
 db.consulting.belongsTo(db.company, { foreignKey: "company_idx" });
 
 // plan과 company
-db.plan.belongsTo(db.company, {
-  foreignKey: "company_idx",
-});
 db.company.hasMany(db.plan, {
   foreignKey: "company_idx",
   onDelete: "cascade",
+});
+
+db.plan.belongsTo(db.company, {
+  foreignKey: "company_idx",
 });
 
 // company와 user
