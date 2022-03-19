@@ -180,10 +180,7 @@ db.customer.hasMany(db.consulting, { foreignKey: "customer_idx" });
 db.consulting.belongsTo(db.customer, {
   foreignKey: "customer_idx",
 });
-db.userCompany.hasMany(db.customer, { foreignKey: "contact_person" });
-db.customer.belongsTo(db.userCompany, {
-  foreignKey: "contact_person",
-});
+
 db.company.hasMany(db.customer, { foreignKey: "company_idx" });
 db.customer.belongsTo(db.company, {
   foreignKey: "company_idx",
@@ -284,6 +281,19 @@ db.formOpen.belongsTo(db.userCompany, {
   targetKey: "user_idx",
   foreignKey: "user_idx",
 });
+
+db.userCompany.hasMany(db.customer, {
+  sourceKey: "user_idx",
+  foreignKey: "contact_person",
+});
+db.customer.belongsTo(
+  db.userCompany,
+
+  {
+    targetKey: "user_idx",
+    foreignKey: "contact_person",
+  }
+);
 // config와 company
 db.config.belongsTo(db.company, {
   foreignKey: "company_idx",

@@ -118,7 +118,7 @@ module.exports = {
 
       // 계정 delete처리
 
-      const deletedTime = moment().format("YYYY.MM.DD");
+      const deletedTime = moment().format("YYYY-MM-DD");
 
       await db.user.update(
         {

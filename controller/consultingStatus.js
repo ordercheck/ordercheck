@@ -349,7 +349,7 @@ module.exports = {
 
         { attributes: ["customer_phoneNumber"] }
       );
-      const deletedTime = moment().format("YYYY.MM.DD");
+      const deletedTime = moment().format("YYYY-MM-DD");
       // 고객 지우기
       await db.customer.update(
         { deleted: deletedTime },
@@ -848,7 +848,7 @@ module.exports = {
   },
   doIntegratedUser: async (req, res, next) => {
     const { body, company_idx, user_idx } = req;
-    const deletedTime = moment().format("YYYY.MM.DD");
+    const deletedTime = moment().format("YYYY-MM-DD");
     try {
       // 대표 상담폼과 병합
       await body.target_idx.forEach(async (data) => {
