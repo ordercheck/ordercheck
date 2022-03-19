@@ -37,14 +37,18 @@ module.exports = {
       let companyProfile = await db.sequelize
         .query(
           `SELECT plan, company_name, company_logo, company_subdomain, address, 
-          detail_address, business_number, business_enrollment, business_enrollment_title, user_name,
+          detail_address, company.business_number, business_enrollment, business_enrollment_title, user_name,
+          card.active AS cardActive,
+          text_cost,
           whiteLabelChecked,  
           chatChecked, 
           analysticChecked
           FROM userCompany 
-          LEFT JOIN company ON userCompany.company_idx = company.idx
+          LEFT JOIN company ON userCompany.company_idx = company.idx AND userCompany.active = true AND userCompany.standBy = false AND userCompany.deleted = null
           LEFT JOIN plan ON userCompany.company_idx = plan.company_idx
           LEFT JOIN user ON company.huidx = user.idx
+          LEFT JOIN card ON card.user_idx = user.idx AND main=true
+          LEFT JOIN sms ON sms.user_idx = user.idx
           WHERE userCompany.user_idx = ${req.user_idx}`
         )
         .spread((r) => {
@@ -803,7 +807,11 @@ module.exports = {
       params: { cardId },
       body,
     } = req;
-    await db.card.update(body, { whre: { idx: cardId } });
+    try {
+      await db.card.update(body, { where: { idx: cardId } });
+    } catch (err) {
+      next(err);
+    }
 
     return res.send({ success: 200 });
   },

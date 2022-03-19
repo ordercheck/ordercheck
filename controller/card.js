@@ -47,7 +47,7 @@ module.exports = {
     cardInfo.cardId = createResult.idx;
     cardInfo.active = createResult.active;
     cardInfo.card_email = createResult.card_email;
-    cardInfo.card_code = parseInt(createResult.card_code);
+    cardInfo.card_code = createResult.card_code;
     cardInfo.main = createResult.main;
 
     return res.send({ success: 200, cardInfo });

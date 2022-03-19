@@ -8,7 +8,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     card_code: {
       allowNull: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(100),
     },
 
     card_name: {

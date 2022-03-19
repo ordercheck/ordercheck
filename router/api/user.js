@@ -49,18 +49,6 @@ const { checkCard } = require("../../model/db");
 const attributes = require("../../lib/attributes");
 const { next } = require("cheerio/lib/api/traversing");
 
-let global_uidx = 0;
-
-const check_data = (req, res, next) => {
-  jwt.verify(req.query.token, process.env.tokenSecret, function (err, decoded) {
-    if (err) {
-      res.redirect("/admin");
-    } else {
-      next();
-    }
-  });
-};
-
 const addPlanAndSchedule = async (ut, pt, ct, t) => {
   try {
     let user_data = await verify_data(ut);
