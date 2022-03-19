@@ -118,7 +118,7 @@ module.exports = {
 
       // 계정 delete처리
 
-      const deletedTime = moment().format("YYYY-MM-DD");
+      const deletedTime = moment()
 
       await db.user.update(
         {
@@ -204,8 +204,18 @@ module.exports = {
         }
       );
     }
-
+    const checkHuidx = await db.company.findByPk(company_idx, {
+      attributes: ["huidx"],
+    });
+    // 소유주 체크
     if (user_idx == checkHuidx.huidx) {
+      // 소유주가 탈퇴한 회사 delete처리
+      const deletedTime = moment();
+
+      await db.company.update(
+        { deleted: deletedTime },
+        { where: { idx: company_idx } }
+      );
       await db.userCompany.destroy({
         where: {
           company_idx,

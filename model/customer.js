@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes) {
   //테이블을 정의
-  return sequelize.define('customer', {
+  return sequelize.define("customer", {
     idx: {
       autoIncrement: true,
       primaryKey: true,
@@ -9,24 +9,24 @@ module.exports = function (sequelize, DataTypes) {
 
     customer_name: {
       allowNull: false,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
 
     customer_phoneNumber: {
       allowNull: false,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
     address: {
       allowNull: false,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
 
     detail_address: {
       allowNull: false,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
 
@@ -60,10 +60,9 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: 0,
       type: DataTypes.INTEGER,
     },
-
     deleted: {
       allowNull: true,
-      type: DataTypes.STRING(100),
+      type: DataTypes.DATE(),
     },
   });
 };

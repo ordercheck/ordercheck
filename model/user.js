@@ -26,7 +26,6 @@ module.exports = function (sequelize, DataTypes) {
 
     user_email: {
       allowNull: false,
-      unique: true,
       defaultValue: "",
       type: DataTypes.STRING(100),
     },
@@ -51,7 +50,7 @@ module.exports = function (sequelize, DataTypes) {
 
     deleted: {
       allowNull: true,
-      type: DataTypes.STRING(100),
+      type: DataTypes.DATE(),
     },
 
     use_agree: {
