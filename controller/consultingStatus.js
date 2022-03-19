@@ -150,7 +150,11 @@ module.exports = {
           // }
           // 팀원 카카오 푸쉬 보내기
           const getMembers = await db.userCompany.findAll({
-            where: { company_idx: bodyData.company_idx },
+            where: {
+              company_idx: bodyData.company_idx,
+              active: true,
+              standBy: false,
+            },
             include: [
               {
                 attributes: ["user_phone"],

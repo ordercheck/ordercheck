@@ -62,7 +62,7 @@ const addPlanAndSchedule = async (ut, pt, ct, t) => {
 
     // 각 데이터에 필요한 key, value
     const findCompanyData = await db.userCompany.findOne({
-      where: { user_idx: findUser.idx },
+      where: { user_idx: findUser.idx, active: true, standBy: false },
       attributes: ["company_idx"],
     });
 
@@ -161,7 +161,7 @@ router.post("/login", async (req, res, next) => {
   }
 
   const findCompany = await db.company.findOne({
-    where: { company_subdomain },
+    where: { company_subdomain, deleted: null },
   });
 
   const findConfigResult = await template.findConfig(
@@ -214,7 +214,7 @@ router.post("/join/check", async (req, res) => {
   const randomNumber = generateRandomCode(6);
   const message = `[인증번호:${randomNumber}] 오더체크 인증번호입니다.\n오더체크와 편리한 고객응대를 시작해보세요.`;
   let phoneCheck = await db.user
-    .findAll({ where: { user_phone } })
+    .findAll({ where: { user_phone, deleted: null } })
     .then((r) => {
       return makeArray(r);
     });
@@ -223,7 +223,7 @@ router.post("/join/check", async (req, res) => {
     return res.send({ success: 400, type: "phone" });
   }
   let emailCheck = await db.user
-    .findAll({ where: { user_email } })
+    .findAll({ where: { user_email, deleted: null } })
     .then((r) => {
       return makeArray(r);
     });
@@ -330,7 +330,7 @@ router.post("/join/do", async (req, res, next) => {
 
       // subdomain
       const findCompany = await db.company.findOne({
-        where: { company_subdomain },
+        where: { company_subdomain, deleted: null },
       });
 
       const findConfigResult = await template.findConfig(
@@ -553,7 +553,9 @@ router.post("/duplicate/email", async (req, res) => {
 router.post("/check/subdomain", async (req, res) => {
   const { company_subdomain } = req.body;
   try {
-    const result = await db.company.findOne({ where: { company_subdomain } });
+    const result = await db.company.findOne({
+      where: { company_subdomain, deleted: null },
+    });
     if (!result) {
       return res.send({ success: 400, msg: "존재하지 않는 도메인입니다." });
     } else
@@ -571,7 +573,9 @@ router.post("/check/subdomain", async (req, res) => {
 router.post("/check/company-name", async (req, res) => {
   const { company_name } = req.body;
   try {
-    const result = await db.company.findOne({ where: { company_name } });
+    const result = await db.company.findOne({
+      where: { company_name, deleted: null },
+    });
     if (!result) {
       return res.send({ success: 200 });
     } else res.send({ success: 400, msg: "이미 존재하는 회사 이름입니다." });

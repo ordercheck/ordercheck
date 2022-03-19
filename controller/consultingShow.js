@@ -2,15 +2,15 @@ const {
   checkPage,
   addUserId,
   getDetailCustomerInfo,
-} = require('../lib/apiFunctions');
+} = require("../lib/apiFunctions");
 
-const db = require('../model/db');
+const db = require("../model/db");
 
 const {
   showIntegratedUserAttributes,
   customerAttributes,
   showCalculateAttributes,
-} = require('../lib/attributes');
+} = require("../lib/attributes");
 
 module.exports = {
   showTotalConsultingDefault: async (req, res, next) => {
@@ -34,7 +34,7 @@ module.exports = {
         include: [
           {
             model: db.user,
-            attributes: ['idx', 'user_name'],
+            attributes: ["idx", "user_name"],
           },
         ],
         attributes: customerAttributes,
@@ -50,67 +50,67 @@ module.exports = {
     };
 
     try {
-      let getCustomerDataResult = '';
+      let getCustomerDataResult = "";
       let customerNumber = intPage * intlimit - (intlimit - 1);
       if (!No && !Name && !Address && !Date) {
         getCustomerDataResult = await getCustomerData(
-          'createdAt',
-          'DESC',
+          "createdAt",
+          "DESC",
           totalData - intlimit * intPage + intlimit,
-          'minus'
+          "minus"
         );
 
         if (getCustomerDataResult.customerData == 0) {
-          return next({ message: '고객이 없습니다.' });
+          return next({ message: "고객이 없습니다." });
         }
       }
 
       // 0이 오름차순,1이 내림차순 (ASC는 오름차순)
       if (No) {
         getCustomerDataResult = await getCustomerData(
-          'createdAt',
-          No == 0 ? 'ASC' : 'DESC',
+          "createdAt",
+          No == 0 ? "ASC" : "DESC",
           No == 0 ? totalData - intlimit * intPage + intlimit : customerNumber,
-          No == 0 ? 'minus' : 'plus'
+          No == 0 ? "minus" : "plus"
         );
 
         if (getCustomerDataResult.customerData == 0) {
-          return next({ message: '고객이 없습니다.' });
+          return next({ message: "고객이 없습니다." });
         }
       }
       if (Name) {
         getCustomerDataResult = await getCustomerData(
-          'customer_name',
-          Name == 0 ? 'ASC' : 'DESC',
+          "customer_name",
+          Name == 0 ? "ASC" : "DESC",
           Name == 0 ? totalData - limit * page + limit : customerNumber,
-          Name == 0 ? 'minus' : 'plus'
+          Name == 0 ? "minus" : "plus"
         );
         if (getCustomerDataResult.customerData == 0) {
-          return next({ message: '고객이 없습니다.' });
+          return next({ message: "고객이 없습니다." });
         }
       }
 
       if (Address) {
         getCustomerDataResult = await getCustomerData(
-          'searchingAddress',
-          Address == 0 ? 'ASC' : 'DESC',
+          "searchingAddress",
+          Address == 0 ? "ASC" : "DESC",
           Address == 0 ? totalData - limit * page + limit : customerNumber,
-          Address == 0 ? 'minus' : 'plus'
+          Address == 0 ? "minus" : "plus"
         );
         if (getCustomerDataResult.customerData == 0) {
-          return next({ message: '고객이 없습니다.' });
+          return next({ message: "고객이 없습니다." });
         }
       }
 
       if (Date) {
         getCustomerDataResult = await getCustomerData(
-          'updatedAt',
-          Date == 0 ? 'ASC' : 'DESC',
+          "updatedAt",
+          Date == 0 ? "ASC" : "DESC",
           Date == 0 ? totalData - limit * page + limit : customerNumber,
-          Date == 0 ? 'minus' : 'plus'
+          Date == 0 ? "minus" : "plus"
         );
         if (getCustomerDataResult.customerData == 0) {
-          return next({ message: '고객이 없습니다.' });
+          return next({ message: "고객이 없습니다." });
         }
       }
 
@@ -135,7 +135,7 @@ module.exports = {
     try {
       const result = await db.customer.findAll({
         where: { form_link, deleted: null },
-        group: ['customer_phoneNumber'],
+        group: ["customer_phoneNumber"],
       });
       return res.send({ result });
     } catch (err) {
@@ -168,15 +168,15 @@ module.exports = {
 
     try {
       const findAllUser = await db.userCompany.findAll({
-        where: { company_idx },
+        where: { company_idx, active: true, standBy: false },
         include: [
           {
             model: db.user,
-            attributes: ['user_name', 'user_profile'],
+            attributes: ["user_name", "user_profile"],
           },
         ],
-        attributes: [['user_idx', 'userId']],
-        order: [['searchingName', 'ASC']],
+        attributes: [["user_idx", "userId"]],
+        order: [["searchingName", "ASC"]],
         raw: true,
         nest: true,
       });
@@ -193,8 +193,8 @@ module.exports = {
       }
       findAllUser.unshift({
         userId: null,
-        user_name: '담당자 없음',
-        user_profile: '',
+        user_name: "담당자 없음",
+        user_profile: "",
       });
 
       return res.send({ success: 200, findAllUser });
@@ -209,7 +209,7 @@ module.exports = {
     try {
       let findResult = await db.calculate.findAll({
         where: { customer_idx },
-        order: [['createdAt', 'DESC']],
+        order: [["createdAt", "DESC"]],
         attributes: showCalculateAttributes,
       });
 

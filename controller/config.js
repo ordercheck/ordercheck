@@ -159,7 +159,6 @@ module.exports = {
             [Op.like]: `%${search}%`,
           },
           company_idx,
-
           active: true,
           standBy: false,
         },
@@ -284,7 +283,7 @@ module.exports = {
       const template = new Template({});
 
       const findUserResult = await db.userCompany.findAll({
-        where: { config_idx: templateId },
+        where: { config_idx: templateId, standBy: false, active: true },
         raw: true,
         nest: true,
       });
