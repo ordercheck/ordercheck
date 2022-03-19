@@ -118,6 +118,7 @@ ${company_url}
 
   showStandbyUser: async (req, res, next) => {
     const { company_idx } = req;
+    console.log("company_idx", company_idx);
     const standbyUser = await findMembers(
       {
         company_idx,
@@ -127,7 +128,7 @@ ${company_url}
       },
       ["createdAt", "DESC"]
     );
-
+    console.log("standbyUser", standbyUser);
     return res.send({ success: 200, standbyUser });
   },
   joinStandbyUser: async (req, res, next) => {
