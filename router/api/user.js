@@ -520,7 +520,9 @@ router.post("/send/sms", async (req, res) => {
 router.post("/duplicate/phoneNumber", async (req, res) => {
   const { user_phone } = req.body;
   try {
-    const result = await db.user.findOne({ where: { user_phone } });
+    const result = await db.user.findOne({
+      where: { user_phone, deleted: null },
+    });
 
     if (!result) {
       return res.send({ success: 200 });
@@ -534,7 +536,9 @@ router.post("/duplicate/phoneNumber", async (req, res) => {
 router.post("/duplicate/email", async (req, res) => {
   const { user_email } = req.body;
   try {
-    const result = await db.user.findOne({ where: { user_email } });
+    const result = await db.user.findOne({
+      where: { user_email, deleted: null },
+    });
     if (!result) {
       return res.send({ success: 200 });
     } else res.send({ success: 400, msg: "이미 존재하는 이메일입니다" });

@@ -132,8 +132,6 @@ module.exports = {
       );
 
       return res.send({ success: 200 });
-
-      //  결제 예정 플랜 취소
     } catch (err) {
       next(err);
     }
