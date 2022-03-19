@@ -64,13 +64,13 @@ db.store = sequelize.import(__dirname + "/store.js");
 db.customer = sequelize.import(__dirname + "/customer.js");
 
 // usre와 store
-db.user.hasMany(db.store, { foreignKey: "user_idx" });
+db.user.hasMany(db.store, { foreignKey: "user_idx", onDelete: "cascade" });
 db.store.belongsTo(db.user, {
   foreignKey: "user_idx",
 });
 
 // user와 delReason
-db.user.hasOne(db.delReason, { foreignKey: "user_idx" });
+db.user.hasOne(db.delReason, { foreignKey: "user_idx", onDelete: "cascade" });
 db.delReason.belongsTo(db.user, {
   foreignKey: "user_idx",
 });
@@ -85,7 +85,7 @@ db.chatTemplate.belongsTo(db.company, {
 });
 
 // user와 userConfig
-db.user.hasOne(db.userConfig, { foreignKey: "user_idx" });
+db.user.hasOne(db.userConfig, { foreignKey: "user_idx", onDelete: "cascade" });
 db.userConfig.belongsTo(db.user, {
   foreignKey: "user_idx",
 });
@@ -97,7 +97,7 @@ db.smsHistory.belongsTo(db.sms, {
 });
 
 // user와 sms
-db.user.hasOne(db.sms, { foreignKey: "user_idx" });
+db.user.hasOne(db.sms, { foreignKey: "user_idx", onDelete: "cascade" });
 db.sms.belongsTo(db.user, {
   foreignKey: "user_idx",
 });
@@ -204,10 +204,11 @@ db.customer.belongsTo(db.company, {
 });
 
 // alarm과 user, company, customer, formLink
-db.alarm.belongsTo(db.user, {
-  foreignKey: "user_idx",
-});
 db.user.hasMany(db.alarm, {
+  foreignKey: "user_idx",
+  onDelete: "cascade",
+});
+db.alarm.belongsTo(db.user, {
   foreignKey: "user_idx",
 });
 
@@ -258,28 +259,33 @@ db.plan.belongsTo(db.company, {
 });
 
 // company와 user
-db.company.belongsTo(db.user, {
-  foreignKey: "huidx",
-});
 db.user.hasOne(db.company, {
+  foreignKey: "huidx",
+  onDelete: "cascade",
+});
+db.company.belongsTo(db.user, {
   foreignKey: "huidx",
 });
 
 // card와 user
-db.card.belongsTo(db.user, {
-  foreignKey: "user_idx",
-});
 db.user.hasMany(db.card, {
+  foreignKey: "user_idx",
+  onDelete: "cascade",
+});
+
+db.card.belongsTo(db.user, {
   foreignKey: "user_idx",
 });
 
 // userCompany와 user
+db.user.hasMany(db.userCompany, {
+  foreignKey: "user_idx",
+  onDelete: "cascade",
+});
 db.userCompany.belongsTo(db.user, {
   foreignKey: "user_idx",
 });
-db.user.hasOne(db.userCompany, {
-  foreignKey: "user_idx",
-});
+
 // config와 userCompany
 db.config.hasOne(db.userCompany, {
   foreignKey: "config_idx",
@@ -289,13 +295,13 @@ db.userCompany.belongsTo(db.config, {
   foreignKey: "config_idx",
 });
 
-// userCompany와 company
-db.userCompany.belongsTo(db.company, {
-  foreignKey: "company_idx",
-});
 db.company.hasMany(db.userCompany, {
   foreignKey: "company_idx",
   onDelete: "cascade",
+});
+// userCompany와 company
+db.userCompany.belongsTo(db.company, {
+  foreignKey: "company_idx",
 });
 
 // formOpen과 userCompany
