@@ -7,13 +7,12 @@ const {
 } = require("../lib/apiFunctions");
 const { masterConfig } = require("../lib/standardTemplate");
 const { Template } = require("../lib/classes/TemplateClass");
-
+const { cancelSchedule } = require("../lib/payFunction");
 const bcrypt = require("bcrypt");
 const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
 const _f = require("../lib/functions");
-
 const checkUserPassword = async (userIdx, userPassword) => {
   // 유저 전화번호 먼저 찾기
   const findUser = await db.user.findByPk(userIdx, {
@@ -100,9 +99,10 @@ module.exports = {
     }
   },
   delUser: async (req, res, next) => {
-    const {
+    let {
       body: { user_password, reason },
       user_idx,
+      company_idx,
     } = req;
 
     try {
@@ -131,7 +131,40 @@ module.exports = {
         }
       );
 
-      return res.send({ success: 200 });
+      res.send({ success: 200 });
+
+      //  결제 예정 플랜 취소
+
+      // 유저의 메인 카드 찾기
+      const findMainCard = await db.card.findOne({
+        where: { main: true, user_idx },
+        attributes: ["customer_uid"],
+      });
+
+      // 자기 회사 검색
+      const findPlan = await db.plan.findOne({
+        where: { company_idx, active: 3 },
+        attributes: ["merchant_uid"],
+      });
+
+      await cancelSchedule(findMainCard.customer_uid, findPlan.merchant_uid);
+
+      // 회사 소유주 체크
+
+      const checkHuidx = await db.company.findByPk(company_idx, {
+        attributes: ["huidx"],
+      });
+      if (checkHuidx.huidx == user_idx) {
+        await db.userCompany.update(
+          { active: false },
+          { where: { company_idx } }
+        );
+      } else {
+        await db.userCompany.update(
+          { active: false },
+          { where: { company_idx, user_idx } }
+        );
+      }
     } catch (err) {
       next(err);
     }
