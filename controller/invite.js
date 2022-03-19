@@ -188,11 +188,14 @@ ${company_url}
       body: { company_subdomain },
       user_idx,
     } = req;
+
+    // 재가입 신청 하고자 하는 회사 정보 먼저 찾기
     const findCompany = await db.company.findOne(
       { where: { company_subdomain } },
       { attributes: ["idx"] }
     );
 
+    // userCompany 업데이트
     await db.userCompany.update(
       {
         active: true,
