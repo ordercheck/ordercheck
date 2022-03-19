@@ -328,6 +328,10 @@ db.customer.belongsTo(
   }
 );
 // config와 company
+db.company.hasMany(db.config, {
+  foreignKey: "company_idx",
+  onDelete: "cascade",
+});
 db.config.belongsTo(db.company, {
   foreignKey: "company_idx",
 });
