@@ -159,7 +159,7 @@ module.exports = {
             [Op.like]: `%${search}%`,
           },
           company_idx,
-          deleted: null,
+
           active: true,
           standBy: false,
         },

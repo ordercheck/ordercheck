@@ -50,7 +50,6 @@ db.userConfig = sequelize.import(__dirname + "/userConfig.js");
 db.alarm = sequelize.import(__dirname + "/alarm.js");
 db.receipt = sequelize.import(__dirname + "/receipt.js");
 db.chatTemplate = sequelize.import(__dirname + "/chatTemplate.js");
-
 db.customerFile = sequelize.import(__dirname + "/customerFile.js");
 db.userCompany = sequelize.import(__dirname + "/userCompany.js");
 db.smsHistory = sequelize.import(__dirname + "/smsHistory.js");
@@ -155,12 +154,12 @@ db.files.belongsTo(db.folders, {
   targetKey: "uuid",
 });
 
-// user와 timeLine
+// customer와 timeLine
 db.customer.hasMany(db.timeLine, { foreignKey: "customer_idx" });
 db.timeLine.belongsTo(db.customer, {
   foreignKey: "customer_idx",
 });
-// user와 calculate
+// customer와 calculate
 db.customer.hasMany(db.calculate, { foreignKey: "customer_idx" });
 db.calculate.belongsTo(db.customer, {
   foreignKey: "customer_idx",
@@ -172,11 +171,6 @@ db.calculate.belongsTo(db.company, {
   foreignKey: "company_idx",
 });
 
-// formOpen과 user
-db.formOpen.belongsTo(db.user, {
-  foreignKey: "user_idx",
-});
-
 db.formLink.hasMany(db.formOpen, { foreignKey: "formLink_idx" });
 db.formOpen.belongsTo(db.formLink, {
   foreignKey: "formLink_idx",
@@ -186,8 +180,8 @@ db.customer.hasMany(db.consulting, { foreignKey: "customer_idx" });
 db.consulting.belongsTo(db.customer, {
   foreignKey: "customer_idx",
 });
-db.user.hasOne(db.customer, { foreignKey: "contact_person" });
-db.customer.belongsTo(db.user, {
+db.userCompany.hasMany(db.customer, { foreignKey: "contact_person" });
+db.customer.belongsTo(db.userCompany, {
   foreignKey: "contact_person",
 });
 db.company.hasMany(db.customer, { foreignKey: "company_idx" });
@@ -278,6 +272,17 @@ db.userCompany.belongsTo(db.company, {
 });
 db.company.hasMany(db.userCompany, {
   foreignKey: "company_idx",
+});
+
+// formOpen과 userCompany
+db.userCompany.hasMany(db.formOpen, {
+  foreignKey: "user_idx",
+  sourceKey: "user_idx",
+  onDelete: "cascade",
+});
+db.formOpen.belongsTo(db.userCompany, {
+  targetKey: "user_idx",
+  foreignKey: "user_idx",
 });
 // config와 company
 db.config.belongsTo(db.company, {

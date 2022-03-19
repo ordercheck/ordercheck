@@ -54,7 +54,7 @@ module.exports = {
       });
 
       const standByMember = await db.userCompany.count({
-        where: { active: 1, deleted: null, standBy: true, company_idx },
+        where: { active: 1, standBy: true, company_idx },
       });
 
       // 시간 계산

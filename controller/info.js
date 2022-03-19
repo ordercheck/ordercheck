@@ -131,40 +131,9 @@ module.exports = {
         }
       );
 
-      res.send({ success: 200 });
+      return res.send({ success: 200 });
 
       //  결제 예정 플랜 취소
-
-      // 유저의 메인 카드 찾기
-      const findMainCard = await db.card.findOne({
-        where: { main: true, user_idx },
-        attributes: ["customer_uid"],
-      });
-
-      // 자기 회사 검색
-      const findPlan = await db.plan.findOne({
-        where: { company_idx, active: 3 },
-        attributes: ["merchant_uid"],
-      });
-
-      await cancelSchedule(findMainCard.customer_uid, findPlan.merchant_uid);
-
-      // 회사 소유주 체크
-
-      const checkHuidx = await db.company.findByPk(company_idx, {
-        attributes: ["huidx"],
-      });
-      if (checkHuidx.huidx == user_idx) {
-        await db.userCompany.update(
-          { active: false },
-          { where: { company_idx } }
-        );
-      } else {
-        await db.userCompany.update(
-          { active: false },
-          { where: { company_idx, user_idx } }
-        );
-      }
     } catch (err) {
       next(err);
     }
@@ -190,6 +159,12 @@ module.exports = {
       where: {
         huidx: user_idx,
       },
+      include: [
+        {
+          model: db.plan,
+          where: { plan: "FREE" },
+        },
+      ],
     });
 
     // 기존의 회사가 없을 때
@@ -203,7 +178,6 @@ module.exports = {
         masterConfig,
       });
       // 팀원 template  만들기
-
       await template.createConfig({
         company_idx: randomCompany.idx,
       });
@@ -232,6 +206,36 @@ module.exports = {
         }
       );
     }
+
+    if (user_idx == checkHuidx.huidx) {
+      await db.userCompany.destroy({
+        where: {
+          company_idx,
+        },
+      });
+      // 유저의 메인 카드 찾기
+      const findMainCard = await db.card.findOne({
+        where: { main: true, user_idx },
+        attributes: ["customer_uid"],
+      });
+
+      // 플랜 merchant_uid 체크
+      const findPlan = await db.plan.findOne({
+        where: { company_idx, active: 3 },
+        attributes: ["merchant_uid"],
+      });
+
+      await cancelSchedule(findMainCard.customer_uid, findPlan.merchant_uid);
+    } else {
+      await db.userCompany.destroy({
+        where: {
+          company_idx,
+          user_idx,
+        },
+      });
+    }
+
+    return res.send({ success: 200 });
   },
 
   addUserProfile: async (req, res, next) => {

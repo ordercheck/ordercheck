@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes) {
   //테이블을 정의
-  return sequelize.define('userCompany', {
+  return sequelize.define("userCompany", {
     idx: {
       autoIncrement: true,
       primaryKey: true,
@@ -19,11 +19,7 @@ module.exports = function (sequelize, DataTypes) {
 
     searchingName: {
       allowNull: false,
-      defaultValue: '',
-      type: DataTypes.STRING(100),
-    },
-    deleted: {
-      allowNull: true,
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
   });

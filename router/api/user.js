@@ -62,7 +62,7 @@ const addPlanAndSchedule = async (ut, pt, ct, t) => {
 
     // 각 데이터에 필요한 key, value
     const findCompanyData = await db.userCompany.findOne({
-      where: { user_idx: findUser.idx, deleted: null },
+      where: { user_idx: findUser.idx },
       attributes: ["company_idx"],
     });
 

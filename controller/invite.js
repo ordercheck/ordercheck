@@ -124,7 +124,6 @@ ${company_url}
         company_idx,
         active: true,
         standBy: true,
-        deleted: null,
       },
       ["createdAt", "DESC"]
     );
@@ -141,7 +140,7 @@ ${company_url}
       where: {
         user_idx: findUserCompanyResult.user_idx,
         active: true,
-        deleted: null,
+
         standBy: false,
       },
       attributes: ["idx"],
