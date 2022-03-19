@@ -44,12 +44,12 @@ module.exports = {
           chatChecked, 
           analysticChecked
           FROM userCompany 
-          LEFT JOIN company ON userCompany.company_idx = company.idx AND userCompany.active = true AND userCompany.standBy = false AND userCompany.deleted = null
+          LEFT JOIN company ON userCompany.company_idx = company.idx
           LEFT JOIN plan ON userCompany.company_idx = plan.company_idx
           LEFT JOIN user ON company.huidx = user.idx
           LEFT JOIN card ON card.user_idx = user.idx AND main=true
           LEFT JOIN sms ON sms.user_idx = user.idx
-          WHERE userCompany.user_idx = ${req.user_idx}`
+          WHERE userCompany.user_idx = ${req.user_idx} AND deleted = null AND active = true AND standBy = false`
         )
         .spread((r) => {
           return makeSpreadArray(r);
