@@ -303,7 +303,6 @@ router.post("/join/do", async (req, res, next) => {
         const randomCompany = await createRandomCompany(createUserResult.idx);
 
         // master template 만들기
-
         masterConfig.company_idx = randomCompany.idx;
         const createTempalteResult = await template.createConfig(masterConfig);
 
@@ -399,9 +398,11 @@ router.post("/company/check", async (req, res, next) => {
 // 핸드폰 등록 여부 확인 라우터
 router.post("/phone/check", async (req, res) => {
   const { user_phone } = req.body;
-  let check = await db.user.findAll({ where: { user_phone } }).then((r) => {
-    return makeArray(r);
-  });
+  let check = await db.user
+    .findAll({ where: { user_phone, deleted: null } })
+    .then((r) => {
+      return makeArray(r);
+    });
   if (check.length > 0) {
     return res.send({ success: 200 });
   } else {
