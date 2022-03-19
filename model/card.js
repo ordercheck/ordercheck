@@ -1,40 +1,44 @@
 module.exports = function (sequelize, DataTypes) {
   //테이블을 정의
-  return sequelize.define('card', {
+  return sequelize.define("card", {
     idx: {
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
+    card_code: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
 
     card_name: {
       allowNull: false,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
     card_number: {
       allowNull: false,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
     expiry: {
       allowNull: false,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
     pwd_2digit: {
       allowNull: false,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
     birth: {
       allowNull: false,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
     card_email: {
       allowNull: false,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
     business_number: {

@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes) {
   //테이블을 정의
-  return sequelize.define('receipt', {
+  return sequelize.define("receipt", {
     idx: {
       autoIncrement: true,
       primaryKey: true,
@@ -9,10 +9,28 @@ module.exports = function (sequelize, DataTypes) {
 
     company_name: {
       allowNull: false,
-
       type: DataTypes.STRING(100),
     },
 
+    card_code: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
+
+    card_name: {
+      allowNull: false,
+      type: DataTypes.STRING(100),
+    },
+
+    plan: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
+
+    plan_price: {
+      allowNull: true,
+      type: DataTypes.INTEGER,
+    },
     receiptId: {
       allowNull: false,
       type: DataTypes.INTEGER,
@@ -20,7 +38,6 @@ module.exports = function (sequelize, DataTypes) {
 
     receipt_kind: {
       allowNull: false,
-
       type: DataTypes.STRING(100),
     },
     card_number: {

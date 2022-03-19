@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes) {
   //테이블을 정의
-  return sequelize.define('user', {
+  return sequelize.define("user", {
     idx: {
       autoIncrement: true,
       primaryKey: true,
@@ -8,37 +8,36 @@ module.exports = function (sequelize, DataTypes) {
     },
     personal_code: {
       allowNull: false,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
 
     user_profile: {
       allowNull: false,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.TEXT(),
     },
 
     user_phone: {
       allowNull: false,
-      unique: true,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
 
     user_email: {
       allowNull: false,
       unique: true,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
     user_name: {
       allowNull: false,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
     user_password: {
       allowNull: false,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(250),
     },
     /*

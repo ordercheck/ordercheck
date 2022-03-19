@@ -93,7 +93,7 @@ const sendMail = async (company_url, company_name, inviter, target) => {
                     <tr>
                       <td width="116" height="20" style="line-height: 20px">
                         <img
-                          src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/image/original/mail_logo.png"
+                          src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/thumb/mail_logo.png"
                           alt=""
                           width="116"
                           height="20"

@@ -1,25 +1,26 @@
-const db = require('../model/db');
+const db = require("../model/db");
 const {
   getFileName,
   makePureText,
   checkTitle,
   searchFileandFolder,
-} = require('../lib/apiFunctions');
-const { random5 } = require('../lib/functions');
-const { Op } = require('sequelize');
-const { copyAndDelete, s3_get, s3_delete_objects } = require('../lib/aws/aws');
-const { delFile } = require('../lib/aws/fileupload').ufile;
+} = require("../lib/apiFunctions");
+const { random5 } = require("../lib/functions");
+const { Op } = require("sequelize");
+const { copyAndDelete, s3_get, s3_delete_objects } = require("../lib/aws/aws");
+const { delFile } = require("../lib/aws/fileupload").ufile;
 
 const {
-  showDetailFileFolderAttributes,
+  showDetailFileAttributes,
+  showDetailFolderAttributes,
   showFilesAttributes,
   getUserListAttributes,
-} = require('../lib/attributes');
+} = require("../lib/attributes");
 
-const { fileStoreSort } = require('../lib/checkData');
+const { fileStoreSort } = require("../lib/checkData");
 
 const deleteFileToS3 = async (title, req) => {
-  if (req.query.path !== 'null') {
+  if (req.query.path !== "null") {
     delFile(
       title,
       `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}`
@@ -43,8 +44,8 @@ const checkFile = (
   );
   let Key = `fileStore/${req.params.customerFile_idx}/${afterPath}/${newTitle}`;
 
-  CopySource = CopySource.replace('/null', '');
-  Key = Key.replace('/null', '');
+  CopySource = CopySource.replace("/null", "");
+  Key = Key.replace("/null", "");
 
   params.CopySource = CopySource;
   params.Key = Key;
@@ -52,11 +53,12 @@ const checkFile = (
   return params;
 };
 const getFolderPath = async (pathData, customerFile_idx, joinData) => {
-  const pathArr = pathData.split('/');
+  const pathArr = pathData.split("/");
 
   const findTitleResult = await db.folders.findAll({
     where: { uuid: { [Op.in]: pathArr }, customerFile_idx },
-    attributes: ['title'],
+    attributes: ["title"],
+    order: [["createdAt", "ASC"]],
     raw: true,
     nest: true,
   });
@@ -77,7 +79,7 @@ module.exports = {
       const findAllCustomers = await db.customerFile.findAll({
         where: { company_idx: req.company_idx },
         attributes: getUserListAttributes,
-        order: [['customer_name', 'ASC']],
+        order: [["customer_name", "ASC"]],
       });
 
       return res.send({ success: 200, findAllCustomers });
@@ -96,6 +98,7 @@ module.exports = {
 
     const folders = await db.folders.findAll({
       where: { customerFile_idx, root: true },
+      order: [[sort_field, sort]],
     });
 
     const files = await db.files.findAll({
@@ -121,7 +124,7 @@ module.exports = {
     const t = await db.sequelize.transaction();
     try {
       const findUserResult = await db.user.findByPk(user_idx, {
-        attributes: ['user_name'],
+        attributes: ["user_name"],
       });
 
       const newUuid = random5();
@@ -146,7 +149,7 @@ module.exports = {
 
       const findResult = await db.folders.findOne(
         { where: { uuid: req.body.uuid } },
-        { attributes: ['path', 'uuid'] }
+        { attributes: ["path", "uuid"] }
       );
 
       const insertData = await checkTitle(
@@ -201,8 +204,9 @@ module.exports = {
 
         req.body.customerFile_idx = req.params.customerFile_idx;
         const findUserResult = await db.user.findByPk(req.user_idx, {
-          attributes: ['user_name'],
+          attributes: ["user_name"],
         });
+        console.log(findUserResult);
         req.body.path = req.query.path;
         req.body.upload_people = findUserResult.user_name;
         req.body.file_url = files[i].location;
@@ -213,7 +217,7 @@ module.exports = {
         const uniqueKey = getLastUrl.substr(0, 5);
 
         // 그냥 text로 변환
-        const pureText = makePureText(title.normalize('NFC'));
+        const pureText = makePureText(title.normalize("NFC"));
 
         req.body.searchingTitle = pureText;
         req.body.uniqueKey = uniqueKey;
@@ -244,6 +248,7 @@ module.exports = {
       let findFilesResult = await db.files.findAll({
         where: { folder_uuid: req.body.uuid },
         attributes: showFilesAttributes,
+        order: [[sort_field, sort]],
       });
 
       findFilesResult = JSON.parse(
@@ -266,7 +271,7 @@ module.exports = {
       if (isfolder == 0) {
         const findFileResult = await db.files.findOne(
           { where: { uuid } },
-          { attributes: ['title', 'path', 'uniqueKey'] }
+          { attributes: ["title", "path", "uniqueKey"] }
         );
         // 폴더 안에 없을 때
         const delTarget = `${findFileResult.uniqueKey}${findFileResult.title}`;
@@ -275,12 +280,12 @@ module.exports = {
           where: { uuid },
         });
 
-        return res.send({ success: 200, message: '삭제 완료' });
+        return res.send({ success: 200, message: "삭제 완료" });
       }
       // 폴더일때
       const findFolderUuid = await db.folders.findAll({
         where: { path: { [Op.like]: `%${uuid}%` } },
-        attributes: ['idx', 'path'],
+        attributes: ["idx", "path"],
         raw: true,
       });
 
@@ -303,15 +308,15 @@ module.exports = {
         { transaction: t }
       );
       await t.commit();
-      res.send({ success: 200, message: '삭제 완료' });
+      res.send({ success: 200, message: "삭제 완료" });
 
       // db정보 삭제 후 s3 삭제
       var params = {
-        Bucket: 'ordercheck',
+        Bucket: "ordercheck",
         Prefix: `fileStore/${req.params.customerFile_idx}/${req.query.path}/`,
       };
       const deleteParams = {
-        Bucket: 'ordercheck',
+        Bucket: "ordercheck",
         Delete: { Objects: [] },
       };
       s3_get(params, (err, data) => {
@@ -339,19 +344,59 @@ module.exports = {
 
       // 폴더일 경우
       if (isFolder) {
-        const pureTitle = makePureText(title);
-        await db.folders.update(
-          { title, searchingTitle: pureTitle },
-          { where: { uuid, customerFile_idx } }
-        );
-
+        // 이전에 같은 이름의 폴더를 찾음
         const findFoldersResult = await db.folders.findOne({
           where: { uuid, customerFile_idx },
-          attributes: ['root'],
+          attributes: ["root", "upperFolder"],
         });
-        if (!findFoldersResult.root) {
-          await db.files.update({ title: title }, { where: { uuid } });
+        if (findFoldersResult.upperFolder == undefined) {
+          findFoldersResult.upperFolder = null;
         }
+
+        const findFolderResult = await db.folders.findOne({
+          where: { title, upperFolder: findFoldersResult.upperFolder },
+          attributes: ["duplicateCount", "idx"],
+        });
+
+        // 이미 같은 이름의 폴더가 없을 때
+        if (!findFolderResult) {
+          const pureTitle = makePureText(title);
+          await db.folders.update(
+            { title, searchingTitle: pureTitle, duplicateCount: 1 },
+            { where: { uuid, customerFile_idx } }
+          );
+
+          // 루트폴더 아닐 때
+          if (!findFoldersResult.root) {
+            await db.files.update({ title: title }, { where: { uuid } });
+          }
+        } else {
+          title = `${title}_${findFolderResult.duplicateCount + 1}`;
+          const pureTitle = makePureText(title);
+          await db.folders.update(
+            {
+              title,
+              searchingTitle: pureTitle,
+              duplicateCount: findFolderResult.duplicateCount + 1,
+            },
+            { where: { uuid, customerFile_idx } }
+          );
+
+          db.folders.increment(
+            { duplicateCount: 1 },
+            { where: { idx: findFolderResult.idx } }
+          );
+
+          const findFoldersResult = await db.folders.findOne({
+            where: { uuid, customerFile_idx },
+            attributes: ["root"],
+          });
+          // 루트폴더 아닐 때
+          if (!findFoldersResult.root) {
+            await db.files.update({ title: title }, { where: { uuid } });
+          }
+        }
+        return res.send({ success: 200, newTitle: title });
       } else {
         const findFilesResult = await db.files.findOne({
           where: { uuid },
@@ -359,11 +404,11 @@ module.exports = {
         });
 
         let params = {
-          Bucket: 'ordercheck',
-          ACL: 'public-read',
+          Bucket: "ordercheck",
+          ACL: "public-read",
         };
 
-        const titleExtend = findFilesResult.title.split('.');
+        const titleExtend = findFilesResult.title.split(".");
 
         const newTitle = `${title}.${titleExtend[titleExtend.length - 1]}`;
 
@@ -386,8 +431,8 @@ module.exports = {
           `ordercheck/fileStore/${customerFile_idx}/${path}`
         );
 
-        file_url = file_url.replace('/null', '');
-        Bucket = Bucket.replace('/null', '');
+        file_url = file_url.replace("/null", "");
+        Bucket = Bucket.replace("/null", "");
 
         const copyResult = await copyAndDelete(
           params,
@@ -414,15 +459,20 @@ module.exports = {
           return res.send({ success: 200, updatedFileResult });
         }
       }
-      return res.send({ success: 200 });
     } catch (err) {
       next(err);
     }
   },
   searchFileStore: async (req, res, next) => {
-    const pureText = makePureText(req.query.search);
+    const pureText = req.query.search
+      .replace(/[. ]/g, "")
+      .replace(/[\{\}\[\]\/?,;:|\*~`!^\-_+┼<>@\#$%&\'\"\\\=]/gi, "disjcn");
+    if (pureText == "") {
+      return res.send([]);
+    }
     const totalFindResult = await searchFileandFolder(req, pureText);
-    res.send(totalFindResult);
+
+    return res.send(totalFindResult);
   },
   showDetailFileFolder: async (req, res, next) => {
     const {
@@ -430,57 +480,61 @@ module.exports = {
       query: { path },
     } = req;
 
-    // 폴더일때
-    if (isFolder == 1) {
-      // 폴더 용량 구하기
-      const findTitleResult = await db.files.findAll({
-        where: { folder_uuid: uuid, customerFile_idx, isFolder: false },
-        attributes: ['file_size'],
-        raw: true,
-        nest: true,
-      });
+    try {
+      // 폴더일때
+      if (isFolder == 1) {
+        // 폴더 용량 구하기
+        const findTitleResult = await db.files.findAll({
+          where: { folder_uuid: uuid, customerFile_idx, isFolder: false },
+          attributes: ["file_size"],
+          raw: true,
+          nest: true,
+        });
 
-      const findFolderResult = await db.folders.findOne({
+        const findFolderResult = await db.folders.findOne({
+          where: { uuid, customerFile_idx },
+          attributes: showDetailFolderAttributes,
+          raw: true,
+          nest: true,
+        });
+
+        let addFileSize = 0;
+        findTitleResult.forEach((data) => {
+          addFileSize += data.file_size;
+        });
+
+        const getDetailResult = await getFolderPath(
+          path,
+          customerFile_idx,
+          " | "
+        );
+
+        findFolderResult.path = getDetailResult;
+        findFolderResult.folder_size = addFileSize;
+
+        return res.send({ succes: 200, findFolderResult });
+      }
+
+      // 파일일때
+      const getFileResult = await db.files.findOne({
         where: { uuid, customerFile_idx },
-        attributes: showDetailFileFolderAttributes,
-
-        raw: true,
-        nest: true,
+        attributes: showDetailFileAttributes,
       });
-
-      let addFileSize = 0;
-      findTitleResult.forEach((data) => {
-        addFileSize += data.file_size;
-      });
-
-      const getDetailResult = await getFolderPath(
+      // 파일이 폴더 밖에 있을때
+      if (!path) {
+        return res.send({ succes: 200, getFileResult });
+      }
+      const getTitleRootResult = await getFolderPath(
         path,
         customerFile_idx,
-        ' | '
+        " | "
       );
+      getFileResult.path = getTitleRootResult;
 
-      findFolderResult.path = getDetailResult;
-      findFolderResult.folder_size = addFileSize;
-
-      return res.send({ succes: 200, findFolderResult });
-    }
-    // 파일일때
-    const getFileResult = await db.files.findOne({
-      where: { uuid, customerFile_idx },
-      attributes: showDetailFileFolderAttributes,
-    });
-    // 파일이 폴더 밖에 있을때
-    if (!path) {
       return res.send({ succes: 200, getFileResult });
+    } catch (err) {
+      next(err);
     }
-    const getTitleRootResult = await getFolderPath(
-      path,
-      customerFile_idx,
-      ' | '
-    );
-    getFileResult.path = getTitleRootResult;
-
-    return res.send({ succes: 200, getFileResult });
   },
   getAllFolders: async (req, res, next) => {
     const {
@@ -489,13 +543,13 @@ module.exports = {
     } = req;
     const findResult = await db.files.findAll({
       where: { path: { [Op.like]: `%${uuid}%` }, isFolder: false },
-      attributes: ['file_url', 'title', 'path'],
+      attributes: ["file_url", "title", "path"],
       raw: true,
       nest: true,
     });
     await Promise.all(
       findResult.map(async (data) => {
-        const findPath = await getFolderPath(data.path, customerFile_idx, '/');
+        const findPath = await getFolderPath(data.path, customerFile_idx, "/");
         data.path = findPath;
       })
     );
@@ -512,11 +566,11 @@ module.exports = {
             model: db.files,
             where: { isfolder: true },
             required: false,
-            attributes: ['uuid'],
+            attributes: ["uuid"],
           },
         ],
-        attributes: ['uuid', 'title', 'path'],
-        order: [['title', 'ASC']],
+        attributes: ["uuid", "title", "path"],
+        order: [["title", "ASC"]],
       });
 
       findFolders = JSON.parse(JSON.stringify(findFolders));
@@ -551,13 +605,13 @@ module.exports = {
             model: db.files,
             where: { isfolder: true },
             required: false,
-            attributes: ['uuid', 'title', 'path'],
+            attributes: ["uuid", "title", "path"],
           },
         ],
-        attributes: ['title'],
+        attributes: ["title"],
         raw: true,
         nest: true,
-        order: [['title', 'ASC']],
+        order: [["title", "ASC"]],
       });
 
       const checkResult = await Promise.all(
@@ -566,14 +620,14 @@ module.exports = {
             where: {
               folder_uuid: data.files.uuid,
             },
-            attributes: ['uuid', 'title', 'path'],
+            attributes: ["uuid", "title", "path"],
             raw: true,
           });
-          data = {...data.files}
-       
-          result ?  data.underFolders = true :  data.underFolders = false
-          
-          return data
+          data = { ...data.files };
+
+          result ? (data.underFolders = true) : (data.underFolders = false);
+
+          return data;
         })
       );
 
@@ -584,36 +638,31 @@ module.exports = {
   },
   moveFile: async (req, res, next) => {
     const {
-      params: { fileUuid, folderUuid,customerFile_idx },
+      params: { fileUuid, folderUuid, customerFile_idx },
       query: { path },
     } = req;
 
-    console.log(req.params);
-    console.log(req.query);
-
-
     try {
       // path가 있을 때
-      let newPath = path
-     if(newPath==undefined){
-       newPath = null
-     }
+      let newPath = path;
+      if (newPath == undefined) {
+        newPath = null;
+      }
 
       const beforePath = await db.files.findOne({
         where: { uuid: fileUuid },
-        attributes: ['path'],
+        attributes: ["path"],
       });
 
       let params = {
-        Bucket: 'ordercheck',
-        ACL: 'public-read',
+        Bucket: "ordercheck",
+        ACL: "public-read",
       };
 
       const findFilesResult = await db.files.findOne({
         where: { uuid: fileUuid },
         raw: true,
       });
-
 
       params = checkFile(
         req,
@@ -628,12 +677,8 @@ module.exports = {
         `ordercheck/fileStore/${customerFile_idx}/${beforePath.path}`
       );
       let file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${newPath}/${findFilesResult.uniqueKey}${findFilesResult.title}`;
-      Bucket = Bucket.replace('/null', '');
-      file_url = file_url.replace('/null', '');
-  
-
-
-
+      Bucket = Bucket.replace("/null", "");
+      file_url = file_url.replace("/null", "");
 
       await copyAndDelete(
         params,

@@ -1,9 +1,9 @@
-const { checkPage, addUserId } = require('../lib/apiFunctions');
-const { changeDate, makePureText } = require('../lib/apiFunctions');
-const db = require('../model/db');
-const { Op } = require('sequelize');
-const { sortElements, giveNumbering } = require('../lib/checkData');
-const { customerAttributes } = require('../lib/attributes');
+const { checkPage, addUserId } = require("../lib/apiFunctions");
+const { changeDate, makePureText, isEmptyObj } = require("../lib/apiFunctions");
+const db = require("../model/db");
+const { Op } = require("sequelize");
+const { sortElements, giveNumbering } = require("../lib/checkData");
+const { customerAttributes } = require("../lib/attributes");
 // 0이 오름차순,1이 내림차순 (ASC는 오름차순)
 module.exports = {
   Filter: async (req, res, next) => {
@@ -14,10 +14,13 @@ module.exports = {
       company_idx,
     } = req;
 
-    console.log(req.body);
-
-    // userId가 빈 배열일 때
-    if ((userId && userId.length == 0) || date == '') {
+    if (
+      (userId && userId.length == 0) ||
+      date == "" ||
+      status.length == 0 ||
+      contract_possibility.length == 0
+    ) {
+      // userId가 빈 배열일 때
       return res.send({
         success: 200,
         findResult: confirm ? [] : 0,
@@ -30,8 +33,8 @@ module.exports = {
       company_idx
     );
 
-    let countArr = [0, 1, 2, 3, 4];
-    let countPossibility = [0, 1, 2, 3];
+    let countArr;
+    let countPossibility;
     let contractPerson;
     const countCustomers = async (
       statusData,
@@ -105,7 +108,7 @@ module.exports = {
             include: [
               {
                 model: db.user,
-                attributes: ['idx', 'user_name'],
+                attributes: ["idx", "user_name"],
               },
             ],
             attributes: customerAttributes,
@@ -155,7 +158,7 @@ module.exports = {
             include: [
               {
                 model: db.user,
-                attributes: ['idx', 'user_name'],
+                attributes: ["idx", "user_name"],
               },
             ],
             attributes: customerAttributes,
@@ -210,7 +213,7 @@ module.exports = {
           intlimit,
           start
         );
-    console.log(logicResult);
+
     return res.send({
       success: 200,
       findResult: confirm ? logicResult.findFilteredUsersData : logicResult,
@@ -230,8 +233,19 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      const pureText = makePureText(search);
+      const pureText = search
+        .replace(/[. ]/g, "")
+        .replace(/[\{\}\[\]\/?,;:|\*~`!^\-_+┼<>@\#$%&\'\"\\\=]/gi, "disjcn");
 
+      if (pureText == "") {
+        return res.send({
+          success: 200,
+          customerData: [],
+          page: 1,
+          totalUser: 0,
+          totalPage: 0,
+        });
+      }
       const { start, intlimit, intPage } = await checkPage(
         limit,
         page,
@@ -265,7 +279,7 @@ module.exports = {
         include: [
           {
             model: db.user,
-            attributes: ['idx', 'user_name'],
+            attributes: ["idx", "user_name"],
           },
         ],
         attributes: customerAttributes,

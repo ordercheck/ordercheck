@@ -1,11 +1,10 @@
-const db = require('../model/db');
-
+const db = require("../model/db");
+const { Op } = require("sequelize");
 const {
-  makePureText,
   searchFileandFolder,
   searchingByTitle,
-} = require('../lib/apiFunctions');
-const { customerAttributes } = require('../lib/attributes');
+} = require("../lib/apiFunctions");
+const { customerAttributes } = require("../lib/attributes");
 module.exports = {
   totalSearch: async (req, res, next) => {
     const {
@@ -14,7 +13,18 @@ module.exports = {
     } = req;
 
     try {
-      const pureText = makePureText(search);
+      const pureText = search
+        .replace(/[. ]/g, "")
+        .replace(/[\{\}\[\]\/?,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\(\=]/gi, "disjcn");
+
+      if (pureText == "") {
+        return res.send({
+          success: 200,
+          searchCustomer: [],
+          searchFileStore: [],
+          searchForm: [],
+        });
+      }
 
       // customer search
       let searchCustomer = await db.customer.findAll({
@@ -36,15 +46,23 @@ module.exports = {
         include: [
           {
             model: db.user,
-            attributes: ['idx', 'user_name'],
+            attributes: ["idx", "user_name"],
           },
         ],
+        order: [["createdAt", "DESC"]],
         attributes: customerAttributes,
       });
       // fileStore search
+      let searchFileStore = await searchFileandFolder(req, pureText);
+      // 배열 날짜순으로 sort
+      searchFileStore = searchFileStore.sort(function date_descending(a, b) {
+        var dateA = new Date(a["날짜"]).getTime();
+        var dateB = new Date(b["날짜"]).getTime();
+        return dateA < dateB ? 1 : -1;
+      });
 
-      const searchFileStore = await searchFileandFolder(req, pureText);
-      const searchForm = await searchingByTitle(pureText);
+      const searchForm = await searchingByTitle(pureText, company_idx);
+
       return res.send({
         success: 200,
         searchCustomer,

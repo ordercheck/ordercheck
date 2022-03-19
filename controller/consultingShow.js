@@ -56,8 +56,8 @@ module.exports = {
         getCustomerDataResult = await getCustomerData(
           'createdAt',
           'DESC',
-          customerNumber,
-          'plus'
+          totalData - intlimit * intPage + intlimit,
+          'minus'
         );
 
         if (getCustomerDataResult.customerData == 0) {
@@ -157,8 +157,6 @@ module.exports = {
       if (!consultResult) {
         return;
       }
-
-      console.log(consultResult);
 
       return res.send({ success: 200, consultResult });
     } catch (err) {

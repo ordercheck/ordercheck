@@ -94,8 +94,6 @@
  *             properties:
  *               ut:
  *                type: string
- *               lt:
- *                type: string
  *               ct:
  *                type: string
  *               pt:
@@ -106,7 +104,6 @@
  *                type: string
  *             example:
  *               ut: "userToken"
- *               lt: "loginToken"
  *               ct: "cardToken"
  *               pt: "planToken"
  *               company_name: "회사 이름"
@@ -315,17 +312,34 @@
  *             properties:
  *               ut:
  *                type: string
- *               lt:
- *                type: string
  *               ct:
  *                type: string
  *               pt:
  *                type: string
  *             example:
  *               ut: "userToken"
- *               lt: "loginToken"
  *               ct: "cardToken"
  *               pt: "planToken"
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/token/login:
+ *   post:
+ *     tags:
+ *       - 로그인
+ *     summary: 유저 토큰으로 로그인 하기
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               ut:
+ *                 type: string
+ *             example:
+ *               ut: 'token'
  *     responses:
  *       '200':
  *         description: 성공

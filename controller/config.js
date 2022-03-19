@@ -1,17 +1,20 @@
-const db = require('../model/db');
-const { makeSpreadArray } = require('../lib/functions');
-const _f = require('../lib/functions');
-const { findMembers, findMember, checkTitle } = require('../lib/apiFunctions');
-const { Op } = require('sequelize');
-const { createConfig } = require('../lib/standardTemplate');
+const db = require("../model/db");
+const { makeSpreadArray } = require("../lib/functions");
+const _f = require("../lib/functions");
+const { findMembers, findMember, checkTitle } = require("../lib/apiFunctions");
+const { generateRandomCode } = require("../lib/functions");
+const { Op } = require("sequelize");
+const { Company } = require("../lib/classes/CompanyClass");
+const { Template } = require("../lib/classes/TemplateClass");
+const { createConfig } = require("../lib/standardTemplate");
 
 const {
   payNow,
   delCardPort,
   cancelSchedule,
   schedulePay,
-} = require('../lib/payFunction');
-const moment = require('moment');
+} = require("../lib/payFunction");
+const moment = require("moment");
 const {
   showTemplateListAttributes,
   showPlanAttributes,
@@ -23,62 +26,10 @@ const {
   showDetailTemplateConfig,
   getReceiptListAttributes,
   showFormListAttributes,
-} = require('../lib/attributes');
+} = require("../lib/attributes");
 
-require('moment-timezone');
-moment.tz.setDefault('Asia/Seoul');
-
-const updateLogoAndEnrollment = async (
-  company_idxData,
-  fileData,
-  changeData
-) => {
-  const updateCompanyLogo = async (UrlData, TitleData, change) => {
-    let updateKey;
-    change == 'logo'
-      ? (updateKey = 'company_logo')
-      : (updateKey = 'business_enrollment');
-
-    const updateKeyTitle = `${updateKey}_title`;
-
-    await db.company.update(
-      {
-        [updateKey]: UrlData,
-        [updateKeyTitle]: TitleData,
-      },
-      { where: { idx: company_idxData } }
-    );
-  };
-  try {
-    // 로고를 삭제하는 경우
-    if (!fileData && changeData == 'logo') {
-      await updateCompanyLogo('', '', changeData);
-    }
-    // 로고를 바꾸는 경우
-    else if (fileData && changeData == 'logo') {
-      const originalUrl = fileData.location;
-      const thumbNail = originalUrl.replace(/\/original\//, '/thumb/');
-      await updateCompanyLogo(thumbNail, fileData.originalname, changeData);
-    }
-
-    //사업자 등록증 새로 등록
-    else if (fileData && changeData == 'enrollment') {
-      await updateCompanyLogo(
-        fileData.location,
-        fileData.originalname,
-        changeData
-      );
-    }
-    // 사업자 등록증 삭제
-    else if (!fileData && changeData == 'enrollment') {
-      await updateCompanyLogo(null, null, changeData);
-    }
-
-    return true;
-  } catch (err) {
-    return false;
-  }
-};
+require("moment-timezone");
+moment.tz.setDefault("Asia/Seoul");
 
 module.exports = {
   getCompanyProfile: async (req, res, next) => {
@@ -86,7 +37,9 @@ module.exports = {
       let companyProfile = await db.sequelize
         .query(
           `SELECT plan, company_name, company_logo, company_subdomain, address, 
-          detail_address, business_number, business_enrollment, business_enrollment_title, user_name,
+          detail_address, company.business_number, business_enrollment, business_enrollment_title, user_name,
+          card.active AS cardActive,
+          text_cost,
           whiteLabelChecked,  
           chatChecked, 
           analysticChecked
@@ -94,12 +47,14 @@ module.exports = {
           LEFT JOIN company ON userCompany.company_idx = company.idx
           LEFT JOIN plan ON userCompany.company_idx = plan.company_idx
           LEFT JOIN user ON company.huidx = user.idx
-          WHERE userCompany.user_idx = ${req.user_idx}`
+          LEFT JOIN card ON card.user_idx = user.idx AND main=true
+          LEFT JOIN sms ON sms.user_idx = user.idx
+          WHERE userCompany.user_idx = ${req.user_idx} AND userCompany.active = true AND userCompany.deleted is null AND standBy = false`
         )
         .spread((r) => {
           return makeSpreadArray(r);
         });
-      console.log(companyProfile[0]);
+      console.log(companyProfile);
       return res.send({ success: 200, companyProfile: companyProfile[0] });
     } catch (err) {
       next(err);
@@ -107,8 +62,13 @@ module.exports = {
   },
   changeCompanyLogo: async (req, res, next) => {
     const { company_idx, file } = req;
+    const company = new Company({});
     try {
-      const result = await updateLogoAndEnrollment(company_idx, file, 'logo');
+      const result = await company.updateLogoAndEnrollment(
+        company_idx,
+        file,
+        "logo"
+      );
       if (result) {
         return res.send({ success: 200 });
       }
@@ -119,8 +79,13 @@ module.exports = {
 
   delCompanyLogo: async (req, res, next) => {
     const { company_idx, file } = req;
+    const company = new Company({});
     try {
-      const result = await updateLogoAndEnrollment(company_idx, file, 'logo');
+      const result = await company.updateLogoAndEnrollment(
+        company_idx,
+        file,
+        "logo"
+      );
       if (result) {
         return res.send({ success: 200 });
       }
@@ -130,19 +95,16 @@ module.exports = {
   },
   changeCompanyInfo: async (req, res, next) => {
     const { body, company_idx } = req;
+    const company = new Company({});
     try {
-      const updateCompanyInfo = async (updateData) => {
-        await db.company.update(updateData, { where: { idx: company_idx } });
-      };
-
       try {
-        await updateCompanyInfo(body);
+        await company.updateCompany(body, { idx: company_idx });
 
         return res.send({ success: 200 });
       } catch (err) {
         return res.send({
           success: 400,
-          message: '해당 회사 도메인은 이미 사용되었습니다.',
+          message: "해당 회사 도메인은 이미 사용되었습니다.",
         });
       }
     } catch (err) {
@@ -151,11 +113,12 @@ module.exports = {
   },
   changeCompanyEnrollment: async (req, res, next) => {
     const { company_idx, file } = req;
+    const company = new Company({});
     try {
-      const result = await updateLogoAndEnrollment(
+      const result = await company.updateLogoAndEnrollment(
         company_idx,
         file,
-        'enrollment'
+        "enrollment"
       );
       if (result) {
         return res.send({ success: 200 });
@@ -166,18 +129,18 @@ module.exports = {
   },
   getCompanyProfileMember: async (req, res, next) => {
     const { company_idx, user_idx } = req;
+    const company = new Company({});
     try {
-      const findResult = await findMembers(
+      const findResult = await company.findMembers(
         {
           company_idx,
           deleted: null,
           active: true,
           standBy: false,
         },
-        ['searchingName', 'ASC'],
+        ["searchingName", "ASC"],
         user_idx
       );
-
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
@@ -189,7 +152,8 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      const findResult = await findMembers(
+      const company = new Company({});
+      const findResult = await company.findMembers(
         {
           searchingName: {
             [Op.like]: `%${search}%`,
@@ -200,7 +164,7 @@ module.exports = {
           standBy: false,
         },
 
-        ['searchingName', 'ASC']
+        ["searchingName", "ASC"]
       );
 
       return res.send(findResult);
@@ -212,12 +176,9 @@ module.exports = {
     const {
       params: { memberId },
     } = req;
-    const deletedTime = moment().format('YYYY.MM.DD');
+    const company = new Company({});
     try {
-      await db.userCompany.update(
-        { deleted: deletedTime, active: false },
-        { where: { idx: memberId } }
-      );
+      await company.delCompanyMember(memberId);
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
@@ -230,22 +191,20 @@ module.exports = {
       user_idx,
     } = req;
     try {
-      const Title = await checkTitle(
-        db.config,
-        { template_name: title, company_idx },
-        title,
-        req.body
-      );
-
+      const template = new Template({});
+      const checkTitleResult = await template.checkTitle({
+        template_name: title,
+      });
       const findUser = await db.user.findByPk(user_idx, {
-        attributes: ['user_name'],
+        attributes: ["user_name"],
       });
 
-      createConfig.template_name = Title.title;
-      createConfig.create_people = findUser.user_name;
-      createConfig.company_idx = company_idx;
-
-      const createdResult = await db.config.create(createConfig);
+      const createConfigClass = new Template(createConfig);
+      const createdResult = createConfigClass.createPrivateConfig(
+        checkTitleResult.title,
+        findUser.user_name,
+        company_idx
+      );
 
       return res.send({ success: 200, templateId: createdResult.idx });
     } catch (err) {
@@ -254,13 +213,14 @@ module.exports = {
   },
   showTemplateList: async (req, res, next) => {
     const { company_idx } = req;
-
+    const template = new Template({});
     try {
-      const findResult = await db.config.findAll({
-        where: { company_idx },
-        attributes: showTemplateListAttributes,
-        raw: true,
-      });
+      const findResult = await template.findAllConfig(
+        {
+          company_idx,
+        },
+        showTemplateListAttributes
+      );
 
       let No = 1;
       findResult.map((data) => {
@@ -277,9 +237,12 @@ module.exports = {
     const { templateId } = req.params;
 
     try {
-      const findResult = await db.config.findByPk(templateId, {
-        attributes: { exclude: showDetailTemplateConfig },
+      const template = new Template({});
+
+      const findResult = await template.findConfigFindByPk(templateId, {
+        exclude: showDetailTemplateConfig,
       });
+
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
@@ -292,17 +255,21 @@ module.exports = {
       user_idx,
       params: { templateId },
     } = req;
+    const template = new Template({});
     try {
       const findUserResult = await db.user.findByPk(user_idx, {
-        attributes: ['user_name'],
+        attributes: ["user_name"],
       });
 
-      const updatedDate = moment().format('YYYY.MM.DD HH:mm');
+      const updatedDate = moment().format("YYYY.MM.DD HH:mm");
 
       const update_people = `${updatedDate} ${findUserResult.user_name}`;
+
       body.update_people = update_people;
       body.company_idx = company_idx;
-      await db.config.update(body, { where: { idx: templateId } });
+
+      await template.updateConfig(body, { idx: templateId });
+
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
@@ -314,22 +281,28 @@ module.exports = {
       company_idx,
     } = req;
     try {
+      const template = new Template({});
+
       const findUserResult = await db.userCompany.findAll({
         where: { config_idx: templateId },
         raw: true,
         nest: true,
       });
-      const findConfigResult = await db.config.findOne({
-        where: { company_idx, template_name: '팀원' },
-        attributes: ['idx'],
-      });
+
+      const findConfigResult = await template.findConfig(
+        { company_idx, template_name: "팀원" },
+        ["idx"]
+      );
+
       findUserResult.forEach(async (data) => {
         await db.userCompany.update(
           { config_idx: findConfigResult.idx },
           { where: { idx: data.idx } }
         );
       });
-      await db.config.destroy({ where: { idx: templateId } });
+
+      await template.destroyConfig({ idx: templateId });
+
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
@@ -343,7 +316,7 @@ module.exports = {
         include: [
           {
             model: db.company,
-            attributes: ['form_link_count'],
+            attributes: ["form_link_count"],
           },
         ],
         attributes: showPlanAttributes,
@@ -353,10 +326,10 @@ module.exports = {
       if (!findPlanResult.free_plan) {
         return res.send(findPlanResult);
       }
-      let now = moment().format('YYYY-MM-DD');
+      let now = moment().format("YYYY-MM-DD");
       now = moment(now);
-      const freePlan = moment(findPlanResult.start_plan.replace(/\./g, '-'));
-      let diffTime = moment(freePlan.diff(now)).format('DD');
+      const freePlan = moment(findPlanResult.start_plan.replace(/\./g, "-"));
+      let diffTime = moment(freePlan.diff(now)).format("DD");
       diffTime = parseInt(diffTime) - 1;
 
       return res.send(findPlanResult);
@@ -370,7 +343,7 @@ module.exports = {
       const findPlanResult = await db.plan.findAll({
         where: { company_idx },
         attributes: showPlanHistoryAttributes,
-        order: [['createdAt', 'DESC']],
+        order: [["createdAt", "DESC"]],
       });
       return res.send({ success: 200, findPlanResult });
     } catch (err) {
@@ -391,12 +364,16 @@ module.exports = {
   },
   showSmsInfo: async (req, res, next) => {
     const { user_idx } = req;
-
     try {
       const findResult = await db.sms.findOne({
         where: { user_idx },
-        attributes: ['text_cost', 'repay', 'auto_price', 'auto_min'],
+        attributes: ["text_cost", "repay", "auto_price", "auto_min"],
       });
+
+      findResult.dataValues.text_cost = findResult.text_cost.toLocaleString();
+      findResult.dataValues.auto_price = findResult.auto_price.toLocaleString();
+      findResult.dataValues.auto_min = findResult.auto_min.toLocaleString();
+
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
@@ -410,7 +387,17 @@ module.exports = {
           user_idx,
         },
       });
-      return res.send({ success: 200 });
+
+      const findResult = await db.sms.findOne({
+        where: { user_idx },
+        attributes: ["text_cost", "repay", "auto_price", "auto_min"],
+      });
+
+      findResult.dataValues.text_cost = findResult.text_cost.toLocaleString();
+      findResult.dataValues.auto_price = findResult.auto_price.toLocaleString();
+      findResult.dataValues.auto_min = findResult.auto_min.toLocaleString();
+
+      return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
     }
@@ -418,14 +405,16 @@ module.exports = {
   paySms: async (req, res, next) => {
     const {
       user_idx,
+      company_idx,
       body: { text_cost },
     } = req;
 
     const findCardResult = await db.card.findOne({
       where: { user_idx, main: true },
+      attributes: ["idx", "customer_uid", "card_number"],
     });
     if (!findCardResult) {
-      return res.send({ success: 400, message: '등록된 카드가 없습니다.' });
+      return res.send({ success: 400, message: "등록된 카드가 없습니다." });
     }
 
     const merchant_uid = _f.random5();
@@ -434,16 +423,37 @@ module.exports = {
       findCardResult.customer_uid,
       text_cost,
       merchant_uid,
-      '문자 충전'
+      "문자 충전"
     );
 
     if (!payResult.success) {
-      return next(payResult.message);
+      await db.sms.update(
+        {
+          active: false,
+        },
+        {
+          where: {
+            idx: findCardResult.idx,
+          },
+        }
+      );
+      res.send({ success: 400, message: "문자 충전 실패" });
+      const receiptId = generateRandomCode(6);
+
+      await db.receipt.create({
+        result_price_levy: text_cost,
+        receiptId,
+        status: false,
+        company_name: findCompany.company_name,
+        receipt_kind: "자동 문자 충전",
+        card_number: findCompany.card_number,
+      });
+      return;
     }
 
     const findSmsResult = await db.sms.findOne({
       where: { user_idx },
-      attributes: ['text_cost'],
+      attributes: ["text_cost"],
     });
 
     const beforeCost = findSmsResult.text_cost;
@@ -461,29 +471,75 @@ module.exports = {
       }
     );
 
-    res.send({ success: 200, message: '충전 완료' });
+    res.send({ success: 200, message: "충전 완료" });
+    // 영수증 등록 로직
+    const findCompany = await db.company.findByPk(company_idx, {
+      attributes: ["company_name"],
+    });
 
-    // 영수증 등록
+    const receiptId = generateRandomCode(6);
+
+    await db.receipt.create({
+      result_price_levy: text_cost,
+      receiptId,
+      company_name: findCompany.company_name,
+      receipt_kind: "자동 문자 충전",
+      card_number: findCompany.card_number,
+    });
   },
   showSmsHistory: async (req, res, next) => {
     const { user_idx } = req;
     try {
-      const findResult = await db.smsHistory.findAll({
+      // 해당 유저의 sms조회
+      const findSms = await db.sms.findOne({
         where: { user_idx },
-        attributes: showSmsHistoryAttributes,
       });
+
+      const findResult = await db.smsHistory.findAll({
+        where: { sms_idx: findSms.idx },
+        attributes: showSmsHistoryAttributes,
+        order: [["createdAt", "DESC"]],
+      });
+
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
     }
   },
   showCardsInfo: async (req, res, next) => {
-    const { user_idx } = req;
+    const { user_idx, company_idx } = req;
     try {
-      const findResult = await db.card.findAll({
+      let findCardInfo = await db.card.findAll({
         where: { user_idx },
         attributes: showCardsInfoAttributes,
+        raw: true,
       });
+
+      let cardEmail;
+      for (let i = 0; i < findCardInfo.length; i++) {
+        // 메인 카드 이메일 찾기
+        if (findCardInfo[i].main == true) {
+          cardEmail = findCardInfo[i].card_email;
+        }
+        const second = findCardInfo[i].card_number.substring(4, 8);
+        const third = findCardInfo[i].card_number.substring(8, 12);
+        findCardInfo[i].card_number = `**** ${second} ${third} ****`;
+        let [year, month] = findCardInfo[i].expiry.split("-");
+        findCardInfo[i].expiry = `${month}/${year.slice(-2)}`;
+      }
+      // 플랜 다음 결제일 체크
+      const findPlan = await db.plan.findOne({
+        where: { company_idx, active: 3 },
+        attributes: ["start_plan"],
+      });
+
+      let expirePlan = null;
+      if (findPlan) {
+        expirePlan = findPlan.start_plan.replace(/\./g, "-");
+        expirePlan = moment(expirePlan).format("YYYY.MM.DD");
+      }
+
+      const findResult = { findCardInfo, expirePlan, cardEmail };
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
@@ -503,21 +559,22 @@ module.exports = {
       next(err);
     }
   },
+
   delCard: async (req, res, next) => {
     const { cardId } = req.params;
     // 삭제 하려는 카드가 main 카드인지 체크
     try {
       const findCardResult = await db.card.findByPk(cardId, {
-        attributes: ['main'],
+        attributes: ["main"],
       });
       if (findCardResult.main == true) {
-        next({ message: '기본 결제 카드로 지정된 카드 입니다.' });
+        next({ message: "기본 결제 카드로 지정된 카드 입니다." });
       }
 
       // db 카드 삭제
       await db.card.destroy({ where: { idx: cardId } });
 
-      res.send({ success: 200, message: '카드 삭제 완료' });
+      res.send({ success: 200, message: "카드 삭제 완료" });
       //아임포트 카드 삭제
       await delCardPort(findCardResult.customer_uid);
     } catch (err) {
@@ -535,8 +592,12 @@ module.exports = {
       // 메인으로 설정되어있는 카드 false로 변경
       const findMainCardResult = await db.card.findOne(
         { where: { user_idx, main: true } },
-        { attributes: ['idx', 'customer_uid'] }
+        { attributes: ["idx", "customer_uid"] }
       );
+
+      const findPlanResult = await db.plan.findOne({
+        where: { company_idx, active: 3 },
+      });
 
       await db.card.update(
         { main: false },
@@ -548,21 +609,18 @@ module.exports = {
 
       // 기존의 아임포트 결제 예약 취소
 
-      await cancelSchedule(findMainCardResult.customer_uid);
+      await cancelSchedule(
+        findMainCardResult.customer_uid,
+        findPlanResult.merchant_uid
+      );
 
       // 새로운 카드로 결제 예약
-
-      const findPlanResult = await db.plan.findOne({
-        where: { company_idx, active: 3 },
-      });
 
       const findCardResult = await db.card.findByPk(cardId);
 
       const findUserResult = await db.user.findByPk(user_idx);
 
-      const Hour = moment().format('HH');
-
-      const startDate = findPlanResult.start_plan.replace(/\./g, '-');
+      const startDate = findPlanResult.start_plan.replace(/\./g, "-");
 
       const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
@@ -587,19 +645,29 @@ module.exports = {
       const findReceiptListResult = await db.receipt.findAll({
         where: whereData,
         attributes: getReceiptListAttributes,
-        order: [['createdAt', 'DESC']],
+        order: [["createdAt", "DESC"]],
+        raw: true,
       });
+
+      // 돈에 , 붙이기
+      for (let i = 0; i < findReceiptListResult.length; i++) {
+        findReceiptListResult[i].result_price_levy =
+          findReceiptListResult[i].result_price_levy.toLocaleString();
+      }
+
       return findReceiptListResult;
     };
 
     const {
-      query: { category },
+      params: { category },
       company_idx,
     } = req;
 
     try {
       let findResult;
-
+      if (category == undefined) {
+        findResult = [];
+      }
       if (category == 0) {
         findResult = await findReceiptList({ company_idx });
       }
@@ -607,15 +675,16 @@ module.exports = {
       if (category == 1) {
         findResult = await findReceiptList({
           company_idx,
-          receipt_kind: '구독',
+          receipt_kind: "구독",
         });
       }
       if (category == 2) {
         findResult = await findReceiptList({
           company_idx,
-          receipt_kind: '자동문자',
+          receipt_kind: "자동문자",
         });
       }
+
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
@@ -629,12 +698,20 @@ module.exports = {
     try {
       const findResult = await db.receipt.findOne({
         where: { receiptId },
-        attributes: { exclude: ['idx', 'updatedAt'] },
+        attributes: { exclude: ["idx", "updatedAt"] },
         raw: true,
       });
 
       findResult.tax_price =
         findResult.result_price_levy - findResult.result_price;
+      findResult.createdAt = findResult.createdAt
+        .split(" ")[0]
+        .replace(/-/g, ".");
+
+      const second = findResult.card_number.substring(4, 8);
+      const third = findResult.card_number.substring(8, 12);
+
+      findResult.card_number = `**** ${second} ${third}  ****`;
 
       return res.send({ success: 200, findResult });
     } catch (err) {
@@ -650,7 +727,7 @@ module.exports = {
         include: [
           {
             model: db.formOpen,
-            attributes: ['user_name'],
+            attributes: ["user_name"],
           },
         ],
         attributes: showFormListAttributes,
@@ -669,7 +746,7 @@ module.exports = {
     try {
       members.forEach(async (data) => {
         const findUserNameResult = await db.user.findByPk(data, {
-          attributes: ['user_name'],
+          attributes: ["user_name"],
         });
 
         await db.formOpen.create({
@@ -688,7 +765,7 @@ module.exports = {
     try {
       const findResult = await db.chatTemplate.findAll({
         where: { company_idx },
-        attributes: ['title', 'contents', 'edit'],
+        attributes: ["title", "contents", "edit"],
       });
       return res.send({ success: 200, findResult });
     } catch (err) {
@@ -708,7 +785,7 @@ module.exports = {
       );
       // user찾기
       const findUserResult = await db.userCompany.findByPk(memberId, {
-        attributes: ['user_idx'],
+        attributes: ["user_idx"],
       });
       // user 정보 변경
       await db.user.update(
@@ -724,5 +801,18 @@ module.exports = {
     } catch (err) {
       next(err);
     }
+  },
+  changeMainCardEmail: async (req, res, next) => {
+    const {
+      params: { cardId },
+      body,
+    } = req;
+    try {
+      await db.card.update(body, { where: { idx: cardId } });
+    } catch (err) {
+      next(err);
+    }
+
+    return res.send({ success: 200 });
   },
 };

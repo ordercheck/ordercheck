@@ -1,39 +1,39 @@
-'use strict';
-const http = require('http');
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const helmet = require('helmet');
+"use strict";
+const http = require("http");
+const express = require("express");
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
+const helmet = require("helmet");
 
-const session = require('express-session');
-const cors = require('cors');
-const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./swagger/config');
+const session = require("express-session");
+const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./swagger/config");
 
-const json2xls = require('json2xls');
+const json2xls = require("json2xls");
 // const corsOptions = {
 //   origin: 'https://ordercheck-file.s3.ap-northeast-2.amazonaws.com',
 //   credentials: true,
 // };
 const allowedOrigins = [
-  'https://ordercheck-file.s3.ap-northeast-2.amazonaws.com',
+  "https://ordercheck-file.s3.ap-northeast-2.amazonaws.com",
 ];
-require('dotenv').config();
-const db_config = require('./lib/config/db_config');
+require("dotenv").config();
+const db_config = require("./lib/config/db_config");
 // const redis = require("redis");
 // const RedisStore = require("connect-redis")(session);
 // const redisClient = redis.createClient();
 // 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
 // ssh -i /Users/kimgunhee/Desktop/keys/ordercheck.pem ubuntu@3.37.20.22
-var MySQLStore = require('express-mysql-session')(session);
+var MySQLStore = require("express-mysql-session")(session);
 var options = db_config;
 //세션 생성에 limit이 생기거나 한계가 있으면 sequelize pool limit을 확인!
 const sessionStore = new MySQLStore(options);
 const sess = {
   resave: false,
   saveUninitialized: false,
-  secret: 'sessionscrete',
-  name: 'sessionId',
+  secret: "sessionscrete",
+  name: "sessionId",
   cookie: {
     httpOnly: true,
     secure: false,
@@ -41,9 +41,9 @@ const sess = {
   store: sessionStore,
   schema: {
     columnNames: {
-      session_id: 'custom_session_id',
-      expires: 'custom_expires_column_name',
-      data: 'custom_data_column_name',
+      session_id: "custom_session_id",
+      expires: "custom_expires_column_name",
+      data: "custom_data_column_name",
     },
   },
 };
@@ -51,24 +51,24 @@ const sess = {
 //client
 // const adminRouter = require('./router/admin/indexRouter')
 // const clientRouter = require('./router/client/indexRouter')
-const ordercheckRouter = require('./router/ordercheck/indexRouter');
+const ordercheckRouter = require("./router/ordercheck/indexRouter");
 
-const apiRouter = require('./router/api/user');
-const consultingRouter = require('./router/api/consulting');
-const inviteRouter = require('./router/api/invite');
-const configRouter = require('./router/api/config');
-const alarmRouter = require('./router/api/alarm');
-const infoRouter = require('./router/api/info');
-const schedulePayRouter = require('./router/api/schedulePay');
-const cardRouter = require('./router/api/card');
-const totalRouter = require('./router/api/total');
-const formLinkRouter = require('./router/api/formLink');
-const fileRouter = require('./router/api/fileStore');
-const homeRouter = require('./router/api/home');
-const storeRouter = require('./router/api/store');
-const socketRouter = require('./router/api/socket');
-const s3ControllRouter = require('./router/api/s3');
-const db = require('./model/db');
+const apiRouter = require("./router/api/user");
+const consultingRouter = require("./router/api/consulting");
+const inviteRouter = require("./router/api/invite");
+const configRouter = require("./router/api/config");
+const alarmRouter = require("./router/api/alarm");
+const infoRouter = require("./router/api/info");
+const schedulePayRouter = require("./router/api/schedulePay");
+const cardRouter = require("./router/api/card");
+const totalRouter = require("./router/api/total");
+const formLinkRouter = require("./router/api/formLink");
+const fileRouter = require("./router/api/fileStore");
+const homeRouter = require("./router/api/home");
+const storeRouter = require("./router/api/store");
+const socketRouter = require("./router/api/socket");
+const s3ControllRouter = require("./router/api/s3");
+const db = require("./model/db");
 
 class AppServer extends http.Server {
   constructor(config) {
@@ -81,9 +81,9 @@ class AppServer extends http.Server {
     this.stop = false;
     process.env.NODE_ENV =
       process.env.NODE_ENV &&
-      process.env.NODE_ENV.trim().toLowerCase() == 'production'
-        ? 'production'
-        : 'development';
+      process.env.NODE_ENV.trim().toLowerCase() == "production"
+        ? "production"
+        : "development";
   }
   start() {
     this.set();
@@ -102,13 +102,13 @@ class AppServer extends http.Server {
   }
 
   set() {
-    this.app.engine('ejs', require('ejs').renderFile);
-    this.app.set('views', __dirname + '/views');
-    this.app.set('view engine', 'ejs');
+    this.app.engine("ejs", require("ejs").renderFile);
+    this.app.set("views", __dirname + "/views");
+    this.app.set("view engine", "ejs");
   }
 
   middleWare() {
-    this.app.enable('trust proxy');
+    this.app.enable("trust proxy");
 
     this.app.use(helmet());
 
@@ -117,33 +117,33 @@ class AppServer extends http.Server {
     this.app.use(function (req, res, next) {
       var origin = req.headers.origin;
       if (allowedOrigins.indexOf(origin) > -1) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader("Access-Control-Allow-Origin", origin);
       }
       // res.header('Access-Control-Allow-Origin', '*');
-      res.header('Access-Control-Allow-Methods', '*');
-      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-      res.header('Access-Control-Allow-Credentials', true);
+      res.header("Access-Control-Allow-Methods", "*");
+      res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+      res.header("Access-Control-Allow-Credentials", true);
       return next();
     });
     this.app.use(
       express.json({
-        limit: '100mb',
+        limit: "100mb",
       })
     );
     this.app.use(
       express.urlencoded({
-        limit: '100mb',
+        limit: "100mb",
         extended: true,
       })
     );
     // this.app.use(bodyParser())
     this.app.use(cookieParser());
-    this.app.use('/public', express.static(__dirname + '/public'));
+    this.app.use("/public", express.static(__dirname + "/public"));
     this.app.use(session(sess));
     this.app.use(json2xls.middleware);
 
     this.app.use(async (req, res, next) => {
-      var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
       // console.log("IP::" + ip)
       next();
 
@@ -170,54 +170,55 @@ class AppServer extends http.Server {
   }
 
   router() {
-    this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-    this.app.use('/', ordercheckRouter);
-    this.app.use('/api', apiRouter);
-    this.app.use('/api/consulting', consultingRouter);
-    this.app.use('/api/form/link', formLinkRouter);
-    this.app.use('/api/config', configRouter);
-    this.app.use('/api/total', totalRouter);
-    this.app.use('/api/alarm', alarmRouter);
-    this.app.use('/api/info', infoRouter);
-    this.app.use('/api/home', homeRouter);
-    this.app.use('/api/store', storeRouter);
-    this.app.use('/api/schedule/pay', schedulePayRouter);
-    this.app.use('/s3', s3ControllRouter);
-    this.app.use('/api/invite', inviteRouter);
-    this.app.use('/api/card', cardRouter);
-    this.app.use('/api/file/store', fileRouter);
-    this.app.use('/api/socket', socketRouter);
+    this.app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    this.app.use("/", ordercheckRouter);
+    this.app.use("/api", apiRouter);
+    this.app.use("/api/consulting", consultingRouter);
+    this.app.use("/api/form/link", formLinkRouter);
+    this.app.use("/api/config", configRouter);
+    this.app.use("/api/total", totalRouter);
+    this.app.use("/api/alarm", alarmRouter);
+    this.app.use("/api/info", infoRouter);
+    this.app.use("/api/home", homeRouter);
+    this.app.use("/api/store", storeRouter);
+    this.app.use("/api/schedule/pay", schedulePayRouter);
+    this.app.use("/s3", s3ControllRouter);
+    this.app.use("/api/invite", inviteRouter);
+    this.app.use("/api/card", cardRouter);
+    this.app.use("/api/file/store", fileRouter);
+    this.app.use("/api/socket", socketRouter);
     // 에러처리
     this.app.use((err, req, res, next) => {
+      console.log(err);
       return res.send({ success: 500, message: err.message });
     });
   }
   dbConnection() {
-    console.log('Eviroment ::: ' + process.env.NODE_ENV);
+    console.log("Eviroment ::: " + process.env.NODE_ENV);
     db.sequelize
       .authenticate()
       .then(() => {
         console.log(
-          'development: Connection has been established successfully.'
+          "development: Connection has been established successfully."
         );
         return db.sequelize.sync({
           force: false,
         });
       })
       .then(() => {
-        console.log('DB Sync complete.');
+        console.log("DB Sync complete.");
       })
       .catch((err) => {
-        console.error('Unable to connect to the database:', err);
+        console.error("Unable to connect to the database:", err);
       });
   }
 
   schedule() {
     // sessionCheck.run()
 
-    require('./lib/schedule');
+    require("./lib/schedule");
     console.log(process.env.NODE_ENV);
-    if (process.env.NODE_ENV == 'development') {
+    if (process.env.NODE_ENV == "development") {
       // pushNotify.run(3)
       // emailSend.run(3)
       // kakaoPush.run(5)

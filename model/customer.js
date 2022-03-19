@@ -65,11 +65,5 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
-
-    tempType: {
-      allowNull: true,
-      defaultValue: null,
-      type: DataTypes.INTEGER,
-    },
   });
 };

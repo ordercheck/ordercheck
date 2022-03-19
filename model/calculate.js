@@ -9,7 +9,7 @@ module.exports = function (sequelize, DataTypes) {
 
     calculateNumber: {
       allowNull: true,
-      defaultValue: '0차 견적서',
+      defaultValue: '1차 견적서',
       type: DataTypes.STRING(100),
     },
 

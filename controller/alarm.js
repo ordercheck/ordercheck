@@ -1,29 +1,17 @@
-const db = require('../model/db');
-const moment = require('moment');
-require('moment-timezone');
-moment.tz.setDefault('Asia/Seoul');
-const { Alarm } = require('../lib/class');
-const { createAlarm } = require('../lib/apiFunctions');
-const { alarmAttributes } = require('../lib/attributes');
+const db = require("../model/db");
+const moment = require("moment");
+require("moment-timezone");
+moment.tz.setDefault("Asia/Seoul");
+const { Alarm } = require("../lib/classes/AlarmClass");
 
 module.exports = {
   delAlarm: async (req, res, next) => {
     const {
       body: { alarmId },
-      user_idx,
     } = req;
     try {
-      alarmId.forEach(async (idx) => {
-        await db.alarm.destroy({ where: { idx } });
-      });
-
-      await db.alarm.findAll({
-        where: { user_idx, repeat_time: null },
-        attributes: alarmAttributes,
-        order: [['createdAt', 'DESC']],
-        raw: true,
-      });
-
+      const alarm = new Alarm({});
+      alarm.delAlarms(alarmId);
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
@@ -36,19 +24,8 @@ module.exports = {
       user_idx,
     } = req;
     try {
-      for (let i = 0; i < alarmId.length; i++) {
-        await db.alarm.update(
-          { confirm: true },
-          { where: { idx: alarmId[i] } }
-        );
-      }
-      await db.alarm.findAll({
-        where: { user_idx, repeat_time: null },
-        attributes: alarmAttributes,
-        order: [['createdAt', 'DESC']],
-        raw: true,
-      });
-
+      const alarm = new Alarm({});
+      alarm.confirmAlarms(alarmId);
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
@@ -61,17 +38,10 @@ module.exports = {
       company_idx,
     } = req;
     try {
-      const findAlarmResult = await db.alarm.findByPk(alarmId, {
-        attributes: alarmAttributes,
-        raw: true,
-      });
+      const alarm = new Alarm({});
+      const findAlarmResult = await alarm.findAlarmsByPk(alarmId);
 
-      await db.alarm.update(
-        { confirm: true },
-        {
-          where: { idx: alarmId },
-        }
-      );
+      await alarm.updateAlarms({ confirm: true }, { idx: alarmId });
 
       delete findAlarmResult.createdAt;
 
@@ -80,19 +50,22 @@ module.exports = {
       findAlarmResult.user_idx = user_idx;
       findAlarmResult.company_idx = company_idx;
 
-      const createResult = await createAlarm(findAlarmResult);
+      const createResult = await alarm.createAlarm(findAlarmResult);
 
       res.send({ success: 200 });
 
       const reAlertMs = afterTime * 60000;
 
       setTimeout(async () => {
-        const io = req.app.get('io');
-        const alarm = new Alarm(createResult);
-        io.to(parseInt(user_idx)).emit('addAlarm', alarm);
-        await db.alarm.update(
+        const io = req.app.get("io");
+        const sendAlarm = new Alarm(createResult);
+        io.to(parseInt(user_idx)).emit(
+          "addAlarm",
+          sendAlarm.alarmData.dataValues
+        );
+        await alarm.updateAlarms(
           { repeat_time: null },
-          { where: { idx: createResult.idx } }
+          { idx: createResult.idx }
         );
       }, reAlertMs);
     } catch (err) {
