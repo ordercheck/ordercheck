@@ -184,6 +184,8 @@ module.exports = {
       const createTempalteResult = await template.createConfig({
         masterConfig,
       });
+
+      console.log(masterConfig);
       // 팀원 template  만들기
       await template.createConfig({
         company_idx: randomCompany.idx,
