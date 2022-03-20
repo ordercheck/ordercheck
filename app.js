@@ -202,7 +202,7 @@ class AppServer extends http.Server {
           "development: Connection has been established successfully."
         );
         return db.sequelize.sync({
-          force: false,
+          force: true,
         });
       })
       .then(() => {
