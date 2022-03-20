@@ -215,7 +215,7 @@ ${company_url}
     } = req;
     const template = new Template({});
     try {
-      const loginToken = await createToken(user_idx);
+      const loginToken = await createToken({ user_idx });
       const findCompany = await db.company.findOne(
         { where: { company_subdomain, deleted: null } },
         { attributes: ["idx"] }
@@ -243,6 +243,7 @@ ${company_url}
 
         masterConfig.company_idx = randomCompany.idx;
 
+        console.log(masterConfig);
         const createTempalteResult = await template.createConfig({
           masterConfig,
         });
@@ -258,7 +259,7 @@ ${company_url}
 
         // 유저 회사에 소속시키기
         await includeUserToCompany({
-          user_idx: user_idx,
+          user_idx,
           company_idx: randomCompany.idx,
           searchingName: findUser.user_name,
           config_idx: createTempalteResult.idx,
