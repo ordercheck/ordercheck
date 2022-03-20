@@ -182,8 +182,7 @@ module.exports = {
       // master template 만들기
       masterConfig.company_idx = randomCompany.idx;
       const createTempalteResult = await template.createConfig(masterConfig);
-      console.log("호출");
-      console.log(createTempalteResult);
+
       // 팀원 template  만들기
       await template.createConfig({
         company_idx: randomCompany.idx,

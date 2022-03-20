@@ -243,10 +243,7 @@ ${company_url}
 
         masterConfig.company_idx = randomCompany.idx;
 
-        console.log(masterConfig);
-        const createTempalteResult = await template.createConfig({
-          masterConfig,
-        });
+        const createTempalteResult = await template.createConfig(masterConfig);
 
         // 팀원 template  만들기
         await template.createConfig({
