@@ -134,7 +134,6 @@ module.exports = {
       const findResult = await company.findMembers(
         {
           company_idx,
-          deleted: null,
           active: true,
           standBy: false,
         },
