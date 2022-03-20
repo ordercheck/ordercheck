@@ -49,7 +49,7 @@ module.exports = {
           LEFT JOIN user ON company.huidx = user.idx
           LEFT JOIN card ON card.user_idx = user.idx AND main=true
           LEFT JOIN sms ON sms.user_idx = user.idx
-          WHERE userCompany.user_idx = ${req.user_idx} AND userCompany.active = true AND userCompany.deleted is null AND standBy = false`
+          WHERE userCompany.user_idx = ${req.user_idx} AND userCompany.active = true AND standBy = false`
         )
         .spread((r) => {
           return makeSpreadArray(r);
