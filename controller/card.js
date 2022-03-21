@@ -1,8 +1,7 @@
 const db = require("../model/db");
-const { payNow, refund, addCard } = require("../lib/payFunction");
+
 const { verify_data } = require("../lib/jwtfunctions");
-const axios = require("axios");
-const _f = require("../lib/functions");
+
 module.exports = {
   enrollmentCard: async (req, res, next) => {
     const {
@@ -16,7 +15,6 @@ module.exports = {
     const countCard = await db.card.count({
       where: { card_number: card_data.card_number, user_idx },
     });
-
     if (countCard !== 0) {
       return res.send({ success: 400, message: "이미 등록된 카드 입니다." });
     }
@@ -27,10 +25,13 @@ module.exports = {
     const checkMainCard = await db.card.findOne({
       where: { user_idx, main: true },
     });
+    // 카드가 메인이 있는지 없는지 체크
     if (!checkMainCard) {
       card_data.main = true;
+    } else {
+      card_data.main = false;
     }
-    card_data.main = false;
+
     // 법인카드 유무 확인 후 체크
     card_data.birth
       ? (card_data.corporation_yn = false)

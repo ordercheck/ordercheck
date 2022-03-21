@@ -581,7 +581,7 @@ module.exports = {
         attributes: ["main"],
       });
       if (findCardResult.main == true) {
-        next({ message: "기본 결제 카드로 지정된 카드 입니다." });
+        return res.send({ message: "기본 결제 카드로 지정된 카드 입니다." });
       }
 
       // db 카드 삭제
@@ -608,11 +608,7 @@ module.exports = {
         { attributes: ["idx", "customer_uid"] }
       );
 
-      const findPlanResult = await db.plan.findOne({
-        where: { company_idx, active: 3 },
-      });
-
-      // main으로 설정된 카드가 없을 때
+      // 이미 main으로 설정된 카드가 있을 때
       if (findMainCardResult) {
         await db.card.update(
           { main: false },
@@ -624,7 +620,9 @@ module.exports = {
       await db.card.update({ main: true }, { where: { idx: cardId } });
 
       // 기존의 아임포트 결제 예약 취소
-
+      const findPlanResult = await db.plan.findOne({
+        where: { company_idx, active: 3 },
+      });
       await cancelSchedule(
         findMainCardResult.customer_uid,
         findPlanResult.merchant_uid
