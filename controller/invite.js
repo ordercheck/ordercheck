@@ -1,7 +1,6 @@
 const {
   includeUserToCompany,
   createRandomCompany,
-
   createFreePlan,
   findMembers,
   decreasePriceAndHistory,
@@ -127,7 +126,7 @@ ${company_url}
       },
       ["createdAt", "DESC"]
     );
-    console.log("standbyUser", standbyUser);
+
     return res.send({ success: 200, standbyUser });
   },
   joinStandbyUser: async (req, res, next) => {

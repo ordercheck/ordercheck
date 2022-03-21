@@ -287,8 +287,7 @@ module.exports = {
       const conceptUrlString = files.hope_concept
         ? selectUrl(files.hope_concept)
         : null;
-      // const imgUrlString = selectUrl(files.floor_plan);
-      // const conceptUrlString = selectUrl(files.hope_concept);
+
       console.log("imgUrl", imgUrlString);
       console.log("concept", conceptUrlString);
       const formBodyData = files.hope_concept

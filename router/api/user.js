@@ -298,33 +298,32 @@ router.post("/join/do", async (req, res, next) => {
         user_idx: createUserResult.idx,
       });
 
+      // 랜덤 회사 만들기
+      const randomCompany = await createRandomCompany(createUserResult.idx);
+
+      // master template 만들기
+      masterConfig.company_idx = randomCompany.idx;
+      const createTempalteResult = await template.createConfig(masterConfig);
+
+      // 팀원 template  만들기
+
+      await template.createConfig({
+        company_idx: randomCompany.idx,
+      });
+
+      // 유저 회사에 소속시키기
+      await includeUserToCompany({
+        user_idx: createUserResult.idx,
+        company_idx: randomCompany.idx,
+        searchingName: user_data.user_name,
+        config_idx: createTempalteResult.idx,
+      });
+
+      // 무료 플랜 만들기
+      await createFreePlan(randomCompany.idx);
+
+      await createSmsUserConfig();
       if (!company_subdomain) {
-        // 랜덤 회사 만들기
-        const randomCompany = await createRandomCompany(createUserResult.idx);
-
-        // master template 만들기
-        masterConfig.company_idx = randomCompany.idx;
-        const createTempalteResult = await template.createConfig(masterConfig);
-
-        // 팀원 template  만들기
-
-        await template.createConfig({
-          company_idx: randomCompany.idx,
-        });
-
-        // 유저 회사에 소속시키기
-        await includeUserToCompany({
-          user_idx: createUserResult.idx,
-          company_idx: randomCompany.idx,
-          searchingName: user_data.user_name,
-          config_idx: createTempalteResult.idx,
-        });
-
-        // 무료 플랜 만들기
-        await createFreePlan(randomCompany.idx);
-
-        await createSmsUserConfig();
-
         return res.send({ success: 200 });
       }
 
