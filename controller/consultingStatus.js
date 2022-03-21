@@ -163,7 +163,7 @@ module.exports = {
             ],
             attributes: ["user_idx"],
           });
-          console.log("hi");
+
           getMembers.forEach(async (data) => {
             // if (text_cost < 10) {
             //   return;
@@ -281,12 +281,20 @@ module.exports = {
         createConsultingAndIncrement(bodyClass.bodyData);
         return;
       }
-      const imgUrlString = selectUrl(files.floor_plan);
-      const conceptUrlString = selectUrl(files.hope_concept);
-      const formBodyData = bodyClass.createNewUrl(
-        imgUrlString,
-        conceptUrlString
-      );
+      const imgUrlString = files.floor_plan
+        ? selectUrl(files.floor_plan)
+        : null;
+      const conceptUrlString = files.hope_concept
+        ? selectUrl(files.hope_concept)
+        : null;
+      // const imgUrlString = selectUrl(files.floor_plan);
+      // const conceptUrlString = selectUrl(files.hope_concept);
+      console.log("imgUrl", imgUrlString);
+      console.log("concept", conceptUrlString);
+      const formBodyData = files.hope_concept
+        ? bodyClass.createNewUrl(imgUrlString, conceptUrlString)
+        : bodyClass.bodyData;
+      console.log("formBodyData", formBodyData);
       await createConsultingAndIncrement(formBodyData);
       return;
     } catch (err) {
