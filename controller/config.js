@@ -27,6 +27,7 @@ const {
   getReceiptListAttributes,
   showFormListAttributes,
 } = require("../lib/attributes");
+const { default: axios } = require("axios");
 
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
@@ -378,7 +379,7 @@ module.exports = {
     }
   },
   changeSms: async (req, res, next) => {
-    const { user_idx } = req;
+    const { user_idx, token } = req;
     try {
       await db.sms.update(req.body, {
         where: {
@@ -390,6 +391,18 @@ module.exports = {
         where: { user_idx },
         attributes: ["text_cost", "repay", "auto_price", "auto_min"],
       });
+      // 현재 문자 요금과 비교하여 문자 결제 진행
+      if (findResult.text_cost < findResult.auto_min) {
+        await axios({
+          url: "/api/config/company/sms/pay",
+          method: "post", // POST method
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token} `,
+          }, // "Content-Type": "application/json"
+          data: { text_cost: findResult.auto_price },
+        });
+      }
 
       findResult.dataValues.text_cost = findResult.text_cost.toLocaleString();
       findResult.dataValues.auto_price = findResult.auto_price.toLocaleString();

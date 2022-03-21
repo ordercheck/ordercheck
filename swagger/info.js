@@ -409,13 +409,13 @@
  *               repay:
  *                 type: boolean
  *               auto_min:
- *                 type: string
+ *                 type: integer
  *               auto_price:
- *                 type: string
+ *                 type: integer
  *             example:
  *               repay: true
- *               auto_min: "3,000"
- *               auto_price: "7,000"
+ *               auto_min: 3000
+ *               auto_price: 7000
  *      responses:
  *       '200':
  *         description: 성공
