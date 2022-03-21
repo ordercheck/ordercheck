@@ -1,16 +1,17 @@
-'use strict';
-require('dotenv').config();
-const io = require('./setting');
-const db = require('./model/db');
-const moment = require('moment');
-require('moment-timezone');
-moment.tz.setDefault('Asia/Seoul');
-const { alarmAttributes } = require('./lib/attributes');
-const { verify_data } = require('./lib/jwtfunctions');
+"use strict";
+require("dotenv").config();
+const io = require("./setting");
+const db = require("./model/db");
+const moment = require("moment");
+require("moment-timezone");
+moment.tz.setDefault("Asia/Seoul");
+const { alarmAttributes } = require("./lib/attributes");
+const { verify_data } = require("./lib/jwtfunctions");
 
-io.on('connection', (socket) => {
+io.on("connection", (socket) => {
+  console.log("socket connect");
   // 회사 알람 시스템에 Join
-  socket.on('alarmJoin', async (data) => {
+  socket.on("alarmJoin", async (data) => {
     // 토큰으로 user idx 찾기
     const user = await verify_data(data);
 
@@ -18,7 +19,7 @@ io.on('connection', (socket) => {
     socket.join(user.user_idx);
   });
   // 회사 알람 보여주기
-  socket.on('alarm', async (data) => {
+  socket.on("alarm", async (data) => {
     // 토큰으로 user idx 찾기
     const user = await verify_data(data);
 
@@ -26,7 +27,7 @@ io.on('connection', (socket) => {
     const findAllAlarms = await db.alarm.findAll({
       where: { user_idx: user.user_idx },
       attributes: alarmAttributes,
-      order: [['createdAt', 'DESC']],
+      order: [["createdAt", "DESC"]],
       raw: true,
     });
 
@@ -47,6 +48,6 @@ io.on('connection', (socket) => {
       }
     }
 
-    io.to(user.user_idx).emit('sendAlarm', scheduleAlarm);
+    io.to(user.user_idx).emit("sendAlarm", scheduleAlarm);
   });
 });

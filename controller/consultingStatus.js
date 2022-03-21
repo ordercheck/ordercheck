@@ -284,12 +284,14 @@ module.exports = {
       const imgUrlString = files.floor_plan
         ? selectUrl(files.floor_plan)
         : null;
+
       const conceptUrlString = files.hope_concept
         ? selectUrl(files.hope_concept)
         : null;
 
       console.log("imgUrl", imgUrlString);
       console.log("concept", conceptUrlString);
+
       const formBodyData = files.hope_concept
         ? bodyClass.createNewUrl(imgUrlString, conceptUrlString)
         : bodyClass.bodyData;
