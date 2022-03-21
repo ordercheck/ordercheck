@@ -481,7 +481,7 @@ module.exports = {
         receiptId,
         status: false,
         company_name: findCompany.company_name,
-        before_text_price: findSmsResult.text_cost,
+        message_price: findSmsResult.text_cost,
         receipt_kind: "자동 문자 충전",
         card_number: findCardResult.card_number,
       });
@@ -512,7 +512,7 @@ module.exports = {
       card_name: findCardResult.card_name,
       card_code: findCardResult.card_code,
       result_price_levy: text_cost,
-      before_text_price: findSmsResult.text_cost,
+      message_price: findSmsResult.text_cost,
       receiptId,
       company_name: findCompany.company_name,
       receipt_kind: "자동 문자 충전",
