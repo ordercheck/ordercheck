@@ -392,8 +392,9 @@ module.exports = {
       });
 
       // 현재 문자 요금과 비교하여 문자 결제 진행
+      let isPayment = false;
       if (findResult.text_cost < findResult.auto_min) {
-        const result = await axios({
+        await axios({
           url: "/api/config/company/sms/pay",
           method: "post", // POST method
           headers: {
@@ -402,13 +403,14 @@ module.exports = {
           }, // "Content-Type": "application/json"
           data: { text_cost: findResult.auto_price },
         });
+        isPayment = true;
       }
 
       findResult.dataValues.text_cost = findResult.text_cost.toLocaleString();
       findResult.dataValues.auto_price = findResult.auto_price.toLocaleString();
       findResult.dataValues.auto_min = findResult.auto_min.toLocaleString();
 
-      return res.send({ success: 200, findResult });
+      return res.send({ success: 200, findResult, isPayment });
     } catch (err) {
       next(err);
     }
