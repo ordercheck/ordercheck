@@ -204,7 +204,7 @@ router.post("/login", async (req, res, next) => {
 
   return res.send({
     success: 200,
-    token,
+    loginToken,
     status,
   });
 });
