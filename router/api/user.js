@@ -156,8 +156,8 @@ router.post("/login", async (req, res, next) => {
     return res.send({ success: 400, message: "비밀번호 혹은 전화번호 오류" });
   }
   if (!company_subdomain) {
-    const loginToken = await createToken({ user_idx: check.idx });
-    return res.send({ success: 200, loginToken });
+    const token = await createToken({ user_idx: check.idx });
+    return res.send({ success: 200, token });
   }
 
   const findCompany = await db.company.findOne({
