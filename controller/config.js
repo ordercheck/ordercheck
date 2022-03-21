@@ -7,7 +7,7 @@ const { Op } = require("sequelize");
 const { Company } = require("../lib/classes/CompanyClass");
 const { Template } = require("../lib/classes/TemplateClass");
 const { createConfig } = require("../lib/standardTemplate");
-
+const axios = require("axios");
 const {
   payNow,
   delCardPort,
@@ -27,7 +27,6 @@ const {
   getReceiptListAttributes,
   showFormListAttributes,
 } = require("../lib/attributes");
-const { default: axios } = require("axios");
 
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
