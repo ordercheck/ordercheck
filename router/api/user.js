@@ -616,7 +616,10 @@ router.post("/company/check/later", async (req, res, next) => {
   if (addPlanResult.success) {
     try {
       await t.commit();
-      return res.send({ success: 200, message: "회사 등록 완료" });
+
+      const token = await createToken({ user_idx: addPlanResult.login_data });
+
+      return res.send({ success: 200, token });
     } catch (err) {
       // create과정에서 오류가 뜨면 롤백
       await t.rollback();
