@@ -393,7 +393,7 @@ module.exports = {
 
       // 현재 문자 요금과 비교하여 문자 결제 진행
       let isPayment = false;
-      let message_price;
+
       if (findResult.text_cost < findResult.auto_min) {
         const payResult = await axios({
           url: "/api/config/company/sms/pay",
@@ -404,9 +404,7 @@ module.exports = {
           }, // "Content-Type": "application/json"
           data: { text_cost: findResult.auto_price },
         });
-        if (payResult.success == 200) {
-          message_price = findResult.auto_price;
-        }
+
         isPayment = true;
       }
 
@@ -414,7 +412,7 @@ module.exports = {
       findResult.dataValues.auto_price = findResult.auto_price.toLocaleString();
       findResult.dataValues.auto_min = findResult.auto_min.toLocaleString();
 
-      return res.send({ success: 200, findResult, isPayment, message_price });
+      return res.send({ success: 200, findResult, isPayment });
     } catch (err) {
       next(err);
     }
@@ -481,7 +479,7 @@ module.exports = {
         receiptId,
         status: false,
         company_name: findCompany.company_name,
-        message_price: findSmsResult.text_cost,
+        message_price: text_cost,
         receipt_kind: "자동 문자 충전",
         card_number: findCardResult.card_number,
       });
@@ -503,7 +501,7 @@ module.exports = {
       }
     );
 
-    res.send({ success: 200, message: "충전 완료", message_price: plusCost });
+    res.send({ success: 200, message: "충전 완료" });
 
     const receiptId = generateRandomCode(6);
 
@@ -512,7 +510,7 @@ module.exports = {
       card_name: findCardResult.card_name,
       card_code: findCardResult.card_code,
       result_price_levy: text_cost,
-      message_price: findSmsResult.text_cost,
+      message_price: text_cost,
       receiptId,
       company_name: findCompany.company_name,
       receipt_kind: "자동 문자 충전",
