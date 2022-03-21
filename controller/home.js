@@ -15,7 +15,7 @@ module.exports = {
       });
 
       const issueCustomerCount = await db.customer.count({
-        where: { company_idx, deleted: null, status: 4 },
+        where: { company_idx, deleted: null, status: 3 },
       });
 
       const companyInfo = await db.company.findByPk(company_idx, {
