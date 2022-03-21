@@ -438,7 +438,6 @@ module.exports = {
     const findCompany = await db.company.findByPk(company_idx, {
       attributes: ["company_name"],
     });
-    console.log(findCardResult);
 
     const merchant_uid = _f.random5();
 
