@@ -1,7 +1,7 @@
 const db = require("../model/db");
 const { makeSpreadArray } = require("../lib/functions");
 const _f = require("../lib/functions");
-const { findMembers, findMember, checkTitle } = require("../lib/apiFunctions");
+const { findMember } = require("../lib/apiFunctions");
 const { generateRandomCode } = require("../lib/functions");
 const { Op } = require("sequelize");
 const { Company } = require("../lib/classes/CompanyClass");
