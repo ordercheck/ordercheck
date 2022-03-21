@@ -422,11 +422,23 @@ module.exports = {
 
     const findCardResult = await db.card.findOne({
       where: { user_idx, main: true },
-      attributes: ["idx", "customer_uid", "card_number"],
+      attributes: [
+        "idx",
+        "customer_uid",
+        "card_number",
+        "card_name",
+        "card_code",
+      ],
     });
+
     if (!findCardResult) {
       return res.send({ success: 400, message: "등록된 카드가 없습니다." });
     }
+    // 영수증 등록 로직
+    const findCompany = await db.company.findByPk(company_idx, {
+      attributes: ["company_name"],
+    });
+    console.log(findCardResult);
 
     const merchant_uid = _f.random5();
 
@@ -452,12 +464,14 @@ module.exports = {
       const receiptId = generateRandomCode(6);
 
       await db.receipt.create({
+        card_name: findCardResult.card_name,
+        card_code: findCardResult.card_code,
         result_price_levy: text_cost,
         receiptId,
         status: false,
         company_name: findCompany.company_name,
         receipt_kind: "자동 문자 충전",
-        card_number: findCompany.card_number,
+        card_number: findCardResult.card_number,
       });
       return;
     }
@@ -483,19 +497,17 @@ module.exports = {
     );
 
     res.send({ success: 200, message: "충전 완료" });
-    // 영수증 등록 로직
-    const findCompany = await db.company.findByPk(company_idx, {
-      attributes: ["company_name"],
-    });
 
     const receiptId = generateRandomCode(6);
 
     await db.receipt.create({
+      card_name: findCardResult.card_name,
+      card_code: findCardResult.card_code,
       result_price_levy: text_cost,
       receiptId,
       company_name: findCompany.company_name,
       receipt_kind: "자동 문자 충전",
-      card_number: findCompany.card_number,
+      card_number: findCardResult.card_number,
     });
   },
   showSmsHistory: async (req, res, next) => {
