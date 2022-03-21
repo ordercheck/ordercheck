@@ -46,6 +46,7 @@ module.exports = {
         include: [
           {
             model: db.userCompany,
+            as: "user",
             attributes: ["idx", ["searchingName", "user_name"]],
           },
         ],
