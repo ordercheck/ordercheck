@@ -156,8 +156,8 @@ router.post("/login", async (req, res, next) => {
     return res.send({ success: 400, message: "비밀번호 혹은 전화번호 오류" });
   }
   if (!company_subdomain) {
-    const token = await createToken({ user_idx: check.idx });
-    return res.send({ success: 200, token });
+    const loginToken = await createToken({ user_idx: check.idx });
+    return res.send({ success: 200, loginToken });
   }
 
   const findCompany = await db.company.findOne({
@@ -179,7 +179,7 @@ router.post("/login", async (req, res, next) => {
     },
     attributes: ["active", "standBy"],
   });
-  const token = await createToken({ user_idx: check.idx });
+  const loginToken = await createToken({ user_idx: check.idx });
   if (!checkCompanyStandBy) {
     await includeUserToCompany({
       user_idx: check.idx,
@@ -189,7 +189,7 @@ router.post("/login", async (req, res, next) => {
       searchingName: check.user_name,
       config_idx: findConfigResult.idx,
     });
-    return res.send({ success: 200, token });
+    return res.send({ success: 200, loginToken });
   }
   let status;
   if (checkCompanyStandBy.active && checkCompanyStandBy.standBy) {
@@ -435,14 +435,14 @@ router.post("/password/reset", async (req, res) => {
 router.post("/create/token", async (req, res) => {
   const { user_phone, user_email, user_password, user_name } = req.body;
   try {
-    let token = await createToken({
+    let loginToken = await createToken({
       user_phone,
       user_email,
       user_password,
       user_name,
     });
 
-    return res.send({ success: 200, token });
+    return res.send({ success: 200, loginToken });
   } catch (err) {
     const Err = err.message;
     return res.send({ success: 500, Err });
@@ -617,9 +617,11 @@ router.post("/company/check/later", async (req, res, next) => {
     try {
       await t.commit();
 
-      const token = await createToken({ user_idx: addPlanResult.login_data });
+      const loginToken = await createToken({
+        user_idx: addPlanResult.login_data,
+      });
 
-      return res.send({ success: 200, token });
+      return res.send({ success: 200, loginToken });
     } catch (err) {
       // create과정에서 오류가 뜨면 롤백
       await t.rollback();
@@ -637,9 +639,9 @@ router.post("/token/login", async (req, res, next) => {
       where: { user_phone: user_data.user_phone },
       attributes: ["idx"],
     });
-    const token = await createToken({ user_idx: findUser.idx });
+    const loginToken = await createToken({ user_idx: findUser.idx });
 
-    return res.send({ success: 200, token });
+    return res.send({ success: 200, loginToken });
   } catch (err) {
     next(err);
   }
