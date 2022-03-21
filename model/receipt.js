@@ -65,7 +65,11 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: 0,
       type: DataTypes.INTEGER,
     },
-
+    before_text_price: {
+      allowNull: true,
+      defaultValue: 0,
+      type: DataTypes.INTEGER,
+    },
     chat_price: {
       allowNull: true,
       defaultValue: 0,

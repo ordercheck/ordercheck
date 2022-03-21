@@ -378,9 +378,9 @@ module.exports = {
     }
   },
   changeSms: async (req, res, next) => {
-    const { user_idx, token } = req;
+    const { user_idx, token, body } = req;
     try {
-      await db.sms.update(req.body, {
+      await db.sms.update(body, {
         where: {
           user_idx,
         },
@@ -433,6 +433,11 @@ module.exports = {
       ],
     });
 
+    const findSmsResult = await db.sms.findOne({
+      where: { user_idx },
+      attributes: ["text_cost"],
+    });
+
     if (!findCardResult) {
       return res.send({ success: 400, message: "등록된 카드가 없습니다." });
     }
@@ -472,16 +477,12 @@ module.exports = {
         receiptId,
         status: false,
         company_name: findCompany.company_name,
+        before_text_price: findSmsResult.text_cost,
         receipt_kind: "자동 문자 충전",
         card_number: findCardResult.card_number,
       });
       return;
     }
-
-    const findSmsResult = await db.sms.findOne({
-      where: { user_idx },
-      attributes: ["text_cost"],
-    });
 
     const beforeCost = findSmsResult.text_cost;
     const plusCost = text_cost;
@@ -507,6 +508,7 @@ module.exports = {
       card_name: findCardResult.card_name,
       card_code: findCardResult.card_code,
       result_price_levy: text_cost,
+      before_text_price: findSmsResult.text_cost,
       receiptId,
       company_name: findCompany.company_name,
       receipt_kind: "자동 문자 충전",
@@ -710,7 +712,7 @@ module.exports = {
       if (category == 2) {
         findResult = await findReceiptList({
           company_idx,
-          receipt_kind: "자동문자",
+          receipt_kind: "자동 문자 충전",
         });
       }
 
@@ -730,9 +732,14 @@ module.exports = {
         attributes: { exclude: ["idx", "updatedAt"] },
         raw: true,
       });
+      // 플랜 영수증일 때
+      if (!findResult.plan) {
+        findResult.tax_price =
+          findResult.result_price_levy - findResult.result_price;
+      } else {
+        findResult.tax_price = findResult.result_price_levy * 0.1;
+      }
 
-      findResult.tax_price =
-        findResult.result_price_levy - findResult.result_price;
       findResult.createdAt = findResult.createdAt
         .split(" ")[0]
         .replace(/-/g, ".");
