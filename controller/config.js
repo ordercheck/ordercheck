@@ -612,10 +612,13 @@ module.exports = {
         where: { company_idx, active: 3 },
       });
 
-      await db.card.update(
-        { main: false },
-        { where: { idx: findMainCardResult.idx } }
-      );
+      // main으로 설정된 카드가 없을 때
+      if (!findMainCardResult) {
+        await db.card.update(
+          { main: false },
+          { where: { idx: findMainCardResult.idx } }
+        );
+      }
 
       //타겟 카드를 true로 변경
       await db.card.update({ main: true }, { where: { idx: cardId } });
