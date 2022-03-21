@@ -439,7 +439,7 @@ module.exports = {
     );
 
     if (!payResult.success) {
-      await db.sms.update(
+      await db.card.update(
         {
           active: false,
         },
