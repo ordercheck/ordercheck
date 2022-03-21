@@ -514,10 +514,12 @@ module.exports = {
       });
 
       let cardEmail;
+      let mainCardId;
       for (let i = 0; i < findCardInfo.length; i++) {
         // 메인 카드 이메일 찾기
         if (findCardInfo[i].main == true) {
           cardEmail = findCardInfo[i].card_email;
+          mainCardId = findCardInfo[i].cardId;
         }
         const second = findCardInfo[i].card_number.substring(4, 8);
         const third = findCardInfo[i].card_number.substring(8, 12);
@@ -531,13 +533,13 @@ module.exports = {
         attributes: ["start_plan"],
       });
 
-      let expirePlan = null;
+      let expirePlan;
       if (findPlan) {
         expirePlan = findPlan.start_plan.replace(/\./g, "-");
         expirePlan = moment(expirePlan).format("YYYY.MM.DD");
       }
 
-      const findResult = { findCardInfo, expirePlan, cardEmail };
+      const findResult = { findCardInfo, expirePlan, cardEmail, mainCardId };
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
