@@ -21,8 +21,15 @@ module.exports = {
       return res.send({ success: 400, message: "이미 등록된 카드 입니다." });
     }
 
-    // console.log(card_data);
     card_data.user_idx = user_idx;
+
+    // 메인으로 등록되어있는 카드가 있는지 체크
+    const checkMainCard = await db.card.findOne({
+      where: { user_idx, main: true },
+    });
+    if (!checkMainCard) {
+      card_data.main = true;
+    }
     card_data.main = false;
     // 법인카드 유무 확인 후 체크
     card_data.birth
