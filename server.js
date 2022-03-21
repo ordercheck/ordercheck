@@ -9,7 +9,6 @@ const { alarmAttributes } = require("./lib/attributes");
 const { verify_data } = require("./lib/jwtfunctions");
 
 io.on("connection", (socket) => {
-  console.log("socket connect");
   // 회사 알람 시스템에 Join
   socket.on("alarmJoin", async (data) => {
     // 토큰으로 user idx 찾기

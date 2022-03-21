@@ -322,7 +322,6 @@ router.post("/join/do", async (req, res, next) => {
       // 무료 플랜 만들기
       await createFreePlan(randomCompany.idx);
 
-      await createSmsUserConfig();
       if (!company_subdomain) {
         return res.send({ success: 200 });
       }

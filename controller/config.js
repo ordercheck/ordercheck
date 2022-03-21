@@ -391,9 +391,10 @@ module.exports = {
         where: { user_idx },
         attributes: ["text_cost", "repay", "auto_price", "auto_min"],
       });
+
       // 현재 문자 요금과 비교하여 문자 결제 진행
       if (findResult.text_cost < findResult.auto_min) {
-        await axios({
+        const result = await axios({
           url: "/api/config/company/sms/pay",
           method: "post", // POST method
           headers: {
