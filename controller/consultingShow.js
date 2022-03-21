@@ -34,7 +34,7 @@ module.exports = {
         include: [
           {
             model: db.userCompany,
-            as: "users",
+            as: "user",
             attributes: ["idx", ["searchingName", "user_name"]],
           },
         ],
@@ -83,7 +83,7 @@ module.exports = {
         getCustomerDataResult = await getCustomerData(
           "customer_name",
           Name == 0 ? "ASC" : "DESC",
-          Name == 0 ? totalData - limit * page + limit : customerNumber,
+          Name == 0 ? totalData - limit * intPage + intlimit : customerNumber,
           Name == 0 ? "minus" : "plus"
         );
         if (getCustomerDataResult.customerData == 0) {
@@ -95,7 +95,9 @@ module.exports = {
         getCustomerDataResult = await getCustomerData(
           "searchingAddress",
           Address == 0 ? "ASC" : "DESC",
-          Address == 0 ? totalData - limit * page + limit : customerNumber,
+          Address == 0
+            ? totalData - limit * intPage + intlimit
+            : customerNumber,
           Address == 0 ? "minus" : "plus"
         );
         if (getCustomerDataResult.customerData == 0) {
@@ -107,7 +109,7 @@ module.exports = {
         getCustomerDataResult = await getCustomerData(
           "updatedAt",
           Date == 0 ? "ASC" : "DESC",
-          Date == 0 ? totalData - limit * page + limit : customerNumber,
+          Date == 0 ? totalData - limit * intPage + intlimit : customerNumber,
           Date == 0 ? "minus" : "plus"
         );
         if (getCustomerDataResult.customerData == 0) {
