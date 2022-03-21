@@ -613,7 +613,7 @@ module.exports = {
       });
 
       // main으로 설정된 카드가 없을 때
-      if (!findMainCardResult) {
+      if (findMainCardResult) {
         await db.card.update(
           { main: false },
           { where: { idx: findMainCardResult.idx } }
