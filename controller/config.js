@@ -465,6 +465,7 @@ module.exports = {
       const receiptId = generateRandomCode(6);
 
       await db.receipt.create({
+        company_idx,
         card_name: findCardResult.card_name,
         card_code: findCardResult.card_code,
         result_price_levy: text_cost,
@@ -502,6 +503,7 @@ module.exports = {
     const receiptId = generateRandomCode(6);
 
     await db.receipt.create({
+      company_idx,
       card_name: findCardResult.card_name,
       card_code: findCardResult.card_code,
       result_price_levy: text_cost,
