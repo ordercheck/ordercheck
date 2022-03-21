@@ -435,14 +435,14 @@ router.post("/password/reset", async (req, res) => {
 router.post("/create/token", async (req, res) => {
   const { user_phone, user_email, user_password, user_name } = req.body;
   try {
-    let loginToken = await createToken({
+    let token = await createToken({
       user_phone,
       user_email,
       user_password,
       user_name,
     });
 
-    return res.send({ success: 200, loginToken });
+    return res.send({ success: 200, token });
   } catch (err) {
     const Err = err.message;
     return res.send({ success: 500, Err });
