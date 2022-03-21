@@ -33,8 +33,8 @@ module.exports = {
         where: { company_idx, deleted: null },
         include: [
           {
-            model: db.user,
-            attributes: ["idx", "user_name"],
+            model: db.userCompany,
+            attributes: ["idx", ["searchingName", "user_name"]],
           },
         ],
         attributes: customerAttributes,
