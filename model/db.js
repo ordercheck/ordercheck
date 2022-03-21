@@ -319,14 +319,11 @@ db.userCompany.hasMany(db.customer, {
   sourceKey: "user_idx",
   foreignKey: "contact_person",
 });
-db.customer.belongsTo(
-  db.userCompany,
-
-  {
-    targetKey: "user_idx",
-    foreignKey: "contact_person",
-  }
-);
+db.customer.belongsTo(db.userCompany, {
+  targetKey: "user_idx",
+  foreignKey: "contact_person",
+  as: "user",
+});
 // config와 company
 db.company.hasMany(db.config, {
   foreignKey: "company_idx",

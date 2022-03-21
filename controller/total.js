@@ -45,8 +45,9 @@ module.exports = {
         },
         include: [
           {
-            model: db.user,
-            attributes: ["idx", "user_name"],
+            model: db.userCompany,
+            as: "user",
+            attributes: ["idx", ["searchingName", "user_name"]],
           },
         ],
         order: [["createdAt", "DESC"]],
