@@ -156,6 +156,19 @@ module.exports = {
         });
       }
 
+      // 기존에 사용하던 무료플랜 있는지 체크
+      const checkCompany = await db.company.findOne({
+        where: {
+          huidx: user_idx,
+        },
+        include: [
+          {
+            model: db.plan,
+            where: { plan: "FREE" },
+          },
+        ],
+      });
+
       await db.userCompany.update(
         { active: true },
         {

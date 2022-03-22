@@ -694,7 +694,7 @@ router.post("/company/check/later", async (req, res, next) => {
   if (addPlanResult.success) {
     try {
       const loginToken = await createToken({
-        user_idx: addPlanResult.login_data,
+        user_idx: findUser.idx,
       });
 
       return res.send({ success: 200, loginToken });
