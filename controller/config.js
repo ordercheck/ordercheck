@@ -740,7 +740,6 @@ module.exports = {
         raw: true,
       });
 
-      console.log(findResult);
       // 플랜 영수증일 때
       findResult.tax_price =
         findResult.result_price_levy - findResult.result_price;
