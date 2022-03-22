@@ -38,6 +38,7 @@ module.exports = {
         .query(
           `SELECT plan, company_name, company_logo, company_subdomain, address, 
           detail_address, company.business_number, business_enrollment, business_enrollment_title, user_name,
+          card.message_active AS messageActive,
           card.active AS cardActive,
           text_cost,
           whiteLabelChecked,  
@@ -461,6 +462,7 @@ module.exports = {
       await db.card.update(
         {
           active: false,
+          message_active: false,
         },
         {
           where: {
