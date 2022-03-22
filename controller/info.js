@@ -325,7 +325,7 @@ module.exports = {
         ],
         raw: true,
         nest: true,
-        attributes: ["idx"],
+        attributes: ["idx", "company_name"],
       });
 
       await db.userCompany.create({
@@ -335,7 +335,11 @@ module.exports = {
         user_idx,
         config_idx: findCompanyResult.configs.idx,
       });
-      return res.send({ success: 200, company_subdomain });
+      return res.send({
+        success: 200,
+        company_subdomain,
+        company_name: findCompanyResult.company_name,
+      });
     } catch (err) {
       next(err);
     }
