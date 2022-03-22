@@ -177,6 +177,7 @@ module.exports = {
     } = req;
     const company = new Company({});
     try {
+      console.log(memberId);
       await company.delCompanyMember(memberId);
       return res.send({ success: 200 });
     } catch (err) {
@@ -480,7 +481,7 @@ module.exports = {
         result_price_levy: text_cost,
         receiptId,
         status: false,
-        result_price: result_price_levy * 0.9,
+        result_price: text_cost * 0.9,
         company_name: findCompany.company_name,
         message_price: text_cost,
         receipt_kind: "자동 문자 충전",
@@ -514,7 +515,7 @@ module.exports = {
       card_code: findCardResult.card_code,
       result_price_levy: text_cost,
       message_price: text_cost,
-      result_price: result_price_levy * 0.9,
+      result_price: text_cost * 0.9,
       receiptId,
       company_name: findCompany.company_name,
       receipt_kind: "자동 문자 충전",
