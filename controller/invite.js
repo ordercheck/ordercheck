@@ -7,7 +7,7 @@ const {
 } = require("../lib/apiFunctions");
 const { masterConfig } = require("../lib/standardTemplate");
 const sendMail = require("../mail/sendInvite");
-
+const { Company } = require("../lib/classes/CompanyClass");
 const axios = require("axios");
 const db = require("../model/db");
 const { createToken } = require("../lib/jwtfunctions");
@@ -117,8 +117,8 @@ ${company_url}
 
   showStandbyUser: async (req, res, next) => {
     const { company_idx } = req;
-
-    const standbyUser = await findMembers(
+    const company = new Company({});
+    const standbyUser = await company.findMembers(
       {
         company_idx,
         active: true,
