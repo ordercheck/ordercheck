@@ -7,7 +7,7 @@ const { Op } = require("sequelize");
 const { Company } = require("../lib/classes/CompanyClass");
 const { Template } = require("../lib/classes/TemplateClass");
 const { createConfig } = require("../lib/standardTemplate");
-
+const axios = require("axios");
 const {
   payNow,
   delCardPort,
@@ -27,7 +27,6 @@ const {
   getReceiptListAttributes,
   showFormListAttributes,
 } = require("../lib/attributes");
-const { default: axios } = require("axios");
 
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
@@ -39,6 +38,7 @@ module.exports = {
         .query(
           `SELECT plan, company_name, company_logo, company_subdomain, address, 
           detail_address, company.business_number, business_enrollment, business_enrollment_title, user_name,
+          card.message_active AS messageActive,
           card.active AS cardActive,
           text_cost,
           whiteLabelChecked,  
@@ -177,6 +177,7 @@ module.exports = {
     } = req;
     const company = new Company({});
     try {
+      console.log(memberId);
       await company.delCompanyMember(memberId);
       return res.send({ success: 200 });
     } catch (err) {
@@ -379,9 +380,9 @@ module.exports = {
     }
   },
   changeSms: async (req, res, next) => {
-    const { user_idx, token } = req;
+    const { user_idx, token, body } = req;
     try {
-      await db.sms.update(req.body, {
+      await db.sms.update(body, {
         where: {
           user_idx,
         },
@@ -391,9 +392,12 @@ module.exports = {
         where: { user_idx },
         attributes: ["text_cost", "repay", "auto_price", "auto_min"],
       });
+
       // 현재 문자 요금과 비교하여 문자 결제 진행
+      let isPayment = false;
+
       if (findResult.text_cost < findResult.auto_min) {
-        await axios({
+        const payResult = await axios({
           url: "/api/config/company/sms/pay",
           method: "post", // POST method
           headers: {
@@ -402,13 +406,15 @@ module.exports = {
           }, // "Content-Type": "application/json"
           data: { text_cost: findResult.auto_price },
         });
+
+        isPayment = true;
       }
 
       findResult.dataValues.text_cost = findResult.text_cost.toLocaleString();
       findResult.dataValues.auto_price = findResult.auto_price.toLocaleString();
       findResult.dataValues.auto_min = findResult.auto_min.toLocaleString();
 
-      return res.send({ success: 200, findResult });
+      return res.send({ success: 200, findResult, isPayment });
     } catch (err) {
       next(err);
     }
@@ -422,11 +428,27 @@ module.exports = {
 
     const findCardResult = await db.card.findOne({
       where: { user_idx, main: true },
-      attributes: ["idx", "customer_uid", "card_number"],
+      attributes: [
+        "idx",
+        "customer_uid",
+        "card_number",
+        "card_name",
+        "card_code",
+      ],
     });
+
+    const findSmsResult = await db.sms.findOne({
+      where: { user_idx },
+      attributes: ["text_cost"],
+    });
+
     if (!findCardResult) {
       return res.send({ success: 400, message: "등록된 카드가 없습니다." });
     }
+    // 영수증 등록 로직
+    const findCompany = await db.company.findByPk(company_idx, {
+      attributes: ["company_name"],
+    });
 
     const merchant_uid = _f.random5();
 
@@ -438,9 +460,10 @@ module.exports = {
     );
 
     if (!payResult.success) {
-      await db.sms.update(
+      await db.card.update(
         {
           active: false,
+          message_active: false,
         },
         {
           where: {
@@ -452,20 +475,20 @@ module.exports = {
       const receiptId = generateRandomCode(6);
 
       await db.receipt.create({
+        company_idx,
+        card_name: findCardResult.card_name,
+        card_code: findCardResult.card_code,
         result_price_levy: text_cost,
         receiptId,
         status: false,
+        result_price: text_cost * 0.9,
         company_name: findCompany.company_name,
+        message_price: text_cost,
         receipt_kind: "자동 문자 충전",
-        card_number: findCompany.card_number,
+        card_number: findCardResult.card_number,
       });
       return;
     }
-
-    const findSmsResult = await db.sms.findOne({
-      where: { user_idx },
-      attributes: ["text_cost"],
-    });
 
     const beforeCost = findSmsResult.text_cost;
     const plusCost = text_cost;
@@ -483,19 +506,20 @@ module.exports = {
     );
 
     res.send({ success: 200, message: "충전 완료" });
-    // 영수증 등록 로직
-    const findCompany = await db.company.findByPk(company_idx, {
-      attributes: ["company_name"],
-    });
 
     const receiptId = generateRandomCode(6);
 
     await db.receipt.create({
+      company_idx,
+      card_name: findCardResult.card_name,
+      card_code: findCardResult.card_code,
       result_price_levy: text_cost,
+      message_price: text_cost,
+      result_price: text_cost * 0.9,
       receiptId,
       company_name: findCompany.company_name,
       receipt_kind: "자동 문자 충전",
-      card_number: findCompany.card_number,
+      card_number: findCardResult.card_number,
     });
   },
   showSmsHistory: async (req, res, next) => {
@@ -695,7 +719,7 @@ module.exports = {
       if (category == 2) {
         findResult = await findReceiptList({
           company_idx,
-          receipt_kind: "자동문자",
+          receipt_kind: "자동 문자 충전",
         });
       }
 
@@ -716,8 +740,10 @@ module.exports = {
         raw: true,
       });
 
+      // 플랜 영수증일 때
       findResult.tax_price =
         findResult.result_price_levy - findResult.result_price;
+
       findResult.createdAt = findResult.createdAt
         .split(" ")[0]
         .replace(/-/g, ".");

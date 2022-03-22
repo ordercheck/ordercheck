@@ -66,6 +66,11 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
     },
 
+    message_price: {
+      allowNull: true,
+      defaultValue: 0,
+      type: DataTypes.INTEGER,
+    },
     chat_price: {
       allowNull: true,
       defaultValue: 0,

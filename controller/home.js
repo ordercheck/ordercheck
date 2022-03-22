@@ -19,7 +19,12 @@ module.exports = {
       });
 
       const companyInfo = await db.company.findByPk(company_idx, {
-        attributes: ["company_logo", "company_name", "companyexist"],
+        attributes: [
+          "company_logo",
+          "company_name",
+          "companyexist",
+          "company_subdomain",
+        ],
       });
 
       const firstDate = moment().format("YYYY-MM-01");
