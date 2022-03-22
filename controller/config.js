@@ -200,13 +200,17 @@ module.exports = {
       });
 
       const createConfigClass = new Template(createConfig);
-      const createdResult = createConfigClass.createPrivateConfig(
+
+      const createdResult = await createConfigClass.createPrivateConfig(
         checkTitleResult.title,
         findUser.user_name,
         company_idx
       );
 
-      return res.send({ success: 200, templateId: createdResult.idx });
+      return res.send({
+        success: 200,
+        templateId: createdResult.idx,
+      });
     } catch (err) {
       next(err);
     }
