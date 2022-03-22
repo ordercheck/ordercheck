@@ -200,13 +200,17 @@ module.exports = {
       });
 
       const createConfigClass = new Template(createConfig);
-      const createdResult = createConfigClass.createPrivateConfig(
+
+      const createdResult = await createConfigClass.createPrivateConfig(
         checkTitleResult.title,
         findUser.user_name,
         company_idx
       );
 
-      return res.send({ success: 200, templateId: createdResult.idx });
+      return res.send({
+        success: 200,
+        templateId: createdResult.idx,
+      });
     } catch (err) {
       next(err);
     }
@@ -481,6 +485,7 @@ module.exports = {
         result_price_levy: text_cost,
         receiptId,
         status: false,
+        receipt_category: 2,
         result_price: text_cost * 0.9,
         company_name: findCompany.company_name,
         message_price: text_cost,
@@ -515,6 +520,7 @@ module.exports = {
       card_code: findCardResult.card_code,
       result_price_levy: text_cost,
       message_price: text_cost,
+      receipt_category: 2,
       result_price: text_cost * 0.9,
       receiptId,
       company_name: findCompany.company_name,
@@ -708,18 +714,10 @@ module.exports = {
       }
       if (category == 0) {
         findResult = await findReceiptList({ company_idx });
-      }
-
-      if (category == 1) {
+      } else {
         findResult = await findReceiptList({
           company_idx,
-          receipt_kind: "구독",
-        });
-      }
-      if (category == 2) {
-        findResult = await findReceiptList({
-          company_idx,
-          receipt_kind: "자동 문자 충전",
+          receipt_category: category,
         });
       }
 
