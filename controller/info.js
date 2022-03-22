@@ -146,8 +146,9 @@ module.exports = {
       user_idx,
       company_idx,
     } = req;
-    const template = new Template({});
+
     try {
+      // 비밀번호가 일치하지 않을 경우
       const checkResult = await checkUserPassword(user_idx, user_password);
       if (!checkResult) {
         return res.send({

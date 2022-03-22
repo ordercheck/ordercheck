@@ -223,7 +223,8 @@ module.exports = {
         {
           company_idx,
         },
-        showTemplateListAttributes
+        showTemplateListAttributes,
+        [["createdAt", "DESC"]]
       );
 
       let No = 1;

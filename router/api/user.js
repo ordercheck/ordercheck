@@ -369,68 +369,73 @@ router.post("/company/check", async (req, res, next) => {
   let user_data = await verify_data(ut);
   let plan_data = await verify_data(pt);
   let card_data = await verify_data(ct);
-
-  let check_domain = await db.company
-    .findAll({ where: { company_subdomain, deleted: null } })
-    .then((r) => {
-      return makeArray(r);
+  try {
+    // 도메인 체크
+    let check_domain = await db.company
+      .findAll({ where: { company_subdomain, deleted: null } })
+      .then((r) => {
+        return makeArray(r);
+      });
+    if (check_domain.length > 0) {
+      return res.send({ success: 400, type: "domain" });
+    }
+    // user idx 찾기
+    const findUser = await db.user.findOne({
+      where: { user_phone: user_data.user_phone },
+      attributes: ["idx", "user_name"],
     });
-  if (check_domain.length > 0) {
-    return res.send({ success: 400, type: "domain" });
+
+    // 기존 무료 플랜 비활성
+    await db.userCompany.update(
+      { active: false },
+      { where: { user_idx: findUser.idx } }
+    );
+
+    const template = new Template({});
+
+    // 회사 생성
+
+    const company_data = await db.company.create({
+      company_name,
+      company_subdomain,
+      companyexist: true,
+      huidx: findUser.idx,
+    });
+
+    // master template 만들기
+    masterConfig.company_idx = company_data.idx;
+
+    const createTempalteResult = await template.createConfig(masterConfig);
+
+    // 팀원 template  만들기
+    await template.createConfig({
+      company_idx: company_data.idx,
+    });
+
+    // 유저 회사에 소속시키기
+    await includeUserToCompany({
+      user_idx: findUser.idx,
+      company_idx: company_data.idx,
+      searchingName: findUser.user_name,
+      config_idx: createTempalteResult.idx,
+    });
+
+    const addPlanResult = await addPlanAndSchedule(
+      user_data,
+      plan_data,
+      card_data,
+      findUser,
+      company_data
+    );
+
+    if (addPlanResult.success) {
+      return res.send({ success: 200, message: "회사 등록 완료" });
+    }
+
+    next(addPlanResult.err);
+  } catch (err) {
+    next(err);
   }
-  // user idx 찾기
-  const findUser = await db.user.findOne({
-    where: { user_phone: user_data.user_phone },
-    attributes: ["idx", "user_name"],
-  });
-
-  await db.userCompany.update(
-    { active: false },
-    { where: { user_idx: findUser.idx } }
-  );
-
-  const template = new Template({});
-
-  // 회사 먼저 생성
-
-  const company_data = await db.company.create({
-    company_name,
-    company_subdomain,
-    companyexist: true,
-    huidx: findUser.idx,
-  });
-
-  // master template 만들기
-  masterConfig.company_idx = company_data.idx;
-
-  const createTempalteResult = await template.createConfig(masterConfig);
-
-  // 팀원 template  만들기
-  await template.createConfig({
-    company_idx: company_data.idx,
-  });
-
-  // 유저 회사에 소속시키기
-  await includeUserToCompany({
-    user_idx: findUser.idx,
-    company_idx: company_data.idx,
-    searchingName: findUser.user_name,
-    config_idx: createTempalteResult.idx,
-  });
-
-  const addPlanResult = await addPlanAndSchedule(
-    user_data,
-    plan_data,
-    card_data,
-    findUser,
-    company_data
-  );
-
-  if (addPlanResult.success) {
-    return res.send({ success: 200, message: "회사 등록 완료" });
-  }
-
-  next(addPlanResult.err);
 });
 // 핸드폰 등록 여부 확인 라우터
 router.post("/phone/check", async (req, res) => {
@@ -650,62 +655,60 @@ router.post("/company/check/later", async (req, res, next) => {
   let card_data = await verify_data(ct);
 
   const template = new Template({});
-  // user idx 찾기
-  const findUser = await db.user.findOne({
-    where: { user_phone: user_data.user_phone },
-    attributes: ["idx", "user_name"],
-  });
 
-  // 기존 무료 플랜 비활성화
-  await db.userCompany.update(
-    { active: false },
-    { where: { user_idx: findUser.idx } }
-  );
+  try {
+    // user idx 찾기
+    const findUser = await db.user.findOne({
+      where: { user_phone: user_data.user_phone },
+      attributes: ["idx", "user_name"],
+    });
 
-  // 랜덤 회사 만들기
-  const randomCompany = await createRandomCompany(findUser.idx);
+    // 기존 무료 플랜 비활성화
+    await db.userCompany.update(
+      { active: false },
+      { where: { user_idx: findUser.idx } }
+    );
 
-  // master template 만들기
-  masterConfig.company_idx = randomCompany.idx;
-  const createTempalteResult = await template.createConfig(masterConfig);
+    // 랜덤 회사 만들기
+    const randomCompany = await createRandomCompany(findUser.idx);
 
-  // 팀원 template  만들기
+    // master template 만들기
+    masterConfig.company_idx = randomCompany.idx;
+    const createTempalteResult = await template.createConfig(masterConfig);
 
-  await template.createConfig({
-    company_idx: randomCompany.idx,
-  });
+    // 팀원 template  만들기
 
-  // 유저 회사에 소속시키기
-  await includeUserToCompany({
-    user_idx: findUser.idx,
-    company_idx: randomCompany.idx,
-    searchingName: findUser.user_name,
-    config_idx: createTempalteResult.idx,
-  });
+    await template.createConfig({
+      company_idx: randomCompany.idx,
+    });
 
-  const addPlanResult = await addPlanAndSchedule(
-    user_data,
-    plan_data,
-    card_data,
-    findUser,
-    randomCompany
-  );
+    // 유저 회사에 소속시키기
+    await includeUserToCompany({
+      user_idx: findUser.idx,
+      company_idx: randomCompany.idx,
+      searchingName: findUser.user_name,
+      config_idx: createTempalteResult.idx,
+    });
 
-  if (addPlanResult.success) {
-    try {
+    const addPlanResult = await addPlanAndSchedule(
+      user_data,
+      plan_data,
+      card_data,
+      findUser,
+      randomCompany
+    );
+
+    if (addPlanResult.success) {
       const loginToken = await createToken({
         user_idx: findUser.idx,
       });
-
       return res.send({ success: 200, loginToken });
-    } catch (err) {
-      // create과정에서 오류가 뜨면 롤백
-      await t.rollback();
-      next(err);
     }
+
+    next(addPlanResult.err);
+  } catch (err) {
+    next(err);
   }
-  await t.rollback();
-  next(addPlanResult.err);
 });
 router.post("/token/login", async (req, res, next) => {
   const { ut } = req.body;
