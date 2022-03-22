@@ -739,8 +739,9 @@ module.exports = {
         attributes: { exclude: ["idx", "updatedAt"] },
         raw: true,
       });
-      // 플랜 영수증일 때
 
+      console.log(findResult);
+      // 플랜 영수증일 때
       findResult.tax_price =
         findResult.result_price_levy - findResult.result_price;
 
