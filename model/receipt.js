@@ -81,5 +81,10 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: 0,
       type: DataTypes.INTEGER,
     },
+    receipt_category: {
+      allowNull: true,
+      defaultValue: 0,
+      type: DataTypes.INTEGER,
+    },
   });
 };
