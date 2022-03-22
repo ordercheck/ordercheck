@@ -65,7 +65,7 @@
  *       - bearerAuth: []
  *      tags:
  *       - profile
- *      summary: 회사 프로필 이미지 등록하기 (formData)
+ *      summary: 유저 프로필 이미지 등록하기 (formData)
  *      requestBody:
  *       content:
  *         application/json:

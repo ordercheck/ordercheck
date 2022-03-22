@@ -6,6 +6,7 @@ const {
   createFreePlan,
 } = require("../lib/apiFunctions");
 const { masterConfig } = require("../lib/standardTemplate");
+const { showUserAlarmConfigAttributes } = require("../lib/attributes");
 const { Template } = require("../lib/classes/TemplateClass");
 const { cancelSchedule } = require("../lib/payFunction");
 const bcrypt = require("bcrypt");
@@ -29,12 +30,6 @@ const checkUserPassword = async (userIdx, userPassword) => {
     return false;
   }
   return true;
-};
-
-const updateUser = async (updateData, whereData) => {
-  await db.user.update(updateData, {
-    where: whereData,
-  });
 };
 
 module.exports = {
@@ -256,7 +251,7 @@ module.exports = {
 
   addUserProfile: async (req, res, next) => {
     const { file, user_idx } = req;
-
+    console.log("fielfile", file);
     const originalUrl = file.location;
 
     const thumbNail = originalUrl.replace(/\/original\//, "/thumb/");
@@ -297,8 +292,13 @@ module.exports = {
           }
         );
       }
-
-      await updateUser(body, { idx: user_idx });
+      // 비밀번호는 변경 하면 안됨
+      if (body.user_password) {
+        return res.send({ success: 400, message: "rejected" });
+      }
+      await db.user.update(body, {
+        where: { idx: user_idx },
+      });
 
       return res.send({ success: 200 });
     } catch (err) {
@@ -318,14 +318,19 @@ module.exports = {
     return res.send({ success: 200, findResult });
   },
   changeUserAlarmConfig: async (req, res, next) => {
-    const { body } = req;
-    const result = Object.keys(body);
-    result.forEach((data) => {
-      if (!body[data]) {
-        delete body[data];
-      }
-    });
+    const { body, user_idx } = req;
+    try {
+      const result = Object.keys(body);
+      result.forEach((data) => {
+        if (!body[data]) {
+          delete body[data];
+        }
+      });
 
-    await updateUser(body, { user_idx });
+      await db.userConfig.update(body, { where: { user_idx } });
+      return res.send({ success: 200 });
+    } catch (err) {
+      next(err);
+    }
   },
 };
