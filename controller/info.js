@@ -156,57 +156,16 @@ module.exports = {
         });
       }
 
-      // 기존에 사용하던 무료플랜 있는지 체크
-      const checkCompany = await db.company.findOne({
-        where: {
-          huidx: user_idx,
-        },
-        include: [
-          {
-            model: db.plan,
-            where: { plan: "FREE" },
+      await db.userCompany.update(
+        { active: true },
+        {
+          where: {
+            company_idx: checkCompany.idx,
+            user_idx,
           },
-        ],
-      });
+        }
+      );
 
-      // 기존의 회사가 없을 때
-      if (!checkCompany) {
-        // 랜덤 회사 만들기
-        const randomCompany = await createRandomCompany(user_idx);
-
-        // master template 만들기
-        masterConfig.company_idx = randomCompany.idx;
-        const createTempalteResult = await template.createConfig(masterConfig);
-
-        // 팀원 template  만들기
-        await template.createConfig({
-          company_idx: randomCompany.idx,
-        });
-
-        const findUser = await db.user.findByPk(user_idx, {
-          attributes: ["user_name"],
-        });
-
-        // 유저 회사에 소속시키기
-        await includeUserToCompany({
-          user_idx: user_idx,
-          company_idx: randomCompany.idx,
-          searchingName: findUser.user_name,
-          config_idx: createTempalteResult.idx,
-        });
-        // 무료 플랜 만들기
-        await createFreePlan(randomCompany.idx);
-      } else {
-        await db.userCompany.update(
-          { active: true },
-          {
-            where: {
-              company_idx: checkCompany.idx,
-              user_idx,
-            },
-          }
-        );
-      }
       const checkHuidx = await db.company.findByPk(company_idx, {
         attributes: ["huidx"],
       });
