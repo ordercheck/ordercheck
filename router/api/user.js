@@ -113,6 +113,7 @@ const addPlanAndSchedule = async (ut, pt, ct, t) => {
       where: { company_idx: findCompanyData.company_idx },
       transaction: t,
     });
+
     return { success: true, login_data: findUser.idx };
   } catch (err) {
     return { success: false, err };
@@ -383,7 +384,7 @@ router.post("/company/check", async (req, res, next) => {
   const t = await db.sequelize.transaction();
 
   let check_domain = await db.company
-    .findAll({ where: { company_subdomain } })
+    .findAll({ where: { company_subdomain, deleted: null } })
     .then((r) => {
       return makeArray(r);
     });
