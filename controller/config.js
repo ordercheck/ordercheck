@@ -480,6 +480,7 @@ module.exports = {
         result_price_levy: text_cost,
         receiptId,
         status: false,
+        result_price: result_price_levy * 0.9,
         company_name: findCompany.company_name,
         message_price: text_cost,
         receipt_kind: "자동 문자 충전",
@@ -513,6 +514,7 @@ module.exports = {
       card_code: findCardResult.card_code,
       result_price_levy: text_cost,
       message_price: text_cost,
+      result_price: result_price_levy * 0.9,
       receiptId,
       company_name: findCompany.company_name,
       receipt_kind: "자동 문자 충전",
@@ -737,12 +739,9 @@ module.exports = {
         raw: true,
       });
       // 플랜 영수증일 때
-      if (!findResult.plan) {
-        findResult.tax_price =
-          findResult.result_price_levy - findResult.result_price;
-      } else {
-        findResult.tax_price = findResult.result_price_levy * 0.1;
-      }
+
+      findResult.tax_price =
+        findResult.result_price_levy - findResult.result_price;
 
       findResult.createdAt = findResult.createdAt
         .split(" ")[0]
