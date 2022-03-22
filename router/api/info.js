@@ -11,6 +11,7 @@ const {
   changeUserProfile,
   showUserAlarmConfig,
   changeUserAlarmConfig,
+  joinCompany,
 } = require("../../controller/info");
 
 const loginCheck = require("../../middleware/auth");
@@ -28,7 +29,7 @@ router.post(
 router.delete("/user/profile", loginCheck, delUserProfile);
 router.get("/user/alarm/config", loginCheck, showUserAlarmConfig);
 router.patch("/user/alarm/config", loginCheck, changeUserAlarmConfig);
-
+router.get("/user/join/company/:company_subdomain", loginCheck, joinCompany);
 router.post("/company/exit", loginCheck, exitCompany);
 
 module.exports = router;

@@ -161,4 +161,21 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/info/user/join/company/{company_subdomain}:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  profile
+ *      summary: 회사 가입 신청하기
+ *      parameters:
+ *         - in: path
+ *           name: company_subdomain
+ *           schema:
+ *             type: string
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

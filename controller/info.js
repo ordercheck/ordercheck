@@ -307,4 +307,37 @@ module.exports = {
       next(err);
     }
   },
+  joinCompany: async (req, res, next) => {
+    const {
+      params: { company_subdomain },
+      user_idx,
+    } = req;
+    try {
+      // 회사 정보 먼저 찾기
+      const findCompanyResult = await db.company.findOne({
+        where: { company_subdomain, deleted: null },
+        include: [
+          {
+            model: db.config,
+            where: { template_name: "팀원" },
+            attributes: ["idx"],
+          },
+        ],
+        raw: true,
+        nest: true,
+        attributes: ["idx"],
+      });
+
+      await db.userCompany.create({
+        active: true,
+        standBy: true,
+        company_idx: findCompanyResult.idx,
+        user_idx,
+        config_idx: findCompanyResult.configs.idx,
+      });
+      return res.send({ success: 200 });
+    } catch (err) {
+      nest(err);
+    }
+  },
 };
