@@ -150,7 +150,7 @@ module.exports = {
 
     const checkResult = await checkUserPassword(user_idx, user_password);
     if (!checkResult) {
-      res.send({
+      return res.send({
         success: 400,
         message: "비밀번호가 일치하지 않습니다.",
       });
@@ -251,9 +251,7 @@ module.exports = {
 
   addUserProfile: async (req, res, next) => {
     const { file, user_idx } = req;
-    console.log("fielfile", file);
     const originalUrl = file.location;
-
     const thumbNail = originalUrl.replace(/\/original\//, "/thumb/");
 
     await db.user.update(

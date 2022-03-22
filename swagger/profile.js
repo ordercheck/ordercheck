@@ -87,7 +87,7 @@
  *       - bearerAuth: []
  *      tags:
  *       - profile
- *      summary: 회사 프로필 이미지 삭제하기
+ *      summary: 유저 프로필 이미지 삭제하기
  *      responses:
  *       '200':
  *         description: 성공
@@ -108,13 +108,10 @@
  *             properties:
  *               user_name:
  *                 type: string
- *               user_password:
- *                 type: string
  *               user_email:
  *                 type: string
  *             example:
  *               user_name: "이름"
- *               user_password: "비밀번호"
  *               user_email: "이메일"
  *      responses:
  *       '200':
