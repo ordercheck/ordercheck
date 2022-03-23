@@ -157,7 +157,7 @@ module.exports = {
         });
       }
 
-      // 기존에 사용하던 무료플랜 있는지 체크
+      // 기존에 사용하던 무료플랜 체크
       const checkCompany = await db.company.findOne({
         where: {
           huidx: user_idx,
@@ -208,6 +208,19 @@ module.exports = {
           where: { company_idx, active: 3 },
           attributes: ["merchant_uid"],
         });
+
+        // 등록한 메인 카드가 없거나 결제 예정 플랜이 없을 때
+
+        if (!findMainCard.customer_uid || !findPlan.merchant_uid) {
+          await db.userCompany.destroy({
+            where: {
+              company_idx,
+              user_idx,
+            },
+          });
+          return res.send({ success: 200 });
+        }
+        // 결제 예정 취소
 
         await cancelSchedule(findMainCard.customer_uid, findPlan.merchant_uid);
       } else {
