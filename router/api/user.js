@@ -111,7 +111,7 @@ const addPlanAndSchedule = async (
 router.post("/login", async (req, res, next) => {
   const { user_phone, user_password, company_subdomain } = req.body;
   const template = new Template({});
-
+  console.log(company_subdomain);
   let check = await db.user.findOne({ where: { user_phone, deleted: null } });
   if (!check) {
     return res.send({ success: 400, message: "비밀번호 혹은 전화번호 오류" });
@@ -144,6 +144,7 @@ router.post("/login", async (req, res, next) => {
     return res.send({ success: 400, message: "비밀번호 혹은 전화번호 오류" });
   }
   if (!company_subdomain) {
+    console.log("이거 타면 안됨");
     const companyInfo = await db.userCompany.findOne({
       where: {
         user_idx: check.idx,
@@ -181,7 +182,7 @@ router.post("/login", async (req, res, next) => {
     ["idx"]
   );
 
-  const checkCompanyStandBy = await db.userCompany.findOne({
+  let checkCompanyStandBy = await db.userCompany.findOne({
     where: {
       user_idx: check.idx,
       company_idx: findCompany.idx,
@@ -190,7 +191,7 @@ router.post("/login", async (req, res, next) => {
   });
   const loginToken = await createToken({ user_idx: check.idx });
   if (!checkCompanyStandBy) {
-    await includeUserToCompany({
+    checkCompanyStandBy = await includeUserToCompany({
       user_idx: check.idx,
       company_idx: findCompany.idx,
       standBy: true,
@@ -198,7 +199,6 @@ router.post("/login", async (req, res, next) => {
       searchingName: check.user_name,
       config_idx: findConfigResult.idx,
     });
-    return res.send({ success: 200, loginToken, company_subdomain });
   }
   let status;
   if (checkCompanyStandBy.active && checkCompanyStandBy.standBy) {
