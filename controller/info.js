@@ -146,7 +146,7 @@ module.exports = {
       user_idx,
       company_idx,
     } = req;
-
+    console.log(company_idx);
     try {
       // 비밀번호가 일치하지 않을 경우
       const checkResult = await checkUserPassword(user_idx, user_password);
@@ -185,6 +185,7 @@ module.exports = {
       });
       // 소유주 체크
       if (user_idx == checkHuidx.huidx) {
+        console.log("소유주");
         // 소유주가 탈퇴한 회사 delete처리
         const deletedTime = moment();
 
@@ -209,21 +210,11 @@ module.exports = {
           attributes: ["merchant_uid"],
         });
 
-        // 등록한 메인 카드가 없거나 결제 예정 플랜이 없을 때
-
-        if (!findMainCard.customer_uid || !findPlan.merchant_uid) {
-          await db.userCompany.destroy({
-            where: {
-              company_idx,
-              user_idx,
-            },
-          });
-          return res.send({ success: 200 });
-        }
         // 결제 예정 취소
 
         await cancelSchedule(findMainCard.customer_uid, findPlan.merchant_uid);
       } else {
+        console.log("팀원");
         await db.userCompany.destroy({
           where: {
             company_idx,
