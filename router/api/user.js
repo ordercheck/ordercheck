@@ -199,7 +199,6 @@ router.post("/login", async (req, res, next) => {
       searchingName: check.user_name,
       config_idx: findConfigResult.idx,
     });
-    return res.send({ success: 200, loginToken, company_subdomain });
   }
   let status;
   if (checkCompanyStandBy.active && checkCompanyStandBy.standBy) {
