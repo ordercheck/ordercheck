@@ -182,7 +182,7 @@ router.post("/login", async (req, res, next) => {
     ["idx"]
   );
 
-  const checkCompanyStandBy = await db.userCompany.findOne({
+  let checkCompanyStandBy = await db.userCompany.findOne({
     where: {
       user_idx: check.idx,
       company_idx: findCompany.idx,
@@ -191,7 +191,7 @@ router.post("/login", async (req, res, next) => {
   });
   const loginToken = await createToken({ user_idx: check.idx });
   if (!checkCompanyStandBy) {
-    await includeUserToCompany({
+    checkCompanyStandBy = await includeUserToCompany({
       user_idx: check.idx,
       company_idx: findCompany.idx,
       standBy: true,
