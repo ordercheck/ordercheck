@@ -23,6 +23,7 @@ module.exports = {
       // userId가 빈 배열일 때
       return res.send({
         success: 200,
+        totalUser: 0,
         findResult: confirm ? [] : 0,
       });
     }
