@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes) {
   //테이블을 정의
-  return sequelize.define('formLink', {
+  return sequelize.define("formLink", {
     idx: {
       autoIncrement: true,
       primaryKey: true,
@@ -9,7 +9,7 @@ module.exports = function (sequelize, DataTypes) {
     thumbNail: {
       allowNull: true,
       defaultValue:
-        'https://ordercheck.s3.ap-northeast-2.amazonaws.com/original/ordercheckForm.png',
+        "https://ordercheck.s3.ap-northeast-2.amazonaws.com/thumb/default-thumbnail.svg",
       type: DataTypes.TEXT(),
     },
     thumbNail_title: {

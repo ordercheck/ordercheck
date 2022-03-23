@@ -14,6 +14,15 @@ module.exports = {
       company_idx,
     } = req;
 
+    const checkAllCustomers = await db.customer.count({
+      where: { company_idx, deleted: null },
+    });
+    let existCustomers;
+    if (checkAllCustomers == 0) {
+      existCustomers = false;
+    } else {
+      existCustomers = true;
+    }
     if (
       (userId && userId.length == 0) ||
       date == "" ||
@@ -23,7 +32,10 @@ module.exports = {
       // userId가 빈 배열일 때
       return res.send({
         success: 200,
+        totalUser: 0,
+        existCustomers,
         findResult: confirm ? [] : 0,
+        totalPage: 1,
       });
     }
     const { firstDate, secondDate } = changeDate(date);
@@ -219,7 +231,11 @@ module.exports = {
     return res.send({
       success: 200,
       findResult: confirm ? logicResult.findFilteredUsersData : logicResult,
+      totalUser: confirm
+        ? logicResult.findAndCountAllFilterdCustomers.count
+        : logicResult,
       Page: intPage,
+      existCustomers,
       totalPage: Math.ceil(
         confirm
           ? logicResult.findAndCountAllFilterdCustomers.count / intlimit

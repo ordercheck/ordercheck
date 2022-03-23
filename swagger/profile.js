@@ -65,7 +65,7 @@
  *       - bearerAuth: []
  *      tags:
  *       - profile
- *      summary: 회사 프로필 이미지 등록하기 (formData)
+ *      summary: 유저 프로필 이미지 등록하기 (formData)
  *      requestBody:
  *       content:
  *         application/json:
@@ -87,7 +87,7 @@
  *       - bearerAuth: []
  *      tags:
  *       - profile
- *      summary: 회사 프로필 이미지 삭제하기
+ *      summary: 유저 프로필 이미지 삭제하기
  *      responses:
  *       '200':
  *         description: 성공
@@ -108,13 +108,10 @@
  *             properties:
  *               user_name:
  *                 type: string
- *               user_password:
- *                 type: string
  *               user_email:
  *                 type: string
  *             example:
  *               user_name: "이름"
- *               user_password: "비밀번호"
  *               user_email: "이메일"
  *      responses:
  *       '200':
@@ -159,6 +156,23 @@
  *               promotionAlarm: 1
  *               customerStatusAlarm: 2
  *               addConsultingAlarm: 2
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/info/user/join/company/{company_subdomain}:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  profile
+ *      summary: 회사 가입 신청하기
+ *      parameters:
+ *         - in: path
+ *           name: company_subdomain
+ *           schema:
+ *             type: string
  *      responses:
  *       '200':
  *         description: 성공

@@ -709,15 +709,6 @@ module.exports = {
       fileUrl
     );
 
-    // 알림톡 비용 차감 후 저장
-    decreasePriceAndHistory(
-      { text_cost: 10 },
-      sms_idx,
-      "알림톡",
-      message,
-      customerFindResult.customer_phoneNumber
-    );
-
     // 알림톡 보낸 결과 조회
     if (kakaoPushResult) {
       const checkKakaoPromise = () => {
@@ -760,6 +751,15 @@ module.exports = {
           headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
           data: { user_phone, message, type: "LMS" },
         });
+      } else {
+        // 알림톡 비용 차감 후 저장
+        decreasePriceAndHistory(
+          { text_cost: 10 },
+          sms_idx,
+          "알림톡",
+          message,
+          customerFindResult.customer_phoneNumber
+        );
       }
     }
 
