@@ -20,10 +20,21 @@ module.exports = {
       status.length == 0 ||
       contract_possibility.length == 0
     ) {
+      const checkAllCustomers = await db.customer.count({
+        where: { company_idx, deleted: null },
+      });
+      let existCustomers;
+      if (checkAllCustomers == 0) {
+        existCustomers = false;
+      } else {
+        existCustomers = true;
+      }
+
       // userId가 빈 배열일 때
       return res.send({
         success: 200,
         totalUser: 0,
+        existCustomers,
         findResult: confirm ? [] : 0,
         totalPage: 1,
       });
@@ -225,6 +236,7 @@ module.exports = {
         ? logicResult.findAndCountAllFilterdCustomers.count
         : logicResult,
       Page: intPage,
+      existCustomers,
       totalPage: Math.ceil(
         confirm
           ? logicResult.findAndCountAllFilterdCustomers.count / intlimit
