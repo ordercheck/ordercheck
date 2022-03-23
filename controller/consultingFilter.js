@@ -14,22 +14,21 @@ module.exports = {
       company_idx,
     } = req;
 
+    const checkAllCustomers = await db.customer.count({
+      where: { company_idx, deleted: null },
+    });
+    let existCustomers;
+    if (checkAllCustomers == 0) {
+      existCustomers = false;
+    } else {
+      existCustomers = true;
+    }
     if (
       (userId && userId.length == 0) ||
       date == "" ||
       status.length == 0 ||
       contract_possibility.length == 0
     ) {
-      const checkAllCustomers = await db.customer.count({
-        where: { company_idx, deleted: null },
-      });
-      let existCustomers;
-      if (checkAllCustomers == 0) {
-        existCustomers = false;
-      } else {
-        existCustomers = true;
-      }
-
       // userId가 빈 배열일 때
       return res.send({
         success: 200,
