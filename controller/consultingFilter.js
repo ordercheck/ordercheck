@@ -25,6 +25,7 @@ module.exports = {
         success: 200,
         totalUser: 0,
         findResult: confirm ? [] : 0,
+        totalPage: 1,
       });
     }
     const { firstDate, secondDate } = changeDate(date);
