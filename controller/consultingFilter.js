@@ -219,6 +219,9 @@ module.exports = {
     return res.send({
       success: 200,
       findResult: confirm ? logicResult.findFilteredUsersData : logicResult,
+      totalUser: confirm
+        ? logicResult.findAndCountAllFilterdCustomers.count
+        : logicResult,
       Page: intPage,
       totalPage: Math.ceil(
         confirm

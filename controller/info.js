@@ -335,6 +335,7 @@ module.exports = {
         user_idx,
         config_idx: findCompanyResult.configs.idx,
       });
+
       return res.send({
         success: 200,
         company_subdomain,
