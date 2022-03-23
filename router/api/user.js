@@ -714,13 +714,31 @@ router.post("/token/login", async (req, res, next) => {
   const { ut } = req.body;
   try {
     const user_data = await verify_data(ut);
+
     const findUser = await db.user.findOne({
       where: { user_phone: user_data.user_phone },
+      include: [
+        {
+          model: db.userCompany,
+          attributes: ["company_idx"],
+          where: { active: true, standBy: false },
+          include: {
+            model: db.company,
+            attributes: ["company_subdomain"],
+          },
+        },
+      ],
+
       attributes: ["idx"],
     });
+
     const loginToken = await createToken({ user_idx: findUser.idx });
 
-    return res.send({ success: 200, loginToken });
+    return res.send({
+      success: 200,
+      loginToken,
+      company_subdomain: findUser.userCompanies[0].company.company_subdomain,
+    });
   } catch (err) {
     next(err);
   }
