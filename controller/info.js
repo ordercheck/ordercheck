@@ -172,7 +172,7 @@ module.exports = {
           });
 
           await db.company.destroy({ where: { idx: company_idx } });
-
+          console.log(checkUsers);
           checkUsers.forEach(async (data) => {
             await db.userCompany.update(
               { active: true },
@@ -223,7 +223,7 @@ module.exports = {
             { where: { user_idx, active: false, standBy: false } }
           );
         }
-        console.log(randomCompany);
+
         return res.send({
           success: 200,
           company_subdomain: randomCompany.company_subdomain,
