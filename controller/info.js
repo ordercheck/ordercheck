@@ -223,6 +223,7 @@ module.exports = {
             { where: { user_idx, active: false, standBy: false } }
           );
         }
+        console.log(randomCompany);
         return res.send({
           success: 200,
           company_subdomain: randomCompany.company_subdomain,
