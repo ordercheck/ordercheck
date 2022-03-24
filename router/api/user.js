@@ -143,23 +143,22 @@ router.post("/login", async (req, res, next) => {
   if (!compareResult) {
     return res.send({ success: 400, message: "비밀번호 혹은 전화번호 오류" });
   }
-  if (!company_subdomain) {
-    console.log("이거 타면 안됨");
-    const companyInfo = await db.userCompany.findOne({
-      where: {
-        user_idx: check.idx,
-        active: true,
-        standBy: false,
-      },
-      include: [
-        {
-          model: db.company,
-          attributes: ["company_subdomain"],
-        },
-      ],
-      attributes: ["company_idx"],
-    });
 
+  const companyInfo = await db.userCompany.findOne({
+    where: {
+      user_idx: check.idx,
+      active: true,
+      standBy: false,
+    },
+    include: [
+      {
+        model: db.company,
+        attributes: ["company_subdomain"],
+      },
+    ],
+    attributes: ["company_idx"],
+  });
+  if (!company_subdomain) {
     const loginToken = await createToken({ user_idx: check.idx });
     return res.send({
       success: 200,
@@ -215,7 +214,7 @@ router.post("/login", async (req, res, next) => {
     success: 200,
     loginToken,
     status,
-    company_subdomain,
+    company_subdomain: companyInfo.company.company_subdomain,
   });
 });
 // 회원가입 체크 라우터

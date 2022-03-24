@@ -45,10 +45,10 @@ module.exports = {
     cardInfo.cardId = createResult.idx;
     cardInfo.card_name = createResult.card_name;
 
-    const second = createResult.card_number.substring(4, 8);
-    const third = createResult.card_number.substring(8, 12);
+    const first = createResult.card_number.substring(0, 4);
+    const last = createResult.card_number.substring(12, 16);
 
-    cardInfo.card_number = `**** ${second} ${third} ****`;
+    cardInfo.card_number = `${first} **** **** ${last}`;
     const [year, month] = createResult.expiry.split("-");
 
     cardInfo.expiry = `${month}/${year.slice(-2)}`;

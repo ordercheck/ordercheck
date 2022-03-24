@@ -34,8 +34,10 @@ module.exports = {
         include: [
           {
             model: db.userCompany,
-            as: "user",
+            where: { active: true },
             attributes: ["idx", ["searchingName", "user_name"]],
+            required: false,
+            as: "user",
           },
         ],
         attributes: customerAttributes,
@@ -53,7 +55,7 @@ module.exports = {
     try {
       let getCustomerDataResult = "";
       let customerNumber = intPage * intlimit - (intlimit - 1);
-      if (!No && !Name && !Address && !Date) {
+      if (!No && !Name && !Address) {
         getCustomerDataResult = await getCustomerData(
           "createdAt",
           "DESC",
