@@ -198,12 +198,13 @@ module.exports = {
           raw: true,
         });
 
-        await db.userCompany.destroy({
-          where: {
-            company_idx,
-          },
-        });
+        // await db.userCompany.destroy({
+        //   where: {
+        //     company_idx,
+        //   },
+        // });
 
+        console.log(findUserCompany);
         findUserCompany.forEach(async (data) => {
           await db.userCompany.update(
             { active: true },
@@ -211,6 +212,12 @@ module.exports = {
               where: { user_idx: data.user_idx, active: false, standBy: false },
             }
           );
+          await db.userCompany.destroy({
+            where: {
+              company_idx,
+              user_idx: data.user_idx,
+            },
+          });
         });
 
         // // 유저의 메인 카드 찾기
