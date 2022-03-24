@@ -188,7 +188,7 @@ module.exports = {
           const template = new Template({});
           // 랜덤 회사 만들기
           const randomCompany = await createRandomCompany(user_idx);
-
+          console.log(randomCompany);
           // master template 만들기
           masterConfig.company_idx = randomCompany.idx;
           const createTempalteResult = await template.createConfig(
