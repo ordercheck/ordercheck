@@ -146,7 +146,7 @@ module.exports = {
       user_idx,
       company_idx,
     } = req;
-    console.log(company_idx);
+
     try {
       // 비밀번호가 일치하지 않을 경우
       const checkResult = await checkUserPassword(user_idx, user_password);
@@ -158,34 +158,33 @@ module.exports = {
       }
 
       // 기존에 사용하던 무료플랜 체크
-      const checkCompany = await db.company.findOne({
-        where: {
-          huidx: user_idx,
-        },
-        include: [
-          {
-            model: db.plan,
-            where: { plan: "FREE" },
-          },
-        ],
-      });
+      // const checkCompany = await db.company.findOne({
+      //   where: {
+      //     huidx: user_idx,
+      //   },
+      //   include: [
+      //     {
+      //       model: db.plan,
+      //       where: { plan: "FREE" },
+      //     },
+      //   ],
+      // });
 
-      await db.userCompany.update(
-        { active: true },
-        {
-          where: {
-            company_idx: checkCompany.idx,
-            user_idx,
-          },
-        }
-      );
+      // await db.userCompany.update(
+      //   { active: true },
+      //   {
+      //     where: {
+      //       company_idx: checkCompany.idx,
+      //       user_idx,
+      //     },
+      //   }
+      // );
 
       const checkHuidx = await db.company.findByPk(company_idx, {
         attributes: ["huidx"],
       });
       // 소유주 체크
       if (user_idx == checkHuidx.huidx) {
-        console.log("소유주");
         // 소유주가 탈퇴한 회사 delete처리
         const deletedTime = moment();
 
@@ -193,34 +192,53 @@ module.exports = {
           { deleted: deletedTime },
           { where: { idx: company_idx } }
         );
+
+        const findUserCompany = await db.userCompany.findAll({
+          where: { company_idx, active: true, standBy: false },
+          raw: true,
+        });
+
         await db.userCompany.destroy({
           where: {
             company_idx,
           },
         });
-        // 유저의 메인 카드 찾기
-        const findMainCard = await db.card.findOne({
-          where: { main: true, user_idx },
-          attributes: ["customer_uid"],
+
+        findUserCompany.forEach(async (data) => {
+          await db.userCompany.update(
+            { active: true },
+            {
+              where: { user_idx: data.user_idx, active: false, standBy: false },
+            }
+          );
         });
 
-        // 플랜 merchant_uid 체크
-        const findPlan = await db.plan.findOne({
-          where: { company_idx, active: 3 },
-          attributes: ["merchant_uid"],
-        });
+        // // 유저의 메인 카드 찾기
+        // const findMainCard = await db.card.findOne({
+        //   where: { main: true, user_idx },
+        //   attributes: ["customer_uid"],
+        // });
+
+        // // 플랜 merchant_uid 체크
+        // const findPlan = await db.plan.findOne({
+        //   where: { company_idx, active: 3 },
+        //   attributes: ["merchant_uid"],
+        // });
 
         // 결제 예정 취소
 
-        await cancelSchedule(findMainCard.customer_uid, findPlan.merchant_uid);
+        // await cancelSchedule(findMainCard.customer_uid, findPlan.merchant_uid);
       } else {
-        console.log("팀원");
         await db.userCompany.destroy({
           where: {
             company_idx,
             user_idx,
           },
         });
+        await db.userCompany.update(
+          { active: true },
+          { where: { user_idx, active: false, standBy: false } }
+        );
       }
 
       return res.send({ success: 200 });
