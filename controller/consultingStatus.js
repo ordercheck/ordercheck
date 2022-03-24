@@ -171,8 +171,6 @@ module.exports = {
             // } else {
             const user_phone = data.user.user_phone.replace(/\./g, "");
 
-            console.log(bodyData);
-
             const { kakaoPushResult, message } = await TeamkakaoPushNewForm(
               user_phone,
               bodyData.title,
