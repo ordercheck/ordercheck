@@ -698,8 +698,11 @@
  *             properties:
  *               company_subdomain:
  *                 type: string
+ *               company_name:
+ *                 type: string
  *             example:
- *               company_subdomain: "김기수"
+ *               company_subdomain: "회사 서브 도메인"
+ *               company_name: '회사 이름'
  *      responses:
  *       '200':
  *         description: 성공
