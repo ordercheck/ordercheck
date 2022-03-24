@@ -30,6 +30,7 @@ const {
   customerkakaoPushNewCal,
   checkKakaoPushResult,
 } = require("../lib/kakaoPush");
+const { formLink } = require("../model/db");
 const changeToSearch = (body) => {
   const searchingPhoneNumber = body.customer_phoneNumber.replace(/\./g, "");
   const searchingAddress = `${body.address.replace(
@@ -169,12 +170,16 @@ module.exports = {
             //   return;
             // } else {
             const user_phone = data.user.user_phone.replace(/\./g, "");
+
+            console.log(bodyData);
+
             const { kakaoPushResult, message } = await TeamkakaoPushNewForm(
               user_phone,
               bodyData.title,
               bodyData.customer_name,
               "확인하기",
-              bodyData.customer_phoneNumber
+              bodyData.customer_phoneNumber,
+              bodyData.form_link
             );
 
             if (kakaoPushResult) {
