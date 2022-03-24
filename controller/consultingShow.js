@@ -35,6 +35,7 @@ module.exports = {
           {
             model: db.userCompany,
             as: "user",
+            where: { active: true, deleted: null },
             attributes: ["idx", ["searchingName", "user_name"]],
           },
         ],
@@ -45,8 +46,6 @@ module.exports = {
         raw: true,
         nest: true,
       });
-
-      console.log(customerFindAndCount);
 
       const customerData = addUserId(customerFindAndCount.rows, addminus, No);
       return { customerFindAndCount, customerData };
@@ -108,7 +107,6 @@ module.exports = {
       }
 
       if (Date) {
-        console.log("이건 타면 안됨");
         getCustomerDataResult = await getCustomerData(
           "updatedAt",
           Date == 0 ? "ASC" : "DESC",
