@@ -177,11 +177,7 @@ module.exports = {
     } = req;
     const company = new Company({});
     try {
-      await company.delCompanyMember(memberId);
-      await company.updateCompanyMember(
-        { active: true },
-        { idx: memberId, active: false, standBy: false }
-      );
+      await company.delCompanyAndChangeFree(memberId);
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
