@@ -211,6 +211,10 @@ module.exports = {
 
           // 무료 플랜 만들기
           await createFreePlan(randomCompany.idx);
+          return res.send({
+            success: 200,
+            company_subdomain: randomCompany.company_subdomain,
+          });
         } else {
           await db.userCompany.destroy({
             where: {
@@ -222,12 +226,11 @@ module.exports = {
             { active: true },
             { where: { user_idx, active: false, standBy: false } }
           );
+          return res.send({
+            success: 200,
+            company_subdomain: randomCompany.company_subdomain,
+          });
         }
-
-        return res.send({
-          success: 200,
-          company_subdomain: randomCompany.company_subdomain,
-        });
       }
 
       // 기존에 사용하던 무료플랜 체크
