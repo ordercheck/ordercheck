@@ -749,8 +749,8 @@ module.exports = {
         .split(" ")[0]
         .replace(/-/g, ".");
 
-      const first = createResult.card_number.substring(0, 4);
-      const last = createResult.card_number.substring(12, 16);
+      const first = findResult.card_number.substring(0, 4);
+      const last = findResult.card_number.substring(12, 16);
 
       findResult.card_number = `${first} **** **** ${last}`;
 
