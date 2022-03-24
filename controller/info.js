@@ -204,7 +204,6 @@ module.exports = {
         //   },
         // });
 
-        console.log(findUserCompany);
         findUserCompany.forEach(async (data) => {
           await db.userCompany.update(
             { active: true },
