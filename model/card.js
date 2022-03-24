@@ -50,11 +50,6 @@ module.exports = function (sequelize, DataTypes) {
       unique: true,
       type: DataTypes.STRING(100),
     },
-    customer_uid: {
-      allowNull: true,
-      unique: true,
-      type: DataTypes.STRING(100),
-    },
 
     corporation_yn: {
       allowNull: false,
