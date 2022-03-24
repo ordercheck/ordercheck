@@ -34,9 +34,9 @@ module.exports = {
         include: [
           {
             model: db.userCompany,
-            as: "user",
-            where: { active: true, deleted: null },
+            where: { active: true },
             attributes: ["idx", ["searchingName", "user_name"]],
+            as: "user",
           },
         ],
         attributes: customerAttributes,
