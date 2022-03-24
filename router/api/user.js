@@ -380,7 +380,7 @@ router.post("/company/check", async (req, res, next) => {
     }
     // user idx 찾기
     const findUser = await db.user.findOne({
-      where: { user_phone: user_data.user_phone },
+      where: { user_phone: user_data.user_phone, deleted: null },
       attributes: ["idx", "user_name"],
     });
 
@@ -453,7 +453,7 @@ router.post("/phone/check", async (req, res) => {
 // 패스워드 수정 라우터
 router.post("/password/reset", async (req, res) => {
   const { user_phone, user_password } = req.body;
-  let check = await db.user.findOne({ where: { user_phone } });
+  let check = await db.user.findOne({ where: { user_phone, deleted: null } });
   if (check) {
     const newHashPassword = await bcrypt.hash(
       user_password,
