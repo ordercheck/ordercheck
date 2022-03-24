@@ -176,8 +176,7 @@ module.exports = {
               bodyData.title,
               bodyData.customer_name,
               "확인하기",
-              bodyData.customer_phoneNumber,
-              bodyData.form_link
+              bodyData.customer_phoneNumber
             );
 
             if (kakaoPushResult) {
