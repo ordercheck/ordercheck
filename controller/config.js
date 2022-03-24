@@ -177,8 +177,11 @@ module.exports = {
     } = req;
     const company = new Company({});
     try {
-      console.log(memberId);
       await company.delCompanyMember(memberId);
+      await company.updateCompanyMember(
+        { active: true },
+        { idx: memberId, active: false, standBy: false }
+      );
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
