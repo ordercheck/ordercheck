@@ -397,7 +397,6 @@ router.post("/company/check", async (req, res, next) => {
     const company_data = await db.company.create({
       company_name,
       company_subdomain,
-      companyexist: true,
       huidx: findUser.idx,
     });
 
