@@ -46,6 +46,8 @@ module.exports = {
         nest: true,
       });
 
+      console.log(customerFindAndCount);
+
       const customerData = addUserId(customerFindAndCount.rows, addminus, No);
       return { customerFindAndCount, customerData };
     };
