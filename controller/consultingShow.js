@@ -36,6 +36,7 @@ module.exports = {
             model: db.userCompany,
             where: { active: true },
             attributes: ["idx", ["searchingName", "user_name"]],
+            required: false,
             as: "user",
           },
         ],
