@@ -186,12 +186,12 @@ module.exports = {
       // 소유주 체크
       if (user_idx == checkHuidx.huidx) {
         // 소유주가 탈퇴한 회사 delete처리
-        const deletedTime = moment();
+        // const deletedTime = moment();
 
-        await db.company.update(
-          { deleted: deletedTime },
-          { where: { idx: company_idx } }
-        );
+        // await db.company.update(
+        //   { deleted: deletedTime },
+        //   { where: { idx: company_idx } }
+        // );
 
         const findUserCompany = await db.userCompany.findAll({
           where: { company_idx, active: true, standBy: false },
