@@ -565,9 +565,11 @@ module.exports = {
           cardEmail = findCardInfo[i].card_email;
           mainCardId = findCardInfo[i].cardId;
         }
-        const second = findCardInfo[i].card_number.substring(4, 8);
-        const third = findCardInfo[i].card_number.substring(8, 12);
-        findCardInfo[i].card_number = `**** ${second} ${third} ****`;
+
+        const first = createResult.card_number.substring(0, 4);
+        const last = createResult.card_number.substring(12, 16);
+
+        findCardInfo[i].card_number = `${first} **** **** ${last}`;
         let [year, month] = findCardInfo[i].expiry.split("-");
         findCardInfo[i].expiry = `${month}/${year.slice(-2)}`;
       }
@@ -747,10 +749,10 @@ module.exports = {
         .split(" ")[0]
         .replace(/-/g, ".");
 
-      const second = findResult.card_number.substring(4, 8);
-      const third = findResult.card_number.substring(8, 12);
+      const first = createResult.card_number.substring(0, 4);
+      const last = createResult.card_number.substring(12, 16);
 
-      findResult.card_number = `**** ${second} ${third}  ****`;
+      findResult.card_number = `${first} **** **** ${last}`;
 
       return res.send({ success: 200, findResult });
     } catch (err) {
