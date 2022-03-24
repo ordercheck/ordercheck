@@ -170,6 +170,7 @@ module.exports = {
             where: { company_idx, active: true, standBy: false },
             raw: true,
           });
+
           await db.company.destroy({ where: { idx: company_idx } });
 
           checkUsers.forEach(async (data) => {
@@ -222,7 +223,10 @@ module.exports = {
             { where: { user_idx, active: false, standBy: false } }
           );
         }
-        return res.send({ success: 200 });
+        return res.send({
+          success: 200,
+          company_subdomain: randomCompany.company_subdomain,
+        });
       }
 
       // 기존에 사용하던 무료플랜 체크
@@ -308,7 +312,14 @@ module.exports = {
         );
       }
 
-      return res.send({ success: 200 });
+      const findCompanySub = await db.company.findOne({
+        where: { huidx: user_idx },
+      });
+
+      return res.send({
+        success: 200,
+        company_subdomain: findCompanySub.company_subdomain,
+      });
     } catch (err) {
       next(err);
     }
