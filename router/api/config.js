@@ -31,6 +31,7 @@ const {
   delCompanyLogo,
   changeMemberInfo,
   changeMainCardEmail,
+  createCompany,
   addTemplate,
 } = require("../../controller/config");
 const {
@@ -96,5 +97,6 @@ router.patch(
 router.get("/company/form/list", loginCheck, showFormList);
 router.post("/company/form/set/member/:formId", loginCheck, setFormOpenMembers);
 router.get("/company/chat/template", loginCheck, showChatTemplate);
+router.post("/company/exist", loginCheck, createCompany);
 
 module.exports = router;

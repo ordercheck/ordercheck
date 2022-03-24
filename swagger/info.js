@@ -683,4 +683,26 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/config/company/exist:
+ *   post:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  config
+ *      summary: 회사 생성하기
+ *      requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               company_subdomain:
+ *                 type: string
+ *             example:
+ *               company_subdomain: "김기수"
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

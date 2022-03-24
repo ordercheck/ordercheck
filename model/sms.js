@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes) {
   //테이블을 정의
-  return sequelize.define('sms', {
+  return sequelize.define("sms", {
     idx: {
       autoIncrement: true,
       primaryKey: true,
@@ -8,7 +8,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     text_cost: {
       allowNull: false,
-      defaultValue: 0,
+      defaultValue: 1000,
       type: DataTypes.INTEGER,
     },
 

@@ -855,4 +855,15 @@ module.exports = {
 
     return res.send({ success: 200 });
   },
+  createCompany: async (req, res, next) => {
+    const {
+      body: { company_subdomain },
+      user_idx,
+    } = req;
+    await db.company.update(
+      { company_subdomain, companyexist: true },
+      { where: { huidx: user_idx } }
+    );
+    return res.send({ success: 200 });
+  },
 };
