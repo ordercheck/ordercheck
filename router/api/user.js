@@ -630,7 +630,9 @@ router.post("/check/company-name", async (req, res) => {
 router.post("/check/password", async (req, res) => {
   const { user_password, user_phone } = req.body;
   try {
-    const findUserResult = await db.user.findOne({ where: { user_phone } });
+    const findUserResult = await db.user.findOne({
+      where: { user_phone, deleted: null },
+    });
 
     const comparePasswordResult = await bcrypt.compare(
       user_password,
@@ -658,7 +660,7 @@ router.post("/company/check/later", async (req, res, next) => {
   try {
     // user idx 찾기
     const findUser = await db.user.findOne({
-      where: { user_phone: user_data.user_phone },
+      where: { user_phone: user_data.user_phone, deleted: null },
       attributes: ["idx", "user_name"],
     });
 
@@ -719,7 +721,7 @@ router.post("/token/login", async (req, res, next) => {
     const user_data = await verify_data(ut);
 
     const findUser = await db.user.findOne({
-      where: { user_phone: user_data.user_phone },
+      where: { user_phone: user_data.user_phone, deleted: null },
       include: [
         {
           model: db.userCompany,
