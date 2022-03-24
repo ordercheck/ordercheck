@@ -57,7 +57,7 @@ module.exports = {
         console.log("이거 타야함");
         getCustomerDataResult = await getCustomerData(
           "createdAt",
-          "DESC",
+          "ASC",
           totalData - intlimit * intPage + intlimit,
           "minus"
         );
