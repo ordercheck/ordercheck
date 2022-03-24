@@ -144,7 +144,6 @@ router.post("/login", async (req, res, next) => {
     return res.send({ success: 400, message: "비밀번호 혹은 전화번호 오류" });
   }
   if (!company_subdomain) {
-    console.log("이거 타면 안됨");
     const companyInfo = await db.userCompany.findOne({
       where: {
         user_idx: check.idx,

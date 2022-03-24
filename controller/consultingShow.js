@@ -53,7 +53,8 @@ module.exports = {
     try {
       let getCustomerDataResult = "";
       let customerNumber = intPage * intlimit - (intlimit - 1);
-      if (!No && !Name && !Address && !Date) {
+      if (!No && !Name && !Address) {
+        console.log("이거 타야함");
         getCustomerDataResult = await getCustomerData(
           "createdAt",
           "DESC",
