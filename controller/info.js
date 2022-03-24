@@ -14,6 +14,7 @@ const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
 const _f = require("../lib/functions");
+const { EventBridge } = require("aws-sdk");
 const checkUserPassword = async (userIdx, userPassword) => {
   // 유저 전화번호 먼저 찾기
   const findUser = await db.user.findByPk(userIdx, {
@@ -155,6 +156,73 @@ module.exports = {
           success: 400,
           message: "비밀번호가 일치하지 않습니다.",
         });
+      }
+
+      // 지금 회사가 무료플랜인지 체크
+      const checking = await db.plan.findOne({ where: { company_idx } });
+      if (checking.plan == "FREE") {
+        const checkHuidx = await db.company.findByPk(company_idx, {
+          attributes: ["huidx"],
+        });
+
+        if (user_idx == checkHuidx.huidx) {
+          const checkUsers = await db.userCompany.findAll({
+            where: { company_idx, active: true, standBy: false },
+            raw: true,
+          });
+          await db.userCompany.destroy({ company_idx });
+
+          checkUsers.forEach((data) => {
+            await db.userCompany.update(
+              { active: true },
+              {
+                where: {
+                  user_idx: data.user_idx,
+                  active: false,
+                  standBy: false,
+                },
+              }
+            );
+          });
+          const template = new Template({});
+          // 랜덤 회사 만들기
+          const randomCompany = await createRandomCompany(user_idx);
+
+          // master template 만들기
+          masterConfig.company_idx = randomCompany.idx;
+          const createTempalteResult = await template.createConfig(
+            masterConfig
+          );
+
+          // 팀원 template  만들기
+          await template.createConfig({
+            company_idx: randomCompany.idx,
+          });
+
+          const findUser = await db.user.findByPk(user_idx);
+          // 유저 회사에 소속시키기
+          await includeUserToCompany({
+            user_idx: user_idx,
+            company_idx: randomCompany.idx,
+            searchingName: findUser.user_name,
+            config_idx: createTempalteResult.idx,
+          });
+
+          // 무료 플랜 만들기
+          await createFreePlan(randomCompany.idx);
+        } else {
+          await db.userCompany.destroy({
+            where: {
+              company_idx,
+              user_idx,
+            },
+          });
+          await db.userCompany.update(
+            { active: true },
+            { where: { user_idx, active: false, standBy: false } }
+          );
+        }
+        return res.send({ success: 200 });
       }
 
       // 기존에 사용하던 무료플랜 체크
