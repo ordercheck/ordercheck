@@ -230,8 +230,6 @@ module.exports = {
           attributes: ["company_subdomain"],
         });
 
-        console.log(findSub);
-
         return res.send({
           success: 200,
           company_subdomain: findSub.company_subdomain,
