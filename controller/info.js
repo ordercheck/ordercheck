@@ -198,7 +198,6 @@ module.exports = {
           raw: true,
         });
 
-        // 무료 버전
         await db.userCompany.destroy({
           where: {
             company_idx,
