@@ -211,7 +211,7 @@ module.exports = {
           },
         });
 
-        await db.company.destroy({ where: { company_idx } });
+        await db.company.destroy({ where: { idx: company_idx } });
 
         // 무료
         const template = new Template({});
