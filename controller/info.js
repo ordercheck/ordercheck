@@ -332,7 +332,12 @@ module.exports = {
         attributes: ["idx", "company_name"],
       });
 
+      const findUserName = await db.user.findByPk(user_idx, {
+        attributes: ["user_name"],
+      });
+
       await db.userCompany.create({
+        searchingName: findUserName.user_name,
         active: true,
         standBy: true,
         company_idx: findCompanyResult.idx,
