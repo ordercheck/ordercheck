@@ -43,7 +43,6 @@ module.exports = {
         offset: start,
         limit: intlimit,
         raw: true,
-        nest: true,
       });
 
       console.log(customerFindAndCount);
