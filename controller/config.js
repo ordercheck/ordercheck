@@ -566,8 +566,8 @@ module.exports = {
           mainCardId = findCardInfo[i].cardId;
         }
 
-        const first = createResult.card_number.substring(0, 4);
-        const last = createResult.card_number.substring(12, 16);
+        const first = findCardInfo[i].card_number.substring(0, 4);
+        const last = findCardInfo[i].card_number.substring(12, 16);
 
         findCardInfo[i].card_number = `${first} **** **** ${last}`;
         let [year, month] = findCardInfo[i].expiry.split("-");
