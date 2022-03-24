@@ -43,6 +43,7 @@ module.exports = {
         offset: start,
         limit: intlimit,
         raw: true,
+        nest: true,
       });
 
       console.log(customerFindAndCount);
@@ -55,7 +56,6 @@ module.exports = {
       let getCustomerDataResult = "";
       let customerNumber = intPage * intlimit - (intlimit - 1);
       if (!No && !Name && !Address) {
-        console.log("이거 타야함");
         getCustomerDataResult = await getCustomerData(
           "createdAt",
           "ASC",
@@ -108,6 +108,7 @@ module.exports = {
       }
 
       if (Date) {
+        console.log("이건 타면 안됨");
         getCustomerDataResult = await getCustomerData(
           "updatedAt",
           Date == 0 ? "ASC" : "DESC",
