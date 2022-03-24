@@ -172,7 +172,7 @@ module.exports = {
           });
 
           await db.company.destroy({ where: { idx: company_idx } });
-          console.log(checkUsers);
+
           checkUsers.forEach(async (data) => {
             await db.userCompany.update(
               { active: true },
@@ -188,7 +188,7 @@ module.exports = {
           const template = new Template({});
           // 랜덤 회사 만들기
           const randomCompany = await createRandomCompany(user_idx);
-          console.log(randomCompany);
+
           // master template 만들기
           masterConfig.company_idx = randomCompany.idx;
           const createTempalteResult = await template.createConfig(
@@ -211,10 +211,6 @@ module.exports = {
 
           // 무료 플랜 만들기
           await createFreePlan(randomCompany.idx);
-          return res.send({
-            success: 200,
-            company_subdomain: randomCompany.company_subdomain,
-          });
         } else {
           await db.userCompany.destroy({
             where: {
@@ -226,11 +222,17 @@ module.exports = {
             { active: true },
             { where: { user_idx, active: false, standBy: false } }
           );
-          return res.send({
-            success: 200,
-            company_subdomain: randomCompany.company_subdomain,
-          });
         }
+        const findSub = await db.company.findOne({
+          where: {
+            huidx: { user_idx },
+          },
+        });
+
+        return res.send({
+          success: 200,
+          company_subdomain: findSub.company_subdomain,
+        });
       }
 
       // 기존에 사용하던 무료플랜 체크
