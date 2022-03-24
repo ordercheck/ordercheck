@@ -171,9 +171,23 @@ ${company_url}
     });
 
     await db.userCompany.update(
+      {
+        active: true,
+      },
+      {
+        where: {
+          user_idx: findUserCompanyResult.user_idx,
+          active: false,
+          standBy: false,
+        },
+      }
+    );
+
+    await db.userCompany.update(
       { active: false, standBy: true },
       { where: { idx: memberId } }
     );
+
     res.send({ success: 200 });
 
     // 알림 보내기
