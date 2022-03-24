@@ -170,9 +170,9 @@ module.exports = {
             where: { company_idx, active: true, standBy: false },
             raw: true,
           });
-          await db.userCompany.destroy({ company_idx });
+          await db.company.destroy({ idx: company_idx });
 
-          checkUsers.forEach((data) => {
+          checkUsers.forEach(async (data) => {
             await db.userCompany.update(
               { active: true },
               {
