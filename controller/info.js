@@ -225,9 +225,12 @@ module.exports = {
         }
         const findSub = await db.company.findOne({
           where: {
-            huidx: { user_idx },
+            huidx: user_idx,
           },
+          attributes: ["company_subdomain"],
         });
+
+        console.log(findSub);
 
         return res.send({
           success: 200,
