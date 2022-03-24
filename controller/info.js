@@ -204,6 +204,43 @@ module.exports = {
         //   },
         // });
 
+        // 무료 버전
+        await db.userCompany.destroy({
+          where: {
+            company_idx,
+          },
+        });
+
+        await db.company.destroy({ where: { company_idx } });
+
+        // 무료
+        const template = new Template({});
+        // 랜덤 회사 만들기
+        const randomCompany = await createRandomCompany(user_idx);
+
+        // master template 만들기
+        masterConfig.company_idx = randomCompany.idx;
+        const createTempalteResult = await template.createConfig(masterConfig);
+
+        // 팀원 template  만들기
+
+        await template.createConfig({
+          company_idx: randomCompany.idx,
+        });
+
+        const findUser = await db.user.findByPk(user_idx);
+
+        // 유저 회사에 소속시키기
+        await includeUserToCompany({
+          user_idx: user_idx,
+          company_idx: randomCompany.idx,
+          searchingName: findUser.user_name,
+          config_idx: createTempalteResult.idx,
+        });
+
+        // 무료 플랜 만들기
+        await createFreePlan(randomCompany.idx);
+
         findUserCompany.forEach(async (data) => {
           await db.userCompany.update(
             { active: true },
@@ -211,12 +248,6 @@ module.exports = {
               where: { user_idx: data.user_idx, active: false, standBy: false },
             }
           );
-          await db.userCompany.destroy({
-            where: {
-              company_idx,
-              user_idx: data.user_idx,
-            },
-          });
         });
 
         // // 유저의 메인 카드 찾기
