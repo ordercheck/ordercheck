@@ -213,21 +213,20 @@ module.exports = {
           );
         });
 
-        // // 유저의 메인 카드 찾기
-        // const findMainCard = await db.card.findOne({
-        //   where: { main: true, user_idx },
-        //   attributes: ["customer_uid"],
-        // });
+        // 유저의 메인 카드 찾기
+        const findMainCard = await db.card.findOne({
+          where: { main: true, user_idx },
+          attributes: ["customer_uid"],
+        });
 
-        // // 플랜 merchant_uid 체크
-        // const findPlan = await db.plan.findOne({
-        //   where: { company_idx, active: 3 },
-        //   attributes: ["merchant_uid"],
-        // });
+        // 플랜 merchant_uid 체크
+        const findPlan = await db.plan.findOne({
+          where: { company_idx, active: 3 },
+          attributes: ["merchant_uid"],
+        });
 
         // 결제 예정 취소
-
-        // await cancelSchedule(findMainCard.customer_uid, findPlan.merchant_uid);
+        await cancelSchedule(findMainCard.customer_uid, findPlan.merchant_uid);
       } else {
         await db.userCompany.destroy({
           where: {

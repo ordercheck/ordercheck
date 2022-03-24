@@ -393,7 +393,6 @@ router.post("/company/check", async (req, res, next) => {
     const template = new Template({});
 
     // 회사 생성
-
     const company_data = await db.company.create({
       company_name,
       company_subdomain,
