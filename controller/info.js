@@ -117,7 +117,7 @@ module.exports = {
         attributes: ["companyexist"],
       });
 
-      if (companyexist) {
+      if (checkCompanyExist.companyexist) {
         return res.send({ success: 400, message: "회사를 먼저 나가주세요" });
       }
 
