@@ -858,13 +858,14 @@ module.exports = {
   createCompany: async (req, res, next) => {
     const {
       body: { company_subdomain, company_name },
-      user_idx,
+
+      company_idx,
     } = req;
 
     try {
       await db.company.update(
         { company_subdomain, company_name, companyexist: true },
-        { where: { huidx: user_idx, deleted: null } }
+        { where: { idx: company_idx } }
       );
       return res.send({ success: 200 });
     } catch (err) {
