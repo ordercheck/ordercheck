@@ -858,7 +858,6 @@ module.exports = {
   createCompany: async (req, res, next) => {
     const {
       body: { company_subdomain, company_name },
-
       company_idx,
     } = req;
 
