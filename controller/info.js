@@ -80,7 +80,7 @@ module.exports = {
 
       userProfile[0].fileStoreSize = fileStoreSize;
       userProfile[0].authList = findConfig;
-      console.log(userProfile[0]);
+
       return res.send({ success: 200, userProfile: userProfile[0] });
     } catch (err) {
       next(err);
