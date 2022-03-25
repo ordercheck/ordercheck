@@ -18,6 +18,7 @@ moment.tz.setDefault("Asia/Seoul");
 const _f = require("../lib/functions");
 const { EventBridge } = require("aws-sdk");
 const attributes = require("../lib/attributes");
+const { user } = require("../model/db");
 const checkUserPassword = async (userIdx, userPassword) => {
   // 유저 전화번호 먼저 찾기
   const findUser = await db.user.findByPk(userIdx, {
@@ -145,7 +146,7 @@ module.exports = {
       // 계정 delete처리
 
       const deletedTime = moment();
-
+      // 유저 탈퇴처리
       await db.user.update(
         {
           deleted: deletedTime,
@@ -153,6 +154,17 @@ module.exports = {
         {
           where: {
             idx: user_idx,
+          },
+        }
+      );
+      // 회사 탈퇴 처리
+      await db.company.update(
+        {
+          deleted: deletedTime,
+        },
+        {
+          where: {
+            huidx: user_idx,
           },
         }
       );
