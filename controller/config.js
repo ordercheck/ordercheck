@@ -864,7 +864,7 @@ module.exports = {
     try {
       await db.company.update(
         { company_subdomain, company_name, companyexist: true },
-        { where: { huidx: user_idx } }
+        { where: { huidx: user_idx, deleted: null } }
       );
       return res.send({ success: 200 });
     } catch (err) {

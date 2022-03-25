@@ -287,6 +287,8 @@ module.exports = {
       });
       // 소유주 체크
       if (user_idx == checkHuidx.huidx) {
+        // 소유주 빼고 팀원들 찾기
+        const findUserCompany = await findMemberExceptMe(company_idx, user_idx);
         // 소유주가 탈퇴한 회사 delete처리
         const deletedTime = moment();
 
@@ -302,9 +304,6 @@ module.exports = {
           },
         });
 
-        // 소유주 빼고 팀원들 찾기
-        const findUserCompany = await findMemberExceptMe(company_idx, user_idx);
-        console.log(findUserCompany);
         // 팀원들 다른 플랜 active처리
         findUserCompany.forEach(async (data) => {
           await db.userCompany.update(
