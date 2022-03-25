@@ -304,7 +304,7 @@ module.exports = {
 
         // 소유주 빼고 팀원들 찾기
         const findUserCompany = await findMemberExceptMe(company_idx, user_idx);
-
+        console.log(findUserCompany);
         // 팀원들 다른 플랜 active처리
         findUserCompany.forEach(async (data) => {
           await db.userCompany.update(
