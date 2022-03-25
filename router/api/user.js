@@ -180,7 +180,7 @@ router.post("/login", async (req, res, next) => {
     const findCompany = await db.company.findOne({
       where: { company_subdomain, deleted: null },
     });
-
+    console.log(findCompany);
     const findConfigResult = await template.findConfig(
       {
         template_name: "팀원",
