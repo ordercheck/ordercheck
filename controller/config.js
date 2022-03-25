@@ -56,8 +56,6 @@ module.exports = {
           return makeSpreadArray(r);
         });
 
-      console.log(companyProfile);
-
       return res.send({ success: 200, companyProfile: companyProfile[0] });
     } catch (err) {
       next(err);
