@@ -17,6 +17,7 @@ require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
 const _f = require("../lib/functions");
 const { EventBridge } = require("aws-sdk");
+const attributes = require("../lib/attributes");
 const checkUserPassword = async (userIdx, userPassword) => {
   // 유저 전화번호 먼저 찾기
   const findUser = await db.user.findByPk(userIdx, {
@@ -112,14 +113,32 @@ module.exports = {
         });
       }
 
-      // 먼저 현재 플랜이 FREE인지 체크
-      const findPlan = await db.plan.findOne({
-        where: { company_idx },
-        attributes: ["plan"],
+      const checkCompanyExist = await db.company.findByPk(company_idx, {
+        attributes: ["companyexist"],
       });
-      if (findPlan.plan !== "FREE") {
-        return res.send({ success: 400, message: "FREE Plan이 아닙니다." });
+
+      if (companyexist) {
+        return res.send({ success: 400, message: "회사를 먼저 나가주세요" });
       }
+
+      // 결제 예정 취소
+      // 유저의 메인 카드 찾기
+      const findMainCard = await db.card.findOne({
+        where: { main: true, user_idx },
+        attributes: ["customer_uid"],
+      });
+
+      // 플랜 merchant_uid 체크
+      const findPlan = await db.plan.findOne({
+        where: { company_idx, active: 3 },
+        attributes: ["merchant_uid"],
+      });
+
+      if (findMainCard && findPlan) {
+        // 결제 예정 취소
+        await cancelSchedule(findMainCard.customer_uid, findPlan.merchant_uid);
+      }
+
       // 탈퇴사유 생성
       await db.delReason.create({ reason, user_idx });
 
