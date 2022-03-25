@@ -1,6 +1,6 @@
-const db = require('../model/db');
-const { limitPlan } = require('../lib/standardTemplate');
-const { delFile } = require('../lib/aws/fileupload').ufile;
+const db = require("../model/db");
+const { limitPlan } = require("../lib/standardTemplate");
+const { delFile } = require("../lib/aws/fileupload").ufile;
 // 고객 체크
 const checkCustomerCount = async (company_idx, data) => {
   const findCompanyData = await db.company.findByPk(company_idx, {
@@ -8,7 +8,7 @@ const checkCustomerCount = async (company_idx, data) => {
   });
   const findPlanResult = await db.plan.findOne({
     where: { company_idx, active: 1 },
-    attributes: ['plan'],
+    attributes: ["plan"],
   });
 
   return {
@@ -21,12 +21,12 @@ const check = async (reqData, data) => {
   try {
     const findCompanyByLink = await db.formLink.findOne({
       where: { form_link: reqData },
-      attributes: ['company_idx'],
+      attributes: ["company_idx"],
     });
     if (!findCompanyByLink) {
       return {
         success: false,
-        message: '존재하지 않는 링크 입니다',
+        message: "존재하지 않는 링크 입니다",
       };
     }
 
@@ -55,7 +55,7 @@ module.exports = {
 
     const { success, findCompanyData, findPlanResult, message } = await check(
       form_link,
-      'form_link_count'
+      "form_link_count"
     );
 
     if (!success) {
@@ -75,7 +75,7 @@ module.exports = {
   checkCustomerLimit: async (req, res, next) => {
     const { findCompanyData, findPlanResult } = await checkCustomerCount(
       req.company_idx,
-      'customer_count'
+      "customer_count"
     );
 
     if (
@@ -84,7 +84,7 @@ module.exports = {
     ) {
       return res.send({
         success: 400,
-        message: '이달 고객 등록 가능 횟수가 초과하였습니다.',
+        message: "이달 고객 등록 가능 횟수가 초과하였습니다.",
       });
     }
     return next();
