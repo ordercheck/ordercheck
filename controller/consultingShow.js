@@ -59,8 +59,8 @@ module.exports = {
         getCustomerDataResult = await getCustomerData(
           "createdAt",
           "DESC",
-          customerNumber,
-          "plus"
+          totalData - intlimit * intPage + intlimit,
+          "minus"
         );
 
         if (getCustomerDataResult.customerData == 0) {
