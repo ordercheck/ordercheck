@@ -32,6 +32,7 @@ const {
   changeMemberInfo,
   changeMainCardEmail,
   createCompany,
+  showFormOpenMember,
   addTemplate,
 } = require("../../controller/config");
 const {
@@ -95,6 +96,7 @@ router.patch(
 );
 
 router.get("/company/form/list", loginCheck, showFormList);
+router.get("/company/form/open/member/:formId", loginCheck, showFormOpenMember);
 router.post("/company/form/set/member/:formId", loginCheck, setFormOpenMembers);
 router.get("/company/chat/template", loginCheck, showChatTemplate);
 router.post("/company/exist", loginCheck, createCompany);

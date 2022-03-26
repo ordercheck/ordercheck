@@ -871,4 +871,45 @@ module.exports = {
       next(err);
     }
   },
+  showFormOpenMember: async (req, res, next) => {
+    const {
+      company_idx,
+      params: { formId },
+    } = req;
+
+    // 해당 form 찾기
+    const findForm = await db.formLink.findByPk(formId, {
+      attributes: ["title"],
+    });
+
+    let memberList = await db.userCompany.findAll({
+      where: { company_idx, active: true, standBy: false },
+      include: [
+        {
+          model: db.config,
+          where: { form_total: true },
+          attributes: ["form_total"],
+        },
+      ],
+      attributes: [
+        ["user_idx", "memberId"],
+        ["searchingName", "user_name"],
+      ],
+    });
+
+    memberList = JSON.parse(JSON.stringify(memberList));
+
+    memberList.unshift({
+      memberId: null,
+      user_name: "담당자 없음",
+      config: { form_total: true },
+    });
+
+    const selectMemberList = await db.formOpen.findAll({
+      where: { formLink_idx: formId },
+      attributes: [["user_idx", "memberId"], "user_name"],
+    });
+
+    return res.send({ success: 200, memberList, selectMemberList });
+  },
 };

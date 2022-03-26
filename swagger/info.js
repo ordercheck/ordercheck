@@ -708,4 +708,22 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/config/company/form/open/member/{formId}:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  config
+ *      summary: 폼 권한 멤버들 보여주기
+ *      parameters:
+ *         - in: path
+ *           name: formId
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */
