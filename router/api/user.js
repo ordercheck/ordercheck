@@ -351,7 +351,12 @@ router.post("/join/do", async (req, res, next) => {
         config_idx: findConfigResult.idx,
       });
 
-      return res.send({ success: 200, loginToken, status: "standBy" });
+      return res.send({
+        success: 200,
+        loginToken,
+        company_subdomain: randomCompany.company_subdomain,
+        status: "standBy",
+      });
     }
   } catch (err) {
     next(err);
