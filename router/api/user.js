@@ -166,6 +166,10 @@ router.post("/login", async (req, res, next) => {
       company_subdomain: companyInfo.company.company_subdomain,
     });
   }
+  // 링크로 로그인 할 때
+  const findCompany = await db.company.findOne({
+    where: { company_subdomain, deleted: null },
+  });
 
   let checkCompanyStandBy = await db.userCompany.findOne({
     where: {
@@ -174,13 +178,9 @@ router.post("/login", async (req, res, next) => {
     },
     attributes: ["active", "standBy"],
   });
+
   const loginToken = await createToken({ user_idx: check.idx });
   if (!checkCompanyStandBy) {
-    // 링크로 로그인 할 때
-    const findCompany = await db.company.findOne({
-      where: { company_subdomain, deleted: null },
-    });
-
     const findConfigResult = await template.findConfig(
       {
         template_name: "팀원",
