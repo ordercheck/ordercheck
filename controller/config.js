@@ -893,6 +893,12 @@ module.exports = {
             attributes: ["form_total"],
           },
         ],
+        include: [
+          {
+            model: db.user,
+            attributes: ["user_profile"],
+          },
+        ],
         attributes: [
           ["user_idx", "memberId"],
           ["searchingName", "user_name"],
@@ -900,19 +906,43 @@ module.exports = {
       });
 
       memberList = JSON.parse(JSON.stringify(memberList));
+      memberList = memberList.map((data) => {
+        data.user_profile = data.user.user_profile;
+        delete data.user;
+        return data;
+      });
 
       // 담당자 없음 추가
       memberList.unshift({
         memberId: null,
         user_name: "담당자 없음",
-        config: { form_total: true },
+        user_profile: "",
       });
 
-      const selectMemberList = await db.formOpen.findAll({
+      let selectMemberList = await db.formOpen.findAll({
         where: { formLink_idx: formId },
+        include: [
+          {
+            model: db.userCompany,
+            attributes: ["idx"],
+            include: [
+              {
+                model: db.user,
+                attributes: ["user_profile"],
+              },
+            ],
+          },
+        ],
         attributes: [["user_idx", "memberId"], "user_name"],
       });
 
+      selectMemberList = JSON.parse(JSON.stringify(selectMemberList));
+
+      selectMemberList = selectMemberList.map((data) => {
+        data.user_profile = data.userCompany.user.user_profile;
+        delete data.userCompany;
+        return data;
+      });
       const findResult = {
         memberList,
         selectMemberList,
