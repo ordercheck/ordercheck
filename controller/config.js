@@ -877,47 +877,50 @@ module.exports = {
       company_idx,
       params: { formId },
     } = req;
+    try {
+      // 해당 form 찾기
+      const findForm = await db.formLink.findByPk(formId, {
+        attributes: ["title"],
+      });
 
-    // 해당 form 찾기
-    const findForm = await db.formLink.findByPk(formId, {
-      attributes: ["title"],
-    });
+      // 열람 권한 있는 멤버 찾기
+      let memberList = await db.userCompany.findAll({
+        where: { company_idx, active: true, standBy: false },
+        include: [
+          {
+            model: db.config,
+            where: { form_total: true },
+            attributes: ["form_total"],
+          },
+        ],
+        attributes: [
+          ["user_idx", "memberId"],
+          ["searchingName", "user_name"],
+        ],
+      });
 
-    // 열람 권한 있는 멤버 찾기
-    let memberList = await db.userCompany.findAll({
-      where: { company_idx, active: true, standBy: false },
-      include: [
-        {
-          model: db.config,
-          where: { form_total: true },
-          attributes: ["form_total"],
-        },
-      ],
-      attributes: [
-        ["user_idx", "memberId"],
-        ["searchingName", "user_name"],
-      ],
-    });
+      memberList = JSON.parse(JSON.stringify(memberList));
 
-    memberList = JSON.parse(JSON.stringify(memberList));
+      // 담당자 없음 추가
+      memberList.unshift({
+        memberId: null,
+        user_name: "담당자 없음",
+        config: { form_total: true },
+      });
 
-    // 담당자 없음 추가
-    memberList.unshift({
-      memberId: null,
-      user_name: "담당자 없음",
-      config: { form_total: true },
-    });
+      const selectMemberList = await db.formOpen.findAll({
+        where: { formLink_idx: formId },
+        attributes: [["user_idx", "memberId"], "user_name"],
+      });
 
-    const selectMemberList = await db.formOpen.findAll({
-      where: { formLink_idx: formId },
-      attributes: [["user_idx", "memberId"], "user_name"],
-    });
+      const findResult = { memberList, selectMemberList, formTitle };
 
-    return res.send({
-      success: 200,
-      memberList,
-      selectMemberList,
-      formTitle: findForm.title,
-    });
+      return res.send({
+        success: 200,
+        findResult,
+      });
+    } catch (err) {
+      next(err);
+    }
   },
 };
