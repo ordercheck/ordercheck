@@ -197,6 +197,7 @@ module.exports = {
       next(err);
     }
   },
+
   showFormDetail: async (req, res, next) => {
     try {
       const { formDetail } = await findWhiteFormDetail(req.params.formId);

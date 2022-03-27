@@ -767,6 +767,7 @@ module.exports = {
         include: [
           {
             model: db.formOpen,
+            as: "member",
             attributes: ["user_name"],
           },
         ],
