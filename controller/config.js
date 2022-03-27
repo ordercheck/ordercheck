@@ -913,7 +913,11 @@ module.exports = {
         attributes: [["user_idx", "memberId"], "user_name"],
       });
 
-      const findResult = { memberList, selectMemberList, formTitle };
+      const findResult = {
+        memberList,
+        selectMemberList,
+        formTitle: findForm.title,
+      };
 
       return res.send({
         success: 200,
