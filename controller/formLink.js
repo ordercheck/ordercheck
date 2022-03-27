@@ -206,6 +206,7 @@ module.exports = {
       next(err);
     }
   },
+
   searchFormLink: async (req, res, next) => {
     try {
       const pureText = makePureText(req.params.title);

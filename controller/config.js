@@ -760,7 +760,6 @@ module.exports = {
   },
   showFormList: async (req, res, next) => {
     const { company_idx } = req;
-
     try {
       const findResult = await db.formLink.findAll({
         where: { company_idx },
@@ -771,6 +770,7 @@ module.exports = {
             attributes: ["user_name"],
           },
         ],
+        order: [["createdAt", "DESC"]],
         attributes: showFormListAttributes,
       });
       return res.send({ success: 200, findResult });
