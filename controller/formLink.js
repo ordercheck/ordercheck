@@ -39,6 +39,13 @@ module.exports = {
 
       const createResult = await form.createFormLink(insertData);
 
+      const formOpenData = {
+        formLink_idx: createResult.idx,
+        user_name: createResult.create_people,
+        user_idx,
+      };
+      await form.createOpenMember(formOpenData);
+
       res.send({
         success: 200,
         formId: createResult.idx,

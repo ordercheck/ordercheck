@@ -185,7 +185,7 @@ db.calculate.belongsTo(db.company, {
   foreignKey: "company_idx",
 });
 
-db.formLink.hasMany(db.formOpen, { foreignKey: "formLink_idx" });
+db.formLink.hasMany(db.formOpen, { foreignKey: "formLink_idx", as: "member" });
 db.formOpen.belongsTo(db.formLink, {
   foreignKey: "formLink_idx",
 });
