@@ -882,6 +882,7 @@ module.exports = {
       attributes: ["title"],
     });
 
+    // 열람 권한 있는 멤버 찾기
     let memberList = await db.userCompany.findAll({
       where: { company_idx, active: true, standBy: false },
       include: [
@@ -899,6 +900,7 @@ module.exports = {
 
     memberList = JSON.parse(JSON.stringify(memberList));
 
+    // 담당자 없음 추가
     memberList.unshift({
       memberId: null,
       user_name: "담당자 없음",
@@ -910,6 +912,11 @@ module.exports = {
       attributes: [["user_idx", "memberId"], "user_name"],
     });
 
-    return res.send({ success: 200, memberList, selectMemberList });
+    return res.send({
+      success: 200,
+      memberList,
+      selectMemberList,
+      formTitle: findForm.title,
+    });
   },
 };
