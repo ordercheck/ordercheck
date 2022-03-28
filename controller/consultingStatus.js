@@ -521,7 +521,7 @@ module.exports = {
     if (customer_phoneNumber) {
       // 전화번호 바꿨을 때 파일보관함에 바꾼 전화번호가 있으면 그대로
       const checkFileStore = await db.customerFile.findOne({
-        where: { customer_phoneNumber },
+        where: { customer_phoneNumber, company_idx },
         attributes: ["idx"],
       });
 
