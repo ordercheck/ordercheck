@@ -15,6 +15,7 @@ const {
   createFormLinkAttributes,
   getFormLinkInfoAttributes,
 } = require("../lib/attributes");
+const { company } = require("../model/db");
 module.exports = {
   createFormLink: async (req, res, next) => {
     const form = new Form({});
@@ -39,12 +40,41 @@ module.exports = {
 
       const createResult = await form.createFormLink(insertData);
 
-      const formOpenData = {
+      const findCompanyOwner = await db.company.findByPk(
+        company_idx,
+        {
+          include: [
+            {
+              model: db.user,
+
+              attributes: ["user_name", "idx"],
+            },
+          ],
+        },
+        {
+          attributes: ["idx"],
+        }
+      );
+
+      // 소유주인지 체크
+      if (user_idx !== findCompanyOwner.user.idx) {
+        // 폼 만든사람 데이터
+        const formOpenData = {
+          formLink_idx: createResult.idx,
+          user_name: createResult.create_people,
+          user_idx,
+        };
+        await form.createOpenMember(formOpenData);
+      }
+
+      // 소유주 데이터
+      const formOpenOwnerData = {
         formLink_idx: createResult.idx,
-        user_name: createResult.create_people,
-        user_idx,
+        user_name: findCompanyOwner.user.user_name,
+        user_idx: findCompanyOwner.user.idx,
       };
-      await form.createOpenMember(formOpenData);
+
+      await form.createOpenMember(formOpenOwnerData);
 
       res.send({
         success: 200,

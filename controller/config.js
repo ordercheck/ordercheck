@@ -875,6 +875,7 @@ module.exports = {
   showFormOpenMember: async (req, res, next) => {
     const {
       company_idx,
+      user_idx,
       params: { formId },
     } = req;
     try {
@@ -888,13 +889,6 @@ module.exports = {
         where: { company_idx, active: true, standBy: false },
         include: [
           {
-            model: db.config,
-            where: { form_total: true },
-            attributes: ["form_total"],
-          },
-        ],
-        include: [
-          {
             model: db.user,
             attributes: ["user_profile"],
           },
@@ -905,12 +899,24 @@ module.exports = {
         ],
       });
 
-      memberList = JSON.parse(JSON.stringify(memberList));
-      memberList = memberList.map((data) => {
-        data.user_profile = data.user.user_profile;
-        delete data.user;
-        return data;
+      // 소유주 idx 찾기
+      const companyOwner = await db.company.findByPk(company_idx, {
+        attributes: ["huidx"],
       });
+
+      memberList = JSON.parse(JSON.stringify(memberList));
+
+      for (i = 0; i < memberList.length; i++) {
+        if (memberList[i].memberId === companyOwner.huidx) {
+          memberList[i].owner = true;
+        }
+        memberList[i].user_profile = memberList[i].user.user_profile;
+        delete memberList[i].user;
+        if (memberList[i].memberId === user_idx) {
+          memberList.unshift(memberList[i]);
+          memberList.splice(i + 1, 1);
+        }
+      }
 
       let selectMemberList = await db.formOpen.findAll({
         where: { formLink_idx: formId },
@@ -918,6 +924,7 @@ module.exports = {
           {
             model: db.userCompany,
             attributes: ["idx"],
+            where: { active: true, standBy: false },
             include: [
               {
                 model: db.user,
@@ -931,11 +938,19 @@ module.exports = {
 
       selectMemberList = JSON.parse(JSON.stringify(selectMemberList));
 
-      selectMemberList = selectMemberList.map((data) => {
-        data.user_profile = data.userCompany.user.user_profile;
-        delete data.userCompany;
-        return data;
-      });
+      for (i = 0; i < selectMemberList.length; i++) {
+        if (selectMemberList[i].memberId === companyOwner.huidx) {
+          selectMemberList[i].owner = true;
+        }
+        selectMemberList[i].user_profile =
+          selectMemberList[i].userCompany.user.user_profile;
+        delete selectMemberList[i].userCompany;
+        if (selectMemberList[i].memberId === user_idx) {
+          selectMemberList.unshift(selectMemberList[i]);
+          selectMemberList.splice(i + 1, 1);
+        }
+      }
+
       const findResult = {
         memberList,
         selectMemberList,
