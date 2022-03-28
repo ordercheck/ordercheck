@@ -909,6 +909,8 @@ module.exports = {
       for (i = 0; i < memberList.length; i++) {
         if (memberList[i].memberId === companyOwner.huidx) {
           memberList[i].owner = true;
+        } else {
+          memberList[i].owner = false;
         }
         memberList[i].user_profile = memberList[i].user.user_profile;
         delete memberList[i].user;
@@ -941,7 +943,10 @@ module.exports = {
       for (i = 0; i < selectMemberList.length; i++) {
         if (selectMemberList[i].memberId === companyOwner.huidx) {
           selectMemberList[i].owner = true;
+        } else {
+          selectMemberList[i].owner = false;
         }
+
         selectMemberList[i].user_profile =
           selectMemberList[i].userCompany.user.user_profile;
         delete selectMemberList[i].userCompany;
