@@ -518,8 +518,30 @@ module.exports = {
     }
     res.send({ success: 200, consultResult });
 
-    // 파일 보관함 있는지 체크
-    // await
+    if (customer_phoneNumber) {
+      // 전화번호 바꿨을 때 파일보관함에 바꾼 전화번호가 있으면 그대로
+      const checkFileStore = await db.customerFile.findOne({
+        where: { customer_phoneNumber },
+        attributes: ["idx"],
+      });
+
+      if (!checkFileStore) {
+        const searchingPhoneNumber = customer_phoneNumber.replace(/\./g, "");
+
+        const findCustomer = await db.customer.findOne({
+          where: { customer_phoneNumber, company_idx },
+          attributes: ["customer_name"],
+        });
+        await db.customerFile.create({
+          customer_phoneNumber,
+          searchingPhoneNumber,
+          customer_name: findCustomer.customer_name,
+          company_idx,
+        });
+        return;
+      }
+    }
+    return;
   },
 
   addCalculate: async (req, res, next) => {

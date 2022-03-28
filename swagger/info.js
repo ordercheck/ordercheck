@@ -588,7 +588,7 @@
  *       '401':
  *         description: 실패
  * /api/config/company/form/set/member/{formId}:
- *   post:
+ *   patch:
  *      security:
  *       - bearerAuth: []
  *      tags:

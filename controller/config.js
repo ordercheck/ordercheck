@@ -27,6 +27,7 @@ const {
   getReceiptListAttributes,
   showFormListAttributes,
 } = require("../lib/attributes");
+const attributes = require("../lib/attributes");
 
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
@@ -785,17 +786,45 @@ module.exports = {
     } = req;
 
     try {
-      members.forEach(async (data) => {
-        const findUserNameResult = await db.user.findByPk(data, {
-          attributes: ["user_name"],
+      // 볼 수 있는 팀원들 전체 조회
+      const formOpenMembers = await db.formOpen.findAll({
+        where: { formLink_idx: formId },
+        attributes: ["user_idx", "idx"],
+        raw: true,
+      });
+
+      // db에 넣기
+      for (i = 0; i < members.length; i++) {
+        const checkMemberResult = await db.formOpen.findOne({
+          where: { formLink_idx: formId, user_idx: members[i] },
         });
 
-        await db.formOpen.create({
-          formLink_idx: formId,
-          user_name: findUserNameResult.user_name,
-          user_idx: data,
-        });
-      });
+        if (!checkMemberResult) {
+          // 이름 찾기
+          const findUser = await db.user.findByPk(members[i], {
+            attributes: ["user_name"],
+          });
+          await db.formOpen.create({
+            formLink_idx: formId,
+            user_idx: members[i],
+            user_name: findUser.user_name,
+          });
+        }
+      }
+
+      // 삭제할 idx 찾기
+      delData = [];
+      for (i = 0; i < formOpenMembers.length; i++) {
+        const result = members.includes(formOpenMembers[i].user_idx);
+        if (!result) {
+          delData.push(formOpenMembers[i].idx);
+        }
+      }
+
+      await db.formOpen.destroy({ where: { idx: delData } });
+
+      await db.formOpen.findAll({});
+
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
