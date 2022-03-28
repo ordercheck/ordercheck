@@ -912,13 +912,6 @@ module.exports = {
         return data;
       });
 
-      // 담당자 없음 추가
-      memberList.unshift({
-        memberId: null,
-        user_name: "담당자 없음",
-        user_profile: "",
-      });
-
       let selectMemberList = await db.formOpen.findAll({
         where: { formLink_idx: formId },
         include: [
