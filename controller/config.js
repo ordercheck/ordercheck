@@ -1000,4 +1000,23 @@ module.exports = {
       next(err);
     }
   },
+  changeWhiteLabel: async (req, res, next) => {
+    const {
+      params: { check },
+      company_idx,
+    } = req;
+
+    await db.company.update(
+      {
+        whiteLabelChecked: check,
+      },
+      {
+        where: {
+          company_idx,
+        },
+      }
+    );
+
+    return res.send({ success: 200 });
+  },
 };

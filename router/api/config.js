@@ -33,6 +33,7 @@ const {
   changeMainCardEmail,
   createCompany,
   showFormOpenMember,
+  changeWhiteLabel,
   addTemplate,
 } = require("../../controller/config");
 const {
@@ -103,6 +104,7 @@ router.patch(
   setFormOpenMembers
 );
 router.get("/company/chat/template", loginCheck, showChatTemplate);
+router.patch("/whiteLabel/:check", loginCheck, changeWhiteLabel);
 router.post("/company/exist", loginCheck, createCompany);
 
 module.exports = router;
