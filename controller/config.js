@@ -44,7 +44,8 @@ module.exports = {
           text_cost,
           plan.whiteLabelChecked,  
           chatChecked, 
-          analysticChecked
+          analysticChecked,
+          form_link_count
           FROM userCompany 
           LEFT JOIN company ON userCompany.company_idx = company.idx
           LEFT JOIN plan ON userCompany.company_idx = plan.company_idx

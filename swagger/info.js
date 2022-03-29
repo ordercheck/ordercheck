@@ -726,4 +726,22 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/config/company/whiteLabel/{check}:
+ *   patch:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  config
+ *      summary: 화이트 라벨 설정 (check 0 또는 1)
+ *      parameters:
+ *         - in: path
+ *           name: check
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */
