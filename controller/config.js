@@ -34,6 +34,7 @@ moment.tz.setDefault("Asia/Seoul");
 
 module.exports = {
   getCompanyProfile: async (req, res, next) => {
+    const { user_idx, company_idx } = req;
     try {
       let companyProfile = await db.sequelize
         .query(
@@ -52,11 +53,38 @@ module.exports = {
           LEFT JOIN user ON company.huidx = user.idx
           LEFT JOIN card ON card.user_idx = user.idx AND main=true
           LEFT JOIN sms ON sms.user_idx = user.idx
-          WHERE userCompany.user_idx = ${req.user_idx} AND userCompany.active = true AND standBy = false`
+          WHERE userCompany.user_idx = ${user_idx} AND userCompany.active = true AND standBy = false`
         )
         .spread((r) => {
           return makeSpreadArray(r);
         });
+      const findPlan = await db.plan.findOne({
+        where: { company_idx, active: 1 },
+        attributes: [
+          "plan",
+          "chat_price",
+          "analystic_price",
+          "whiteLabel_price",
+          "expire_plan",
+          "free_plan",
+          "pay_type",
+        ],
+      });
+
+      const planDetail = {
+        plan: findPlan.plan,
+        chat_price: findPlan.chat_price.toLocaleString(),
+        analystic_price: findPlan.analystic_price.toLocaleString(),
+        whiteLabel_price: findPlan.whiteLabel_price.toLocaleString(),
+        expire_plan: findPlan.expire_plan
+          ? moment(findPlan.expire_plan.replace(/\./g, "-"))
+              .add(1, "d")
+              .format("YYYY.MM.DD")
+          : false,
+        free_plan: findPlan.free_plan ? true : false,
+        pay_type: findPlan.pay_type,
+      };
+      companyProfile[0].planDetail = planDetail;
 
       return res.send({ success: 200, companyProfile: companyProfile[0] });
     } catch (err) {
@@ -114,6 +142,7 @@ module.exports = {
       next(err);
     }
   },
+
   changeCompanyEnrollment: async (req, res, next) => {
     const { company_idx, file } = req;
     const company = new Company({});
@@ -148,6 +177,7 @@ module.exports = {
       next(err);
     }
   },
+
   searchMember: async (req, res, next) => {
     const {
       query: { search },
@@ -173,6 +203,7 @@ module.exports = {
       next(err);
     }
   },
+
   delCompanyMember: async (req, res, next) => {
     const {
       params: { memberId },
