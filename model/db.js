@@ -286,6 +286,17 @@ db.userCompany.belongsTo(db.user, {
   foreignKey: "user_idx",
 });
 
+//userCompany와 formLink
+db.userCompany.hasMany(db.formLink, {
+  foreignKey: "user_idx",
+  sourceKey: "user_idx",
+  onDelete: "cascade",
+});
+db.formLink.belongsTo(db.userCompany, {
+  foreignKey: "user_idx",
+  targetKey: "user_idx",
+});
+
 // config와 userCompany
 db.config.hasOne(db.userCompany, {
   foreignKey: "config_idx",

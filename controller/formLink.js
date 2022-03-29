@@ -37,6 +37,7 @@ module.exports = {
       insertData.searchingTitle = pureText;
       insertData.create_people = findUserNameResult.user_name;
       insertData.tempType = tempType;
+      insertData.user_idx = user_idx;
 
       const createResult = await form.createFormLink(insertData);
 
@@ -46,7 +47,6 @@ module.exports = {
           include: [
             {
               model: db.user,
-
               attributes: ["user_name", "idx"],
             },
           ],
@@ -99,11 +99,11 @@ module.exports = {
     }
   },
   showFormLink: async (req, res, next) => {
-    const { company_idx } = req;
+    const { company_idx, user_idx } = req;
     const form = new Form({});
     try {
       let formList = await form.findAllLink(
-        { company_idx },
+        { company_idx, user_idx },
         createFormLinkAttributes
       );
 
