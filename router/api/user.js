@@ -170,7 +170,6 @@ router.post("/login", async (req, res, next) => {
   const findCompany = await db.company.findOne({
     where: { company_subdomain, deleted: null },
   });
-
   let checkCompanyStandBy = await db.userCompany.findOne({
     where: {
       user_idx: check.idx,
@@ -314,7 +313,6 @@ router.post("/join/do", async (req, res, next) => {
       const createTempalteResult = await template.createConfig(masterConfig);
 
       // 팀원 template  만들기
-
       await template.createConfig({
         company_idx: randomCompany.idx,
       });
@@ -354,7 +352,12 @@ router.post("/join/do", async (req, res, next) => {
         config_idx: findConfigResult.idx,
       });
 
-      return res.send({ success: 200, loginToken, status: "standBy" });
+      return res.send({
+        success: 200,
+        loginToken,
+        company_subdomain: randomCompany.company_subdomain,
+        status: "standBy",
+      });
     }
   } catch (err) {
     next(err);

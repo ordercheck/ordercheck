@@ -12,7 +12,7 @@
 
 module.exports = function (sequelize, DataTypes) {
   //테이블을 정의
-  return sequelize.define('plan', {
+  return sequelize.define("plan", {
     idx: {
       autoIncrement: true,
       primaryKey: true,
@@ -20,7 +20,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     plan: {
       allowNull: false,
-      defaultValue: 'FREE',
+      defaultValue: "프리",
       type: DataTypes.STRING(100),
     },
 

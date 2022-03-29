@@ -185,7 +185,7 @@ db.calculate.belongsTo(db.company, {
   foreignKey: "company_idx",
 });
 
-db.formLink.hasMany(db.formOpen, { foreignKey: "formLink_idx" });
+db.formLink.hasMany(db.formOpen, { foreignKey: "formLink_idx", as: "member" });
 db.formOpen.belongsTo(db.formLink, {
   foreignKey: "formLink_idx",
 });
@@ -286,6 +286,17 @@ db.userCompany.belongsTo(db.user, {
   foreignKey: "user_idx",
 });
 
+//userCompany와 formLink
+db.userCompany.hasMany(db.formLink, {
+  foreignKey: "user_idx",
+  sourceKey: "user_idx",
+  onDelete: "cascade",
+});
+db.formLink.belongsTo(db.userCompany, {
+  foreignKey: "user_idx",
+  targetKey: "user_idx",
+});
+
 // config와 userCompany
 db.config.hasOne(db.userCompany, {
   foreignKey: "config_idx",
@@ -305,6 +316,7 @@ db.userCompany.belongsTo(db.company, {
 });
 
 // formOpen과 userCompany
+
 db.userCompany.hasMany(db.formOpen, {
   foreignKey: "user_idx",
   sourceKey: "user_idx",

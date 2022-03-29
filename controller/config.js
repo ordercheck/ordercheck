@@ -27,12 +27,14 @@ const {
   getReceiptListAttributes,
   showFormListAttributes,
 } = require("../lib/attributes");
+const attributes = require("../lib/attributes");
 
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
 
 module.exports = {
   getCompanyProfile: async (req, res, next) => {
+    const { user_idx, company_idx } = req;
     try {
       let companyProfile = await db.sequelize
         .query(
@@ -41,20 +43,52 @@ module.exports = {
           card.message_active AS messageActive,
           card.active AS cardActive,
           text_cost,
-          whiteLabelChecked,  
+          plan.whiteLabelChecked,  
           chatChecked, 
-          analysticChecked
+          analysticChecked,
+          form_link_count
           FROM userCompany 
           LEFT JOIN company ON userCompany.company_idx = company.idx
           LEFT JOIN plan ON userCompany.company_idx = plan.company_idx
           LEFT JOIN user ON company.huidx = user.idx
           LEFT JOIN card ON card.user_idx = user.idx AND main=true
           LEFT JOIN sms ON sms.user_idx = user.idx
-          WHERE userCompany.user_idx = ${req.user_idx} AND userCompany.active = true AND standBy = false`
+          WHERE userCompany.user_idx = ${user_idx} AND userCompany.active = true AND standBy = false`
         )
         .spread((r) => {
           return makeSpreadArray(r);
         });
+      const findPlan = await db.plan.findOne({
+        where: { company_idx, active: 1 },
+        attributes: [
+          "plan",
+          "chat_price",
+          "analystic_price",
+          "whiteLabel_price",
+          "expire_plan",
+          "plan_price",
+          "free_plan",
+          "start_plan",
+          "pay_type",
+        ],
+      });
+
+      const planDetail = {
+        plan: findPlan.plan,
+        plan_price: findPlan.plan_price.toLocaleString(),
+        chat_price: findPlan.chat_price.toLocaleString(),
+        analystic_price: findPlan.analystic_price.toLocaleString(),
+        whiteLabel_price: findPlan.whiteLabel_price.toLocaleString(),
+        start_plan: findPlan.start_plan ? findPlan.start_plan : false,
+        expire_plan: findPlan.expire_plan
+          ? moment(findPlan.expire_plan.replace(/\./g, "-"))
+              .add(1, "d")
+              .format("YYYY.MM.DD")
+          : false,
+        free_plan: findPlan.free_plan ? true : false,
+        pay_type: findPlan.pay_type,
+      };
+      companyProfile[0].planDetail = planDetail;
 
       return res.send({ success: 200, companyProfile: companyProfile[0] });
     } catch (err) {
@@ -112,6 +146,7 @@ module.exports = {
       next(err);
     }
   },
+
   changeCompanyEnrollment: async (req, res, next) => {
     const { company_idx, file } = req;
     const company = new Company({});
@@ -146,6 +181,7 @@ module.exports = {
       next(err);
     }
   },
+
   searchMember: async (req, res, next) => {
     const {
       query: { search },
@@ -171,6 +207,7 @@ module.exports = {
       next(err);
     }
   },
+
   delCompanyMember: async (req, res, next) => {
     const {
       params: { memberId },
@@ -760,16 +797,17 @@ module.exports = {
   },
   showFormList: async (req, res, next) => {
     const { company_idx } = req;
-
     try {
       const findResult = await db.formLink.findAll({
         where: { company_idx },
         include: [
           {
             model: db.formOpen,
+            as: "member",
             attributes: ["user_name"],
           },
         ],
+        order: [["createdAt", "DESC"]],
         attributes: showFormListAttributes,
       });
       return res.send({ success: 200, findResult });
@@ -784,17 +822,45 @@ module.exports = {
     } = req;
 
     try {
-      members.forEach(async (data) => {
-        const findUserNameResult = await db.user.findByPk(data, {
-          attributes: ["user_name"],
+      // 볼 수 있는 팀원들 전체 조회
+      const formOpenMembers = await db.formOpen.findAll({
+        where: { formLink_idx: formId },
+        attributes: ["user_idx", "idx"],
+        raw: true,
+      });
+
+      // db에 넣기
+      for (i = 0; i < members.length; i++) {
+        const checkMemberResult = await db.formOpen.findOne({
+          where: { formLink_idx: formId, user_idx: members[i] },
         });
 
-        await db.formOpen.create({
-          formLink_idx: formId,
-          user_name: findUserNameResult.user_name,
-          user_idx: data,
-        });
-      });
+        if (!checkMemberResult) {
+          // 이름 찾기
+          const findUser = await db.user.findByPk(members[i], {
+            attributes: ["user_name"],
+          });
+          await db.formOpen.create({
+            formLink_idx: formId,
+            user_idx: members[i],
+            user_name: findUser.user_name,
+          });
+        }
+      }
+
+      // 삭제할 idx 찾기
+      delData = [];
+      for (i = 0; i < formOpenMembers.length; i++) {
+        const result = members.includes(formOpenMembers[i].user_idx);
+        if (!result) {
+          delData.push(formOpenMembers[i].idx);
+        }
+      }
+
+      await db.formOpen.destroy({ where: { idx: delData } });
+
+      await db.formOpen.findAll({});
+
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
@@ -870,5 +936,122 @@ module.exports = {
     } catch (err) {
       next(err);
     }
+  },
+  showFormOpenMember: async (req, res, next) => {
+    const {
+      company_idx,
+      user_idx,
+      params: { formId },
+    } = req;
+    try {
+      // 해당 form 찾기
+      const findForm = await db.formLink.findByPk(formId, {
+        attributes: ["title"],
+      });
+
+      // 열람 권한 있는 멤버 찾기
+      let memberList = await db.userCompany.findAll({
+        where: { company_idx, active: true, standBy: false },
+        include: [
+          {
+            model: db.user,
+            attributes: ["user_profile"],
+          },
+        ],
+        attributes: [
+          ["user_idx", "memberId"],
+          ["searchingName", "user_name"],
+        ],
+      });
+
+      // 소유주 idx 찾기
+      const companyOwner = await db.company.findByPk(company_idx, {
+        attributes: ["huidx"],
+      });
+
+      memberList = JSON.parse(JSON.stringify(memberList));
+
+      for (i = 0; i < memberList.length; i++) {
+        if (memberList[i].memberId === companyOwner.huidx) {
+          memberList[i].owner = true;
+        } else {
+          memberList[i].owner = false;
+        }
+        memberList[i].user_profile = memberList[i].user.user_profile;
+        delete memberList[i].user;
+        if (memberList[i].memberId === user_idx) {
+          memberList.unshift(memberList[i]);
+          memberList.splice(i + 1, 1);
+        }
+      }
+
+      let selectMemberList = await db.formOpen.findAll({
+        where: { formLink_idx: formId },
+        include: [
+          {
+            model: db.userCompany,
+            attributes: ["idx"],
+            where: { active: true, standBy: false },
+            include: [
+              {
+                model: db.user,
+                attributes: ["user_profile"],
+              },
+            ],
+          },
+        ],
+        attributes: [["user_idx", "memberId"], "user_name"],
+      });
+
+      selectMemberList = JSON.parse(JSON.stringify(selectMemberList));
+
+      for (i = 0; i < selectMemberList.length; i++) {
+        if (selectMemberList[i].memberId === companyOwner.huidx) {
+          selectMemberList[i].owner = true;
+        } else {
+          selectMemberList[i].owner = false;
+        }
+
+        selectMemberList[i].user_profile =
+          selectMemberList[i].userCompany.user.user_profile;
+        delete selectMemberList[i].userCompany;
+        if (selectMemberList[i].memberId === user_idx) {
+          selectMemberList.unshift(selectMemberList[i]);
+          selectMemberList.splice(i + 1, 1);
+        }
+      }
+
+      const findResult = {
+        memberList,
+        selectMemberList,
+        formTitle: findForm.title,
+      };
+
+      return res.send({
+        success: 200,
+        findResult,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+  changeWhiteLabel: async (req, res, next) => {
+    const {
+      params: { check },
+      company_idx,
+    } = req;
+
+    await db.company.update(
+      {
+        whiteLabelChecked: check,
+      },
+      {
+        where: {
+          company_idx,
+        },
+      }
+    );
+
+    return res.send({ success: 200 });
   },
 };

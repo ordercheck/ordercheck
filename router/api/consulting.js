@@ -36,6 +36,7 @@ router.post("/filter/:limit/:page", loginCheck, Filter);
 // *****************************show*********************************
 // 고객 연동하기에서 고객들을 보여주기
 router.post("/integrated/user", loginCheck, showIntegratedUser);
+
 router.patch("/integrated/user", loginCheck, doIntegratedUser);
 
 // 해당 상담 견적서 보여주기
@@ -134,6 +135,7 @@ router.post("/customer", loginCheck, checkCustomerLimit, addCompanyCustomer);
 
 // 고객 통합 검색
 router.get("/customer/search/:limit/:page", loginCheck, searchCustomer);
+
 // 컨설팅 삭제
 router.delete("/:customer_idx", loginCheck, delConsulting);
 

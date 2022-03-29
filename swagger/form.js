@@ -129,7 +129,7 @@
  *       - bearerAuth: []
  *     tags:
  *       -  Form
- *     summary: form 제목 화이트라벨 업데이트
+ *     summary: form 제목 업데이트
  *     requestBody:
  *      content:
  *        application/json:
@@ -140,12 +140,9 @@
  *                type: string
  *              title:
  *                type: string
- *              whiteLabelChecked:
- *                type: boolean
  *            example:
  *              formId: "form idx"
  *              title: "title"
- *              whiteLabelChecked: true
  *     responses:
  *       '200':
  *         description: 성공

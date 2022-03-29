@@ -588,7 +588,7 @@
  *       '401':
  *         description: 실패
  * /api/config/company/form/set/member/{formId}:
- *   post:
+ *   patch:
  *      security:
  *       - bearerAuth: []
  *      tags:
@@ -703,6 +703,42 @@
  *             example:
  *               company_subdomain: "회사 서브 도메인"
  *               company_name: '회사 이름'
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/config/company/form/open/member/{formId}:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  config
+ *      summary: 폼 권한 멤버들 보여주기
+ *      parameters:
+ *         - in: path
+ *           name: formId
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/config/company/whiteLabel/{check}:
+ *   patch:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  config
+ *      summary: 화이트 라벨 설정 (check 0 또는 1)
+ *      parameters:
+ *         - in: path
+ *           name: check
+ *           schema:
+ *             type: integer
+ *           example: 1
  *      responses:
  *       '200':
  *         description: 성공
