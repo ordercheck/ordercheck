@@ -98,6 +98,7 @@ module.exports = {
       next(err);
     }
   },
+
   showFormLink: async (req, res, next) => {
     const { company_idx, user_idx } = req;
     const form = new Form({});
@@ -114,6 +115,7 @@ module.exports = {
         data.urlPath = data.form_link;
         return data;
       });
+
       return res.send({ success: 200, formList });
     } catch (err) {
       next(err);
@@ -121,7 +123,10 @@ module.exports = {
   },
   createThumbNail: async (req, res, next) => {
     try {
-      const { formId } = req.params;
+      const {
+        params: { formId },
+        company_idx,
+      } = req;
 
       const originalUrl = req.file.location;
       const thumbNail_title = getFileName(originalUrl);
@@ -135,7 +140,7 @@ module.exports = {
         { where: { idx: formId } }
       );
 
-      const { formDetail } = await findWhiteFormDetail(formId);
+      const { formDetail } = await findWhiteFormDetail(formId, company_idx);
       res.send({ success: 200, formDetail });
 
       // 팀원들에게 알람 보내기
@@ -198,18 +203,20 @@ module.exports = {
       user_idx,
       company_idx,
     } = req;
+
     try {
       const formTitle = await db.formLink.findByPk(formId, {
         attributes: ["title"],
       });
       await db.formLink.destroy({ where: { idx: formId } });
+
       res.send({ success: 200, message: "삭제 성공" });
 
       // 팀원들에게 알람 보내기
       const findUser = await db.user.findByPk(user_idx, {
         attributes: ["user_name"],
       });
-      //
+
       const io = req.app.get("io");
       const findMembers = await findMemberExceptMe(company_idx, user_idx);
       const message = `${findUser.user_name}님이 [${formTitle.title}] 신청폼을 삭제하였습니다.`;
@@ -229,8 +236,12 @@ module.exports = {
   },
 
   showFormDetail: async (req, res, next) => {
+    const {
+      params: { formId },
+      company_idx,
+    } = req;
     try {
-      const { formDetail } = await findWhiteFormDetail(req.params.formId);
+      const { formDetail } = await findWhiteFormDetail(formId, company_idx);
       return res.send({ success: 200, formDetail });
     } catch (err) {
       next(err);
@@ -248,7 +259,7 @@ module.exports = {
   },
   updateForm: async (req, res, next) => {
     const {
-      body: { title, whiteLabelChecked, formId, expression },
+      body: { title, formId, expression },
       company_idx,
       user_idx,
     } = req;
@@ -261,13 +272,12 @@ module.exports = {
           title,
           expression,
           searchingTitle,
-          whiteLabelChecked,
         },
         { where: { idx: formId } }
       );
 
       // 수정된 정보를 찾기
-      const { formDetail } = await findWhiteFormDetail(formId);
+      const { formDetail } = await findWhiteFormDetail(formId, company_idx);
 
       res.send({ success: 200, formDetail });
 

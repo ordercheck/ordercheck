@@ -75,5 +75,10 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: true,
       type: DataTypes.BOOLEAN,
     },
+    whiteLabelChecked: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
+    },
   });
 };

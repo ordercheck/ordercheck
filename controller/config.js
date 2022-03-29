@@ -42,7 +42,7 @@ module.exports = {
           card.message_active AS messageActive,
           card.active AS cardActive,
           text_cost,
-          whiteLabelChecked,  
+          plan.whiteLabelChecked,  
           chatChecked, 
           analysticChecked
           FROM userCompany 
