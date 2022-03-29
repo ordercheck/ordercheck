@@ -66,6 +66,7 @@ module.exports = {
           "analystic_price",
           "whiteLabel_price",
           "expire_plan",
+          "plan_price",
           "free_plan",
           "pay_type",
         ],
@@ -73,6 +74,7 @@ module.exports = {
 
       const planDetail = {
         plan: findPlan.plan,
+        plan_price: findPlan.plan_price.toLocaleString(),
         chat_price: findPlan.chat_price.toLocaleString(),
         analystic_price: findPlan.analystic_price.toLocaleString(),
         whiteLabel_price: findPlan.whiteLabel_price.toLocaleString(),
