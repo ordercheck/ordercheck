@@ -121,7 +121,10 @@ module.exports = {
               {
                 model: db.userCompany,
                 as: "user",
-                attributes: ["idx", ["searchingName", "user_name"]],
+                attributes: [
+                  ["user_idx", "idx"],
+                  ["searchingName", "user_name"],
+                ],
               },
             ],
             attributes: customerAttributes,
@@ -214,7 +217,6 @@ module.exports = {
 
     if (userId) {
       userId[userId.indexOf(0)] = null;
-
       contractPerson = userId;
     }
 
