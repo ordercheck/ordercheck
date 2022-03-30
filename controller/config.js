@@ -958,7 +958,7 @@ module.exports = {
             attributes: ["user_profile"],
           },
         ],
-        order: [["user_name", "ASC"]],
+        order: [["searchingName", "ASC"]],
         attributes: [
           ["user_idx", "memberId"],
           ["searchingName", "user_name"],
