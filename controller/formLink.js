@@ -375,7 +375,6 @@ module.exports = {
       next(err);
     }
   },
-
   getFormLinkInfo: async (req, res, next) => {
     const {
       params: { form_link },

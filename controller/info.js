@@ -358,7 +358,7 @@ module.exports = {
       }
 
       const findCompanySub = await db.company.findOne({
-        where: { huidx: user_idx },
+        where: { huidx: user_idx, deleted: null },
       });
 
       return res.send({
