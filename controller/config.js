@@ -1000,6 +1000,7 @@ module.exports = {
             ],
           },
         ],
+        order: [["user_name", "ASC"]],
         attributes: [["user_idx", "memberId"], "user_name"],
       });
 
