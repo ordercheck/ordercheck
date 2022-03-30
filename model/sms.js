@@ -8,6 +8,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     text_cost: {
       allowNull: false,
+      defaultValue: 0,
       type: DataTypes.INTEGER,
     },
 
