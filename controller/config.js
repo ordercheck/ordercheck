@@ -958,6 +958,7 @@ module.exports = {
             attributes: ["user_profile"],
           },
         ],
+        order: [["user_name", "ASC"]],
         attributes: [
           ["user_idx", "memberId"],
           ["searchingName", "user_name"],
@@ -1000,7 +1001,7 @@ module.exports = {
             ],
           },
         ],
-        order: [["user_name", "DESC"]],
+        order: [["user_name", "ASC"]],
         attributes: [["user_idx", "memberId"], "user_name"],
       });
 
