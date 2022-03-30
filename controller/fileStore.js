@@ -206,7 +206,7 @@ module.exports = {
         const findUserResult = await db.user.findByPk(req.user_idx, {
           attributes: ["user_name"],
         });
-        console.log(findUserResult);
+
         req.body.path = req.query.path;
         req.body.upload_people = findUserResult.user_name;
         req.body.file_url = files[i].location;

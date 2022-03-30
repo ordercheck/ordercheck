@@ -41,6 +41,7 @@ module.exports = {
           `SELECT plan, company_name, company_logo, company_subdomain, address, 
           detail_address, company.business_number, business_enrollment, business_enrollment_title, user_name,
           card.message_active AS messageActive,
+          companyexist,
           card.active AS cardActive,
           text_cost,
           plan.whiteLabelChecked,  

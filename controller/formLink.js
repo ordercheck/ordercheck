@@ -111,6 +111,7 @@ module.exports = {
       if (!formList) {
         return res.send({ success: 400, message: "등록된 폼이 없습니다" });
       }
+
       formList = formList.map((data) => {
         data.urlPath = data.form_link;
         return data;
@@ -197,6 +198,7 @@ module.exports = {
       duplicateResult,
     });
   },
+
   delFormLink: async (req, res, next) => {
     const {
       params: { formId },
@@ -257,6 +259,7 @@ module.exports = {
       next(err);
     }
   },
+
   updateForm: async (req, res, next) => {
     const {
       body: { title, formId, expression },
@@ -304,6 +307,7 @@ module.exports = {
       next(err);
     }
   },
+
   deleteThumbNail: async (req, res, next) => {
     try {
       const {
@@ -346,6 +350,7 @@ module.exports = {
       next(err);
     }
   },
+
   updateFormTitle: async (req, res, next) => {
     const {
       body: { formId, title },
@@ -370,6 +375,7 @@ module.exports = {
       next(err);
     }
   },
+
   getFormLinkInfo: async (req, res, next) => {
     const {
       params: { form_link },
