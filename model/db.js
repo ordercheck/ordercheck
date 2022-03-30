@@ -316,7 +316,6 @@ db.userCompany.belongsTo(db.company, {
 });
 
 // formOpen과 userCompany
-
 db.userCompany.hasMany(db.formOpen, {
   foreignKey: "user_idx",
   sourceKey: "user_idx",
