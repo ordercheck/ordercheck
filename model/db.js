@@ -69,12 +69,6 @@ db.store.belongsTo(db.user, {
   foreignKey: "user_idx",
 });
 
-// user와 delReason
-db.user.hasOne(db.delReason, { foreignKey: "user_idx", onDelete: "cascade" });
-db.delReason.belongsTo(db.user, {
-  foreignKey: "user_idx",
-});
-
 // company와 chatTemplate
 db.company.hasMany(db.chatTemplate, {
   foreignKey: "company_idx",

@@ -157,7 +157,7 @@ module.exports = {
       });
 
       // 탈퇴사유 생성
-      await db.delReason.create({ reason, user_idx });
+      await db.delReason.create({ reason });
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
