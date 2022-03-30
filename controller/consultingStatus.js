@@ -67,7 +67,7 @@ module.exports = {
           await t.commit();
 
           db.company.increment(
-            { form_link_count: 1, customer_count: 1 },
+            { form_link_count: 1 },
             { where: { idx: formLinkCompany.company_idx } }
           );
 
