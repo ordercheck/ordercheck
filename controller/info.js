@@ -140,35 +140,23 @@ module.exports = {
         await cancelSchedule(findMainCard.customer_uid, findPlan.merchant_uid);
       }
 
-      // 탈퇴사유 생성
-      await db.delReason.create({ reason, user_idx });
-
       // 계정 delete처리
 
-      const deletedTime = moment();
       // 유저 탈퇴처리
-      await db.user.update(
-        {
-          deleted: deletedTime,
+      await db.user.destroy({
+        where: {
+          idx: user_idx,
         },
-        {
-          where: {
-            idx: user_idx,
-          },
-        }
-      );
+      });
       // 회사 탈퇴 처리
-      await db.company.update(
-        {
-          deleted: deletedTime,
+      await db.company.destroy({
+        where: {
+          huidx: user_idx,
         },
-        {
-          where: {
-            huidx: user_idx,
-          },
-        }
-      );
+      });
 
+      // 탈퇴사유 생성
+      await db.delReason.create({ reason, user_idx });
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
@@ -191,97 +179,6 @@ module.exports = {
         });
       }
 
-      // 지금 회사가 무료플랜인지 체크 나중에 삭제
-      // const checking = await db.plan.findOne({ where: { company_idx } });
-      // if (checking.plan == "FREE") {
-      //   const checkHuidx = await db.company.findByPk(company_idx, {
-      //     attributes: ["huidx"],
-      //   });
-
-      //   if (user_idx == checkHuidx.huidx) {
-      //     const checkUsers = await db.userCompany.findAll({
-      //       where: { company_idx, active: true, standBy: false },
-      //       raw: true,
-      //     });
-
-      //     await db.company.destroy({ where: { idx: company_idx } });
-
-      //     checkUsers.forEach(async (data) => {
-      //       await db.userCompany.update(
-      //         { active: true },
-      //         {
-      //           where: {
-      //             user_idx: data.user_idx,
-      //             active: false,
-      //             standBy: false,
-      //           },
-      //         }
-      //       );
-      //     });
-      //     const template = new Template({});
-      //     // 랜덤 회사 만들기
-      //     const randomCompany = await createRandomCompany(user_idx);
-
-      //     // master template 만들기
-      //     masterConfig.company_idx = randomCompany.idx;
-      //     const createTempalteResult = await template.createConfig(
-      //       masterConfig
-      //     );
-
-      //     // 팀원 template  만들기
-      //     await template.createConfig({
-      //       company_idx: randomCompany.idx,
-      //     });
-
-      //     const findUser = await db.user.findByPk(user_idx);
-      //     // 유저 회사에 소속시키기
-      //     await includeUserToCompany({
-      //       user_idx: user_idx,
-      //       company_idx: randomCompany.idx,
-      //       searchingName: findUser.user_name,
-      //       config_idx: createTempalteResult.idx,
-      //     });
-
-      //     // 무료 플랜 만들기
-      //     await createFreePlan(randomCompany.idx);
-      //   } else {
-      //     await db.userCompany.destroy({
-      //       where: {
-      //         company_idx,
-      //         user_idx,
-      //       },
-      //     });
-      //     await db.userCompany.update(
-      //       { active: true },
-      //       { where: { user_idx, active: false, standBy: false } }
-      //     );
-      //   }
-      //   const findSub = await db.company.findOne({
-      //     where: {
-      //       huidx: user_idx,
-      //     },
-      //     attributes: ["company_subdomain"],
-      //   });
-
-      //   return res.send({
-      //     success: 200,
-      //     company_subdomain: findSub.company_subdomain,
-      //   });
-      // }
-
-      // 기존에 사용하던 무료플랜 체크
-      // const checkCompany = await db.company.findOne({
-      //   where: {
-      //     huidx: user_idx,
-      //   },
-      //   include: [
-      //     {
-      //       model: db.plan,
-      //       where: { plan: "FREE" },
-      //     },
-      //   ],
-      // });
-
       const checkHuidx = await db.company.findByPk(company_idx, {
         attributes: ["huidx"],
       });
@@ -289,20 +186,8 @@ module.exports = {
       if (user_idx == checkHuidx.huidx) {
         // 소유주 빼고 팀원들 찾기
         const findUserCompany = await findMemberExceptMe(company_idx, user_idx);
-        // 소유주가 탈퇴한 회사 delete처리
-        const deletedTime = moment();
 
-        await db.company.update(
-          { deleted: deletedTime },
-          { where: { idx: company_idx } }
-        );
-
-        // 소속 다 제거
-        await db.userCompany.destroy({
-          where: {
-            company_idx,
-          },
-        });
+        await db.company.destroy({ where: { idx: company_idx } });
 
         // 팀원들 다른 플랜 active처리
         findUserCompany.forEach(async (data) => {
@@ -358,7 +243,7 @@ module.exports = {
       }
 
       const findCompanySub = await db.company.findOne({
-        where: { huidx: user_idx, deleted: null },
+        where: { huidx: user_idx },
       });
 
       return res.send({
@@ -460,7 +345,7 @@ module.exports = {
     try {
       // 회사 정보 먼저 찾기
       const findCompanyResult = await db.company.findOne({
-        where: { company_subdomain, deleted: null },
+        where: { company_subdomain },
         include: [
           {
             model: db.config,

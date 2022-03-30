@@ -6,6 +6,7 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
+
     personal_code: {
       allowNull: false,
       defaultValue: "",
@@ -34,6 +35,7 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: "",
       type: DataTypes.STRING(100),
     },
+
     user_password: {
       allowNull: false,
       defaultValue: "",
@@ -48,7 +50,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER(4),
     },
 
-    deleted: {
+    stopped: {
       allowNull: true,
       type: DataTypes.DATE(),
     },
@@ -57,13 +59,20 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.BOOLEAN,
     },
+
     private_agree: {
       allowNull: true,
       type: DataTypes.BOOLEAN,
     },
+
     marketing_agree: {
       allowNull: true,
       type: DataTypes.BOOLEAN,
+    },
+
+    last_login: {
+      allowNull: true,
+      type: DataTypes.DATE(),
     },
   });
 };

@@ -6,12 +6,6 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-    //host uidx
-    // huidx: {
-    //   allowNull: true,
-    //   unique: true,
-    //   type: DataTypes.INTEGER,
-    // },
     company_name: {
       allowNull: false,
       defaultValue: "",
@@ -63,11 +57,6 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       defaultValue: "",
       type: DataTypes.STRING(100),
-    },
-
-    deleted: {
-      allowNull: true,
-      type: DataTypes.DATE(),
     },
 
     companyexist: {

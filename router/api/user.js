@@ -111,30 +111,11 @@ const addPlanAndSchedule = async (
 router.post("/login", async (req, res, next) => {
   const { user_phone, user_password, company_subdomain } = req.body;
   const template = new Template({});
-
-  let check = await db.user.findOne({ where: { user_phone, deleted: null } });
+  const last_login = moment();
+  let check = await db.user.findOne({ where: { user_phone } });
   if (!check) {
     return res.send({ success: 400, message: "비밀번호 혹은 전화번호 오류" });
   }
-
-  //  userCompany를 찾아 없으면 무료 플랜으로 전환
-  // let findUserCompany = await db.userCompany.findOne({
-  //   where: { user_idx: check.idx, active: true },
-  // });
-  // if (!findUserCompany) {
-  //   const findCompany = await db.company.findOne(
-  //     { where: { huidx: check.idx } },
-  //     { attributes: ['idx'] }
-  //   );
-
-  //   findUserCompany = await db.userCompany.create({
-  //     where: {
-  //       user_idx: check.idx,
-  //       company_idx: findCompany.idx,
-  //       searchingName: check.user_name,
-  //     },
-  //   });
-  // }
 
   const compareResult = await bcrypt.compare(
     user_password,
@@ -160,60 +141,70 @@ router.post("/login", async (req, res, next) => {
   });
   if (!company_subdomain) {
     const loginToken = await createToken({ user_idx: check.idx });
-    return res.send({
+    res.send({
       success: 200,
       loginToken,
       company_subdomain: companyInfo.company.company_subdomain,
     });
-  }
-  // 링크로 로그인 할 때
-  const findCompany = await db.company.findOne({
-    where: { company_subdomain, deleted: null },
-  });
-  let checkCompanyStandBy = await db.userCompany.findOne({
-    where: {
-      user_idx: check.idx,
-      company_idx: findCompany.idx,
-    },
-    attributes: ["active", "standBy"],
-  });
-
-  const loginToken = await createToken({ user_idx: check.idx });
-  if (!checkCompanyStandBy) {
-    const findConfigResult = await template.findConfig(
-      {
-        template_name: "팀원",
+  } else {
+    // 링크로 로그인 할 때
+    const findCompany = await db.company.findOne({
+      where: { company_subdomain },
+    });
+    let checkCompanyStandBy = await db.userCompany.findOne({
+      where: {
+        user_idx: check.idx,
         company_idx: findCompany.idx,
       },
-      ["idx"]
-    );
+      attributes: ["active", "standBy"],
+    });
 
-    checkCompanyStandBy = await includeUserToCompany({
-      user_idx: check.idx,
-      company_idx: findCompany.idx,
-      standBy: true,
-      active: true,
-      searchingName: check.user_name,
-      config_idx: findConfigResult.idx,
+    const loginToken = await createToken({ user_idx: check.idx });
+    if (!checkCompanyStandBy) {
+      const findConfigResult = await template.findConfig(
+        {
+          template_name: "팀원",
+          company_idx: findCompany.idx,
+        },
+        ["idx"]
+      );
+
+      checkCompanyStandBy = await includeUserToCompany({
+        user_idx: check.idx,
+        company_idx: findCompany.idx,
+        standBy: true,
+        active: true,
+        searchingName: check.user_name,
+        config_idx: findConfigResult.idx,
+      });
+    }
+    let status;
+    if (checkCompanyStandBy.active && checkCompanyStandBy.standBy) {
+      status = "standBy";
+    }
+    if (!checkCompanyStandBy.active && checkCompanyStandBy.standBy) {
+      status = "refused";
+    }
+    if (checkCompanyStandBy.active && !checkCompanyStandBy.standBy) {
+      status = "access";
+    }
+
+    res.send({
+      success: 200,
+      loginToken,
+      status,
+      company_subdomain: companyInfo.company.company_subdomain,
     });
   }
-  let status;
-  if (checkCompanyStandBy.active && checkCompanyStandBy.standBy) {
-    status = "standBy";
-  }
-  if (!checkCompanyStandBy.active && checkCompanyStandBy.standBy) {
-    status = "refused";
-  }
-  if (checkCompanyStandBy.active && !checkCompanyStandBy.standBy) {
-    status = "access";
-  }
-
-  return res.send({
-    success: 200,
-    loginToken,
-    status,
-    company_subdomain: companyInfo.company.company_subdomain,
-  });
+  await db.user.update(
+    { last_login },
+    {
+      where: {
+        idx: check.idx,
+      },
+    }
+  );
+  return;
 });
 // 회원가입 체크 라우터
 router.post("/join/check", async (req, res) => {
@@ -221,7 +212,7 @@ router.post("/join/check", async (req, res) => {
   const randomNumber = generateRandomCode(6);
   const message = `[인증번호:${randomNumber}] 오더체크 인증번호입니다.\n오더체크와 편리한 고객응대를 시작해보세요.`;
   let phoneCheck = await db.user
-    .findAll({ where: { user_phone, deleted: null } })
+    .findAll({ where: { user_phone } })
     .then((r) => {
       return makeArray(r);
     });
@@ -230,7 +221,7 @@ router.post("/join/check", async (req, res) => {
     return res.send({ success: 400, type: "phone" });
   }
   let emailCheck = await db.user
-    .findAll({ where: { user_email, deleted: null } })
+    .findAll({ where: { user_email } })
     .then((r) => {
       return makeArray(r);
     });
@@ -334,7 +325,7 @@ router.post("/join/do", async (req, res, next) => {
 
       // subdomain
       const findCompany = await db.company.findOne({
-        where: { company_subdomain, deleted: null },
+        where: { company_subdomain },
       });
 
       const findConfigResult = await template.findConfig(
@@ -373,7 +364,7 @@ router.post("/company/check", async (req, res, next) => {
   try {
     // 도메인 체크
     let check_domain = await db.company
-      .findAll({ where: { company_subdomain, deleted: null } })
+      .findAll({ where: { company_subdomain } })
       .then((r) => {
         return makeArray(r);
       });
@@ -382,7 +373,7 @@ router.post("/company/check", async (req, res, next) => {
     }
     // user idx 찾기
     const findUser = await db.user.findOne({
-      where: { user_phone: user_data.user_phone, deleted: null },
+      where: { user_phone: user_data.user_phone },
       attributes: ["idx", "user_name"],
     });
 
@@ -439,11 +430,9 @@ router.post("/company/check", async (req, res, next) => {
 // 핸드폰 등록 여부 확인 라우터
 router.post("/phone/check", async (req, res) => {
   const { user_phone } = req.body;
-  let check = await db.user
-    .findAll({ where: { user_phone, deleted: null } })
-    .then((r) => {
-      return makeArray(r);
-    });
+  let check = await db.user.findAll({ where: { user_phone } }).then((r) => {
+    return makeArray(r);
+  });
   if (check.length > 0) {
     return res.send({ success: 200 });
   } else {
@@ -453,7 +442,7 @@ router.post("/phone/check", async (req, res) => {
 // 패스워드 수정 라우터
 router.post("/password/reset", async (req, res) => {
   const { user_phone, user_password } = req.body;
-  let check = await db.user.findOne({ where: { user_phone, deleted: null } });
+  let check = await db.user.findOne({ where: { user_phone } });
   if (check) {
     const newHashPassword = await bcrypt.hash(
       user_password,
@@ -563,7 +552,7 @@ router.post("/duplicate/phoneNumber", async (req, res) => {
   const { user_phone } = req.body;
   try {
     const result = await db.user.findOne({
-      where: { user_phone, deleted: null },
+      where: { user_phone },
     });
 
     if (!result) {
@@ -579,7 +568,7 @@ router.post("/duplicate/email", async (req, res) => {
   const { user_email } = req.body;
   try {
     const result = await db.user.findOne({
-      where: { user_email, deleted: null },
+      where: { user_email },
     });
     if (!result) {
       return res.send({ success: 200 });
@@ -595,7 +584,7 @@ router.post("/check/subdomain", async (req, res) => {
   const { company_subdomain } = req.body;
   try {
     const result = await db.company.findOne({
-      where: { company_subdomain, deleted: null },
+      where: { company_subdomain },
     });
     if (!result) {
       return res.send({ success: 400, msg: "존재하지 않는 도메인입니다." });
@@ -615,7 +604,7 @@ router.post("/check/company-name", async (req, res) => {
   const { company_name } = req.body;
   try {
     const result = await db.company.findOne({
-      where: { company_name, deleted: null },
+      where: { company_name },
     });
     if (!result) {
       return res.send({ success: 200 });
@@ -631,7 +620,7 @@ router.post("/check/password", async (req, res) => {
   const { user_password, user_phone } = req.body;
   try {
     const findUserResult = await db.user.findOne({
-      where: { user_phone, deleted: null },
+      where: { user_phone },
     });
 
     const comparePasswordResult = await bcrypt.compare(
@@ -660,7 +649,7 @@ router.post("/company/check/later", async (req, res, next) => {
   try {
     // user idx 찾기
     const findUser = await db.user.findOne({
-      where: { user_phone: user_data.user_phone, deleted: null },
+      where: { user_phone: user_data.user_phone },
       attributes: ["idx", "user_name"],
     });
 
@@ -718,10 +707,11 @@ router.post("/company/check/later", async (req, res, next) => {
 router.post("/token/login", async (req, res, next) => {
   const { ut } = req.body;
   try {
+    const last_login = moment();
     const user_data = await verify_data(ut);
 
     const findUser = await db.user.findOne({
-      where: { user_phone: user_data.user_phone, deleted: null },
+      where: { user_phone: user_data.user_phone },
       include: [
         {
           model: db.userCompany,
@@ -739,11 +729,21 @@ router.post("/token/login", async (req, res, next) => {
 
     const loginToken = await createToken({ user_idx: findUser.idx });
 
-    return res.send({
+    res.send({
       success: 200,
       loginToken,
       company_subdomain: findUser.userCompanies[0].company.company_subdomain,
     });
+
+    await db.user.update(
+      { last_login },
+      {
+        where: {
+          idx: findUser.idx,
+        },
+      }
+    );
+    return;
   } catch (err) {
     next(err);
   }
