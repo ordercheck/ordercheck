@@ -74,10 +74,24 @@ const getFolderPath = async (pathData, customerFile_idx, joinData) => {
 };
 module.exports = {
   getUserList: async (req, res, next) => {
+    const { company_idx, user_idx } = req;
     try {
       // 파일저장소 고객찾기
+
+      let findCustomer = await db.customer.findAll({
+        where: { company_idx, contact_person: user_idx },
+        group: ["customer_phoneNumber"],
+        attributes: ["customer_phoneNumber"],
+        raw: true,
+      });
+
+      const findCustomerArr = [];
+      findCustomer = findCustomer.forEach((data) => {
+        findCustomerArr.push(data.customer_phoneNumber);
+      });
+
       const findAllCustomers = await db.customerFile.findAll({
-        where: { company_idx: req.company_idx },
+        where: { customer_phoneNumber: { [Op.in]: findCustomerArr } },
         attributes: getUserListAttributes,
         order: [["customer_name", "ASC"]],
       });
