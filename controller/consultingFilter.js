@@ -120,6 +120,7 @@ module.exports = {
             include: [
               {
                 model: db.userCompany,
+                where: { active: true, standBy: false },
                 as: "user",
                 attributes: [
                   ["user_idx", "idx"],
