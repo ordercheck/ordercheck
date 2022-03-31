@@ -554,6 +554,7 @@ module.exports = {
       body,
       file,
     } = req;
+    console.log(req.file);
     body.customer_idx = customer_idx;
     body.company_idx = company_idx;
     const addCalculateLogic = async () => {
