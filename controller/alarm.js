@@ -37,6 +37,8 @@ module.exports = {
       user_idx,
       company_idx,
     } = req;
+    console.log(afterTime);
+    console.log(time);
     try {
       const alarm = new Alarm({});
       const findAlarmResult = await alarm.findAlarmsByPk(alarmId);
