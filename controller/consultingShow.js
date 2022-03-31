@@ -88,7 +88,7 @@ module.exports = {
 
       if (Date) {
         getCustomerDataResult = await getCustomerData(
-          "updatedAt",
+          "createdAt",
           Date == 0 ? "DESC" : "ASC",
           Date == 0
             ? totalData - intlimit * intPage + intlimit
