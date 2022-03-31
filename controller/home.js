@@ -93,7 +93,7 @@ module.exports = {
           createdAt: { [Op.between]: [daysAgo, now] },
           company_idx,
         },
-        attributes: consultingCountArrAttributes,
+        // attributes: consultingCountArrAttributes,
         order: [["createdAt", "DESC"]],
         raw: true,
       });
