@@ -87,6 +87,8 @@ module.exports = {
         },
       });
 
+      console.log(daysAgo, now);
+
       const consultingCountArr = await db.consulting.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
@@ -96,7 +98,7 @@ module.exports = {
         order: [["createdAt", "DESC"]],
         raw: true,
       });
-      console.log(consultingCountArr);
+
       const calculateCountArr = await db.calculate.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
