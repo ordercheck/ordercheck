@@ -102,16 +102,16 @@ module.exports = {
     const { user_idx, company_idx } = req;
     const form = new Form({});
     try {
-      const findOpenForm = await form.findAllLink(
+      const formList = await form.findAllLink(
         { company_idx, user_idx },
         createFormLinkAttributes
       );
 
-      if (!findOpenForm) {
+      if (!formList) {
         return res.send({ success: 400, message: "등록된 폼이 없습니다" });
       }
 
-      return res.send({ success: 200, findOpenForm });
+      return res.send({ success: 200, formList });
     } catch (err) {
       next(err);
     }
