@@ -797,7 +797,7 @@ module.exports = {
     }
   },
   showFormList: async (req, res, next) => {
-    const { company_idx } = req;
+    const { company_idx, user_idx } = req;
     try {
       const findResult = await db.formLink.findAll({
         where: { company_idx },
@@ -805,6 +805,7 @@ module.exports = {
           {
             model: db.formOpen,
             as: "member",
+            where: { user_idx },
             attributes: ["user_name"],
           },
         ],
