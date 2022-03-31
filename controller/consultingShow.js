@@ -71,42 +71,15 @@ module.exports = {
         }
       }
 
-      // 0이 오름차순,1이 내림차순 (ASC는 오름차순)
-      if (No) {
-        getCustomerDataResult = await getCustomerData(
-          "createdAt",
-          No == 0 ? "DESC" : "ASC",
-          No == 0 ? customerNumber : totalData - intlimit * intPage + intlimit,
-          No == 0 ? "plus" : "minus"
-        );
-
-        if (getCustomerDataResult.customerData == 0) {
-          return next({ message: "고객이 없습니다." });
-        }
-      }
       if (Name) {
         getCustomerDataResult = await getCustomerData(
           "customer_name",
           Name == 0 ? "DESC" : "ASC",
           Name == 0
-            ? customerNumber
-            : totalData - intlimit * intPage + intlimit,
-          Name == 0 ? "plus" : "minus"
-        );
-        if (getCustomerDataResult.customerData == 0) {
-          return next({ message: "고객이 없습니다." });
-        }
-      }
+            ? totalData - intlimit * intPage + intlimit
+            : customerNumber,
 
-      if (Address) {
-        getCustomerDataResult = await getCustomerData(
-          "searchingAddress",
-          Address == 0 ? "DESC" : "ASC",
-          Address == 0
-            ? customerNumber
-            : totalData - intlimit * intPage + intlimit,
-
-          Address == 0 ? "plus" : "minus"
+          Name == 0 ? "minus" : "plus"
         );
         if (getCustomerDataResult.customerData == 0) {
           return next({ message: "고객이 없습니다." });
@@ -118,9 +91,10 @@ module.exports = {
           "updatedAt",
           Date == 0 ? "DESC" : "ASC",
           Date == 0
-            ? customerNumber
-            : totalData - intlimit * intPage + intlimit,
-          Date == 0 ? "plus" : "minus"
+            ? totalData - intlimit * intPage + intlimit
+            : customerNumber,
+
+          Date == 0 ? "minus" : "plus"
         );
         if (getCustomerDataResult.customerData == 0) {
           return next({ message: "고객이 없습니다." });

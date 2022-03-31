@@ -13,7 +13,6 @@ io.on("connection", (socket) => {
   socket.on("alarmJoin", async (data) => {
     // 토큰으로 user idx 찾기
     const user = await verify_data(data);
-
     // 개인 room 참가
     socket.join(user.user_idx);
   });
@@ -21,7 +20,6 @@ io.on("connection", (socket) => {
   socket.on("alarm", async (data) => {
     // 토큰으로 user idx 찾기
     const user = await verify_data(data);
-
     // 개인 repeat alarm 찾기
     const findAllAlarms = await db.alarm.findAll({
       where: { user_idx: user.user_idx },
