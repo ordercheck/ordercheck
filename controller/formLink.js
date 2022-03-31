@@ -99,25 +99,27 @@ module.exports = {
   },
 
   showFormLink: async (req, res, next) => {
-    const { company_idx, user_idx } = req;
+    const { user_idx } = req;
     const form = new Form({});
     try {
-      console.log(user_idx);
-      let formList = await form.findFormOpenAndLink(user_idx);
-      console.log(formList);
-      // let formList = await form.findAllLink(
-      //   { company_idx },
-      //   createFormLinkAttributes
-      // );
+      const findOpenForm = await form.findFormOpenAndLink(
+        { user_idx },
+        createFormLinkAttributes
+      );
 
-      if (!formList) {
+      if (!findOpenForm) {
         return res.send({ success: 400, message: "등록된 폼이 없습니다" });
       }
 
-      formList = formList.map((data) => {
-        data.urlPath = data.form_link;
-        return data;
+      const formList = [];
+      findOpenForm.forEach((data) => {
+        formList.push(data.formLink);
       });
+
+      // formList = formList.map((data) => {
+      //   data.urlPath = data.form_link;
+      //   return data;
+      // });
 
       return res.send({ success: 200, formList });
     } catch (err) {
