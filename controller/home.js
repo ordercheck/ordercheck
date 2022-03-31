@@ -62,8 +62,8 @@ module.exports = {
       });
 
       // 시간 계산
-      const now = moment().add("1", "day");
-      const daysAgo = moment().subtract(6, "day");
+      const now = moment().add("1", "day").format("YYYY-MM-DD");
+      const daysAgo = moment().subtract(6, "day").format("YYYY-MM-DD");
 
       const zeroFiftyPossibility = await db.customer.count({
         where: {
@@ -86,19 +86,16 @@ module.exports = {
           },
         },
       });
-      console.log(daysAgo, now);
 
       const consultingCountArr = await db.consulting.findAll({
         where: {
           createdAt: { [Op.between]: [daysAgo, now] },
           company_idx,
         },
-        // attributes: consultingCountArrAttributes,
+        attributes: consultingCountArrAttributes,
         order: [["createdAt", "DESC"]],
         raw: true,
       });
-
-      console.log(consultingCountArr);
 
       const calculateCountArr = await db.calculate.findAll({
         where: {
