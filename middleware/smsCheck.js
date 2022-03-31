@@ -1,4 +1,3 @@
-const attributes = require("../lib/attributes");
 const db = require("../model/db");
 const smsCheck = async (req, res, next) => {
   //  소유주의 문자 남은 비용을 체크
