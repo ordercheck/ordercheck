@@ -799,11 +799,11 @@ module.exports = {
       if (autoSms.text_cost < autoSms.auto_min) {
         await axios({
           url: "/api/config/company/sms/pay",
-          method: "post", // POST method
+          method: "post",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token} `,
-          }, // "Content-Type": "application/json"
+          },
           data: { text_cost: autoSms.auto_price },
         });
       }
@@ -856,6 +856,7 @@ module.exports = {
     };
     try {
       const { customer_idx, calculate_idx } = req.params;
+
       // 이미 대표상태인 견적서 찾기
       const findCalculateResult = await db.calculate.findOne({
         where: { customer_idx, isMain: true },
