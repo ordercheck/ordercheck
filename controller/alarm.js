@@ -49,7 +49,7 @@ module.exports = {
       findAlarmResult.repeat_time = time;
       findAlarmResult.user_idx = user_idx;
       findAlarmResult.company_idx = company_idx;
-      findAlarmResult.createdAt = time;
+      findAlarmResult.createdAt = moment(time);
       const createResult = await alarm.createAlarm(findAlarmResult);
 
       res.send({ success: 200 });
