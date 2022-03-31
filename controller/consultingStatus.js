@@ -283,10 +283,13 @@ module.exports = {
         createConsultingAndIncrement(bodyClass.bodyData);
         return;
       }
+
+      console.log(files.floor_plan);
       const imgUrlString = files.floor_plan
         ? selectUrl(files.floor_plan)
         : null;
 
+      console.log(files.hope_concept);
       const conceptUrlString = files.hope_concept
         ? selectUrl(files.hope_concept)
         : null;

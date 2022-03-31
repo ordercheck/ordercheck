@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes) {
   //테이블을 정의
-  return sequelize.define('consulting', {
+  return sequelize.define("consulting", {
     idx: {
       autoIncrement: true,
       primaryKey: true,
@@ -173,7 +173,6 @@ module.exports = function (sequelize, DataTypes) {
     },
     hope_concept: {
       allowNull: true,
-
       type: DataTypes.TEXT(),
     },
 
