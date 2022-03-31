@@ -75,9 +75,9 @@ module.exports = {
       if (No) {
         getCustomerDataResult = await getCustomerData(
           "createdAt",
-          No == 0 ? "ASC" : "DESC",
-          No == 0 ? totalData - intlimit * intPage + intlimit : customerNumber,
-          No == 0 ? "minus" : "plus"
+          No == 0 ? "DESC" : "ASC",
+          No == 0 ? customerNumber : totalData - intlimit * intPage + intlimit,
+          No == 0 ? "plus" : "minus"
         );
 
         if (getCustomerDataResult.customerData == 0) {
@@ -87,9 +87,11 @@ module.exports = {
       if (Name) {
         getCustomerDataResult = await getCustomerData(
           "customer_name",
-          Name == 0 ? "ASC" : "DESC",
-          Name == 0 ? totalData - limit * intPage + intlimit : customerNumber,
-          Name == 0 ? "minus" : "plus"
+          Name == 0 ? "DESC" : "ASC",
+          Name == 0
+            ? customerNumber
+            : totalData - intlimit * intPage + intlimit,
+          Name == 0 ? "plus" : "minus"
         );
         if (getCustomerDataResult.customerData == 0) {
           return next({ message: "고객이 없습니다." });
@@ -99,11 +101,12 @@ module.exports = {
       if (Address) {
         getCustomerDataResult = await getCustomerData(
           "searchingAddress",
-          Address == 0 ? "ASC" : "DESC",
+          Address == 0 ? "DESC" : "ASC",
           Address == 0
-            ? totalData - limit * intPage + intlimit
-            : customerNumber,
-          Address == 0 ? "minus" : "plus"
+            ? customerNumber
+            : totalData - intlimit * intPage + intlimit,
+
+          Address == 0 ? "plus" : "minus"
         );
         if (getCustomerDataResult.customerData == 0) {
           return next({ message: "고객이 없습니다." });
@@ -113,9 +116,11 @@ module.exports = {
       if (Date) {
         getCustomerDataResult = await getCustomerData(
           "updatedAt",
-          Date == 0 ? "ASC" : "DESC",
-          Date == 0 ? totalData - limit * intPage + intlimit : customerNumber,
-          Date == 0 ? "minus" : "plus"
+          Date == 0 ? "DESC" : "ASC",
+          Date == 0
+            ? customerNumber
+            : totalData - intlimit * intPage + intlimit,
+          Date == 0 ? "plus" : "minus"
         );
         if (getCustomerDataResult.customerData == 0) {
           return next({ message: "고객이 없습니다." });
