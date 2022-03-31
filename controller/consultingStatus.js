@@ -756,14 +756,14 @@ module.exports = {
         // 문자 보내기 전 문자 비용 체크
 
         if (text_cost - 10 < 37) {
-          return res.send({ success: 400, message: "LMS 비용 부족" });
+          return res.send({ success: 400, message: "SMS 비용 부족" });
         }
 
-        // LMS 비용 차감 후 저장
+        // SMS 비용 차감 후 저장
         decreasePriceAndHistory(
-          { text_cost: 37 },
+          { text_cost: 11 },
           sms_idx,
-          "LMS",
+          "SMS",
           message,
           customerFindResult.customer_phoneNumber
         );
@@ -776,7 +776,7 @@ module.exports = {
           url: "/api/send/sms",
           method: "post", // POST method
           headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
-          data: { user_phone, message, type: "LMS" },
+          data: { user_phone, message, type: "SMS" },
         });
       } else {
         // 알림톡 비용 차감 후 저장
