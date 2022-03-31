@@ -87,7 +87,7 @@ module.exports = {
         },
       });
 
-      console.log(daysAgo, now);
+      console.log("이전시간", daysAgo, "현재", now);
 
       const consultingCountArr = await db.consulting.findAll({
         where: {
