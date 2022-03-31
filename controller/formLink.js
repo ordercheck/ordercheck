@@ -37,7 +37,6 @@ module.exports = {
       insertData.searchingTitle = pureText;
       insertData.create_people = findUserNameResult.user_name;
       insertData.tempType = tempType;
-      insertData.user_idx = user_idx;
 
       const createResult = await form.createFormLink(insertData);
 
@@ -103,10 +102,13 @@ module.exports = {
     const { company_idx, user_idx } = req;
     const form = new Form({});
     try {
-      let formList = await form.findAllLink(
-        { company_idx, user_idx },
-        createFormLinkAttributes
-      );
+      console.log(user_idx);
+      let formList = await form.findFormOpenAndLink(user_idx);
+      console.log(formList);
+      // let formList = await form.findAllLink(
+      //   { company_idx },
+      //   createFormLinkAttributes
+      // );
 
       if (!formList) {
         return res.send({ success: 400, message: "등록된 폼이 없습니다" });
