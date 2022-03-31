@@ -93,7 +93,6 @@ module.exports = {
           Date == 0
             ? totalData - intlimit * intPage + intlimit
             : customerNumber,
-
           Date == 0 ? "minus" : "plus"
         );
         if (getCustomerDataResult.customerData == 0) {

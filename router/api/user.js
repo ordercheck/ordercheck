@@ -109,6 +109,8 @@ const addPlanAndSchedule = async (
 
 // 로그인 라우터
 router.post("/login", async (req, res, next) => {
+  var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  console.log(ip);
   const { user_phone, user_password, company_subdomain } = req.body;
   const template = new Template({});
   const last_login = moment();
