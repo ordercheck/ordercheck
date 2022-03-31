@@ -91,7 +91,10 @@ module.exports = {
       });
 
       const findAllCustomers = await db.customerFile.findAll({
-        where: { customer_phoneNumber: { [Op.in]: findCustomerArr } },
+        where: {
+          customer_phoneNumber: { [Op.in]: findCustomerArr },
+          company_idx,
+        },
         attributes: getUserListAttributes,
         order: [["customer_name", "ASC"]],
       });
