@@ -79,7 +79,7 @@ module.exports = {
       // 파일저장소 고객찾기
 
       let findCustomer = await db.customer.findAll({
-        where: { company_idx, contact_person: user_idx },
+        where: { company_idx, contact_person: user_idx, deleted: null },
         group: ["customer_phoneNumber"],
         attributes: ["customer_phoneNumber"],
         raw: true,
