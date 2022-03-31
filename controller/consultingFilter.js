@@ -177,7 +177,6 @@ module.exports = {
               {
                 model: db.userCompany,
                 where: { active: true, standBy: false },
-                required: false,
                 as: "user",
                 attributes: ["idx", ["searchingName", "user_name"]],
               },
