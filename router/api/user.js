@@ -709,7 +709,6 @@ router.post("/company/check/later", async (req, res, next) => {
 router.post("/token/login", async (req, res, next) => {
   const { ut } = req.body;
   try {
-    const last_login = moment();
     const user_data = await verify_data(ut);
 
     const findUser = await db.user.findOne({
@@ -737,14 +736,6 @@ router.post("/token/login", async (req, res, next) => {
       company_subdomain: findUser.userCompanies[0].company.company_subdomain,
     });
 
-    await db.user.update(
-      { last_login },
-      {
-        where: {
-          idx: findUser.idx,
-        },
-      }
-    );
     return;
   } catch (err) {
     next(err);

@@ -206,7 +206,7 @@ ${company_url}
       { where: { company_subdomain } },
       { attributes: ["idx"] }
     );
-
+    console.log(findCompany);
     // userCompany 업데이트
     await db.userCompany.update(
       {
@@ -227,7 +227,7 @@ ${company_url}
       user_idx,
     } = req;
     const template = new Template({});
-    const last_login = moment();
+
     try {
       const loginToken = await createToken({ user_idx });
       const findCompany = await db.company.findOne(
@@ -289,17 +289,7 @@ ${company_url}
         );
       }
 
-      res.send({ success: 200, loginToken });
-      await db.user.update(
-        {
-          last_login,
-        },
-        {
-          where: {
-            idx: user_idx,
-          },
-        }
-      );
+      return res.send({ success: 200, loginToken });
     } catch (err) {
       next(err);
     }
