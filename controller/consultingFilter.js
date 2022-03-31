@@ -13,7 +13,7 @@ module.exports = {
       params: { limit, page },
       company_idx,
     } = req;
-
+    console.log(contract_possibility);
     const checkAllCustomers = await db.customer.count({
       where: { company_idx, deleted: null },
     });
@@ -120,7 +120,7 @@ module.exports = {
             include: [
               {
                 model: db.userCompany,
-                where: { active: true, standBy: false },
+
                 as: "user",
                 attributes: [
                   ["user_idx", "idx"],
