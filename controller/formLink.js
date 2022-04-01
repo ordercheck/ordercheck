@@ -383,7 +383,12 @@ module.exports = {
       body: { formId, title },
     } = req;
     try {
+      const beforeFormLink = await db.formLink.findByPk(formId, {
+        attributes: ["title"],
+      });
+
       const searchingTitle = makePureText(title);
+
       await db.formLink.update(
         {
           title,
@@ -397,7 +402,38 @@ module.exports = {
       });
       formDetail.urlPath = formDetail.form_link;
 
-      return res.send({ success: 200, formDetail });
+      res.send({ success: 200, formDetail });
+
+      const alarm = new Alarm({});
+
+      const findUser = await db.user.findByPk(user_idx, {
+        attributes: ["user_name"],
+      });
+
+      const message = alarm.changeFormTitleAlarm(
+        findUser.user_name,
+        beforeFormLink.title,
+        formDetail.title
+      );
+
+      const data = {
+        form_idx: formId,
+        message,
+        company_idx,
+        alarm_type: 5,
+      };
+      const findOpenMemberResult = await db.formOpen.findAll({
+        where: { formLink_idx: formId },
+        attributes: ["user_idx"],
+        raw: true,
+      });
+      const findMembers = [];
+      findOpenMemberResult.forEach((data) => {
+        findMembers.push(data.user_idx);
+      });
+
+      const io = req.app.get("io");
+      alarm.sendMultiAlarm(data, findMembers, io);
     } catch (err) {
       next(err);
     }
