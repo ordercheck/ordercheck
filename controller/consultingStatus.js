@@ -473,12 +473,14 @@ module.exports = {
         customer_idx: createCustomerResult.idx,
       };
 
-      const findMembers = [];
+      let findMembers = [];
       // contact_person 체크
       if (createCustomerResult.contact_person) {
         findMembers.push(createCustomerResult.contact_person);
       }
       findMembers.push(checkCompany.huidx);
+
+      findMembers = [...new Set(findMembers)];
 
       const io = req.app.get("io");
 
