@@ -162,7 +162,7 @@ module.exports = {
         alarm_type: 5,
       };
       const findOpenMemberResult = await db.formOpen.findAll({
-        where: { formLink_idx: formId },
+        where: { formLink_idx: formId, user_idx: { [Op.ne]: user_idx } },
         attributes: ["user_idx"],
         raw: true,
       });
@@ -223,7 +223,7 @@ module.exports = {
         attributes: ["title"],
       });
       const findOpenMemberResult = await db.formOpen.findAll({
-        where: { formLink_idx: formId },
+        where: { formLink_idx: formId, user_idx: { [Op.ne]: user_idx } },
         attributes: ["user_idx"],
         raw: true,
       });
@@ -324,7 +324,7 @@ module.exports = {
       };
 
       const findOpenMemberResult = await db.formOpen.findAll({
-        where: { formLink_idx: formId },
+        where: { formLink_idx: formId, user_idx: { [Op.ne]: user_idx } },
         attributes: ["user_idx"],
         raw: true,
       });
@@ -376,7 +376,7 @@ module.exports = {
         alarm_type: 5,
       };
       const findOpenMemberResult = await db.formOpen.findAll({
-        where: { formLink_idx: formId },
+        where: { formLink_idx: formId, user_idx: { [Op.ne]: user_idx } },
         attributes: ["user_idx"],
         raw: true,
       });
@@ -440,7 +440,7 @@ module.exports = {
         alarm_type: 5,
       };
       const findOpenMemberResult = await db.formOpen.findAll({
-        where: { formLink_idx: formId },
+        where: { formLink_idx: formId, user_idx: { [Op.ne]: user_idx } },
         attributes: ["user_idx"],
         raw: true,
       });
