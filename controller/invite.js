@@ -170,7 +170,7 @@ ${company_url}
     alarm.createAlarm({
       message: approveMessage,
       company_idx,
-      user_idx: findUserCompanyResult.idx,
+      user_idx: findUserCompanyResult.user_idx,
       alarm_type: 1,
     });
 
