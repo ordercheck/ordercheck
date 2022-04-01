@@ -381,6 +381,7 @@ module.exports = {
   updateFormTitle: async (req, res, next) => {
     const {
       body: { formId, title },
+      user_idx,
     } = req;
     try {
       const beforeFormLink = await db.formLink.findByPk(formId, {
