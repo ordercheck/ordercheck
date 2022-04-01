@@ -134,12 +134,13 @@ ${company_url}
     const {
       params: { memberId },
       company_idx,
+      user_idx,
     } = req;
     const findUserCompanyResult = await db.userCompany.findByPk(memberId, {
       attributes: ["user_idx", "company_idx"],
     });
 
-    const fondBeforeCompanyUser = await db.userCompany.findOne({
+    const findBeforeCompanyUser = await db.userCompany.findOne({
       where: {
         user_idx: findUserCompanyResult.user_idx,
         active: true,
@@ -148,10 +149,10 @@ ${company_url}
       attributes: ["idx"],
     });
 
-    if (fondBeforeCompanyUser) {
+    if (findBeforeCompanyUser) {
       await db.userCompany.update(
         { active: false },
-        { where: { idx: fondBeforeCompanyUser.idx } }
+        { where: { idx: findBeforeCompanyUser.idx } }
       );
     }
 
@@ -176,6 +177,20 @@ ${company_url}
     });
 
     //팀원들 알람
+    const findCompanyMembers = await db.userCompany.findAll({
+      where: { active: true, standBy: false, company_idx },
+      attributes: ["user_idx"],
+      raw: true,
+    });
+
+    const findAuthUser = await db.user.findByPk(user_idx, {
+      attributes: ["user_name"],
+    });
+    const message = alarm.approveAlarmAuth();
+    const members = [];
+    findCompanyMembers.forEach((data) => {
+      members.push(data.user_idx);
+    });
 
     // 알림 보내기
     const io = req.app.get("io");
