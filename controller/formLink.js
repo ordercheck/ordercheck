@@ -222,12 +222,7 @@ module.exports = {
       const formTitle = await db.formLink.findByPk(formId, {
         attributes: ["title"],
       });
-      const findOpenMemberResult = await db.formOpen.findAll({
-        where: { formLink_idx: formId },
-        attributes: ["user_idx"],
-        raw: true,
-      });
-      await db.formLink.destroy({ where: { idx: formId } });
+      // await db.formLink.destroy({ where: { idx: formId } });
 
       res.send({ success: 200, message: "삭제 성공" });
 
@@ -246,7 +241,11 @@ module.exports = {
         company_idx,
         alarm_type: 5,
       };
-
+      const findOpenMemberResult = await db.formOpen.findAll({
+        where: { formLink_idx: formId },
+        attributes: ["user_idx"],
+        raw: true,
+      });
       const findMembers = [];
       findOpenMemberResult.forEach((data) => {
         findMembers.push(data.user_idx);
