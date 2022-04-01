@@ -330,7 +330,7 @@ module.exports = {
       );
 
       res.send({ success: 200, message: "썸네일 삭제 " });
-
+      const alarm = new Alarm({});
       // 팀원들에게 알람 보내기
       const findUser = await db.user.findByPk(user_idx, {
         attributes: ["user_name"],
@@ -340,10 +340,7 @@ module.exports = {
         attributes: ["title"],
       });
 
-      const io = req.app.get("io");
-      const findMembers = await findMemberExceptMe(company_idx, user_idx);
-
-      const message = `${findUser.user_name}님이 [${formTitle.title}] 신청폼을 수정하였습니다.`;
+      const message = alarm.changeFormAlarm(findUser.user_name, formTitle);
 
       const data = {
         form_idx: formId,
@@ -351,8 +348,18 @@ module.exports = {
         company_idx,
         alarm_type: 5,
       };
+      const findOpenMemberResult = await db.formOpen.findAll({
+        where: { formLink_idx: formId },
+        attributes: ["user_idx"],
+        raw: true,
+      });
+      const findMembers = [];
+      findOpenMemberResult.forEach((data) => {
+        findMembers.push(data.user_idx);
+      });
 
-      await sendCompanyAlarm(data, findMembers, io);
+      const io = req.app.get("io");
+      alarm.sendMultiAlarm(data, findMembers, io);
       return;
     } catch (err) {
       next(err);
