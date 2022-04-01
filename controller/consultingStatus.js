@@ -384,6 +384,7 @@ module.exports = {
           deleted: null,
         },
       });
+
       // 같은 전화번호가 없을 경우, fileStore도 삭제
       if (findResultCustomers == 0) {
         await db.customerFile.destroy({
