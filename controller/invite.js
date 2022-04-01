@@ -9,6 +9,7 @@ const { masterConfig } = require("../lib/standardTemplate");
 const sendMail = require("../mail/sendInvite");
 const { Company } = require("../lib/classes/CompanyClass");
 const axios = require("axios");
+const { Op } = require("sequelize");
 const db = require("../model/db");
 const { createToken } = require("../lib/jwtfunctions");
 const { Template } = require("../lib/classes/TemplateClass");
@@ -180,7 +181,12 @@ ${company_url}
 
     //팀원들 알람
     const findCompanyMembers = await db.userCompany.findAll({
-      where: { active: true, standBy: false, company_idx },
+      where: {
+        active: true,
+        standBy: false,
+        company_idx,
+        user_idx: { [Op.ne]: user_idx },
+      },
       attributes: ["user_idx"],
       raw: true,
     });
