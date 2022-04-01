@@ -45,10 +45,13 @@ module.exports = {
         .query(
           `SELECT user.idx, personal_code, user_phone, userCompany.company_idx, user_profile, 
               user_email, user_name, plan, calculateReload, config_idx,
-              whiteLabelChecked,chatChecked,analysticChecked,
+              plan.whiteLabelChecked,plan.chatChecked,plan.analysticChecked,
+              sms.text_cost,
               date_format(user.createdAt, '%Y.%m.%d') as createdAt
               FROM user 
               LEFT JOIN userCompany ON user.idx = userCompany.user_idx AND active = true AND standBy = false
+              LEFT JOIN company ON userCompany.company_idx = company.idx
+              LEFT JOIN sms ON sms.user_idx = company.huidx
               LEFT JOIN userConfig ON user.idx = userConfig.user_idx
               LEFT JOIN plan ON userCompany.company_idx = plan.company_idx and plan.active = 1     
               WHERE user.idx = ${req.user_idx}`
