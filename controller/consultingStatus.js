@@ -339,7 +339,10 @@ module.exports = {
       const io = req.app.get("io");
 
       const alarm = new Alarm({});
-      alarm.setContactAlarm(check.user_name, consultResult.customer_name);
+      const message = alarm.setContactAlarm(
+        check.user_name,
+        consultResult.customer_name
+      );
       const insertData = {
         message,
         user_idx: contract_person,
