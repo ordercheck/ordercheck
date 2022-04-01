@@ -314,6 +314,7 @@ module.exports = {
     const {
       params: { customer_idx, contract_person },
       company_idx,
+      user_idx,
     } = req;
     try {
       await db.customer.update(
@@ -332,24 +333,24 @@ module.exports = {
       res.send({ success: 200, consultResult });
 
       // 팀원에게 알림 보내기
-
+      const check = await db.user.findByPk(user_idx, {
+        attributes: ["user_name"],
+      });
       const io = req.app.get("io");
 
-      const message = `[${consultResult.customer_name}]님의 담당자로 지정되었습니다.`;
       const alarm = new Alarm({});
-      const createResult = await alarm.createAlarm({
+      alarm.setContactAlarm(check.user_name, consultResult.customer_name);
+      const insertData = {
         message,
         user_idx: contract_person,
         company_idx,
         alarm_type: 2,
         customer_idx: consultResult.idx,
-      });
-      const sendAlarm = new Alarm(createResult);
+      };
 
-      io.to(parseInt(createResult.user_idx)).emit(
-        "addAlarm",
-        sendAlarm.alarmData.dataValues
-      );
+      sendMember = [contract_person];
+      alarm.sendMultiAlarm(insertData, sendMember, io);
+
       return;
     } catch (err) {
       next(err);
