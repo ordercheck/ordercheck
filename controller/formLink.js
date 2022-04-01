@@ -241,7 +241,6 @@ module.exports = {
       const message = alarm.delFormAlarm(findUser.user_name, formTitle.title);
 
       const data = {
-        form_idx: formId,
         message,
         company_idx,
         alarm_type: 5,
