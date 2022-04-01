@@ -342,7 +342,7 @@ module.exports = {
         message,
         user_idx: contract_person,
         company_idx,
-        alarm_type: 2,
+        alarm_type: 5,
         customer_idx: consultResult.idx,
       };
 
@@ -468,7 +468,7 @@ module.exports = {
       const insertData = {
         message,
         company_idx,
-        alarm_type: 1,
+        alarm_type: 9,
         customer_idx: createCustomerResult.idx,
       };
 
@@ -833,23 +833,6 @@ module.exports = {
       attributes: showCalculateAttributes,
     });
     res.send({ success: 200, findResult });
-
-    // 팀원들에게 알람 보내기
-
-    const io = req.app.get("io");
-    const now = moment().format("YY/MM/DD");
-
-    const findMembers = await findMemberExceptMe(company_idx, user_idx);
-    const alarmMessage = `${findSender.user_name}님이 [${customerFindResult.customer_name} ${now}] 고객님께 ${calculateFindResult.calculateNumber}차 견적서를 발송했습니다.`;
-
-    const data = {
-      customer_idx: customerFindResult.idx,
-      message: alarmMessage,
-      company_idx,
-      alarm_type: 3,
-    };
-
-    await sendCompanyAlarm(data, findMembers, io);
     return;
   },
   setMainCalculate: async (req, res, next) => {
@@ -980,7 +963,7 @@ module.exports = {
       const insertData = {
         message,
         company_idx,
-        alarm_type: 4,
+        alarm_type: 8,
         customer_idx: findCustomer.idx,
       };
       await sendCompanyAlarm(insertData, findMembers, io);

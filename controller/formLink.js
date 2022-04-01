@@ -94,7 +94,7 @@ module.exports = {
         form_idx: createResult.idx,
         message,
         company_idx,
-        alarm_type: 7,
+        alarm_type: 18,
       };
       const io = req.app.get("io");
       const findMembers = [findCompanyOwner.user.idx];
@@ -159,7 +159,7 @@ module.exports = {
         form_idx: formId,
         message,
         company_idx,
-        alarm_type: 5,
+        alarm_type: 13,
       };
       const findOpenMemberResult = await db.formOpen.findAll({
         where: { formLink_idx: formId, user_idx: { [Op.ne]: user_idx } },
@@ -243,7 +243,7 @@ module.exports = {
       const data = {
         message,
         company_idx,
-        alarm_type: 5,
+        alarm_type: 19,
       };
 
       const findMembers = [];
@@ -320,7 +320,7 @@ module.exports = {
         form_idx: formId,
         message,
         company_idx,
-        alarm_type: 5,
+        alarm_type: 13,
       };
 
       const findOpenMemberResult = await db.formOpen.findAll({
@@ -373,7 +373,7 @@ module.exports = {
         form_idx: formId,
         message,
         company_idx,
-        alarm_type: 5,
+        alarm_type: 13,
       };
       const findOpenMemberResult = await db.formOpen.findAll({
         where: { formLink_idx: formId, user_idx: { [Op.ne]: user_idx } },
@@ -437,7 +437,7 @@ module.exports = {
         form_idx: formId,
         message,
         company_idx,
-        alarm_type: 5,
+        alarm_type: 14,
       };
       const findOpenMemberResult = await db.formOpen.findAll({
         where: { formLink_idx: formId, user_idx: { [Op.ne]: user_idx } },

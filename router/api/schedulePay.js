@@ -282,14 +282,13 @@ router.post("/", async (req, res, next) => {
       );
 
       //알람 생성
-      const day = moment().add("1", "day").format(" YY/MM/DD");
 
-      const message = `결제 실패로 ${day} 부터 이용이 제한됩니다. `;
+      const message = `플랜 정기 결제가 실패하였습니다. 등록된 카드를 확인해주세요.`;
 
       const createResult = await alarm.createAlarm({
         message,
         user_idx: findCompany.huidx,
-        alarm_type: 9,
+        alarm_type: 23,
       });
 
       // 알람 보내기
