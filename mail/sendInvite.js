@@ -1,7 +1,7 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 
 const transport = nodemailer.createTransport({
-  service: 'Gmail',
+  service: "Gmail",
   auth: {
     user: process.env.SEND_EMAIL_ID,
     pass: process.env.SEND_PASSWORD,
@@ -12,7 +12,7 @@ const sendMail = async (company_url, company_name, inviter, target) => {
   let mailOptions = {
     from: process.env.SEND_EMAIL_ID,
     to: target,
-    subject: 'invite Test',
+    subject: "invite Test",
     html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
         <html xmlns="http://www.w3.org/1999/xhtml">
           <head>

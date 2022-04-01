@@ -185,7 +185,7 @@ ${company_url}
         active: true,
         standBy: false,
         company_idx,
-        user_idx: { [Op.ne]: user_idx },
+        user_idx: { [Op.ne]: user_idx, [Op.ne]: findUserCompanyResult.user },
       },
       attributes: ["user_idx"],
       raw: true,
