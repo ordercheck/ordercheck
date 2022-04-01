@@ -97,7 +97,7 @@ module.exports = {
         alarm_type: 7,
       };
       const io = req.app.get("io");
-      findMembers = [findCompanyOwner.user.idx];
+      const findMembers = [findCompanyOwner.user.idx];
       alarm.sendMultiAlarm(data, findMembers, io);
     } catch (err) {
       next(err);
