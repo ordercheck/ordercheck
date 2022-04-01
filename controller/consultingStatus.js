@@ -31,6 +31,7 @@ const {
   checkKakaoPushResult,
 } = require("../lib/kakaoPush");
 const { formLink } = require("../model/db");
+const attributes = require("../lib/attributes");
 const changeToSearch = (body) => {
   const searchingPhoneNumber = body.customer_phoneNumber.replace(/\./g, "");
   const searchingAddress = `${body.address.replace(
@@ -451,24 +452,36 @@ module.exports = {
 
       res.send({ success: 200 });
 
-      const alarm = new Alarm({});
       // 소유주랑 담당자에게 알람 보내기
       const checkCompany = await db.company.findByPk(company_idx, {
         attributes: ["huidx"],
       });
 
-      const io = req.app.get("io");
+      const checkAddUser = await db.user.findByPk(user_idx, {
+        attributes: ["user_name"],
+      });
 
+      const alarm = new Alarm({});
+      const message = alarm.addCustomer(
+        checkAddUser.user_name,
+        createCustomerResult.customer_name
+      );
       const insertData = {
         message,
         company_idx,
-        // alarm_type: 1,
-        customer_idx: findCustomer.idx,
+        alarm_type: 1,
+        customer_idx: createCustomerResult.idx,
       };
-      const findMembers = [
-        checkCompany.huidx,
-        createCustomerResult.contact_person,
-      ];
+
+      const findMembers = [];
+      // contact_person 체크
+      if (createCustomerResult.contact_person) {
+        findMembers.push(createCustomerResult.contact_person);
+      }
+      findMembers.push(checkCompany.huidx);
+
+      const io = req.app.get("io");
+
       await alarm.sendMultiAlarm(insertData, findMembers, io);
       // await sendCompanyAlarm(insertData, findMembers, io);
       return;
