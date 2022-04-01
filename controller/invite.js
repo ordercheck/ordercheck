@@ -146,7 +146,7 @@ ${company_url}
         active: true,
         standBy: false,
       },
-      attributes: ["idx"],
+      attributes: ["idx", "searchingName"],
     });
 
     if (findBeforeCompanyUser) {
@@ -162,6 +162,8 @@ ${company_url}
     );
 
     res.send({ success: 200 });
+    // 알림 보내기
+    const io = req.app.get("io");
     const alarm = new Alarm({});
     const findCompany = await db.company.findByPk(company_idx, {
       attributes: ["company_name"],
@@ -186,14 +188,20 @@ ${company_url}
     const findAuthUser = await db.user.findByPk(user_idx, {
       attributes: ["user_name"],
     });
-    const message = alarm.approveAlarmAuth();
+
+    const message = alarm.approveAlarmAuth(
+      findAuthUser.user_name,
+      findBeforeCompanyUser.searchingName
+    );
+
     const members = [];
     findCompanyMembers.forEach((data) => {
       members.push(data.user_idx);
     });
 
-    // 알림 보내기
-    const io = req.app.get("io");
+    const insertData = { message, alarm_type: 2 };
+    alarm.sendMultiAlarm(insertData, members, io);
+
     io.to(findUserCompanyResult.user_idx).emit("invite", "approve");
     return;
   },
