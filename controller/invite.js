@@ -166,6 +166,7 @@ ${company_url}
       attributes: ["company_name"],
     });
 
+    // 가입 신청자 알람
     const approveMessage = alarm.approveAlarmMember(findCompany.company_name);
     alarm.createAlarm({
       message: approveMessage,
@@ -173,6 +174,8 @@ ${company_url}
       user_idx: findUserCompanyResult.user_idx,
       alarm_type: 1,
     });
+
+    //팀원들 알람
 
     // 알림 보내기
     const io = req.app.get("io");
