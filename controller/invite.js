@@ -13,6 +13,7 @@ const db = require("../model/db");
 const { createToken } = require("../lib/jwtfunctions");
 const { Template } = require("../lib/classes/TemplateClass");
 const attributes = require("../lib/attributes");
+const { Alarm } = require("../lib/classes/AlarmClass");
 
 module.exports = {
   sendEmail: async (req, res, next) => {
@@ -130,7 +131,10 @@ ${company_url}
     return res.send({ success: 200, standbyUser });
   },
   joinStandbyUser: async (req, res, next) => {
-    const { memberId } = req.params;
+    const {
+      params: { memberId },
+      company_idx,
+    } = req;
     const findUserCompanyResult = await db.userCompany.findByPk(memberId, {
       attributes: ["user_idx", "company_idx"],
     });
@@ -157,6 +161,18 @@ ${company_url}
     );
 
     res.send({ success: 200 });
+    const alarm = new Alarm({});
+    const findCompany = await db.company.findByPk(company_idx, {
+      attributes: ["company_name"],
+    });
+
+    const approveMessage = alarm.approveAlarmMember(findCompany.company_name);
+    alarm.createAlarm({
+      message: approveMessage,
+      company_idx,
+      user_idx: findUserCompanyResult.idx,
+      alarm_type: 1,
+    });
 
     // 알림 보내기
     const io = req.app.get("io");
