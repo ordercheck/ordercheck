@@ -11,7 +11,7 @@ const {
   findMemberExceptMe,
   findMembers,
 } = require("../lib/apiFunctions");
-
+const { Op } = require("sequelize");
 const {
   createFormLinkAttributes,
   getFormLinkInfoAttributes,
