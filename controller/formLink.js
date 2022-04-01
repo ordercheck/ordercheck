@@ -82,10 +82,13 @@ module.exports = {
         formId: createResult.idx,
         message: "폼 생성 ",
       });
-      // 팀원들에게 알람 보내기
-      const io = req.app.get("io");
-      const findMembers = await findMemberExceptMe(company_idx, user_idx);
-      const message = `${findUserNameResult.user_name}님이 새로운 신청폼 [${title}]을 등록하였습니다.`;
+
+      const alarm = new Alarm({});
+
+      const message = alarm.createFormAlarm(
+        findUserNameResult.user_name,
+        title
+      );
 
       const data = {
         form_idx: createResult.idx,
@@ -93,8 +96,9 @@ module.exports = {
         company_idx,
         alarm_type: 7,
       };
-
-      await sendCompanyAlarm(data, findMembers, io);
+      const io = req.app.get("io");
+      findMembers = [findCompanyOwner.user.idx];
+      alarm.sendMultiAlarm(data, findMembers, io);
     } catch (err) {
       next(err);
     }
