@@ -382,6 +382,7 @@ module.exports = {
     const {
       body: { formId, title },
       user_idx,
+      company_idx,
     } = req;
     try {
       const beforeFormLink = await db.formLink.findByPk(formId, {
