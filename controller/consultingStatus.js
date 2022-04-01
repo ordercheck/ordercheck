@@ -451,34 +451,26 @@ module.exports = {
 
       res.send({ success: 200 });
 
-      // 팀원들에게 알람 보내기
-      const findCustomer = await db.customer.findByPk(
-        createCustomerResult.idx,
-        {
-          attributes: ["customer_name", "idx"],
-        }
-      );
-
-      const findUser = await db.user.findByPk(user_idx, {
-        attributes: ["user_name"],
+      const alarm = new Alarm({});
+      // 소유주랑 담당자에게 알람 보내기
+      const checkCompany = await db.company.findByPk(company_idx, {
+        attributes: ["huidx"],
       });
 
-      const now = moment().format("YY.MM.DD");
-
-      const message = `${findUser.user_name}님이 [${findCustomer.customer_name} ${now}]을 신규 등록했습니다.`;
-
       const io = req.app.get("io");
-
-      const findMembers = await findMemberExceptMe(company_idx, user_idx);
 
       const insertData = {
         message,
         company_idx,
-        alarm_type: 1,
+        // alarm_type: 1,
         customer_idx: findCustomer.idx,
       };
-
-      await sendCompanyAlarm(insertData, findMembers, io);
+      const findMembers = [
+        checkCompany.huidx,
+        createCustomerResult.contact_person,
+      ];
+      await alarm.sendMultiAlarm(insertData, findMembers, io);
+      // await sendCompanyAlarm(insertData, findMembers, io);
       return;
     } catch (err) {
       await t.rollback();

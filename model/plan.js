@@ -56,9 +56,10 @@ module.exports = function (sequelize, DataTypes) {
 
     whiteLabelChecked: {
       allowNull: false,
-      defaultValue: true,
+      defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+
     chatChecked: {
       allowNull: false,
       defaultValue: false,
