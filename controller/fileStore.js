@@ -76,8 +76,21 @@ module.exports = {
   getUserList: async (req, res, next) => {
     const { company_idx, user_idx } = req;
     try {
-      // 파일저장소 고객찾기
+      // 소유주 체크
+      const check = await db.company.findByPk(company_idx, {
+        attributes: ["huidx"],
+      });
 
+      if (check.huidx == user_idx) {
+        const findAllCustomers = await db.customerFile.findAll({
+          where: { company_idx },
+          attributes: getUserListAttributes,
+          order: [["customer_name", "ASC"]],
+        });
+        return res.send({ success: 200, findAllCustomers });
+      }
+
+      // 파일저장소 고객찾기
       let findCustomer = await db.customer.findAll({
         where: { company_idx, contact_person: user_idx, deleted: null },
         group: ["customer_phoneNumber"],
