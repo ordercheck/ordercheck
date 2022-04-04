@@ -116,7 +116,7 @@ module.exports = {
         alarm_type: 17,
       };
       const sendMember = [findCompanyData.huidx];
-      console.log(sendMember);
+      console.log(io);
       alarm.sendMultiAlarm(insertData, sendMember, io);
     }
 
