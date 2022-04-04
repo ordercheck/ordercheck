@@ -109,7 +109,6 @@ module.exports = {
     } = req;
 
     try {
-      console.log(user_idx);
       const checkResult = await checkUserPassword(user_idx, user_password);
       if (!checkResult) {
         res.send({
