@@ -977,25 +977,52 @@ module.exports = {
       );
 
       res.send({ success: 200, findSameUser });
+      const alarm = new Alarm({});
 
-      // 팀원들에게 알람 보내기
-      const findCustomer = await db.customer.findByPk(body.main_idx, {
-        attributes: ["customer_name", "idx"],
+      const integratingUser = await db.user.findByPk(user_idx, {
+        attributes: ["user_name"],
       });
 
-      const message = `[${findCustomer.customer_name}] 고객님의 고객 연동이 완료되었습니다.`;
+      const targetCustomer = await db.customer.findByPk(body.target_idx[0], {
+        attributes: [
+          [
+            db.sequelize.fn(
+              "date_format",
+              db.sequelize.col("createdAt"),
+              "%Y/%m/%d"
+            ),
+            "createdAt",
+          ],
+          ,
+          "customer_name",
+        ],
+      });
+
+      const mainCustomer = await db.customer.findByPk(body.main_idx, {
+        attributes: [
+          [
+            db.sequelize.fn(
+              "date_format",
+              db.sequelize.col("createdAt"),
+              "%Y/%m/%d"
+            ),
+            "createdAt",
+          ],
+          ,
+          "customer_name",
+        ],
+      });
+      const message = alarm.integrateCustomer(
+        integratingUser.user_name,
+        targetCustomer.customer_name,
+        mainCustomer.customer_name,
+        mainCustomer.createdAt
+      );
+
+      console.log(message);
 
       const io = req.app.get("io");
 
-      const findMembers = await findMemberExceptMe(company_idx, user_idx);
-
-      const insertData = {
-        message,
-        company_idx,
-        alarm_type: 15,
-        customer_idx: findCustomer.idx,
-      };
-      await sendCompanyAlarm(insertData, findMembers, io);
       return;
     } catch (err) {
       next(err);
