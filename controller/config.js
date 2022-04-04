@@ -887,31 +887,6 @@ module.exports = {
         attributes: ["user_name"],
       });
 
-      // 기존에 있던 팀원들 알람 보내기
-      nonMember.forEach(async (data) => {
-        const defaultMember = await db.user.findByPk(data, {
-          attributes: ["user_name"],
-        });
-        const inviteDefaultAlarm = alarm.inviteDefaultMemberAlarm(
-          inviter.user_name,
-          findFormLink.title,
-          defaultMember.user_name
-        );
-
-        const invitedMemberData = {
-          message: inviteDefaultAlarm,
-          alarm_type: 16,
-          user_idx: data,
-        };
-        // 알람 대상에 자기 자신 제외
-        const sendMembers = [];
-        if (data !== user_idx) {
-          sendMembers.push(data);
-        }
-
-        alarm.sendMultiAlarm(invitedMemberData, sendMembers, io);
-      });
-
       // 템플릿 초대 받은 사람 알림
       invitedMember.forEach(async (data) => {
         const inviteMessage = alarm.inviteFormAlarm(
@@ -921,11 +896,37 @@ module.exports = {
 
         const invitedMemberData = {
           message: inviteMessage,
-          alarm_type: 15,
+          alarm_type: 22,
           user_idx: data,
         };
 
         // 자기 자신 제외
+        const sendMembers = [];
+        if (data !== user_idx) {
+          sendMembers.push(data);
+        }
+
+        alarm.sendMultiAlarm(invitedMemberData, sendMembers, io);
+      });
+
+      // 기존에 있던 팀원들 알람 보내기
+      nonMember.forEach(async (data) => {
+        const defaultMember = await db.user.findByPk(invitedMember[0], {
+          attributes: ["user_name"],
+        });
+        const inviteDefaultAlarm = alarm.inviteDefaultMemberAlarm(
+          inviter.user_name,
+          findFormLink.title,
+          defaultMember.user_name,
+          invitedMember.length
+        );
+
+        const invitedMemberData = {
+          message: inviteDefaultAlarm,
+          alarm_type: 23,
+          user_idx: data,
+        };
+        // 알람 대상에 자기 자신 제외
         const sendMembers = [];
         if (data !== user_idx) {
           sendMembers.push(data);
@@ -943,7 +944,7 @@ module.exports = {
 
         const deletedMemberData = {
           message: deletedMessage,
-          alarm_type: 17,
+          alarm_type: 24,
           user_idx: data,
         };
 
