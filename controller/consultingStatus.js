@@ -725,24 +725,32 @@ module.exports = {
     const {
       params: { customer_idx, calculate_idx },
       body: { calculateReload },
-      company_idx,
+      huidx,
       text_cost,
       repay,
       sms_idx,
-      token,
-      user_idx,
+      huidxToken,
     } = req;
     // 알림톡 보내기 전 알림톡 비용 체크
     if (text_cost < 10) {
-      return res.send({ success: 400, message: "알림톡 비용 부족" });
+      res.send({ success: 400, message: "알림톡 비용 부족" });
+      const alarm = new Alarm({});
+      const io = req.app.get("io");
+      const message = alarm.failedSendAlimTalkAlarm();
+      const insertData = {
+        message,
+        alarm_type: 35,
+      };
+
+      const sendMember = [huidx];
+      console.log(sendMember);
+
+      alarm.sendMultiAlarm(insertData, sendMember, io);
+      return;
     }
 
     const customerFindResult = await db.customer.findByPk(customer_idx, {
       attributes: ["customer_phoneNumber", "customer_name", "idx"],
-    });
-
-    const findSender = await db.user.findByPk(user_idx, {
-      attributes: ["user_phone", "user_name"],
     });
 
     const companyFindResult = await db.company.findByPk(req.company_idx, {
@@ -838,7 +846,7 @@ module.exports = {
           method: "post",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token} `,
+            Authorization: `Bearer ${huidxToken} `,
           },
           data: { text_cost: autoSms.auto_price },
         });
