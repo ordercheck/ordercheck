@@ -925,9 +925,13 @@ module.exports = {
           user_idx: data,
         };
 
-        const findMembers = [data];
+        // 자기 자신 제외
+        const sendMembers = [];
+        if (data !== user_idx) {
+          sendMembers.push(data);
+        }
 
-        alarm.sendMultiAlarm(invitedMemberData, findMembers, io);
+        alarm.sendMultiAlarm(invitedMemberData, sendMembers, io);
       });
 
       // 템플릿에서 제외 된 사람 알람
@@ -942,9 +946,14 @@ module.exports = {
           alarm_type: 17,
           user_idx: data,
         };
-        const findMembers = [data];
 
-        alarm.sendMultiAlarm(deletedMemberData, findMembers, io);
+        // 자기 자신 제외
+        const sendMembers = [];
+        if (data !== user_idx) {
+          sendMembers.push(data);
+        }
+
+        alarm.sendMultiAlarm(deletedMemberData, sendMembers, io);
       });
       return;
     } catch (err) {
