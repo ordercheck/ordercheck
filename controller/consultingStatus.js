@@ -832,13 +832,11 @@ module.exports = {
         );
       }
     }
-
+    const autoSms = await db.sms.findByPk(sms_idx, {
+      attributes: ["text_cost", "auto_min", "auto_price"],
+    });
     // 문자 자동 충전
     if (repay) {
-      const autoSms = await db.sms.findByPk(sms_idx, {
-        attributes: ["text_cost", "auto_min", "auto_price"],
-      });
-
       if (autoSms.text_cost < autoSms.auto_min) {
         await axios({
           url: "/api/config/company/sms/pay",
@@ -869,6 +867,17 @@ module.exports = {
       attributes: showCalculateAttributes,
     });
     res.send({ success: 200, findResult });
+
+    if (autoSms.text_cost < 1000) {
+      const alarm = new Alarm({});
+      const message = alarm.messageCostAlarm(autoSms.text_cost);
+      const insertData = {
+        message,
+        alarm_type: 36,
+      };
+      const sendMember = [huidx];
+      alarm.sendMultiAlarm(insertData, sendMember, io);
+    }
     return;
   },
   setMainCalculate: async (req, res, next) => {
