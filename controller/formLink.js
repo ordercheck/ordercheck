@@ -439,11 +439,13 @@ module.exports = {
         company_idx,
         alarm_type: 14,
       };
+
       const findOpenMemberResult = await db.formOpen.findAll({
         where: { formLink_idx: formId, user_idx: { [Op.ne]: user_idx } },
         attributes: ["user_idx"],
         raw: true,
       });
+
       const findMembers = [];
       findOpenMemberResult.forEach((data) => {
         findMembers.push(data.user_idx);

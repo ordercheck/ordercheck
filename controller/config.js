@@ -28,6 +28,7 @@ const {
   showFormListAttributes,
 } = require("../lib/attributes");
 const attributes = require("../lib/attributes");
+const { Alarm } = require("../lib/classes/AlarmClass");
 
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
@@ -821,6 +822,7 @@ module.exports = {
     const {
       params: { formId },
       body: { members },
+      user_idx,
     } = req;
 
     try {
@@ -862,11 +864,57 @@ module.exports = {
         }
       }
 
-      console.log("삭제할 팀원들", deletedMember);
-      console.log("추가할  팀원들", invitedMember);
       await db.formOpen.destroy({ where: { idx: delData } });
 
       res.send({ success: 200 });
+      const alarm = new Alarm({});
+      const io = req.app.get("io");
+
+      // 폼 타이틀 찾기
+      const findFormLink = await db.formLink.findByPk(formId, {
+        attributes: ["title"],
+      });
+
+      // 보낸사람 찾기
+      const inviter = await db.user.findByPk(user_idx, {
+        attributes: ["user_name"],
+      });
+
+      // 템플릿 초대 받은 사람 알림
+      invitedMember.forEach(async (data) => {
+        const inviteMessage = alarm.inviteFormAlarm(
+          inviter.user_name,
+          findFormLink.title
+        );
+
+        const invitedMemberData = {
+          message: inviteMessage,
+          alarm_type: 15,
+          user_idx: data,
+        };
+
+        const findMembers = [data];
+
+        alarm.sendMultiAlarm(invitedMemberData, findMembers, io);
+      });
+
+      // 템플릿에서 제외 된 사람 알람
+      deletedMember.forEach(async (data) => {
+        const deletedMessage = alarm.excludeFormAlarm(
+          inviter.user_name,
+          findFormLink.title
+        );
+
+        const deletedMemberData = {
+          message: deletedMessage,
+          alarm_type: 17,
+          user_idx: data,
+        };
+        const findMembers = [data];
+
+        alarm.sendMultiAlarm(deletedMemberData, findMembers, io);
+      });
+      return;
     } catch (err) {
       next(err);
     }
