@@ -56,8 +56,7 @@ module.exports = {
 
     const { success, findCompanyData, findPlanResult, message } = await check(
       form_link,
-      "form_link_count",
-      "huidx"
+      "form_link_count"
     );
 
     if (!success) {
@@ -98,7 +97,8 @@ module.exports = {
     } = req;
     const { success, findCompanyData, findPlanResult, message } = await check(
       form_link,
-      "form_link_count"
+      "form_link_count",
+      "huidx"
     );
 
     if (!success) {
