@@ -840,7 +840,6 @@ module.exports = {
         attributes: ["text_cost", "auto_min", "auto_price"],
       });
 
-      console.log(autoSms.text_cost);
       if (autoSms.text_cost < autoSms.auto_min) {
         await axios({
           url: "/api/config/company/sms/pay",

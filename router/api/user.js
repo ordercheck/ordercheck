@@ -48,6 +48,7 @@ const functions = require("../../lib/functions");
 const { checkCard } = require("../../model/db");
 const attributes = require("../../lib/attributes");
 const { next } = require("cheerio/lib/api/traversing");
+const { Alarm } = require("../../lib/classes/AlarmClass");
 
 const addPlanAndSchedule = async (
   user_data,
@@ -421,7 +422,22 @@ router.post("/company/check", async (req, res, next) => {
     );
 
     if (addPlanResult.success) {
-      return res.send({ success: 200, message: "회사 등록 완료" });
+      res.send({ success: 200, message: "회사 등록 완료" });
+      // 플랜 알람 보내기
+      const alarm = new Alarm({});
+
+      const freePlan = moment(plan_data.start_plan.replace(/\./g, "-"));
+      let diffTime = moment.duration(freePlan.diff(now)).asDays();
+      diffTime = Math.ceil(diffTime);
+
+      const message = alarm.startFreeAlarm(diffTime);
+      const insertData = {
+        message,
+        alarm_type: 37,
+      };
+      const sendMember = [findUser.idx];
+      const io = req.app.get("io");
+      alarm.sendMultiAlarm(insertData, sendMember, io);
     }
 
     next(addPlanResult.err);
