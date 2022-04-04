@@ -1,5 +1,6 @@
 const db = require("../model/db");
 const { limitPlan } = require("../lib/standardTemplate");
+const { Alarm } = require("../lib/classes/AlarmClass");
 const { delFile } = require("../lib/aws/fileupload").ufile;
 // 고객 체크
 const checkCustomerCount = async (company_idx, data) => {
@@ -55,7 +56,8 @@ module.exports = {
 
     const { success, findCompanyData, findPlanResult, message } = await check(
       form_link,
-      "form_link_count"
+      "form_link_count",
+      "huidx"
     );
 
     if (!success) {
@@ -104,6 +106,21 @@ module.exports = {
     }
     console.log(findCompanyData.form_link_count);
     console.log(limitPlan[findPlanResult.plan].form_link_count);
+    const alarm = new Alarm({});
+    const io = req.app.get("io");
+    if (
+      limitPlan[findPlanResult.plan].form_link_count / 2 ==
+      findCompanyData.form_link_count
+    ) {
+      const alarmMessage = alarm.formLinkLimitAlarm50();
+      const insertData = {
+        message: alarmMessage,
+        alarm_type: 17,
+      };
+      const sendMember = [findCompanyData.huidx];
+      alarm.sendMultiAlarm(insertData, sendMember, io);
+    }
+
     next();
   },
 };
