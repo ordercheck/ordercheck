@@ -184,13 +184,9 @@ module.exports = {
 
     // 50% 찼을 때
     if (
-      limitPlan[findPlanResult.plan].fileStore / 2 <=
-      fileStoreSize <
-      limitPlan[findPlanResult.plan].fileStore * 0.8
+      limitPlan[findPlanResult.plan].fileStore / 2 <= fileStoreSize &&
+      fileStoreSize < limitPlan[findPlanResult.plan].fileStore * 0.8
     ) {
-      console.log(
-        limitPlan[findPlanResult.plan].fileStore / 2 <= fileStoreSize
-      );
       const alarmMessage = alarm.fileLimitAlarm50();
       const insertData = {
         message: alarmMessage,
@@ -202,9 +198,8 @@ module.exports = {
 
     // 80% 찼을 때
     if (
-      limitPlan[findPlanResult.plan].fileStore * 0.8 <=
-      fileStoreSize <
-      limitPlan[findPlanResult.plan].fileStore
+      limitPlan[findPlanResult.plan].fileStore * 0.8 <= fileStoreSize &&
+      fileStoreSize < limitPlan[findPlanResult.plan].fileStore
     ) {
       const alarmMessage = alarm.fileLimitAlarm80();
       const insertData = {
