@@ -531,6 +531,21 @@ module.exports = {
         receipt_kind: "자동 문자 충전",
         card_number: findCardResult.card_number,
       });
+
+      // 문자 자동충전 실패 알람 보내기
+
+      const alarm = new Alarm({});
+      const message = alarm.failedAutoMessageAlarm();
+
+      const insertData = {
+        message,
+        alarm_type: 34,
+      };
+
+      const sendMember = [user_idx];
+      const io = req.app.get("io");
+      alarm.sendMultiAlarm(insertData, sendMember, io);
+
       return;
     }
 
