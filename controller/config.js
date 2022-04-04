@@ -832,7 +832,12 @@ module.exports = {
         attributes: ["user_idx", "idx"],
         raw: true,
       });
+
+      // 초대된 멤버
       const invitedMember = [];
+
+      // 기존에 있던 멤버
+      const nonMember = [];
       // db에 넣기
       for (i = 0; i < members.length; i++) {
         const checkMemberResult = await db.formOpen.findOne({
@@ -850,6 +855,8 @@ module.exports = {
             user_name: findUser.user_name,
           });
           invitedMember.push(parseInt(members[i]));
+        } else {
+          nonMember.push(parseInt(members[i]));
         }
       }
 
@@ -864,6 +871,7 @@ module.exports = {
         }
       }
 
+      console.log(nonMember);
       await db.formOpen.destroy({ where: { idx: delData } });
 
       res.send({ success: 200 });
