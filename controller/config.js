@@ -1017,7 +1017,7 @@ module.exports = {
 
         await db.userCompany.update(
           { config_idx: findTeamTemplate.idx },
-          { where: { idx: company_idx, config_idx: templateId } }
+          { where: { company_idx, config_idx: templateId } }
         );
       }
       // 검색용 usre_name 변경, config 변경

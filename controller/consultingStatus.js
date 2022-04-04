@@ -429,7 +429,6 @@ module.exports = {
     }
   },
   addCompanyCustomer: async (req, res, next) => {
-    console.log("hi");
     const { body, user_idx, company_idx } = req;
     if (body.contact_person == "") {
       body.contact_person = null;
@@ -439,7 +438,7 @@ module.exports = {
     try {
       // 검색용으로 변경
       const { searchingPhoneNumber, searchingAddress } = changeToSearch(body);
-      console.log(1);
+
       body.user_idx = user_idx;
       body.company_idx = company_idx;
       const classBody = new Customer(body);
@@ -447,7 +446,7 @@ module.exports = {
         searchingAddress,
         searchingPhoneNumber
       );
-      console.log(2);
+
       const createCustomerResult = await db.customer.create(customerData, {
         transaction: t,
       });
@@ -464,21 +463,21 @@ module.exports = {
       await db.consulting.create(consultingData, {
         transaction: t,
       });
-      console.log(3);
+
       const fileStoreData = classBody.fileStoreData(
         createCustomerResult.customer_phoneNumber,
         createCustomerResult.customer_name,
         createCustomerResult.customer_idx,
         customerData.searchingPhoneNumber
       );
-      console.log(4);
+
       const { success, err } = await createFileStore(fileStoreData, t);
       if (!success) {
         next(err);
       }
       db.company.increment({ customer_count: 1 }, { where: { idx: user_idx } });
       await t.commit();
-      console.log(5);
+
       res.send({ success: 200 });
 
       // 소유주랑 담당자에게 알람 보내기
