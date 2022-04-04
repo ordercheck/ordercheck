@@ -104,8 +104,7 @@ module.exports = {
     if (!success) {
       return res.send({ success: 400, message });
     }
-    console.log(findCompanyData.form_link_count);
-    console.log(limitPlan[findPlanResult.plan].form_link_count);
+
     const alarm = new Alarm({});
     const io = req.app.get("io");
     if (
@@ -118,6 +117,7 @@ module.exports = {
         alarm_type: 17,
       };
       const sendMember = [findCompanyData.huidx];
+      console.log(sendMember);
       alarm.sendMultiAlarm(insertData, sendMember, io);
     }
 
