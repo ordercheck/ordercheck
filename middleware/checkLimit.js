@@ -89,4 +89,18 @@ module.exports = {
     }
     return next();
   },
+
+  checkConsultingLimit: async (req, res, next) => {
+    const { success, findCompanyData, findPlanResult, message } = await check(
+      form_link,
+      "form_link_count"
+    );
+
+    if (!success) {
+      return res.send({ success: 400, message });
+    }
+    console.log(findCompanyData.form_link_count);
+    console.log(limitPlan[findPlanResult.plan].form_link_count);
+    next();
+  },
 };

@@ -28,7 +28,10 @@ const {
   patchCalculate,
   setMainCalculate,
 } = require("../../controller/consultingStatus");
-const { checkCustomerLimit } = require("../../middleware/checkLimit");
+const {
+  checkCustomerLimit,
+  checkConsultingLimit,
+} = require("../../middleware/checkLimit");
 // *****************************filter*********************************
 // 상담 필터링
 router.post("/filter/:limit/:page", loginCheck, Filter);
@@ -122,11 +125,11 @@ router.post(
 // 상담폼 추가 라우터
 router.post(
   "/",
-  // checkFormLimit,
   multer_form_upload().fields([
     { name: "floor_plan" },
     { name: "hope_concept" },
   ]),
+  checkConsultingLimit,
   // checkFormSns,
   addConsultingForm
 );

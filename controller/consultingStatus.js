@@ -743,7 +743,6 @@ module.exports = {
       };
 
       const sendMember = [huidx];
-      console.log(sendMember);
 
       alarm.sendMultiAlarm(insertData, sendMember, io);
       return;
