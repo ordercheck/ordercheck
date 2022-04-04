@@ -76,7 +76,7 @@ module.exports = {
   checkCustomerLimit: async (req, res, next) => {
     const { findCompanyData, findPlanResult } = await checkCustomerCount(
       req.company_idx,
-      "customer_count"
+      ["customer_count"]
     );
 
     if (
