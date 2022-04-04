@@ -871,7 +871,6 @@ module.exports = {
         }
       }
 
-      console.log(nonMember);
       await db.formOpen.destroy({ where: { idx: delData } });
 
       res.send({ success: 200 });
@@ -886,6 +885,28 @@ module.exports = {
       // 보낸사람 찾기
       const inviter = await db.user.findByPk(user_idx, {
         attributes: ["user_name"],
+      });
+
+      // 기존에 있던 팀원들 알람 보내기
+      nonMember.forEach(async (data) => {
+        const defaultMember = await db.user.findByPk(data, {
+          attributes: ["user_name"],
+        });
+        const inviteDefaultAlarm = alarm.inviteDefaultMemberAlarm(
+          inviter.user_name,
+          findFormLink.title,
+          defaultMember.user_name
+        );
+
+        const invitedMemberData = {
+          message: inviteDefaultAlarm,
+          alarm_type: 16,
+          user_idx: data,
+        };
+
+        const findMembers = [data];
+
+        alarm.sendMultiAlarm(invitedMemberData, findMembers, io);
       });
 
       // 템플릿 초대 받은 사람 알림
