@@ -189,9 +189,7 @@ module.exports = {
       limitPlan[findPlanResult.plan].fileStore * 0.8
     ) {
       console.log(
-        limitPlan[findPlanResult.plan].fileStore / 2,
-        fileStoreSize,
-        limitPlan[findPlanResult.plan].fileStore * 0.8
+        limitPlan[findPlanResult.plan].fileStore / 2 <= fileStoreSize
       );
       const alarmMessage = alarm.fileLimitAlarm50();
       const insertData = {
