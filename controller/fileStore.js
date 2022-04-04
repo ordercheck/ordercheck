@@ -261,7 +261,8 @@ module.exports = {
         createFileResult.push(createResult.toJSON());
       }
 
-      return res.send({ success: 200, createFileResult });
+      res.send({ success: 200, createFileResult });
+      next();
     } catch (err) {
       next(err);
     }

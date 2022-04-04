@@ -106,6 +106,7 @@ module.exports = {
 
     const alarm = new Alarm({});
     const io = req.app.get("io");
+    // 50% 찼을 때
     if (
       limitPlan[findPlanResult.plan].form_link_count / 2 ==
       findCompanyData.form_link_count
@@ -116,10 +117,58 @@ module.exports = {
         alarm_type: 17,
       };
       const sendMember = [findCompanyData.huidx];
-      console.log(io);
+
       alarm.sendMultiAlarm(insertData, sendMember, io);
     }
 
+    // 80% 찼을 때
+    if (
+      limitPlan[findPlanResult.plan].form_link_count * 0.8 ==
+      findCompanyData.form_link_count
+    ) {
+      const alarmMessage = alarm.formLinkLimitAlarm80();
+      const insertData = {
+        message: alarmMessage,
+        alarm_type: 18,
+      };
+      const sendMember = [findCompanyData.huidx];
+
+      alarm.sendMultiAlarm(insertData, sendMember, io);
+    }
+
+    // 초과 했을 때
+    if (
+      limitPlan[findPlanResult.plan].form_link_count ==
+      findCompanyData.form_link_count
+    ) {
+      const alarmMessage = alarm.formLinkLimitAlarm100();
+      const insertData = {
+        message: alarmMessage,
+        alarm_type: 19,
+      };
+      const sendMember = [findCompanyData.huidx];
+
+      alarm.sendMultiAlarm(insertData, sendMember, io);
+    }
     next();
+  },
+
+  checkFileLimit: async (req, res, next) => {
+    const { company_idx } = req;
+    const findFilesResult = await db.files.findAll({
+      where: {
+        company_idx,
+        isFolder: false,
+      },
+      attributes: ["file_size"],
+      raw: true,
+    });
+
+    let fileStoreSize = 0;
+    findFilesResult.forEach((data) => {
+      fileStoreSize += data.file_size;
+    });
+    console.log(fileStoreSize);
+    return;
   },
 };
