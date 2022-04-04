@@ -91,6 +91,9 @@ module.exports = {
   },
 
   checkConsultingLimit: async (req, res, next) => {
+    const {
+      body: { form_link },
+    } = req;
     const { success, findCompanyData, findPlanResult, message } = await check(
       form_link,
       "form_link_count"
