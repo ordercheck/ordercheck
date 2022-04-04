@@ -977,6 +977,7 @@ module.exports = {
       );
 
       res.send({ success: 200, findSameUser });
+
       const alarm = new Alarm({});
 
       const integratingUser = await db.user.findByPk(user_idx, {
@@ -993,7 +994,6 @@ module.exports = {
             ),
             "createdAt",
           ],
-          ,
           "customer_name",
         ],
       });
@@ -1008,22 +1008,42 @@ module.exports = {
             ),
             "createdAt",
           ],
-          ,
           "customer_name",
+          "contact_person",
         ],
       });
+
       const message = alarm.integrateCustomer(
         integratingUser.user_name,
         targetCustomer.customer_name,
         mainCustomer.customer_name,
+        targetCustomer.createdAt,
         mainCustomer.createdAt
       );
 
-      console.log(message);
-
       const io = req.app.get("io");
+      // null 제외
+      let contactArr = [];
+      if (mainCustomer.contact_person) {
+        contactArr.push(mainCustomer.contact_person);
+      }
 
-      return;
+      for (i = 0; i < body.target_idx.length; i++) {
+        const findContact = await db.customer.findByPk(body.target_idx[i], {
+          attributes: ["contact_person"],
+        });
+
+        if (findContact.contact_person) {
+          contactArr.push(findContact.contact_person);
+        }
+      }
+      // 중복 제거
+      contactArr = [...new Set(contactArr)];
+      const insertData = {
+        message,
+        alarm_type: 8,
+      };
+      alarm.sendMultiAlarm(insertData, contactArr, io);
     } catch (err) {
       next(err);
     }
