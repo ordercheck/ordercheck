@@ -425,7 +425,7 @@ router.post("/company/check", async (req, res, next) => {
       res.send({ success: 200, message: "회사 등록 완료" });
       // 플랜 알람 보내기
       const alarm = new Alarm({});
-
+      let now = moment();
       const freePlan = moment(plan_data.start_plan.replace(/\./g, "-"));
       let diffTime = moment.duration(freePlan.diff(now)).asDays();
       diffTime = Math.ceil(diffTime);
