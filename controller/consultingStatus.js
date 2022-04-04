@@ -422,6 +422,7 @@ module.exports = {
       const findMembers = [findCustomerResult.contact_person];
 
       const io = req.app.get("io");
+
       alarm.sendMultiAlarm(data, findMembers, io);
     } catch (err) {
       next(err);

@@ -830,7 +830,7 @@ module.exports = {
         attributes: ["user_idx", "idx"],
         raw: true,
       });
-
+      const invitedMember = [];
       // db에 넣기
       for (i = 0; i < members.length; i++) {
         const checkMemberResult = await db.formOpen.findOne({
@@ -847,6 +847,7 @@ module.exports = {
             user_idx: members[i],
             user_name: findUser.user_name,
           });
+          invitedMember.push(formId);
         }
       }
 
@@ -859,11 +860,11 @@ module.exports = {
         }
       }
 
+      console.log("삭제할 팀원들", delData);
+      console.log("추가할  팀원들", invitedMember);
       await db.formOpen.destroy({ where: { idx: delData } });
 
-      await db.formOpen.findAll({});
-
-      return res.send({ success: 200 });
+      res.send({ success: 200 });
     } catch (err) {
       next(err);
     }
