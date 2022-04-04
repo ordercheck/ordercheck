@@ -731,11 +731,12 @@ module.exports = {
       sms_idx,
       huidxToken,
     } = req;
+    const alarm = new Alarm({});
+    const io = req.app.get("io");
     // 알림톡 보내기 전 알림톡 비용 체크
     if (text_cost < 10) {
       res.send({ success: 400, message: "알림톡 비용 부족" });
-      const alarm = new Alarm({});
-      const io = req.app.get("io");
+
       const message = alarm.failedSendAlimTalkAlarm();
       const insertData = {
         message,
@@ -869,7 +870,6 @@ module.exports = {
     res.send({ success: 200, findResult });
 
     if (autoSms.text_cost < 1000) {
-      const alarm = new Alarm({});
       const message = alarm.messageCostAlarm(autoSms.text_cost);
       const insertData = {
         message,
