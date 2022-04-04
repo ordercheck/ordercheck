@@ -183,16 +183,16 @@ module.exports = {
     });
 
     // 50% 찼을 때
-
-    console.log(limitPlan[findPlanResult.plan].fileStore / 2);
-    console.log(limitPlan[findPlanResult.plan].fileStore * 0.8);
-    console.log(fileStoreSize);
     if (
       limitPlan[findPlanResult.plan].fileStore / 2 <=
       fileStoreSize <
       limitPlan[findPlanResult.plan].fileStore * 0.8
     ) {
-      console.log("이거 왜탐?");
+      console.log(
+        limitPlan[findPlanResult.plan].fileStore / 2,
+        fileStoreSize,
+        limitPlan[findPlanResult.plan].fileStore * 0.8
+      );
       const alarmMessage = alarm.fileLimitAlarm50();
       const insertData = {
         message: alarmMessage,
