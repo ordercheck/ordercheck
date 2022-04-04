@@ -919,7 +919,7 @@ module.exports = {
             inviter.user_name,
             findFormLink.title,
             defaultMember.user_name,
-            invitedMember.length
+            invitedMember.length == 0 ? 0 : invitedMember.length - 1
           );
 
           const invitedMemberData = {
