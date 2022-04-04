@@ -5,7 +5,7 @@ const { delFile } = require("../lib/aws/fileupload").ufile;
 // 고객 체크
 const checkCustomerCount = async (company_idx, data) => {
   const findCompanyData = await db.company.findByPk(company_idx, {
-    attributes: [data],
+    attributes: data,
   });
   const findPlanResult = await db.plan.findOne({
     where: { company_idx, active: 1 },
@@ -56,7 +56,7 @@ module.exports = {
 
     const { success, findCompanyData, findPlanResult, message } = await check(
       form_link,
-      "form_link_count"
+      ["form_link_count"]
     );
 
     if (!success) {
@@ -97,8 +97,7 @@ module.exports = {
     } = req;
     const { success, findCompanyData, findPlanResult, message } = await check(
       form_link,
-      "form_link_count",
-      "huidx"
+      ["form_link_count", "huidx"]
     );
 
     if (!success) {
@@ -117,7 +116,7 @@ module.exports = {
         alarm_type: 17,
       };
       const sendMember = [findCompanyData.huidx];
-      console.log(sendMember);
+
       alarm.sendMultiAlarm(insertData, sendMember, io);
     }
 
