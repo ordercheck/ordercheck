@@ -911,7 +911,7 @@ module.exports = {
       // 기존에 있던 팀원들 알람 보내기
       nonMember.forEach(async (data) => {
         // 초대된 사람이 없을 때 처리
-        if (!invitedMember[0]) {
+        if (invitedMember.length !== 0) {
           const defaultMember = await db.user.findByPk(invitedMember[0], {
             attributes: ["user_name"],
           });
