@@ -847,20 +847,22 @@ module.exports = {
             user_idx: members[i],
             user_name: findUser.user_name,
           });
-          invitedMember.push(parseInt(formId));
+          invitedMember.push(parseInt(members[i]));
         }
       }
 
       // 삭제할 idx 찾기
-      delData = [];
+      const delData = [];
+      const deletedMember = [];
       for (i = 0; i < formOpenMembers.length; i++) {
         const result = members.includes(formOpenMembers[i].user_idx);
         if (!result) {
           delData.push(formOpenMembers[i].idx);
+          deletedMember.push(formOpenMembers[i].user_idx);
         }
       }
 
-      console.log("삭제할 팀원들", delData);
+      console.log("삭제할 팀원들", deletedMember);
       console.log("추가할  팀원들", invitedMember);
       await db.formOpen.destroy({ where: { idx: delData } });
 
