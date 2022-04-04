@@ -359,6 +359,7 @@ module.exports = {
     const {
       params: { customer_idx },
       company_idx,
+      user_idx,
     } = req;
     try {
       // 고객 전화번호 찾기
