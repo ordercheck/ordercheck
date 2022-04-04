@@ -155,6 +155,8 @@ module.exports = {
 
   checkFileLimit: async (req, res, next) => {
     const { company_idx } = req;
+    const alarm = new Alarm({});
+    const io = req.app.get("io");
     const findFilesResult = await db.files.findAll({
       where: {
         company_idx,
@@ -168,7 +170,57 @@ module.exports = {
     findFilesResult.forEach((data) => {
       fileStoreSize += data.file_size;
     });
-    console.log(fileStoreSize);
+    // GB로 변환
+    fileStoreSize = fileStoreSize * 0.001;
+
+    const findPlanResult = await db.plan.findOne({
+      where: { company_idx, active: 1 },
+      attributes: ["plan"],
+    });
+
+    const findCompany = await db.company.findByPk(company_idx, {
+      attributes: ["huidx"],
+    });
+
+    // 50% 찼을 때
+    if (
+      limitPlan[findPlanResult.plan].fileStore / 2 <=
+      fileStoreSize <
+      limitPlan[findPlanResult.plan].fileStore * 0.8
+    ) {
+      const alarmMessage = alarm.fileLimitAlarm50();
+      const insertData = {
+        message: alarmMessage,
+        alarm_type: 27,
+      };
+      const sendMember = [findCompany.huidx];
+      alarm.sendMultiAlarm(insertData, sendMember, io);
+    }
+
+    // 80% 찼을 때
+    if (
+      limitPlan[findPlanResult.plan].fileStore * 0.8 <=
+      fileStoreSize <
+      limitPlan[findPlanResult.plan].fileStore
+    ) {
+      const alarmMessage = alarm.fileLimitAlarm80();
+      const insertData = {
+        message: alarmMessage,
+        alarm_type: 28,
+      };
+      const sendMember = [findCompany.huidx];
+      alarm.sendMultiAlarm(insertData, sendMember, io);
+    }
+    // 100% 찼을 때
+    if (limitPlan[findPlanResult.plan].fileStore <= fileStoreSize) {
+      const alarmMessage = alarm.fileLimitAlarm100();
+      const insertData = {
+        message: alarmMessage,
+        alarm_type: 29,
+      };
+      const sendMember = [findCompany.huidx];
+      alarm.sendMultiAlarm(insertData, sendMember, io);
+    }
     return;
   },
 };
