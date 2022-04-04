@@ -909,7 +909,7 @@ module.exports = {
           sendMembers.push(data);
         }
 
-        alarm.sendMultiAlarm(invitedMemberData, findMembers, io);
+        alarm.sendMultiAlarm(invitedMemberData, sendMembers, io);
       });
 
       // 템플릿 초대 받은 사람 알림
