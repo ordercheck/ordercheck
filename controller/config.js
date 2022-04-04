@@ -903,8 +903,11 @@ module.exports = {
           alarm_type: 16,
           user_idx: data,
         };
-
-        const findMembers = [data];
+        // 알람 대상에 자기 자신 제외
+        const sendMembers = [];
+        if (data !== user_idx) {
+          sendMembers.push(data);
+        }
 
         alarm.sendMultiAlarm(invitedMemberData, findMembers, io);
       });
