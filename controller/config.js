@@ -994,8 +994,27 @@ module.exports = {
     const {
       body: { user_name, user_email, templateId },
       params: { memberId },
+      company_idx,
     } = req;
     try {
+      const findTemplate = await db.config.findByPk(templateId, {
+        attributes: ["template_name"],
+      });
+      if (findTemplate.template_name == "소유주") {
+        await db.company.update(
+          { huidx: memberId },
+          { where: { idx: company_idx } }
+        );
+        const findTeamTemplate = await db.config.findOne({
+          where: { company_idx, template_name: "팀원" },
+          attributes: ["idx"],
+        });
+
+        await db.userCompany.update(
+          { config_idx: findTeamTemplate.idx },
+          { where: { idx: company_idx, config_idx: templateId } }
+        );
+      }
       // 검색용 usre_name 변경, config 변경
       await db.userCompany.update(
         { searchingName: user_name, config_idx: templateId },
