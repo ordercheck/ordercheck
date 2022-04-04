@@ -905,34 +905,36 @@ module.exports = {
         if (data !== user_idx) {
           sendMembers.push(data);
         }
-
         alarm.sendMultiAlarm(invitedMemberData, sendMembers, io);
       });
 
       // 기존에 있던 팀원들 알람 보내기
       nonMember.forEach(async (data) => {
-        const defaultMember = await db.user.findByPk(invitedMember[0], {
-          attributes: ["user_name"],
-        });
-        const inviteDefaultAlarm = alarm.inviteDefaultMemberAlarm(
-          inviter.user_name,
-          findFormLink.title,
-          defaultMember.user_name,
-          invitedMember.length
-        );
+        // 초대된 사람이 없을 때 처리
+        if (!invitedMember[0]) {
+          const defaultMember = await db.user.findByPk(invitedMember[0], {
+            attributes: ["user_name"],
+          });
+          const inviteDefaultAlarm = alarm.inviteDefaultMemberAlarm(
+            inviter.user_name,
+            findFormLink.title,
+            defaultMember.user_name,
+            invitedMember.length
+          );
 
-        const invitedMemberData = {
-          message: inviteDefaultAlarm,
-          alarm_type: 23,
-          user_idx: data,
-        };
-        // 알람 대상에 자기 자신 제외
-        const sendMembers = [];
-        if (data !== user_idx) {
-          sendMembers.push(data);
+          const invitedMemberData = {
+            message: inviteDefaultAlarm,
+            alarm_type: 23,
+            user_idx: data,
+          };
+          // 알람 대상에 자기 자신 제외
+          const sendMembers = [];
+          if (data !== user_idx) {
+            sendMembers.push(data);
+          }
+
+          alarm.sendMultiAlarm(invitedMemberData, sendMembers, io);
         }
-
-        alarm.sendMultiAlarm(invitedMemberData, sendMembers, io);
       });
 
       // 템플릿에서 제외 된 사람 알람
