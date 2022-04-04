@@ -365,7 +365,13 @@ module.exports = {
       const findCustomerResult = await db.customer.findByPk(
         customer_idx,
 
-        { attributes: ["customer_phoneNumber"] }
+        {
+          attributes: [
+            "customer_phoneNumber",
+            "customer_name",
+            "contact_person",
+          ],
+        }
       );
       const deletedTime = moment();
       // 고객 지우기
@@ -394,7 +400,28 @@ module.exports = {
         });
       }
 
-      return res.send({ success: 200 });
+      res.send({ success: 200 });
+
+      const alarm = new Alarm({});
+
+      const findUser = await db.user.findByPk(user_idx, {
+        attributes: ["user_name"],
+      });
+
+      const message = alarm.delCustomerAlarm(
+        findUser.user_name,
+        findCustomerResult.customer_name
+      );
+
+      const data = {
+        message,
+        alarm_type: 7,
+      };
+
+      const findMembers = [findCustomerResult.contact_person];
+
+      const io = req.app.get("io");
+      alarm.sendMultiAlarm(data, findMembers, io);
     } catch (err) {
       next(err);
     }
@@ -484,7 +511,7 @@ module.exports = {
       const io = req.app.get("io");
 
       await alarm.sendMultiAlarm(insertData, findMembers, io);
-      // await sendCompanyAlarm(insertData, findMembers, io);
+
       return;
     } catch (err) {
       await t.rollback();

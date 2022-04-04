@@ -451,6 +451,7 @@ module.exports = {
 
       const io = req.app.get("io");
       alarm.sendMultiAlarm(data, findMembers, io);
+      return;
     } catch (err) {
       next(err);
     }
