@@ -176,7 +176,7 @@ ${company_url}
       message: approveMessage,
       company_idx,
       user_idx: findUserCompanyResult.user_idx,
-      alarm_type: 1,
+      alarm_type: 5,
     });
 
     //팀원들 알람
@@ -205,7 +205,7 @@ ${company_url}
       members.push(data.user_idx);
     });
 
-    const insertData = { message, alarm_type: 2 };
+    const insertData = { message, alarm_type: 6 };
     alarm.sendMultiAlarm(insertData, members, io);
 
     io.to(findUserCompanyResult.user_idx).emit("invite", "approve");

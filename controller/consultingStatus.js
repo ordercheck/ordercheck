@@ -342,7 +342,7 @@ module.exports = {
         message,
         user_idx: contract_person,
         company_idx,
-        alarm_type: 5,
+        alarm_type: 11,
         customer_idx: consultResult.idx,
       };
 
@@ -416,7 +416,7 @@ module.exports = {
 
       const data = {
         message,
-        alarm_type: 7,
+        alarm_type: 13,
       };
 
       const findMembers = [findCustomerResult.contact_person];
@@ -497,7 +497,7 @@ module.exports = {
       const insertData = {
         message,
         company_idx,
-        alarm_type: 9,
+        alarm_type: 14,
         customer_idx: createCustomerResult.idx,
       };
 
@@ -992,7 +992,7 @@ module.exports = {
       const insertData = {
         message,
         company_idx,
-        alarm_type: 8,
+        alarm_type: 15,
         customer_idx: findCustomer.idx,
       };
       await sendCompanyAlarm(insertData, findMembers, io);
