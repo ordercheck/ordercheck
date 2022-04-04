@@ -192,6 +192,7 @@ module.exports = {
       fileStoreSize <
       limitPlan[findPlanResult.plan].fileStore * 0.8
     ) {
+      console.log("이거 왜탐?");
       const alarmMessage = alarm.fileLimitAlarm50();
       const insertData = {
         message: alarmMessage,
