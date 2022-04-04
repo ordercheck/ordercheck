@@ -1001,12 +1001,15 @@ module.exports = {
         attributes: ["template_name"],
       });
       if (findTemplate.template_name == "소유주") {
-        console.log("타나");
+        const findMember = await db.userCompany.findByPk(memberId, {
+          attributes: ["user_idx"],
+        });
+
         await db.company.update(
-          { huidx: memberId },
+          { huidx: findMember.user_idx },
           { where: { idx: company_idx } }
         );
-        console.log("업뎃 되나");
+
         const findTeamTemplate = await db.config.findOne({
           where: { company_idx, template_name: "팀원" },
           attributes: ["idx"],
