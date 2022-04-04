@@ -847,7 +847,7 @@ module.exports = {
             user_idx: members[i],
             user_name: findUser.user_name,
           });
-          invitedMember.push(parseInit(formId));
+          invitedMember.push(parseInt(formId));
         }
       }
 
