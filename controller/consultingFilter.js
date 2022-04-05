@@ -13,9 +13,7 @@ module.exports = {
       params: { limit, page },
       company_idx,
     } = req;
-    const zeroIdx = userId.indexOf(0);
-    userId[zeroIdx] = null;
-    console.log(userId);
+
     const checkAllCustomers = await db.customer.count({
       where: { company_idx, deleted: null },
     });
@@ -221,6 +219,7 @@ module.exports = {
     }
 
     if (userId) {
+      console.log(userId);
       userId[userId.indexOf(0)] = null;
       contractPerson = userId;
     }
