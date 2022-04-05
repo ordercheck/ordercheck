@@ -12,7 +12,7 @@ const sendMail = async (company_url, company_name, inviter, target) => {
   let mailOptions = {
     from: process.env.SEND_EMAIL_ID,
     to: target,
-    subject: "invite Test",
+    subject: "오더체크",
     html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
@@ -21,24 +21,47 @@ const sendMail = async (company_url, company_name, inviter, target) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <style type="text/css">
           /* GENERAL STYLE RESETS */
-          body {
-            font-family: Noto Sans KR;
-            font-size: 15px;
-            line-height: 23px;
+          body,
+          #bodyTable {
+            width: 100% !important;
+            height: 100% !important;
+            margin: 0;
+            padding: 0;
+          }
+          #bodyTable {
+            padding: 20px 0 30px 0;
+            background-color: #ffffff;
+          }
+          img,
+          a img {
+            border: 0;
+            outline: none;
+            text-decoration: none;
+          }
+          .imageFix {
+            display: block;
+          }
+          table,
+          td {
+            border-collapse: collapse;
+            border: none;
           }
     
-          .wrap {
+          .header {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
           }
     
-          .content-text {
-            margin: 30px 0px;
+          .btn-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
           }
     
           .info {
-            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
           }
     
           /* Outlook.com(Hotmail)의 전체 너비 및 적절한 줄 높이를 허용 */
@@ -80,54 +103,108 @@ const sendMail = async (company_url, company_name, inviter, target) => {
         </style>
       </head>
       <body>
-        <div class="wrap">
-          <div class="header">
-            <img
-              src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/header.png"
-              alt=""
-              width="900px"
-              height="89px"
-            />
-          </div>
-          <div class="content-text">
-            안녕하세요!<br />
-            <b>‘${inviter}’</b>님이 <b>‘${company_name}’</b> 회사에 고객님을
-            초대합니다.<br /><br />
-            아래 버튼을 눌러 함께하세요!
-          </div>
-          <a
-            href="${company_url}"
-            style="
-              display: block;
-              font-family: Noto Sans KR;
-              width: 160px;
-              height: 55px;
-              line-height: 55px;
-              text-align: center;
-              text-decoration: none;
-              font-size: 16px;
-              font-weight: bold;
-              background: #02164f;
-              border-radius: 6px;
-              color: #ffffff;
-            "
-            ><font color="#ffffff">참여하기</font></a
-          >
-          <div class="info">
-            <img
-              src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/ordercheck_info_B.png"
-              width="900px"
-              height="555px"
-            />
-          </div>
-          <div class="footer">
-            <img
-              src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/footer_other.png"
-              width="900px"
-              height="116px"
-            />
-          </div>
-        </div>
+        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+          <tr class="header">
+            <td>
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td width="116" height="20" style="line-height: 20px">
+                    <img
+                      src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/header.png"
+                      alt=""
+                      width="900"
+                      height="89"
+                    />
+                  </td>
+                  <td height="20" style="line-height: 20px"></td>
+                  <td height="20" style="line-height: 20px"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td
+                    style="
+                      font-family: Noto Sans KR;
+                      font-size: 15px;
+                      line-height: 150%;
+                      color: #41495d;
+                      display: flex;
+                      justify-content: center;
+                      margin: 30px 0px;
+                    "
+                  >
+                    <div>
+                      안녕하세요!<br />
+                      <b>‘${inviter}’</b>님이 <b>‘${company_name}’</b> 회사에
+                      고객님을 초대합니다.<br /><br />
+                      아래 버튼을 눌러 함께하세요!
+                    </div>
+                  </td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr class="btn-wrap">
+                  <td width="160" height="55" style="line-height: 55px">
+                    <div>
+                      <a
+                        href="${company_url}"
+                        style="
+                          display: block;
+                          font-family: Noto Sans KR;
+                          width: 160px;
+                          height: 55px;
+                          line-height: 55px;
+                          text-align: center;
+                          text-decoration: none;
+                          font-size: 16px;
+                          font-weight: bold;
+                          background: #02164f;
+                          border-radius: 6px;
+                          color: #ffffff;
+                        "
+                        ><font color="#ffffff">참여하기</font></a
+                      >
+                    </div>
+                  </td>
+                  <td height="55" style="line-height: 55px"></td>
+                  <td height="55" style="line-height: 55px"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td class="info">
+                    <img
+                      src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/ordercheck_info_B.png"
+                      alt=""
+                      width="900"
+                      height="555"
+                    />
+                    <img
+                      src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/footer_other.png"
+                      alt=""
+                      width="900"
+                      height="116"
+                    />
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
       </body>
     </html>
         `,
