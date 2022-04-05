@@ -250,7 +250,7 @@ const sendMail = async (company_url, company_name, inviter, target) => {
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding: 50px 0px 0px 0px">
+                  <td style="padding: 50px 0px 0px 0px; text-align: center">
                     <img
                       src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/ordercheck_info.png"
                       width="721"
@@ -259,7 +259,7 @@ const sendMail = async (company_url, company_name, inviter, target) => {
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding: 60px 0px 0px 0px">
+                  <td style="padding: 60px 0px 0px 0px; text-align: center">
                     <img
                       src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/footer_other.png"
                       alt=""
