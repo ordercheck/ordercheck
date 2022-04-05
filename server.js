@@ -9,6 +9,10 @@ const { alarmAttributes } = require("./lib/attributes");
 const { verify_data } = require("./lib/jwtfunctions");
 
 io.on("connection", (socket) => {
+  socket.on("disconnect", function () {
+    console.log("끊김");
+  });
+
   console.log("연결");
   // 회사 알람 시스템에 Join
   socket.on("alarmJoin", async (data) => {
