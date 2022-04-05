@@ -51,8 +51,11 @@ module.exports = {
       text_cost,
       repay,
       sms_idx,
-      token,
+      huidxToken,
+      huidx,
     } = req;
+    const io = req.app.get("io");
+    const alarm = new Alarm({});
     // 문자 비용 계산(없으면 오류)
     if (text_cost < target_phoneNumber.length * 37) {
       return res.send({ success: 400, message: "LMS 비용이 부족합니다." });
@@ -69,7 +72,7 @@ module.exports = {
 
     const message = `[${findCompany.company_name}]
 안녕하세요, ${findInviter.user_name}님이 ${findCompany.company_name} 회사에 초대합니다:)
-
+--
 참여하기:
 ${company_url}
  `;
@@ -107,7 +110,7 @@ ${company_url}
           method: "post", // POST method
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token} `,
+            Authorization: `Bearer ${huidxToken} `,
           }, // "Content-Type": "application/json"
           data: { text_cost: autoSms.auto_price },
         });
@@ -115,6 +118,20 @@ ${company_url}
     }
 
     res.send({ success: 200 });
+
+    const checkSmsCost = await db.sms.findByPk({
+      where: { user_idx: huidx },
+      attributes: ["text_cost"],
+    });
+    if (checkSmsCost.text_cost <= 1000) {
+      const message = alarm.messageCostAlarm(checkSmsCost.text_cost);
+      const insertData = {
+        message,
+        alarm_type: 36,
+      };
+      const sendMember = [huidx];
+      alarm.sendMultiAlarm(insertData, sendMember, io);
+    }
   },
 
   showStandbyUser: async (req, res, next) => {

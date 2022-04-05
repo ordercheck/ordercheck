@@ -252,7 +252,7 @@ router.post("/check/pw", async (req, res) => {
   let { user_phone } = req.body;
 
   const randomNumber = generateRandomCode(6);
-  const message = `[인증번호: ${randomNumber}] \n 오더체크 인증번호입니다.`;
+  const message = `[인증번호: ${randomNumber}] \n 오더체크에서 보내는 인증번호입니다.`;
   user_phone = user_phone.replace(/\./g, "-");
 
   try {

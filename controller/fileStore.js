@@ -656,7 +656,7 @@ module.exports = {
             raw: true,
           });
           data = { ...data.files };
-          console.log(result);
+
           result ? (data.underFolders = true) : (data.underFolders = false);
 
           return data;
