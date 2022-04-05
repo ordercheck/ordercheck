@@ -1025,6 +1025,7 @@ module.exports = {
         { searchingName: user_name, config_idx: templateId },
         { where: { idx: memberId } }
       );
+
       // user찾기
       const findUserResult = await db.userCompany.findByPk(memberId, {
         attributes: ["user_idx"],
@@ -1033,6 +1034,12 @@ module.exports = {
       await db.user.update(
         { user_name, user_email },
         { where: { idx: findUserResult.user_idx } }
+      );
+
+      // formOpen 정보 변경
+      await db.formOpen.update(
+        { user_name },
+        { where: { user_idx: findUserResult.user_idx } }
       );
 
       const findResult = await findMember({

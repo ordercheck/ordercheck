@@ -297,6 +297,15 @@ module.exports = {
             where: { user_idx, company_idx },
           }
         );
+
+        await db.formOpen.update(
+          {
+            user_name: body.user_name,
+          },
+          {
+            where: { user_idx },
+          }
+        );
       }
       // 비밀번호는 변경 하면 안됨
       if (body.user_password) {
