@@ -670,7 +670,7 @@ module.exports = {
   },
   moveFile: async (req, res, next) => {
     const {
-      params: { fileUuid, folderUuid, customerFile_idx },
+      params: { fileUuid, folderUuid },
       query: { path },
     } = req;
 
@@ -681,43 +681,10 @@ module.exports = {
         newPath = null;
       }
 
-      const beforePath = await db.files.findOne({
-        where: { uuid: fileUuid },
-        attributes: ["path"],
-      });
-
-      const findFilesResult = await db.files.findOne({
-        where: { uuid: fileUuid },
-        raw: true,
-      });
-
-      params = checkFile(
-        req,
-        params,
-        `${findFilesResult.uniqueKey}${findFilesResult.title}`,
-        `${findFilesResult.uniqueKey}${findFilesResult.title}`,
-        beforePath.path,
-        newPath
-      );
-
-      let Bucket = encodeURI(
-        `ordercheck/fileStore/${customerFile_idx}/${beforePath.path}`
-      );
-      let file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${newPath}/${findFilesResult.uniqueKey}${findFilesResult.title}`;
-      Bucket = Bucket.replace("/null", "");
-      file_url = file_url.replace("/null", "");
-
-      await copyAndDelete(
-        params,
-        Bucket,
-        `${findFilesResult.uniqueKey}${findFilesResult.title}`
-      );
-
       db.files.update(
         {
           folder_uuid: folderUuid,
           path: newPath,
-          file_url,
         },
         { where: { uuid: fileUuid } }
       );
