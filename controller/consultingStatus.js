@@ -1038,12 +1038,14 @@ module.exports = {
       for (i = 0; i < body.target_idx.length; i++) {
         const findContact = await db.customer.findByPk(body.target_idx[i], {
           attributes: ["contact_person"],
+          group: ["contact_person"],
         });
 
         if (findContact.contact_person) {
           contactArr.push(findContact.contact_person);
         }
       }
+      console.log(contactArr);
       // 중복 제거
       contactArr = [...new Set(contactArr)];
       const insertData = {
