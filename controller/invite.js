@@ -185,8 +185,13 @@ ${company_url}
         active: true,
         standBy: false,
         company_idx,
-        user_idx: { [Op.ne]: user_idx, [Op.ne]: findUserCompanyResult.user },
       },
+      include: [
+        {
+          model: db.config,
+          where: { member_approval: true },
+        },
+      ],
       attributes: ["user_idx"],
       raw: true,
     });
