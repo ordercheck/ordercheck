@@ -795,7 +795,7 @@ module.exports = {
       };
       const sendResult = await checkKakaoPromise();
       //문자 다시 보내기
-      console.log(sendResult.sendResult);
+
       // 메시지 전송못할때 3018 (차단, 카톡 없을때)
       // 전화번호 오류 3008
       // 정상발송 0000
