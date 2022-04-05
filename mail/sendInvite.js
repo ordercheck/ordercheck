@@ -139,28 +139,29 @@ const sendMail = async (company_url, company_name, inviter, target) => {
           <tr>
             <td>
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                <tr class="btn-wrap">
-                  <td style="line-height: 55px; margin: auto">
+                <tr>
+                  <td height="55" style="line-height: 55px"></td>
+                  <td width="160" height="55" style="line-height: 55px">
                     <a
                       href="${company_url}"
                       style="
                         display: block;
-                        width: 160px !important;
-                        height: 55px;
                         font-family: Noto Sans KR;
+                        width: 160px;
+                        height: 55px;
+                        line-height: 55px;
                         text-align: center;
                         text-decoration: none;
                         font-size: 16px;
                         font-weight: bold;
-                        margin: auto;
                         background: #02164f;
                         border-radius: 6px;
                         color: #ffffff;
                       "
-                      class="button"
-                      >참여하기</a
+                      ><font color="#ffffff">참여하기</font></a
                     >
                   </td>
+                  <td height="55" style="line-height: 55px"></td>
                 </tr>
               </table>
             </td>

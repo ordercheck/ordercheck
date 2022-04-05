@@ -300,13 +300,6 @@ module.exports = {
     try {
       // 폴더가 아닐 때
       if (isfolder == 0) {
-        const findFileResult = await db.files.findOne(
-          { where: { uuid } },
-          { attributes: ["title", "path", "uniqueKey"] }
-        );
-        // 폴더 안에 없을 때
-        const delTarget = `${findFileResult.uniqueKey}${findFileResult.title}`;
-        deleteFileToS3(delTarget, req);
         await db.files.destroy({
           where: { uuid },
         });
@@ -341,24 +334,6 @@ module.exports = {
       await t.commit();
       res.send({ success: 200, message: "삭제 완료" });
 
-      // db정보 삭제 후 s3 삭제
-      var params = {
-        Bucket: "ordercheck",
-        Prefix: `fileStore/${req.params.customerFile_idx}/${req.query.path}/`,
-      };
-      const deleteParams = {
-        Bucket: "ordercheck",
-        Delete: { Objects: [] },
-      };
-      s3_get(params, (err, data) => {
-        if (data.Contents.length == 0) {
-          return;
-        }
-        data.Contents.forEach((data) => {
-          deleteParams.Delete.Objects.push({ Key: data.Key });
-        });
-        s3_delete_objects(deleteParams);
-      });
       return;
     } catch (err) {
       await t.rollback();
@@ -434,42 +409,10 @@ module.exports = {
           raw: true,
         });
 
-        let params = {
-          Bucket: "ordercheck",
-          ACL: "public-read",
-        };
-
         const titleExtend = findFilesResult.title.split(".");
 
         const newTitle = `${title}.${titleExtend[titleExtend.length - 1]}`;
 
-        path == undefined ? (path = null) : path;
-
-        //  params만들기
-        params = checkFile(
-          req,
-          params,
-          `${findFilesResult.uniqueKey}${findFilesResult.title}`,
-          `${findFilesResult.uniqueKey}${newTitle}`,
-          path,
-          path
-        );
-
-        // 파일삭제
-
-        let file_url = `https://ordercheck.s3.ap-northeast-2.amazonaws.com/fileStore/${customerFile_idx}/${path}/${findFilesResult.uniqueKey}${newTitle}`;
-        let Bucket = encodeURI(
-          `ordercheck/fileStore/${customerFile_idx}/${path}`
-        );
-
-        file_url = file_url.replace("/null", "");
-        Bucket = Bucket.replace("/null", "");
-
-        const copyResult = await copyAndDelete(
-          params,
-          Bucket,
-          `${findFilesResult.uniqueKey}${findFilesResult.title}`
-        );
         if (copyResult) {
           const pureText = makePureText(newTitle);
 
@@ -477,7 +420,6 @@ module.exports = {
             {
               title: newTitle,
               searchingTitle: pureText,
-              file_url,
             },
             { where: { uuid } }
           );
