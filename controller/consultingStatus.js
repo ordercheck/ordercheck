@@ -1041,13 +1041,16 @@ module.exports = {
           group: ["contact_person"],
         });
 
-        if (findContact.contact_person) {
+        if (
+          findContact.contact_person &&
+          findContact.contact_person !== mainCustomer.contact_person
+        ) {
           contactArr.push(findContact.contact_person);
         }
       }
+
       console.log(contactArr);
-      // 중복 제거
-      contactArr = [...new Set(contactArr)];
+
       const insertData = {
         message,
         alarm_type: 8,
