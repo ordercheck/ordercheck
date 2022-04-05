@@ -95,7 +95,6 @@ module.exports = {
       intlimit,
       start
     ) => {
-      console.log(contractPersonData);
       const { sortField, sort, addminus } = sortElements(
         No,
         Name,
@@ -158,6 +157,7 @@ module.exports = {
 
         return { findAndCountAllFilterdCustomers, findFilteredUsersData };
       } else {
+        console.log(contractPersonData);
         let findAndCountAllFilterdCustomers = await db.customer.findAndCountAll(
           {
             where: {
