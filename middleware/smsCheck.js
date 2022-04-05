@@ -8,7 +8,7 @@ const smsCheck = async (req, res, next) => {
   });
 
   const findSms = await db.sms.findOne({
-    where: { user_idx: findCompany.huidx },
+    where: { company_idx },
     attributes: ["text_cost", "repay", "idx"],
   });
 
@@ -24,11 +24,9 @@ const smsCheck = async (req, res, next) => {
 
 const checkFormSns = async (req, res, next) => {
   const { company_idx } = req.body;
-  const findCompany = await db.company.findByPk(company_idx, {
-    attributes: ["huidx"],
-  });
+
   const findSms = await db.sms.findOne({
-    where: { user_idx: findCompany.huidx },
+    where: { company_idx },
   });
 
   req.text_cost = findSms.text_cost;

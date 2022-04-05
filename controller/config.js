@@ -54,7 +54,7 @@ module.exports = {
           LEFT JOIN plan ON userCompany.company_idx = plan.company_idx
           LEFT JOIN user ON company.huidx = user.idx
           LEFT JOIN card ON card.user_idx = user.idx AND main=true
-          LEFT JOIN sms ON sms.user_idx = user.idx
+          LEFT JOIN sms ON sms.company_idx = userCompany.company_idx
           WHERE userCompany.user_idx = ${user_idx} AND userCompany.active = true AND standBy = false`
         )
         .spread((r) => {
@@ -406,10 +406,10 @@ module.exports = {
     }
   },
   showSmsInfo: async (req, res, next) => {
-    const { user_idx } = req;
+    const { user_idx, company_idx } = req;
     try {
       const findResult = await db.sms.findOne({
-        where: { user_idx },
+        where: { company_idx },
         attributes: ["text_cost", "repay", "auto_price", "auto_min"],
       });
 
@@ -423,16 +423,16 @@ module.exports = {
     }
   },
   changeSms: async (req, res, next) => {
-    const { user_idx, token, body } = req;
+    const { user_idx, token, body, company_idx } = req;
     try {
       await db.sms.update(body, {
         where: {
-          user_idx,
+          company_idx,
         },
       });
 
       const findResult = await db.sms.findOne({
-        where: { user_idx },
+        where: { company_idx },
         attributes: ["text_cost", "repay", "auto_price", "auto_min"],
       });
 
@@ -481,7 +481,7 @@ module.exports = {
     });
 
     const findSmsResult = await db.sms.findOne({
-      where: { user_idx },
+      where: { company_idx },
       attributes: ["text_cost"],
     });
 
@@ -559,7 +559,7 @@ module.exports = {
       },
       {
         where: {
-          user_idx,
+          company_idx,
         },
       }
     );
@@ -583,11 +583,11 @@ module.exports = {
     });
   },
   showSmsHistory: async (req, res, next) => {
-    const { user_idx } = req;
+    const { user_idx, company_idx } = req;
     try {
       // 해당 유저의 sms조회
       const findSms = await db.sms.findOne({
-        where: { user_idx },
+        where: { company_idx },
       });
 
       const findResult = await db.smsHistory.findAll({

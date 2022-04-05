@@ -121,7 +121,7 @@ ${company_url}
     res.send({ success: 200 });
 
     const checkSmsCost = await db.sms.findOne({
-      where: { user_idx: huidx },
+      where: { company_idx },
       attributes: ["text_cost"],
     });
     if (checkSmsCost.text_cost <= 1000) {

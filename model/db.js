@@ -90,10 +90,10 @@ db.smsHistory.belongsTo(db.sms, {
   foreignKey: "sms_idx",
 });
 
-// user와 sms
-db.user.hasOne(db.sms, { foreignKey: "user_idx", onDelete: "cascade" });
-db.sms.belongsTo(db.user, {
-  foreignKey: "user_idx",
+// company와 sms
+db.company.hasOne(db.sms, { foreignKey: "company_idx", onDelete: "cascade" });
+db.sms.belongsTo(db.company, {
+  foreignKey: "company_idx",
 });
 
 // company와 customerFile
