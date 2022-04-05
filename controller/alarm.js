@@ -21,7 +21,6 @@ module.exports = {
   confirmAlarm: async (req, res, next) => {
     const {
       body: { alarmId },
-      user_idx,
     } = req;
     try {
       const alarm = new Alarm({});
