@@ -690,7 +690,7 @@ module.exports = {
       );
       return res.send({ success: 200 });
     } catch (err) {
-      // next(err);
+      next(err);
     }
   },
 };
