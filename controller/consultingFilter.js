@@ -95,6 +95,7 @@ module.exports = {
       intlimit,
       start
     ) => {
+      console.log(contractPersonData);
       const { sortField, sort, addminus } = sortElements(
         No,
         Name,
@@ -219,10 +220,8 @@ module.exports = {
     }
 
     if (userId) {
-      console.log(userId);
       userId[userId.indexOf(0)] = null;
       contractPerson = userId;
-      console.log(userId);
     }
 
     const logicResult = !confirm
