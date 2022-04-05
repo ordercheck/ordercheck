@@ -27,6 +27,7 @@ const sendMail = async (company_url, company_name, inviter, target) => {
             height: 100% !important;
             margin: 0;
             padding: 0;
+            text-align: center;
           }
           #bodyTable {
             padding: 20px 0 30px 0;
@@ -45,23 +46,6 @@ const sendMail = async (company_url, company_name, inviter, target) => {
           td {
             border-collapse: collapse;
             border: none;
-          }
-    
-          .header {
-            display: flex;
-            justify-content: center;
-          }
-    
-          .btn-wrap {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-          }
-    
-          .info {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
           }
     
           /* Outlook.com(Hotmail)의 전체 너비 및 적절한 줄 높이를 허용 */
@@ -116,8 +100,6 @@ const sendMail = async (company_url, company_name, inviter, target) => {
                       height="89"
                     />
                   </td>
-                  <td height="20" style="line-height: 20px"></td>
-                  <td height="20" style="line-height: 20px"></td>
                 </tr>
               </table>
             </td>
@@ -134,6 +116,7 @@ const sendMail = async (company_url, company_name, inviter, target) => {
                       color: #41495d;
                       display: flex;
                       justify-content: center;
+                      text-align: left;
                       margin: 30px 0px;
                     "
                   >
@@ -144,8 +127,6 @@ const sendMail = async (company_url, company_name, inviter, target) => {
                       아래 버튼을 눌러 함께하세요!
                     </div>
                   </td>
-                  <td></td>
-                  <td></td>
                 </tr>
               </table>
             </td>
@@ -154,30 +135,31 @@ const sendMail = async (company_url, company_name, inviter, target) => {
             <td>
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr class="btn-wrap">
-                  <td width="160" height="55" style="line-height: 55px">
-                    <div>
-                      <a
-                        href="${company_url}"
-                        style="
-                          display: block;
-                          font-family: Noto Sans KR;
-                          width: 160px;
-                          height: 55px;
-                          line-height: 55px;
-                          text-align: center;
-                          text-decoration: none;
-                          font-size: 16px;
-                          font-weight: bold;
-                          background: #02164f;
-                          border-radius: 6px;
-                          color: #ffffff;
-                        "
-                        ><font color="#ffffff">참여하기</font></a
-                      >
-                    </div>
+                  <td
+                    width="160"
+                    height="55"
+                    style="line-height: 55px; margin: auto"
+                  >
+                    <a
+                      href="${company_url}"
+                      style="
+                        display: block;
+                        font-family: Noto Sans KR;
+                        width: 160px;
+                        height: 55px;
+                        line-height: 55px;
+                        text-align: center;
+                        text-decoration: none;
+                        font-size: 16px;
+                        font-weight: bold;
+                        margin: auto;
+                        background: #02164f;
+                        border-radius: 6px;
+                        color: #ffffff;
+                      "
+                      ><font color="#ffffff">참여하기</font></a
+                    >
                   </td>
-                  <td height="55" style="line-height: 55px"></td>
-                  <td height="55" style="line-height: 55px"></td>
                 </tr>
               </table>
             </td>
@@ -186,7 +168,7 @@ const sendMail = async (company_url, company_name, inviter, target) => {
             <td>
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr>
-                  <td class="info">
+                  <td class="info" style="text-align: center">
                     <img
                       src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/ordercheck_info_B.png"
                       alt=""
@@ -206,8 +188,7 @@ const sendMail = async (company_url, company_name, inviter, target) => {
           </tr>
         </table>
       </body>
-    </html>
-        `,
+    </html>`,
   };
   try {
     const result = await transport.sendMail(mailOptions);
