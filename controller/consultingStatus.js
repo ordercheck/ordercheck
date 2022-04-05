@@ -1049,8 +1049,6 @@ module.exports = {
         }
       }
 
-      console.log(contactArr);
-
       const insertData = {
         message,
         alarm_type: 8,
