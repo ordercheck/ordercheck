@@ -170,13 +170,96 @@ const sendMail = async (company_url, company_name, inviter, target) => {
             <td>
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr>
-                  <td class="info" style="text-align: center">
-                    <img
-                      src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/ordercheck_info_B.png"
-                      alt=""
-                      width="900"
-                      height="555"
+                  <td
+                    class="info"
+                    style="text-align: center; padding: 56px 0px 0px 0px"
+                  >
+                    <hr
+                      style="
+                        width: 860px;
+                        border: 0px;
+                        height: 1px;
+                        background-color: #eff0fa;
+                        margin: 0px auto 21px auto;
+                      "
                     />
+                    <hr
+                      style="
+                        width: 860px;
+                        border: 0px;
+                        height: 1px;
+                        background-color: #eff0fa;
+                        margin: 0px auto;
+                      "
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    style="
+                      font-family: Noto Sans KR;
+                      font-size: 24px;
+                      line-height: 150%;
+                      color: #02164f;
+                      display: flex;
+                      font-weight: 400;
+                      justify-content: center;
+                      text-align: left;
+                      margin: 22px 0px;
+                    "
+                  >
+                    <div><b>오더체크</b>를 소개합니다!</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    style="
+                      font-family: Noto Sans KR;
+                      font-size: 16px;
+                      line-height: 26px;
+                      color: #02164f;
+                      display: flex;
+                      font-weight: 400;
+                      justify-content: center;
+                      text-align: center;
+                    "
+                  >
+                    <div>
+                      오더체크는 인테리어 업체를 위한 온라인 고객 응대 관리
+                      솔루션입니다.<br />
+                      손쉬운 고객 응대의 시작으로 인테리어도 이제 온라인에서
+                      편리하게 관리하세요. 😊<br />
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a
+                      style="
+                        font-family: Noto Sans KR;
+                        font-size: 14px;
+                        line-height: 24px;
+                        color: #8f98b0;
+                        display: flex;
+                        font-weight: 400;
+                        justify-content: center;
+                        text-align: center;
+                      "
+                      ><u>오더체크 더 자세히 알아보기</u></a
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 50px 0px 0px 0px">
+                    <img
+                      src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/ordercheck_info.png"
+                      width="721"
+                      height="247"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 60px 0px 0px 0px">
                     <img
                       src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/footer_other.png"
                       alt=""
@@ -191,6 +274,7 @@ const sendMail = async (company_url, company_name, inviter, target) => {
         </table>
       </body>
     </html>
+    
     `,
   };
   try {
