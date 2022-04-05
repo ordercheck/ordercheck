@@ -76,8 +76,9 @@ module.exports = {
 참여하기:
 ${company_url}
  `;
-    target_phoneNumber.forEach(async (phoneNumber) => {
-      const user_phone = phoneNumber.replace(/\./g, "-");
+
+    for (i = 0; i < target_phoneNumber.length; i++) {
+      const user_phone = target_phoneNumber[i].replace(/\./g, "-");
 
       await axios({
         url: "/api/send/sms",
@@ -94,9 +95,9 @@ ${company_url}
         "LMS",
         message,
         findInviter.user_phone,
-        phoneNumber
+        target_phoneNumber[i]
       );
-    });
+    }
 
     // 문자 자동 충전
     if (repay) {
