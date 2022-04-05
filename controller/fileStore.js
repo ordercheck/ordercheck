@@ -650,12 +650,13 @@ module.exports = {
           const result = await db.files.findOne({
             where: {
               folder_uuid: data.files.uuid,
+              isFolder: true,
             },
             attributes: ["uuid", "title", "path"],
             raw: true,
           });
           data = { ...data.files };
-
+          console.log(result);
           result ? (data.underFolders = true) : (data.underFolders = false);
 
           return data;
