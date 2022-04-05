@@ -95,6 +95,7 @@ module.exports = {
       intlimit,
       start
     ) => {
+      console.log(contractPersonData);
       const { sortField, sort, addminus } = sortElements(
         No,
         Name,
@@ -221,9 +222,8 @@ module.exports = {
     if (userId) {
       userId[userId.indexOf(0)] = null;
       contractPerson = userId;
-      console.log(contractPerson);
     }
-    console.log(contractPerson);
+
     const logicResult = !confirm
       ? await countCustomers(countArr, countPossibility, contractPerson)
       : await findCustomers(
