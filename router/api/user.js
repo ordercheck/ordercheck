@@ -297,8 +297,7 @@ router.post("/join/do", async (req, res, next) => {
 
       // 랜덤 회사 만들기
       const randomCompany = await createRandomCompany(createUserResult.idx);
-      // sms 테이블 만들기
-      await db.sms.create({ company_idx: randomCompany.idx });
+
       // master template 만들기
       masterConfig.company_idx = randomCompany.idx;
       const createTempalteResult = await template.createConfig(masterConfig);
@@ -678,7 +677,7 @@ router.post("/company/check/later", async (req, res, next) => {
 
     // 랜덤 회사 만들기
     const randomCompany = await createRandomCompany(findUser.idx);
-    await db.sms.create({ company_idx: randomCompany.idx });
+
     // master template 만들기
     masterConfig.company_idx = randomCompany.idx;
     const createTempalteResult = await template.createConfig(masterConfig);
