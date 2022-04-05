@@ -63,6 +63,22 @@ const sendMail = async (company_url, company_name, inviter, target) => {
           .ExternalClass div {
             line-height: 100%;
           }
+    
+          .button {
+            display: block;
+            width: 160px !important;
+            height: 55px;
+            font-family: Noto Sans KR;
+            line-height: 55px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            margin: auto;
+            background: #02164f;
+            border-radius: 6px;
+            color: #ffffff;
+          }
           /* Outlook 2007 이상에서 Outlook이 추가하는 테이블 주위의 간격을 제거 */
           table,
           td {
@@ -138,23 +154,7 @@ const sendMail = async (company_url, company_name, inviter, target) => {
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr class="btn-wrap">
                   <td style="line-height: 55px; margin: auto">
-                    <a
-                      href="${company_url}"
-                      style="
-                        display: block;
-                        width: 160px;
-                        height: 55px;
-                        font-family: Noto Sans KR;
-                        line-height: 55px;
-                        text-align: center;
-                        text-decoration: none;
-                        font-size: 16px;
-                        font-weight: bold;
-                        margin: auto;
-                        background: #02164f;
-                        border-radius: 6px;
-                        color: #ffffff;
-                      "
+                    <a href="${company_url}" class="button"
                       ><font color="#ffffff">참여하기</font></a
                     >
                   </td>
@@ -186,7 +186,8 @@ const sendMail = async (company_url, company_name, inviter, target) => {
           </tr>
         </table>
       </body>
-    </html>`,
+    </html>
+    `,
   };
   try {
     const result = await transport.sendMail(mailOptions);

@@ -686,11 +686,6 @@ module.exports = {
         attributes: ["path"],
       });
 
-      let params = {
-        Bucket: "ordercheck",
-        ACL: "public-read",
-      };
-
       const findFilesResult = await db.files.findOne({
         where: { uuid: fileUuid },
         raw: true,
