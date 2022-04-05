@@ -31,7 +31,10 @@ const {
   checkKakaoPushResult,
 } = require("../lib/kakaoPush");
 const { formLink } = require("../model/db");
-const attributes = require("../lib/attributes");
+const {
+  targetCustomerAttributes,
+  mainCustomerAttributes,
+} = require("../lib/attributes");
 const changeToSearch = (body) => {
   const searchingPhoneNumber = body.customer_phoneNumber.replace(/\./g, "");
   const searchingAddress = `${body.address.replace(
@@ -1007,32 +1010,11 @@ module.exports = {
       });
 
       const targetCustomer = await db.customer.findByPk(body.target_idx[0], {
-        attributes: [
-          [
-            db.sequelize.fn(
-              "date_format",
-              db.sequelize.col("createdAt"),
-              "%Y/%m/%d"
-            ),
-            "createdAt",
-          ],
-          "customer_name",
-        ],
+        attributes: targetCustomerAttributes,
       });
 
       const mainCustomer = await db.customer.findByPk(body.main_idx, {
-        attributes: [
-          [
-            db.sequelize.fn(
-              "date_format",
-              db.sequelize.col("createdAt"),
-              "%Y/%m/%d"
-            ),
-            "createdAt",
-          ],
-          "customer_name",
-          "contact_person",
-        ],
+        attributes: mainCustomerAttributes,
       });
 
       const message = alarm.integrateCustomer(
@@ -1047,7 +1029,10 @@ module.exports = {
       // null 제외
       let contactArr = [];
       if (mainCustomer.contact_person) {
-        contactArr.push(mainCustomer.contact_person);
+        // 자기 자신 제외
+        if (user_idx !== mainCustomer.contact_person) {
+          contactArr.push(mainCustomer.contact_person);
+        }
       }
 
       for (i = 0; i < body.target_idx.length; i++) {
