@@ -222,6 +222,7 @@ module.exports = {
       console.log(userId);
       userId[userId.indexOf(0)] = null;
       contractPerson = userId;
+      console.log(userId);
     }
 
     const logicResult = !confirm
