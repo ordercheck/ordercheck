@@ -157,7 +157,6 @@ module.exports = {
 
         return { findAndCountAllFilterdCustomers, findFilteredUsersData };
       } else {
-        console.log(contractPersonData);
         let findAndCountAllFilterdCustomers = await db.customer.findAndCountAll(
           {
             where: {
@@ -179,6 +178,7 @@ module.exports = {
                 model: db.userCompany,
                 where: { active: true, standBy: false },
                 as: "user",
+                required: false,
                 attributes: ["idx", ["searchingName", "user_name"]],
               },
             ],
