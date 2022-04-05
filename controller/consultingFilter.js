@@ -15,6 +15,7 @@ module.exports = {
     } = req;
     const zeroIdx = userId.indexOf(0);
     userId[zeroIdx] = null;
+    console.log(userId);
     const checkAllCustomers = await db.customer.count({
       where: { company_idx, deleted: null },
     });
