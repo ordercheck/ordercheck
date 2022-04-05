@@ -89,7 +89,7 @@ ${company_url}
 
       // 비용에서 차감
       // 알림톡 비용 차감 후 저장
-      decreasePriceAndHistory(
+      await decreasePriceAndHistory(
         { text_cost: 37 },
         sms_idx,
         "LMS",
