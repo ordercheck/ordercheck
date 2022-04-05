@@ -91,16 +91,18 @@ const sendMail = async (company_url, company_name, inviter, target) => {
           <tr class="header">
             <td>
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                <tr>
-                  <td width="116" height="20" style="line-height: 20px">
-                    <img
-                      src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/header.png"
-                      alt=""
-                      width="900"
-                      height="89"
-                    />
-                  </td>
-                </tr>
+                <tbody style="display: flex; justify-content: center">
+                  <tr>
+                    <td width="116" height="20" style="line-height: 20px">
+                      <img
+                        src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/header.png"
+                        alt=""
+                        width="900"
+                        height="89"
+                      />
+                    </td>
+                  </tr>
+                </tbody>
               </table>
             </td>
           </tr>
@@ -135,18 +137,14 @@ const sendMail = async (company_url, company_name, inviter, target) => {
             <td>
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr class="btn-wrap">
-                  <td
-                    width="160"
-                    height="55"
-                    style="line-height: 55px; margin: auto"
-                  >
+                  <td style="line-height: 55px; margin: auto">
                     <a
                       href="${company_url}"
                       style="
                         display: block;
-                        font-family: Noto Sans KR;
                         width: 160px;
                         height: 55px;
+                        font-family: Noto Sans KR;
                         line-height: 55px;
                         text-align: center;
                         text-decoration: none;
