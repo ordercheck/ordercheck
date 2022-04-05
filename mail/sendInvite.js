@@ -126,10 +126,11 @@ const sendMail = async (company_url, company_name, inviter, target) => {
                     "
                   >
                     <div>
-                      안녕하세요!<br />
-                      <b>‘${inviter}’</b>님이 <b>‘${company_name}’</b> 회사에
-                      고객님을 초대합니다.<br /><br />
-                      아래 버튼을 눌러 함께하세요!
+                      <b>홍길동</b> 님,<br />
+                      <b>오더체크</b> 로의 가입이 승인되었습니다.<br />
+                      고객님은 앞으로 <b>오더체크</b> 이(가) 사용하는 워크스페이스에
+                      참여하실 수 있습니다.<br />
+                      시작할 때 도움이 되는 몇 가지 팁이 제공됩니다.
                     </div>
                   </td>
                 </tr>
@@ -158,7 +159,7 @@ const sendMail = async (company_url, company_name, inviter, target) => {
                         border-radius: 6px;
                         color: #ffffff;
                       "
-                      ><font color="#ffffff">참여하기</font></a
+                      ><font color="#ffffff">오더체크 바로가기</font></a
                     >
                   </td>
                   <td height="55" style="line-height: 55px"></td>
@@ -205,10 +206,13 @@ const sendMail = async (company_url, company_name, inviter, target) => {
                       font-weight: 400;
                       justify-content: center;
                       text-align: left;
-                      margin: 22px 0px;
+                      margin: 30px 0px 22px 0px;
                     "
                   >
-                    <div><b>오더체크</b>를 소개합니다!</div>
+                    <img
+                      src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/tip.svg"
+                      alt=""
+                    />
                   </td>
                 </tr>
                 <tr>
@@ -220,46 +224,119 @@ const sendMail = async (company_url, company_name, inviter, target) => {
                       color: #02164f;
                       display: flex;
                       font-weight: 400;
-                      justify-content: center;
-                      text-align: center;
+                      text-align: left;
+                      width: 600px;
+                      margin: auto;
                     "
                   >
+                    <img
+                      src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/customer.svg"
+                      style="margin-right: 22px"
+                    />
                     <div>
-                      오더체크는 인테리어 업체를 위한 온라인 고객 응대 관리
-                      솔루션입니다.<br />
-                      손쉬운 고객 응대의 시작으로 인테리어도 이제 온라인에서
-                      편리하게 관리하세요. 😊<br />
+                      <b>고객관리</b><br />
+                      오더체크의 고객관리 페이지에서
+                      <a
+                        href="https://www.naver.com"
+                        style="color: #1c58ff"
+                        target="_blank"
+                        ><u>담당자를 지정하고 상태를 확인하세요.</u></a
+                      ><br />
                     </div>
                   </td>
                 </tr>
                 <tr>
-                  <td>
-                    <a
-                      style="
-                        font-family: Noto Sans KR;
-                        font-size: 14px;
-                        line-height: 24px;
-                        color: #8f98b0;
-                        display: flex;
-                        font-weight: 400;
-                        justify-content: center;
-                        text-align: center;
-                      "
-                      ><u>오더체크 더 자세히 알아보기</u></a
-                    >
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding: 50px 0px 0px 0px; text-align: center">
+                  <td
+                    style="
+                      font-family: Noto Sans KR;
+                      font-size: 16px;
+                      line-height: 26px;
+                      color: #02164f;
+                      display: flex;
+                      font-weight: 400;
+                      text-align: left;
+                      width: 600px;
+                      margin: 22px auto;
+                    "
+                  >
                     <img
-                      src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/ordercheck_info.png"
-                      width="721"
-                      height="247"
+                      src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/consulting.svg"
+                      style="margin-right: 22px"
                     />
+                    <div>
+                      <b>신청폼 생성</b><br />
+                      제공되는 템플릿을 사용하여 간편하게
+                      <a
+                        href="https://www.naver.com"
+                        style="color: #1c58ff"
+                        target="_blank"
+                        ><u>신청폼을 생성하고 고객에게 공유하세요.</u></a
+                      ><br />
+                    </div>
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding: 60px 0px 0px 0px; text-align: center">
+                  <td
+                    style="
+                      font-family: Noto Sans KR;
+                      font-size: 16px;
+                      line-height: 26px;
+                      color: #02164f;
+                      display: flex;
+                      font-weight: 400;
+                      text-align: left;
+                      width: 600px;
+                      margin: auto;
+                    "
+                  >
+                    <img
+                      src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/file.svg"
+                      style="margin-right: 22px"
+                    />
+                    <div>
+                      <b>파일 보관함</b><br />
+                      오더체크가 제공하는 고객 별 파일 보관함에
+                      <a
+                        href="https://www.naver.com"
+                        style="color: #1c58ff"
+                        target="_blank"
+                        ><u>파일을 업로드하고 관리하세요.</u></a
+                      ><br />
+                    </div>
+                  </td>
+                </tr>
+    
+                <tr>
+                  <td>
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                      <tr>
+                        <td height="55" style="line-height: 55px"></td>
+                        <td width="160" height="55" style="line-height: 55px; padding:30px 0px 60px 0px">
+                          <a
+                            href="${company_url}"
+                            style="
+                              display: block;
+                              font-family: Noto Sans KR;
+                              width: 160px;
+                              height: 55px;
+                              line-height: 55px;
+                              text-align: center;
+                              text-decoration: none;
+                              font-size: 16px;
+                              font-weight: bold;
+                              background: #02164f;
+                              border-radius: 6px;
+                              color: #ffffff;
+                            "
+                            ><font color="#ffffff">팁 더보기</font></a
+                          >
+                        </td>
+                        <td height="55" style="line-height: 55px"></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                  <td style="text-align: center;">
                     <img
                       src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/footer_other.png"
                       alt=""
@@ -274,7 +351,6 @@ const sendMail = async (company_url, company_name, inviter, target) => {
         </table>
       </body>
     </html>
-    
     `,
   };
   try {
