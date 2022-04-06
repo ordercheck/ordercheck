@@ -377,10 +377,10 @@ router.post("/company/check", async (req, res, next) => {
     });
 
     // 기존 무료 플랜 비활성
-    await db.userCompany.update(
-      { active: false },
-      { where: { user_idx: findUser.idx } }
-    );
+    const FreePlan = await db.userCompany.findOne({
+      where: { user_idx: findUser.idx },
+      attributes: ["company_idx"],
+    });
 
     const template = new Template({});
 
@@ -421,6 +421,9 @@ router.post("/company/check", async (req, res, next) => {
 
     if (addPlanResult.success) {
       res.send({ success: 200, message: "회사 등록 완료" });
+
+      await db.company.destroy({ where: { idx: FreePlan.company_idx } });
+
       // 플랜 알람 보내기
       const alarm = new Alarm({});
       let now = moment();
@@ -436,6 +439,7 @@ router.post("/company/check", async (req, res, next) => {
       const sendMember = [findUser.idx];
       const io = req.app.get("io");
       alarm.sendMultiAlarm(insertData, sendMember, io);
+      return;
     }
 
     next(addPlanResult.err);

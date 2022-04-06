@@ -2,6 +2,7 @@ const db = require("../model/db");
 const { limitPlan } = require("../lib/standardTemplate");
 const { Alarm } = require("../lib/classes/AlarmClass");
 const { delFile } = require("../lib/aws/fileupload").ufile;
+const { sendFileStoreMaxEmail } = require("../mail/sendOrdercheckEmail");
 // 고객 체크
 const checkCustomerCount = async (company_idx, data) => {
   const findCompanyData = await db.company.findByPk(company_idx, {
@@ -219,6 +220,10 @@ module.exports = {
       };
       const sendMember = [findCompany.huidx];
       alarm.sendMultiAlarm(insertData, sendMember, io);
+
+      // 이메일 보내기
+      const now = moment().format("YY/MM/DD HH:mm:ss");
+      sendFileStoreMaxEmail(now);
     }
     return;
   },

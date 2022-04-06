@@ -670,4 +670,42 @@ const sendAddFormEmail = async (
   }
 };
 
-module.exports = { sendInviteEmail, sendJoinEmail, sendAddFormEmail };
+const sendFileStoreMaxEmail = async (
+  now,
+  channelTalkLink,
+  fileStoreLink,
+  target
+) => {
+  let mailOptions = {
+    from: process.env.SEND_EMAIL_ID,
+    to: target,
+    subject: "오더체크",
+    html: `[안내] 파일보관함 저장용량을 초과하였습니다.
+
+    사용중인 파일보관함 용량이 가득 찼습니다.
+    
+    현 시점부터 새로운 파일 업로드가 제한됩니다. ${now}. 
+    보관중인 파일은 유지되오나 새로운 폴더 및 파일 생성이 불가합니다.
+    
+    파일보관함을 계속 사용하고 사진, 문서 등을 업로드하려면 저장용량을 추가하거나 불필요한 파일을 제거해야 합니다. 
+    
+    파일보관함 저장용량 추가를 원하신다면 오더체크팀으로 문의바랍니다.
+    
+    <오더체크팀 문의하기>(채널톡 연결)
+    <파일보관함으로 이동>(버튼)`,
+  };
+  try {
+    const result = await transport.sendMail(mailOptions);
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
+module.exports = {
+  sendInviteEmail,
+  sendJoinEmail,
+  sendAddFormEmail,
+  sendFileStoreMaxEmail,
+};
