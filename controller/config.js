@@ -820,19 +820,29 @@ module.exports = {
   showFormList: async (req, res, next) => {
     const { company_idx, user_idx } = req;
     try {
-      const findResult = await db.formLink.findAll({
+      let findResult = await db.formLink.findAll({
         where: { company_idx },
         include: [
           {
             model: db.formOpen,
             as: "member",
-            attributes: ["user_name"],
+            attributes: ["user_name", "user_idx"],
           },
         ],
         order: [["createdAt", "DESC"]],
         attributes: showFormListAttributes,
       });
+      findResult = JSON.parse(JSON.stringify(findResult));
+
+      findResult.map((data) => {
+        for (i = 0; i < data.member.length; i++) {
+          if (data.member[i].user_idx == user_idx) {
+            return data;
+          }
+        }
+      });
       console.log(findResult);
+      console.log(user_idx);
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
