@@ -28,7 +28,7 @@ module.exports = {
     } = req;
     try {
       const insertData = await form.checkTitle({ title, company_idx });
-      console.log(insertData);
+
       const findUserNameResult = await db.user.findByPk(user_idx, {
         attributes: ["user_name"],
       });
@@ -83,22 +83,25 @@ module.exports = {
         message: "폼 생성 ",
       });
 
-      const alarm = new Alarm({});
+      if (findCompanyOwner.user.idx !== user_idx) {
+        const alarm = new Alarm({});
 
-      const message = alarm.createFormAlarm(
-        findUserNameResult.user_name,
-        insertData.title
-      );
+        const message = alarm.createFormAlarm(
+          findUserNameResult.user_name,
+          insertData.title
+        );
 
-      const data = {
-        form_idx: createResult.idx,
-        message,
-        company_idx,
-        alarm_type: 25,
-      };
-      const io = req.app.get("io");
-      const findMembers = [findCompanyOwner.user.idx];
-      alarm.sendMultiAlarm(data, findMembers, io);
+        const data = {
+          form_idx: createResult.idx,
+          message,
+          company_idx,
+          alarm_type: 25,
+        };
+        const io = req.app.get("io");
+        const findMembers = [findCompanyOwner.user.idx];
+        alarm.sendMultiAlarm(data, findMembers, io);
+      }
+      return;
     } catch (err) {
       next(err);
     }
@@ -182,6 +185,8 @@ module.exports = {
   duplicateForm: async (req, res, next) => {
     const {
       params: { formId },
+      company_idx,
+      user_idx,
     } = req;
 
     // 열람 권한자 찾기
@@ -201,7 +206,6 @@ module.exports = {
 
     const duplicateForm = await db.formLink.create(findFormLink.dataValues);
 
-    console.log(findFormOpenMember);
     findFormOpenMember.forEach(async (data) => {
       await db.formOpen.create({
         user_name: data.user_name,
@@ -225,10 +229,34 @@ module.exports = {
       createdAt,
     };
 
-    return res.send({
+    res.send({
       success: 200,
       duplicateResult,
     });
+
+    // 웹 알림 소유주 체크
+    const checkHuidx = await db.company.findByPk(company_idx, {
+      attributes: ["huidx"],
+    });
+
+    if (checkHuidx.huidx !== user_idx) {
+      const alarm = new Alarm({});
+
+      const findUser = await db.user.findByPk(user_idx, {
+        attributes: ["use_name"],
+      });
+      const message = alarm.createFormAlarm(findUser.user_name, duplicateTitle);
+
+      const data = {
+        form_idx: createResult.idx,
+        message,
+        company_idx,
+        alarm_type: 25,
+      };
+      const io = req.app.get("io");
+      const findMembers = [checkHuidx.huidx];
+      alarm.sendMultiAlarm(data, findMembers, io);
+    }
   },
 
   delFormLink: async (req, res, next) => {
