@@ -834,7 +834,7 @@ module.exports = {
       });
       findResult = JSON.parse(JSON.stringify(findResult));
 
-      findResult.map((data) => {
+      findResult = findResult.map((data) => {
         for (i = 0; i < data.member.length; i++) {
           if (data.member[i].user_idx == user_idx) {
             return data;
