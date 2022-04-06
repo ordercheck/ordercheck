@@ -129,9 +129,9 @@ router.post(
     { name: "floor_plan" },
     { name: "hope_concept" },
   ]),
-  checkConsultingLimit,
   // checkFormSns,
-  addConsultingForm
+  addConsultingForm,
+  checkConsultingLimit
 );
 // 고객등록 api
 router.post("/customer", loginCheck, checkCustomerLimit, addCompanyCustomer);

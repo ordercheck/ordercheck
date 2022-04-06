@@ -174,7 +174,7 @@ module.exports = {
             nest: true,
           });
 
-          const now = moment().format("YYYY.MM.DD HH:MM:SS");
+          const now = moment().format("YYYY.MM.DD HH:mm:ss");
           getMembers.forEach(async (data) => {
             // 이메일 먼저 보내기
             await sendAddFormEmail(
@@ -319,7 +319,7 @@ module.exports = {
         : bodyClass.bodyData;
 
       await createConsultingAndIncrement(formBodyData);
-      return;
+      next();
     } catch (err) {
       await t.rollback();
       next(err);

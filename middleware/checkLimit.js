@@ -150,7 +150,7 @@ module.exports = {
 
       alarm.sendMultiAlarm(insertData, sendMember, io);
     }
-    next();
+    return;
   },
 
   checkFileLimit: async (req, res, next) => {
