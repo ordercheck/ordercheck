@@ -826,13 +826,13 @@ module.exports = {
           {
             model: db.formOpen,
             as: "member",
-            where: { user_idx },
             attributes: ["user_name"],
           },
         ],
         order: [["createdAt", "DESC"]],
         attributes: showFormListAttributes,
       });
+      console.log(findResult);
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);

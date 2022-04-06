@@ -148,54 +148,67 @@ router.post("/login", async (req, res, next) => {
       company_subdomain: companyInfo.company.company_subdomain,
     });
   } else {
-    // 링크로 로그인 할 때
-    const findCompany = await db.company.findOne({
-      where: { company_subdomain },
+    // 이미 가입한 회사가 있을 때
+    const checkAlready = await db.userCompany.findOne({
+      where: { active: true, standBy: false, user_idx: check.idx },
     });
-    let checkCompanyStandBy = await db.userCompany.findOne({
-      where: {
-        user_idx: check.idx,
-        company_idx: findCompany.idx,
-      },
-      attributes: ["active", "standBy"],
-    });
-
-    const loginToken = await createToken({ user_idx: check.idx });
-    if (!checkCompanyStandBy) {
-      const findConfigResult = await template.findConfig(
-        {
-          template_name: "팀원",
+    if (checkAlready) {
+      res.send({
+        success: 200,
+        loginToken,
+        status: "already",
+        company_subdomain: companyInfo.company.company_subdomain,
+      });
+    } else {
+      // 링크로 로그인 할 때
+      const findCompany = await db.company.findOne({
+        where: { company_subdomain },
+      });
+      let checkCompanyStandBy = await db.userCompany.findOne({
+        where: {
+          user_idx: check.idx,
           company_idx: findCompany.idx,
         },
-        ["idx"]
-      );
+        attributes: ["active", "standBy"],
+      });
 
-      checkCompanyStandBy = await includeUserToCompany({
-        user_idx: check.idx,
-        company_idx: findCompany.idx,
-        standBy: true,
-        active: true,
-        searchingName: check.user_name,
-        config_idx: findConfigResult.idx,
+      const loginToken = await createToken({ user_idx: check.idx });
+      if (!checkCompanyStandBy) {
+        const findConfigResult = await template.findConfig(
+          {
+            template_name: "팀원",
+            company_idx: findCompany.idx,
+          },
+          ["idx"]
+        );
+
+        checkCompanyStandBy = await includeUserToCompany({
+          user_idx: check.idx,
+          company_idx: findCompany.idx,
+          standBy: true,
+          active: true,
+          searchingName: check.user_name,
+          config_idx: findConfigResult.idx,
+        });
+      }
+      let status;
+      if (checkCompanyStandBy.active && checkCompanyStandBy.standBy) {
+        status = "standBy";
+      }
+      if (!checkCompanyStandBy.active && checkCompanyStandBy.standBy) {
+        status = "refused";
+      }
+      if (checkCompanyStandBy.active && !checkCompanyStandBy.standBy) {
+        status = "access";
+      }
+
+      res.send({
+        success: 200,
+        loginToken,
+        status,
+        company_subdomain: companyInfo.company.company_subdomain,
       });
     }
-    let status;
-    if (checkCompanyStandBy.active && checkCompanyStandBy.standBy) {
-      status = "standBy";
-    }
-    if (!checkCompanyStandBy.active && checkCompanyStandBy.standBy) {
-      status = "refused";
-    }
-    if (checkCompanyStandBy.active && !checkCompanyStandBy.standBy) {
-      status = "access";
-    }
-
-    res.send({
-      success: 200,
-      loginToken,
-      status,
-      company_subdomain: companyInfo.company.company_subdomain,
-    });
   }
   await db.user.update(
     { last_login },
