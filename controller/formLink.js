@@ -248,7 +248,7 @@ module.exports = {
       const message = alarm.createFormAlarm(findUser.user_name, duplicateTitle);
 
       const data = {
-        form_idx: createResult.idx,
+        form_idx: duplicateForm.idx,
         message,
         company_idx,
         alarm_type: 25,
