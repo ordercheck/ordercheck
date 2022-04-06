@@ -834,15 +834,14 @@ module.exports = {
       });
       findResult = JSON.parse(JSON.stringify(findResult));
 
-      findResult = findResult.map((data) => {
+      findResult = findResult.filter((data) => {
         for (i = 0; i < data.member.length; i++) {
           if (data.member[i].user_idx == user_idx) {
             return data;
           }
         }
       });
-      console.log(findResult);
-      console.log(user_idx);
+
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
