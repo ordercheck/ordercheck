@@ -155,7 +155,8 @@ module.exports = {
           //   return;
           // }
           // 열람 가능 팀원 카카오 푸쉬 보내기
-          const getMembers = await db.formOpen.findByPk(bodyData.formIdx, {
+          const getMembers = await db.formOpen.findAll({
+            where: { formLink_idx: bodyData.formIdx },
             include: [
               {
                 model: db.userCompany,
@@ -166,6 +167,7 @@ module.exports = {
                 ],
               },
             ],
+
             raw: true,
             nest: true,
           });
