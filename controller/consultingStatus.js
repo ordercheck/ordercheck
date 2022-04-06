@@ -347,27 +347,28 @@ module.exports = {
 
       res.send({ success: 200, consultResult });
 
-      // 팀원에게 알림 보내기
-      const check = await db.user.findByPk(user_idx, {
-        attributes: ["user_name"],
-      });
-      const io = req.app.get("io");
+      if (user_idx !== contract_person) {
+        // 팀원에게 알림 보내기
+        const check = await db.user.findByPk(user_idx, {
+          attributes: ["user_name"],
+        });
+        const io = req.app.get("io");
 
-      const alarm = new Alarm({});
-      const message = alarm.setContactAlarm(
-        check.user_name,
-        consultResult.customer_name
-      );
-      const insertData = {
-        message,
-        user_idx: contract_person,
-        company_idx,
-        alarm_type: 11,
-        customer_idx: consultResult.idx,
-      };
-
-      sendMember = [contract_person];
-      alarm.sendMultiAlarm(insertData, sendMember, io);
+        const alarm = new Alarm({});
+        const message = alarm.setContactAlarm(
+          check.user_name,
+          consultResult.customer_name
+        );
+        const insertData = {
+          message,
+          user_idx: contract_person,
+          company_idx,
+          alarm_type: 11,
+          customer_idx: consultResult.idx,
+        };
+        sendMember = [contract_person];
+        alarm.sendMultiAlarm(insertData, sendMember, io);
+      }
 
       return;
     } catch (err) {
