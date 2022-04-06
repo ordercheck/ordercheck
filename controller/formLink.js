@@ -243,7 +243,7 @@ module.exports = {
       const alarm = new Alarm({});
 
       const findUser = await db.user.findByPk(user_idx, {
-        attributes: ["use_name"],
+        attributes: ["user_name"],
       });
       const message = alarm.createFormAlarm(findUser.user_name, duplicateTitle);
 
