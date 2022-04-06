@@ -6,7 +6,10 @@ const {
   decreasePriceAndHistory,
 } = require("../lib/apiFunctions");
 const { masterConfig } = require("../lib/standardTemplate");
-const sendMail = require("../mail/sendInvite");
+const {
+  sendInviteEmail,
+  sendJoinEmail,
+} = require("../mail/sendOrdercheckEmail");
 const { Company } = require("../lib/classes/CompanyClass");
 const axios = require("axios");
 const { Op } = require("sequelize");
@@ -31,7 +34,7 @@ module.exports = {
         attributes: ["user_name"],
       });
       target_email.forEach(async (target) => {
-        await sendMail(
+        await sendInviteEmail(
           company_url,
           company_result.company_name,
           user_result.user_name,
@@ -165,6 +168,12 @@ ${company_url}
         active: true,
         standBy: false,
       },
+      include: [
+        {
+          model: db.user,
+          attributes: ["user_email"],
+        },
+      ],
       attributes: ["idx", "searchingName"],
     });
 
@@ -181,7 +190,7 @@ ${company_url}
     );
 
     res.send({ success: 200 });
-    // 알림 보내기
+    // 웹 알림 보내기
     const io = req.app.get("io");
     const alarm = new Alarm({});
     const findCompany = await db.company.findByPk(company_idx, {
@@ -232,6 +241,14 @@ ${company_url}
     alarm.sendMultiAlarm(insertData, members, io);
 
     io.to(findUserCompanyResult.user_idx).emit("invite", "approve");
+
+    // 이메일 보내기
+    console.log(findBeforeCompanyUser.user);
+    await sendJoinEmail(
+      findBeforeCompanyUser.searchingName,
+      findCompany.company_name,
+      findBeforeCompanyUser.user.user_email
+    );
     return;
   },
   refuseUser: async (req, res, next) => {
