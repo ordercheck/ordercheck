@@ -47,6 +47,7 @@ module.exports = {
               user_email, user_name, plan, calculateReload, config_idx,
               plan.whiteLabelChecked,plan.chatChecked,plan.analysticChecked,
               sms.text_cost,
+              huidx,
               date_format(user.createdAt, '%Y.%m.%d') as createdAt
               FROM user 
               LEFT JOIN userCompany ON user.idx = userCompany.user_idx AND active = true AND standBy = false
@@ -83,6 +84,11 @@ module.exports = {
 
       userProfile[0].fileStoreSize = fileStoreSize;
       userProfile[0].authList = findConfig;
+      if (userProfile[0].huidx == req.user_idx) {
+        userProfile[0].isOwner = true;
+      } else {
+        userProfile[0].isOwner = false;
+      }
 
       return res.send({ success: 200, userProfile: userProfile[0] });
     } catch (err) {

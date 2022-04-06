@@ -499,43 +499,7 @@ module.exports = {
       db.company.increment({ customer_count: 1 }, { where: { idx: user_idx } });
       await t.commit();
 
-      res.send({ success: 200 });
-
-      // 소유주랑 담당자에게 알람 보내기
-      const checkCompany = await db.company.findByPk(company_idx, {
-        attributes: ["huidx"],
-      });
-
-      const checkAddUser = await db.user.findByPk(user_idx, {
-        attributes: ["user_name"],
-      });
-
-      const alarm = new Alarm({});
-      const message = alarm.addCustomer(
-        checkAddUser.user_name,
-        createCustomerResult.customer_name
-      );
-      const insertData = {
-        message,
-        company_idx,
-        alarm_type: 14,
-        customer_idx: createCustomerResult.idx,
-      };
-
-      let findMembers = [];
-      // contact_person 체크
-      if (createCustomerResult.contact_person) {
-        findMembers.push(createCustomerResult.contact_person);
-      }
-      findMembers.push(checkCompany.huidx);
-
-      findMembers = [...new Set(findMembers)];
-
-      const io = req.app.get("io");
-
-      await alarm.sendMultiAlarm(insertData, findMembers, io);
-
-      return;
+      return res.send({ success: 200 });
     } catch (err) {
       await t.rollback();
 
