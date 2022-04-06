@@ -201,11 +201,12 @@ module.exports = {
 
     const duplicateForm = await db.formLink.create(findFormLink.dataValues);
 
+    console.log(findFormOpenMember);
     findFormOpenMember.forEach(async (data) => {
       await db.formOpen.create({
-        user_name: findFormOpenMember.user_name,
+        user_name: data.user_name,
         formLink_idx: duplicateForm.idx,
-        user_idx: findFormOpenMember.user_idx,
+        user_idx: data.user_idx,
       });
     });
 
