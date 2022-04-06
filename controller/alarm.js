@@ -3,7 +3,7 @@ const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
 const { Alarm } = require("../lib/classes/AlarmClass");
-const { attributesData } = require("../lib/attributes");
+const { findAlarmAttributes } = require("../lib/attributes");
 module.exports = {
   delAlarm: async (req, res, next) => {
     const {
@@ -42,7 +42,7 @@ module.exports = {
       const alarm = new Alarm({});
       const findAlarmResult = await alarm.findAlarmsByPk(
         alarmId,
-        attributesData
+        findAlarmAttributes
       );
       console.log(findAlarmResult);
       await alarm.updateAlarms({ confirm: true }, { idx: alarmId });
