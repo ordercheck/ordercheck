@@ -346,9 +346,8 @@ module.exports = {
       }
 
       res.send({ success: 200, consultResult });
-      console.log(typeof user_idx);
-      console.log(typeof contract_person);
-      if (user_idx !== contract_person) {
+
+      if (user_idx !== parseInt(contract_person)) {
         // 팀원에게 알림 보내기
         const check = await db.user.findByPk(user_idx, {
           attributes: ["user_name"],
