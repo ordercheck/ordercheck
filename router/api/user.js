@@ -152,6 +152,7 @@ router.post("/login", async (req, res, next) => {
     const checkAlready = await db.userCompany.findOne({
       where: { active: true, standBy: false, user_idx: check.idx },
     });
+    const loginToken = await createToken({ user_idx: check.idx });
     if (checkAlready) {
       res.send({
         success: 200,
@@ -172,7 +173,6 @@ router.post("/login", async (req, res, next) => {
         attributes: ["active", "standBy"],
       });
 
-      const loginToken = await createToken({ user_idx: check.idx });
       if (!checkCompanyStandBy) {
         const findConfigResult = await template.findConfig(
           {
