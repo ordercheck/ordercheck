@@ -135,7 +135,12 @@ module.exports = {
     const company = new Company({});
     try {
       try {
-        await company.updateCompany(body, { idx: company_idx });
+        if (!body.company_name) {
+          await company.updateCompany(body, { idx: company_idx });
+        } else {
+          body.companyexist = true;
+          await company.updateCompany(body, { idx: company_idx });
+        }
 
         return res.send({ success: 200 });
       } catch (err) {
