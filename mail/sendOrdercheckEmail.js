@@ -670,10 +670,99 @@ const sendAddFormEmail = async (
   }
 };
 
-const sendFileStoreMaxEmail = async (
-  now,
-  channelTalkLink,
+const sendForm5080 = async (date, persent, confirmLink, target) => {
+  let mailOptions = {
+    from: process.env.SEND_EMAIL_ID,
+    to: target,
+    subject: "오더체크",
+    html: `[안내] 신청폼 접수가 곧 마감됩니다.
+
+    당월 상담 신청 수가  ${persent}% 찼습니다.
+    상담 신청 수 초과 시 생성된 상담 신청폼의 링크 접근이 제한됩니다.  
+    
+    상담 신청 수의  갱신일은 ${date}이며, 갱신일 이후 신청폼 접근 제한이 해제됩니다.  
+    
+    접수된 상담 신청은 [고객관리]에서 확인할 수 있습니다. 
+     더 많은 상담폼 접수 받기를 희망하신다면 사용중인 플랜을 변경해주시기 바랍니다.
+    
+    오더체크 사이트에서 상담 신청 수를 확인하세요.
+    <상담 신청 수 확인하기> (버튼)${confirmLink}`,
+  };
+  try {
+    const result = await transport.sendMail(mailOptions);
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
+const sendFormLimit = async (date, confirmLink, target) => {
+  let mailOptions = {
+    from: process.env.SEND_EMAIL_ID,
+    to: target,
+    subject: "오더체크",
+    html: `[안내] 신청폼 접수가 마감되었습니다.
+
+    당월 상담 신청 접수가 마감되었습니다.
+    
+    상담 신청 수가 초과되어 생성된 상담 신청폼의 링크 접근이 제한됩니다.
+    
+     상담 신청 수의 갱신일은 ${date}이며, 갱신일 이후 신청폼 접근 제한이 해제됩니다.
+    
+    접수된 상담 신청은 [고객관리]에서 확인할 수 있습니다. 
+    더 많은 상담폼 접수 받기를 희망하신다면 사용중인 플랜을 변경해주시기 바랍니다. 
+    
+    오더체크 사이트에서 상담 신청 수를 확인하세요.
+    <상담 신청 수 확인하기> (버튼)${confirmLink}`,
+  };
+  try {
+    const result = await transport.sendMail(mailOptions);
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
+const sendFileStoreEmail = async (
+  persent,
   fileStoreLink,
+  channelTalkLink,
+  planTB,
+  restMB,
+  target
+) => {
+  let mailOptions = {
+    from: process.env.SEND_EMAIL_ID,
+    to: target,
+    subject: "오더체크",
+    html: `[안내] 파일보관함 저장용량이 거의 가득 찼습니다.
+
+    사용중인 파일 보관함 용량이 ${persent}% 찼습니다. 
+    
+    전체 ${planTB}TB에서 ${restMB}MB의 저장 공간이 남았습니다. 
+    
+    파일보관함을 계속 사용하고 사진, 문서 등을 업로드하려면 저장용량을 추가하거나 불필요한 파일을 제거해야 합니다. 
+    
+    파일보관함 저장용량 추가를 원하신다면 오더체크팀으로 문의바랍니다.
+    <오더체크로 문의하기>(채널톡연결)${channelTalkLink}
+    
+    <파일보관함으로 이동>(버튼)${fileStoreLink}`,
+  };
+  try {
+    const result = await transport.sendMail(mailOptions);
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
+const sendFileStoreEmailLimit = async (
+  date,
+  fileStoreLink,
+  channelTalkLink,
   target
 ) => {
   let mailOptions = {
@@ -684,15 +773,108 @@ const sendFileStoreMaxEmail = async (
 
     사용중인 파일보관함 용량이 가득 찼습니다.
     
-    현 시점부터 새로운 파일 업로드가 제한됩니다. ${now}. 
+    현 시점부터 새로운 파일 업로드가 제한됩니다. ${date}. 
     보관중인 파일은 유지되오나 새로운 폴더 및 파일 생성이 불가합니다.
     
     파일보관함을 계속 사용하고 사진, 문서 등을 업로드하려면 저장용량을 추가하거나 불필요한 파일을 제거해야 합니다. 
     
     파일보관함 저장용량 추가를 원하신다면 오더체크팀으로 문의바랍니다.
     
-    <오더체크팀 문의하기>(채널톡 연결)
-    <파일보관함으로 이동>(버튼)`,
+    <오더체크팀 문의하기>(채널톡 연결)${fileStoreLink}
+    <파일보관함으로 이동>(버튼)${channelTalkLink}`,
+  };
+  try {
+    const result = await transport.sendMail(mailOptions);
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
+const sendTextPayEmail = async (
+  date,
+  companyName,
+  receiptID,
+  beforeCost,
+  payCost,
+  totalCost,
+  receiptLink,
+  target
+) => {
+  let mailOptions = {
+    from: process.env.SEND_EMAIL_ID,
+    to: target,
+    subject: "오더체크",
+    html: `[결제 완료] 자동문자 충전이 완료되었습니다.
+
+    ${companyName} 님,
+    자동 문자 충전이 정상적으로 처리되었습니다.
+    오더체크를 이용해주셔서 감사합니다. 
+    
+    자세한 결제 내역은 [결제 정보] → [영수증] 에서 확인해주세요. 
+    
+    문자 충전 내역 
+    
+    충전 일시: ${date}
+    
+    ▶${receiptID} ######
+    ▶ 이전 잔액: ₩ ${beforeCost}
+    ▶ 충전 금액:  ₩ ${payCost}
+    ▶충전 후 잔액: ₩ ${totalCost}
+    
+    오더체크 사이트에서 영수증을 확인하세요.
+    <영수증 확인하기> (버튼)${receiptLink}`,
+  };
+  try {
+    const result = await transport.sendMail(mailOptions);
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
+const sendFailCostEmail = async (companyName, confirmLink, target) => {
+  let mailOptions = {
+    from: process.env.SEND_EMAIL_ID,
+    to: target,
+    subject: "오더체크",
+    html: `[결제 실패] 자동 문자 충전이 실패하였습니다.
+
+    ${companyName} 님,
+    자동 문자 충전이 실패하였습니다.
+    
+    문자 잔액 소진 시 알림톡 및 문자 푸시가 전송되지 않을 수 있습니다.
+    문자 잔액과 등록된 카드를 확인해주세요.
+    만일 계속해서 결제가 실패하는 경우 고객센터에 문의해주세요. 
+    
+    오더체크 사이트에서 등록 카드를 확인하세요.
+    <확인하기>(버튼)${confirmLink}`,
+  };
+  try {
+    const result = await transport.sendMail(mailOptions);
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
+const noCostText = async (companyName, smsPayLink, target) => {
+  let mailOptions = {
+    from: process.env.SEND_EMAIL_ID,
+    to: target,
+    subject: "오더체크",
+    html: `[안내] 자동 문자 잔액이 부족합니다.
+
+   ${companyName} 님,
+    문자 잔액이 소진되어 알림톡 및 문자 푸시 전송이 중지되었습니다. 
+    문자 잔액과 등록된 카드를 확인해주세요. 
+    충전 전까지 모든 알림톡 및 문자 푸시 전송과 견적 공유 기능이 중지될 예정입니다.
+    
+    문자 충전을 원하신다면 클릭하세요.
+    <문자 잔액 충전하기>(버튼)${smsPayLink}`,
   };
   try {
     const result = await transport.sendMail(mailOptions);
@@ -707,5 +889,11 @@ module.exports = {
   sendInviteEmail,
   sendJoinEmail,
   sendAddFormEmail,
-  sendFileStoreMaxEmail,
+  sendForm5080,
+  sendFormLimit,
+  sendFileStoreEmail,
+  sendFileStoreEmailLimit,
+  sendTextPayEmail,
+  sendFailCostEmail,
+  noCostText,
 };

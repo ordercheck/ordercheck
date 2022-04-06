@@ -15,7 +15,7 @@ const _f = require("../lib/functions");
 const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
-const { sendAddFormEmail } = require("../mail/sendOrdercheckEmail");
+const { sendAddFormEmail, noCostText } = require("../mail/sendOrdercheckEmail");
 const {
   patchCalculateAttributes,
   findSameUserAttributes,
@@ -31,12 +31,12 @@ const {
   customerkakaoPushNewCal,
   checkKakaoPushResult,
 } = require("../lib/kakaoPush");
-const { formLink } = require("../model/db");
+
 const {
   targetCustomerAttributes,
   mainCustomerAttributes,
 } = require("../lib/attributes");
-const attributes = require("../lib/attributes");
+
 const changeToSearch = (body) => {
   const searchingPhoneNumber = body.customer_phoneNumber.replace(/\./g, "");
   const searchingAddress = `${body.address.replace(
@@ -718,6 +718,9 @@ module.exports = {
     } = req;
     const alarm = new Alarm({});
     const io = req.app.get("io");
+    const companyFindResult = await db.company.findByPk(req.company_idx, {
+      attributes: ["company_name"],
+    });
     // 알림톡 보내기 전 알림톡 비용 체크
     if (text_cost < 10) {
       res.send({ success: 400, message: "알림톡 비용 부족" });
@@ -731,15 +734,16 @@ module.exports = {
       const sendMember = [huidx];
 
       alarm.sendMultiAlarm(insertData, sendMember, io);
+
+      const findHuidx = await db.user.findByPk(huidx, {
+        attributes: ["user_email"],
+      });
+      noCostText(companyFindResult.company_name, 123, findHuidx.user_email);
       return;
     }
 
     const customerFindResult = await db.customer.findByPk(customer_idx, {
       attributes: ["customer_phoneNumber", "customer_name", "idx"],
-    });
-
-    const companyFindResult = await db.company.findByPk(req.company_idx, {
-      attributes: ["company_name"],
     });
 
     const calculateFindResult = await db.calculate.findByPk(calculate_idx, {

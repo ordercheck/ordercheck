@@ -2,7 +2,12 @@ const db = require("../model/db");
 const { limitPlan } = require("../lib/standardTemplate");
 const { Alarm } = require("../lib/classes/AlarmClass");
 const { delFile } = require("../lib/aws/fileupload").ufile;
-const { sendFileStoreMaxEmail } = require("../mail/sendOrdercheckEmail");
+const {
+  sendForm5080,
+  sendFormLimit,
+  sendFileStoreEmail,
+  sendFileStoreEmailLimit,
+} = require("../mail/sendOrdercheckEmail");
 // 고객 체크
 const checkCustomerCount = async (company_idx, data) => {
   const findCompanyData = await db.company.findByPk(company_idx, {
@@ -96,7 +101,7 @@ module.exports = {
     const {
       body: { form_link },
     } = req;
-    console.log("이거 안타나?");
+
     const { success, findCompanyData, findPlanResult, message } = await check(
       form_link,
       ["form_link_count", "huidx"]
@@ -121,6 +126,10 @@ module.exports = {
       const sendMember = [findCompanyData.huidx];
 
       alarm.sendMultiAlarm(insertData, sendMember, io);
+      const findHuidx = await db.user.findByPk(findCompanyData.huidx, {
+        attributes: ["user_email"],
+      });
+      sendForm5080(123, 50, 1, findHuidx.user_email);
     }
 
     // 80% 찼을 때
@@ -136,6 +145,11 @@ module.exports = {
       const sendMember = [findCompanyData.huidx];
 
       alarm.sendMultiAlarm(insertData, sendMember, io);
+
+      const findHuidx = await db.user.findByPk(findCompanyData.huidx, {
+        attributes: ["user_email"],
+      });
+      sendForm5080(123, 80, 1, findHuidx.user_email);
     }
 
     // 초과 했을 때
@@ -151,6 +165,11 @@ module.exports = {
       const sendMember = [findCompanyData.huidx];
 
       alarm.sendMultiAlarm(insertData, sendMember, io);
+
+      const findHuidx = await db.user.findByPk(findCompanyData.huidx, {
+        attributes: ["user_email"],
+      });
+      sendFormLimit(123, 1, findHuidx.user_email);
     }
     return;
   },
@@ -168,12 +187,12 @@ module.exports = {
       raw: true,
     });
 
-    let fileStoreSize = 0;
+    let mbFileSize = 0;
     findFilesResult.forEach((data) => {
-      fileStoreSize += data.file_size;
+      mbFileSize += data.file_size;
     });
-    // GB로 변환
-    fileStoreSize = fileStoreSize * 0.001;
+    // TB로 변환
+    const tbFileSize = mbFileSize / 1000000;
 
     const findPlanResult = await db.plan.findOne({
       where: { company_idx, active: 1 },
@@ -186,8 +205,8 @@ module.exports = {
 
     // 50% 찼을 때
     if (
-      limitPlan[findPlanResult.plan].fileStore / 2 <= fileStoreSize &&
-      fileStoreSize < limitPlan[findPlanResult.plan].fileStore * 0.8
+      limitPlan[findPlanResult.plan].fileStore / 2 <= tbFileSize &&
+      tbFileSize < limitPlan[findPlanResult.plan].fileStore * 0.8
     ) {
       const alarmMessage = alarm.fileLimitAlarm50();
       const insertData = {
@@ -196,12 +215,27 @@ module.exports = {
       };
       const sendMember = [findCompany.huidx];
       alarm.sendMultiAlarm(insertData, sendMember, io);
+      const restMB =
+        (limitPlan[findPlanResult.plan].fileStore - tbFileSize) * 1000000;
+
+      const findHuidx = await db.user.findByPk(findCompany.huidx, {
+        attributes: ["user_email"],
+      });
+
+      sendFileStoreEmail(
+        50,
+        123,
+        123,
+        limitPlan[findPlanResult.plan].fileStore,
+        restMB,
+        findHuidx.user_email
+      );
     }
 
     // 80% 찼을 때
     if (
-      limitPlan[findPlanResult.plan].fileStore * 0.8 <= fileStoreSize &&
-      fileStoreSize < limitPlan[findPlanResult.plan].fileStore
+      limitPlan[findPlanResult.plan].fileStore * 0.8 <= tbFileSize &&
+      tbFileSize < limitPlan[findPlanResult.plan].fileStore
     ) {
       const alarmMessage = alarm.fileLimitAlarm80();
       const insertData = {
@@ -210,9 +244,23 @@ module.exports = {
       };
       const sendMember = [findCompany.huidx];
       alarm.sendMultiAlarm(insertData, sendMember, io);
+      const findHuidx = await db.user.findByPk(findCompany.huidx, {
+        attributes: ["user_email"],
+      });
+      const restMB =
+        (limitPlan[findPlanResult.plan].fileStore - tbFileSize) * 1000000;
+
+      sendFileStoreEmail(
+        80,
+        123,
+        123,
+        limitPlan[findPlanResult.plan].fileStore,
+        restMB,
+        findHuidx.user_email
+      );
     }
     // 100% 찼을 때
-    if (limitPlan[findPlanResult.plan].fileStore <= fileStoreSize) {
+    if (limitPlan[findPlanResult.plan].fileStore <= tbFileSize) {
       const alarmMessage = alarm.fileLimitAlarm100();
       const insertData = {
         message: alarmMessage,
@@ -220,10 +268,13 @@ module.exports = {
       };
       const sendMember = [findCompany.huidx];
       alarm.sendMultiAlarm(insertData, sendMember, io);
-
+      const findHuidx = await db.user.findByPk(findCompany.huidx, {
+        attributes: ["user_email"],
+      });
       // 이메일 보내기
       const now = moment().format("YY/MM/DD HH:mm:ss");
-      sendFileStoreMaxEmail(now);
+
+      sendFileStoreEmailLimit(now, 1, 1, findHuidx.user_email);
     }
     return;
   },

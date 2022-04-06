@@ -29,7 +29,10 @@ const {
 } = require("../lib/attributes");
 const attributes = require("../lib/attributes");
 const { Alarm } = require("../lib/classes/AlarmClass");
-
+const {
+  sendTextPayEmail,
+  sendFailCostEmail,
+} = require("../mail/sendOrdercheckEmail");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
 
@@ -473,7 +476,9 @@ module.exports = {
       company_idx,
       body: { text_cost },
     } = req;
-
+    const findHuidx = await db.user.findByPk(user_idx, {
+      attributes: ["user_email"],
+    });
     const findCardResult = await db.card.findOne({
       where: { user_idx, main: true },
       attributes: [
@@ -538,7 +543,6 @@ module.exports = {
       });
 
       // 문자 자동충전 실패 알람 보내기
-
       const alarm = new Alarm({});
       const message = alarm.failedAutoMessageAlarm();
 
@@ -551,6 +555,7 @@ module.exports = {
       const io = req.app.get("io");
       alarm.sendMultiAlarm(insertData, sendMember, io);
 
+      sendFailCostEmail(findCompany.company_name, 123, findHuidx.user_email);
       return;
     }
 
@@ -586,6 +591,18 @@ module.exports = {
       receipt_kind: "자동 문자 충전",
       card_number: findCardResult.card_number,
     });
+
+    const now = moment().format(" YYYY.MM.DD");
+    sendTextPayEmail(
+      now,
+      findCompany.company_name,
+      receiptId,
+      beforeCost,
+      plusCost,
+      addCost,
+      123,
+      findHuidx.user_email
+    );
   },
   showSmsHistory: async (req, res, next) => {
     const { user_idx, company_idx } = req;
