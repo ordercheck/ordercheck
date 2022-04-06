@@ -303,7 +303,7 @@ module.exports = {
       if (bodyClass.bodyData.tempType == 1) {
         bodyClass.bodyData.choice = bodyClass.bodyData.choice.join(", ");
         createConsultingAndIncrement(bodyClass.bodyData);
-        return;
+        next();
       }
 
       const imgUrlString = files.floor_plan
