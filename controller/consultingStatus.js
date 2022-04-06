@@ -166,6 +166,8 @@ module.exports = {
                 ],
               },
             ],
+            raw: true,
+            nest: true,
           });
           console.log(getMembers);
           // getMembers.forEach(async (data) => {
