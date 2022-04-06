@@ -15,6 +15,7 @@ const _f = require("../lib/functions");
 const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
+const { sendAddFormEmail } = require("../mail/sendOrdercheckEmail");
 const {
   patchCalculateAttributes,
   findSameUserAttributes,
@@ -171,68 +172,81 @@ module.exports = {
             raw: true,
             nest: true,
           });
-          console.log(getMembers);
-          // getMembers.forEach(async (data) => {
-          //   // if (text_cost < 10) {
-          //   //   return;
-          //   // } else {
-          //   const user_phone = data.user.user_phone.replace(/\./g, "");
 
-          //   const { kakaoPushResult, message } = await TeamkakaoPushNewForm(
-          //     user_phone,
-          //     bodyData.title,
-          //     bodyData.customer_name,
-          //     "확인하기",
-          //     bodyData.customer_phoneNumber
-          //   );
+          const now = moment().format("YYYY.MM.DD HH:MM:SS");
+          getMembers.forEach(async (data) => {
+            // 이메일 먼저 보내기
+            await sendAddFormEmail(
+              now,
+              bodyData.title,
+              bodyData.customer_name,
+              bodyData.customer_phoneNumber,
+              getMembers.userCompany.user.user_email
+            );
 
-          //   if (kakaoPushResult) {
-          //     const checkKakaoPromise = async () => {
-          //       return new Promise(function (resolve, reject) {
-          //         setTimeout(async () => {
-          //           const sendResult = await checkKakaoPushResult(
-          //             kakaoPushResult
-          //           );
-          //           resolve(sendResult);
-          //         }, 1000);
-          //       });
-          //     };
-          //     const sendResult = await checkKakaoPromise();
+            // if (text_cost < 10) {
+            //   return;
+            // } else {
+            const user_phone = data.userCompany.user.user_phone.replace(
+              /\./g,
+              ""
+            );
 
-          //     //문자 다시 보내기
+            const { kakaoPushResult, message } = await TeamkakaoPushNewForm(
+              user_phone,
+              bodyData.title,
+              bodyData.customer_name,
+              "확인하기",
+              bodyData.customer_phoneNumber
+            );
 
-          //     // 메시지 전송못할때 3018 (차단, 카톡 없을때)
-          //     // 전화번호 오류 3008
-          //     // 정상발송 0000
-          //     if (sendResult.sendResult === "3018") {
-          //       // 문자 보내기 전 문자 비용 체크
+            if (kakaoPushResult) {
+              const checkKakaoPromise = async () => {
+                return new Promise(function (resolve, reject) {
+                  setTimeout(async () => {
+                    const sendResult = await checkKakaoPushResult(
+                      kakaoPushResult
+                    );
+                    resolve(sendResult);
+                  }, 1000);
+                });
+              };
+              const sendResult = await checkKakaoPromise();
 
-          //       // if (text_cost < 11) {
-          //       //   return;
-          //       // }
+              //문자 다시 보내기
 
-          //       await _f.smsPush(user_phone, message, "LMS");
+              // 메시지 전송못할때 3018 (차단, 카톡 없을때)
+              // 전화번호 오류 3008
+              // 정상발송 0000
+              if (sendResult.sendResult === "3018") {
+                // 문자 보내기 전 문자 비용 체크
 
-          //       // decreasePriceAndHistory(
-          //       //   { text_cost: 11 },
-          //       //   findSms.idx,
-          //       //   "LMS",
-          //       //   message,
-          //       //   bodyData.customer_phoneNumber
-          //       // );
-          //     } else {
-          //       // 알림톡 비용 차감 후 저장
-          //       // decreasePriceAndHistory(
-          //       //   { text_cost: 10 },
-          //       //   findSms.idx,
-          //       //   "알림톡",
-          //       //   message,
-          //       //   bodyData.customer_phoneNumber
-          //       // );
-          //     }
-          //   }
-          //   // }
-          // });
+                // if (text_cost < 11) {
+                //   return;
+                // }
+
+                await _f.smsPush(user_phone, message, "LMS");
+
+                // decreasePriceAndHistory(
+                //   { text_cost: 11 },
+                //   findSms.idx,
+                //   "LMS",
+                //   message,
+                //   bodyData.customer_phoneNumber
+                // );
+              } else {
+                // 알림톡 비용 차감 후 저장
+                // decreasePriceAndHistory(
+                //   { text_cost: 10 },
+                //   findSms.idx,
+                //   "알림톡",
+                //   message,
+                //   bodyData.customer_phoneNumber
+                // );
+              }
+            }
+            // }
+          });
         } catch (err) {
           await t.rollback();
           next(err);

@@ -638,4 +638,36 @@ const sendJoinEmail = async (invitedPeople, company_name, target) => {
   }
 };
 
-module.exports = { sendInviteEmail, sendJoinEmail };
+const sendAddFormEmail = async (
+  now,
+  formTitle,
+  customerName,
+  customerPhone,
+  target
+) => {
+  let mailOptions = {
+    from: process.env.SEND_EMAIL_ID,
+    to: target,
+    subject: "오더체크",
+    html: `[알림] 새로운 상담 신청이 접수되었습니다. 
+
+    ${formTitle}
+    
+    일시 : ${now}
+    
+    ▶고객명: ${customerName}
+    ▶연락처: ${customerPhone}
+    
+    접수 내용을 오더체크 페이지에서 확인하세요. 
+    <오더체크 바로가기> (버튼)`,
+  };
+  try {
+    const result = await transport.sendMail(mailOptions);
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
+module.exports = { sendInviteEmail, sendJoinEmail, sendAddFormEmail };
