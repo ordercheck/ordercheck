@@ -74,7 +74,8 @@ module.exports = {
     });
 
     const message = `[${findCompany.company_name}]
-안녕하세요, ${findInviter.user_name}님이 ${findCompany.company_name} 회사에 초대합니다:)
+안녕하세요,
+${findInviter.user_name}님이 ${findCompany.company_name} 회사에 초대합니다:)
 --
 참여하기:
 ${company_url}

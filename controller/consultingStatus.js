@@ -91,66 +91,66 @@ module.exports = {
           //   return;
           // }
 
-          const customer_phoneNumber = bodyData.customer_phoneNumber.replace(
-            /\./g,
-            ""
-          );
+          // const customer_phoneNumber = bodyData.customer_phoneNumber.replace(
+          //   /\./g,
+          //   ""
+          // );
 
-          const { kakaoPushResult, message } = await customerkakaoPushNewForm(
-            customer_phoneNumber,
-            bodyData.company_name,
-            bodyData.customer_name,
-            bodyData.title
-          );
+          // const { kakaoPushResult, message } = await customerkakaoPushNewForm(
+          //   customer_phoneNumber,
+          //   bodyData.company_name,
+          //   bodyData.customer_name,
+          //   bodyData.title
+          // );
 
-          if (kakaoPushResult) {
-            const checkKakaoPromise = async () => {
-              return new Promise(function (resolve, reject) {
-                setTimeout(async () => {
-                  const sendResult = await checkKakaoPushResult(
-                    kakaoPushResult
-                  );
-                  resolve(sendResult);
-                }, 1000);
-              });
-            };
-            const sendResult = await checkKakaoPromise();
-            //문자 다시 보내기
+          // if (kakaoPushResult) {
+          //   const checkKakaoPromise = async () => {
+          //     return new Promise(function (resolve, reject) {
+          //       setTimeout(async () => {
+          //         const sendResult = await checkKakaoPushResult(
+          //           kakaoPushResult
+          //         );
+          //         resolve(sendResult);
+          //       }, 1000);
+          //     });
+          //   };
+          //   const sendResult = await checkKakaoPromise();
+          //   //문자 다시 보내기
 
-            // 메시지 전송못할때 3018 (차단, 카톡 없을때)
-            // 전화번호 오류 3008
-            // 정상발송 0000
-            if (sendResult.sendResult === "3018") {
-              // 문자 보내기 전 문자 비용 체크
+          //   // 메시지 전송못할때 3018 (차단, 카톡 없을때)
+          //   // 전화번호 오류 3008
+          //   // 정상발송 0000
+          //   if (sendResult.sendResult === "3018") {
+          //     // 문자 보내기 전 문자 비용 체크
 
-              // if (text_cost < 11) {
-              //   return;
-              // }
+          //     // if (text_cost < 11) {
+          //     //   return;
+          //     // }
 
-              // text_cost -= 11;
-              // LMS 비용 차감 후 저장
+          //     // text_cost -= 11;
+          //     // LMS 비용 차감 후 저장
 
-              await _f.smsPush(customer_phoneNumber, message, "SMS");
+          //     await _f.smsPush(customer_phoneNumber, message, "SMS");
 
-              // decreasePriceAndHistory(
-              //   { text_cost: 11 },
-              //   findSms.idx,
-              //   "SMS",
-              //   message,
-              //   bodyData.customer_phoneNumber
-              // );
-            } else {
-              console.log("알람톡 보내짐");
-              // 알림톡 비용 차감 후 저장
-              // decreasePriceAndHistory(
-              //   { text_cost: 10 },
-              //   findSms.idx,
-              //   "알림톡",
-              //   message,
-              //   bodyData.customer_phoneNumber
-              // );
-            }
-          }
+          //     // decreasePriceAndHistory(
+          //     //   { text_cost: 11 },
+          //     //   findSms.idx,
+          //     //   "SMS",
+          //     //   message,
+          //     //   bodyData.customer_phoneNumber
+          //     // );
+          //   } else {
+          //     console.log("알람톡 보내짐");
+          //     // 알림톡 비용 차감 후 저장
+          //     // decreasePriceAndHistory(
+          //     //   { text_cost: 10 },
+          //     //   findSms.idx,
+          //     //   "알림톡",
+          //     //   message,
+          //     //   bodyData.customer_phoneNumber
+          //     // );
+          //   }
+          // }
 
           // if (text_cost < 10) {
           //   return;
@@ -169,7 +169,6 @@ module.exports = {
                 ],
               },
             ],
-
             raw: true,
             nest: true,
           });
