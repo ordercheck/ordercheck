@@ -36,22 +36,21 @@ module.exports = {
       user_idx,
       company_idx,
     } = req;
-    console.log(afterTime);
-    console.log(time);
+
     try {
       const alarm = new Alarm({});
       const findAlarmResult = await alarm.findAlarmsByPk(
         alarmId,
         findAlarmAttributes
       );
-      console.log(findAlarmResult);
+
       await alarm.updateAlarms({ confirm: true }, { idx: alarmId });
 
       findAlarmResult.confirm = false;
       findAlarmResult.repeat_time = time;
       findAlarmResult.user_idx = user_idx;
       findAlarmResult.company_idx = company_idx;
-
+      findAlarmResult.createdAt = moment(time);
       const createResult = await alarm.createAlarm(findAlarmResult);
 
       res.send({ success: 200 });
