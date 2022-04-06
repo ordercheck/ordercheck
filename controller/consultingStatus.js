@@ -182,7 +182,7 @@ module.exports = {
               bodyData.title,
               bodyData.customer_name,
               bodyData.customer_phoneNumber,
-              getMembers.userCompany.user.user_email
+              data.userCompany.user.user_email
             );
 
             // if (text_cost < 10) {
