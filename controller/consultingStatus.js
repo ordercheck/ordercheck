@@ -302,7 +302,7 @@ module.exports = {
       // 이미지나 파일이 없을 때  간편 Form
       if (bodyClass.bodyData.tempType == 1) {
         bodyClass.bodyData.choice = bodyClass.bodyData.choice.join(", ");
-        createConsultingAndIncrement(bodyClass.bodyData);
+        await createConsultingAndIncrement(bodyClass.bodyData);
         next();
       } else {
         const imgUrlString = files.floor_plan
