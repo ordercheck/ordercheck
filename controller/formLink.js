@@ -183,6 +183,7 @@ module.exports = {
     const {
       params: { formId },
     } = req;
+
     // 열람 권한자 찾기
     const findFormOpenMember = await db.formOpen.findAll({
       where: { formLink_idx: formId },
@@ -203,7 +204,7 @@ module.exports = {
     findFormOpenMember.forEach(async (data) => {
       await db.formOpen.create({
         user_name: findFormOpenMember.user_name,
-        formLink_idx: formId,
+        formLink_idx: duplicateForm.idx,
         user_idx: findFormOpenMember.user_idx,
       });
     });
