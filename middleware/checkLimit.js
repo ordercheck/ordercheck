@@ -92,6 +92,7 @@ module.exports = {
   },
 
   checkConsultingLimit: async (req, res, next) => {
+    console.log("이거 감?");
     const {
       body: { form_link },
     } = req;
