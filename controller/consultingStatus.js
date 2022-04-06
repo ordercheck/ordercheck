@@ -304,6 +304,7 @@ module.exports = {
         bodyClass.bodyData.choice = bodyClass.bodyData.choice.join(", ");
         createConsultingAndIncrement(bodyClass.bodyData);
         next();
+        return;
       }
 
       const imgUrlString = files.floor_plan
@@ -320,6 +321,7 @@ module.exports = {
 
       await createConsultingAndIncrement(formBodyData);
       next();
+      return;
     } catch (err) {
       await t.rollback();
       next(err);
