@@ -161,6 +161,7 @@ module.exports = {
             include: [
               {
                 model: db.userCompany,
+                where: { active: true, standBy: false },
                 include: [
                   {
                     model: db.user,
