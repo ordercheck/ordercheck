@@ -243,7 +243,6 @@ ${company_url}
     io.to(findUserCompanyResult.user_idx).emit("invite", "approve");
 
     // 이메일 보내기
-    console.log(findBeforeCompanyUser.user);
     await sendJoinEmail(
       findBeforeCompanyUser.searchingName,
       findCompany.company_name,
@@ -294,7 +293,7 @@ ${company_url}
       { where: { company_subdomain } },
       { attributes: ["idx"] }
     );
-    console.log(findCompany);
+
     // userCompany 업데이트
     await db.userCompany.update(
       {
