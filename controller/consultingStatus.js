@@ -304,24 +304,22 @@ module.exports = {
         bodyClass.bodyData.choice = bodyClass.bodyData.choice.join(", ");
         createConsultingAndIncrement(bodyClass.bodyData);
         next();
-        return;
+      } else {
+        const imgUrlString = files.floor_plan
+          ? selectUrl(files.floor_plan)
+          : null;
+
+        const conceptUrlString = files.hope_concept
+          ? selectUrl(files.hope_concept)
+          : null;
+
+        const formBodyData = files.hope_concept
+          ? bodyClass.createNewUrl(imgUrlString, conceptUrlString)
+          : bodyClass.bodyData;
+
+        await createConsultingAndIncrement(formBodyData);
+        next();
       }
-
-      const imgUrlString = files.floor_plan
-        ? selectUrl(files.floor_plan)
-        : null;
-
-      const conceptUrlString = files.hope_concept
-        ? selectUrl(files.hope_concept)
-        : null;
-
-      const formBodyData = files.hope_concept
-        ? bodyClass.createNewUrl(imgUrlString, conceptUrlString)
-        : bodyClass.bodyData;
-
-      await createConsultingAndIncrement(formBodyData);
-      next();
-      return;
     } catch (err) {
       await t.rollback();
       next(err);
