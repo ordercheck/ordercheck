@@ -180,8 +180,17 @@ module.exports = {
     }
   },
   duplicateForm: async (req, res, next) => {
+    const {
+      params: { formId },
+    } = req;
+    // 열람 권한자 찾기
+    const findFormOpenMember = await db.formOpen.findAll({
+      where: { formLink_idx: formId },
+      raw: true,
+    });
+
     // copyCount 1증가
-    const findFormLink = await db.formLink.findByPk(req.params.formId, {
+    const findFormLink = await db.formLink.findByPk(formId, {
       attributes: { exclude: ["idx", "createdAt", "updatedAt"] },
     });
     // 복사본 제목 생성
@@ -190,6 +199,15 @@ module.exports = {
     findFormLink.form_link = _f.random5();
 
     const duplicateForm = await db.formLink.create(findFormLink.dataValues);
+
+    findFormOpenMember.forEach(async (data) => {
+      await db.formOpen.create({
+        user_name: findFormOpenMember.user_name,
+        formLink_idx: formId,
+        user_idx: findFormOpenMember.user_idx,
+      });
+    });
+
     // 시간 형태에 맞게 변형
     const createdAt = duplicateForm.createdAt
       .toISOString()
