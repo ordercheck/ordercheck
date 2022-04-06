@@ -151,7 +151,14 @@ router.post("/login", async (req, res, next) => {
     // 이미 가입한 회사가 있을 때
     const checkAlready = await db.userCompany.findOne({
       where: { active: true, standBy: false, user_idx: check.idx },
+      include: [
+        {
+          model: db.company,
+          where: { companyexist: true },
+        },
+      ],
     });
+    console.log(checkAlready);
     const loginToken = await createToken({ user_idx: check.idx });
     if (checkAlready) {
       res.send({
