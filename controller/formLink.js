@@ -28,7 +28,7 @@ module.exports = {
     } = req;
     try {
       const insertData = await form.checkTitle({ title, company_idx });
-
+      console.log(insertData);
       const findUserNameResult = await db.user.findByPk(user_idx, {
         attributes: ["user_name"],
       });
