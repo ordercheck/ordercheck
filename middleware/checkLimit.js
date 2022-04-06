@@ -95,6 +95,7 @@ module.exports = {
     const {
       body: { form_link },
     } = req;
+    console.log("이거 안타나?");
     const { success, findCompanyData, findPlanResult, message } = await check(
       form_link,
       ["form_link_count", "huidx"]
