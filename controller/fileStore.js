@@ -345,7 +345,6 @@ module.exports = {
       let {
         body: { uuid, title, isFolder },
         params: { customerFile_idx },
-        query: { path },
       } = req;
 
       // 폴더일 경우
@@ -413,24 +412,22 @@ module.exports = {
 
         const newTitle = `${title}.${titleExtend[titleExtend.length - 1]}`;
 
-        if (copyResult) {
-          const pureText = makePureText(newTitle);
+        const pureText = makePureText(newTitle);
 
-          await db.files.update(
-            {
-              title: newTitle,
-              searchingTitle: pureText,
-            },
-            { where: { uuid } }
-          );
+        await db.files.update(
+          {
+            title: newTitle,
+            searchingTitle: pureText,
+          },
+          { where: { uuid } }
+        );
 
-          const updatedFileResult = await db.files.findOne({
-            where: { uuid },
-            raw: true,
-          });
+        const updatedFileResult = await db.files.findOne({
+          where: { uuid },
+          raw: true,
+        });
 
-          return res.send({ success: 200, updatedFileResult });
-        }
+        return res.send({ success: 200, updatedFileResult });
       }
     } catch (err) {
       next(err);
