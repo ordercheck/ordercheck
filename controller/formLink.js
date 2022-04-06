@@ -87,7 +87,7 @@ module.exports = {
 
       const message = alarm.createFormAlarm(
         findUserNameResult.user_name,
-        title
+        insertData.title
       );
 
       const data = {
