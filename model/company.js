@@ -70,5 +70,9 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+
+    resetDate: {
+      type: DataTypes.DATE(),
+    },
   });
 };
