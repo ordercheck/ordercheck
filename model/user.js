@@ -76,6 +76,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     login_access: {
       allowNull: false,
+      defaultValue: true,
       type: DataTypes.BOOLEAN,
     },
   });
