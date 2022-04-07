@@ -74,7 +74,7 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.DATE(),
     },
-    active: {
+    login_access: {
       allowNull: false,
       type: DataTypes.BOOLEAN,
     },
