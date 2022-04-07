@@ -632,8 +632,12 @@ module.exports = {
   showCardsInfo: async (req, res, next) => {
     const { user_idx, company_idx } = req;
     try {
+      const checkCompany = await db.company.findByPk(company_idx, {
+        attributes: ["huidx"],
+      });
+
       let findCardInfo = await db.card.findAll({
-        where: { user_idx },
+        where: { user_idx: checkCompany.huidx },
         attributes: showCardsInfoAttributes,
         raw: true,
       });
