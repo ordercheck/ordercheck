@@ -561,9 +561,8 @@ module.exports = {
 
       failSmsPay(
         findCompany.company_name,
-        findHuidx.user_name.replace(/\./g, "")
+        findHuidx.user_phone.replace(/\./g, "")
       );
-
       return;
     }
 
