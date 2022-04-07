@@ -206,9 +206,45 @@ module.exports = {
         where: { huidx: user_idx },
       });
 
+      let companySubdomain = findCompanySub.company_subdomain;
+
+      // 회사가 없을 때 랜덤 회사 만들기
+      if (!findCompanySub) {
+        const template = new Template({});
+        // 랜덤 회사 만들기
+        const randomCompany = await createRandomCompany(user_idx);
+
+        // master template 만들기
+
+        masterConfig.company_idx = randomCompany.idx;
+
+        const createTempalteResult = await template.createConfig(masterConfig);
+
+        // 팀원 template  만들기
+        await template.createConfig({
+          company_idx: randomCompany.idx,
+        });
+
+        const findUser = await db.user.findByPk(user_idx, {
+          attributes: ["user_name"],
+        });
+
+        // 유저 회사에 소속시키기
+        await includeUserToCompany({
+          user_idx,
+          company_idx: randomCompany.idx,
+          searchingName: findUser.user_name,
+          config_idx: createTempalteResult.idx,
+        });
+
+        // 무료 플랜 만들기
+        await createFreePlan(randomCompany.idx);
+        companySubdomain = randomCompany.company_subdomain;
+      }
+
       return res.send({
         success: 200,
-        company_subdomain: findCompanySub.company_subdomain,
+        company_subdomain: companySubdomain,
       });
     } catch (err) {
       next(err);
