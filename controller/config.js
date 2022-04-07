@@ -593,9 +593,7 @@ module.exports = {
       card_number: findCardResult.card_number,
     });
 
-    const now = moment().format(" YYYY.MM.DD");
     sendTextPayEmail(
-      now,
       findCompany.company_name,
       receiptId,
       beforeCost,

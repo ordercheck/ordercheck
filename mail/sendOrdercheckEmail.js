@@ -1,5 +1,7 @@
 const nodemailer = require("nodemailer");
-
+const moment = require("moment");
+require("moment-timezone");
+moment.tz.setDefault("Asia/Seoul");
 const transport = nodemailer.createTransport({
   service: "Gmail",
   auth: {
@@ -760,11 +762,12 @@ const sendFileStoreEmail = async (
 };
 
 const sendFileStoreEmailLimit = async (
-  date,
   fileStoreLink,
   channelTalkLink,
   target
 ) => {
+  // 이메일 보내기
+  const now = moment().format("YY/MM/DD HH:mm:ss");
   let mailOptions = {
     from: process.env.SEND_EMAIL_ID,
     to: target,
@@ -773,7 +776,7 @@ const sendFileStoreEmailLimit = async (
 
     사용중인 파일보관함 용량이 가득 찼습니다.
     
-    현 시점부터 새로운 파일 업로드가 제한됩니다. ${date}. 
+    현 시점부터 새로운 파일 업로드가 제한됩니다. ${now}. 
     보관중인 파일은 유지되오나 새로운 폴더 및 파일 생성이 불가합니다.
     
     파일보관함을 계속 사용하고 사진, 문서 등을 업로드하려면 저장용량을 추가하거나 불필요한 파일을 제거해야 합니다. 
@@ -793,7 +796,6 @@ const sendFileStoreEmailLimit = async (
 };
 
 const sendTextPayEmail = async (
-  date,
   companyName,
   receiptID,
   beforeCost,
@@ -802,6 +804,7 @@ const sendTextPayEmail = async (
   receiptLink,
   target
 ) => {
+  const now = moment().format(" YYYY.MM.DD");
   let mailOptions = {
     from: process.env.SEND_EMAIL_ID,
     to: target,
@@ -816,7 +819,7 @@ const sendTextPayEmail = async (
     
     문자 충전 내역 
     
-    충전 일시: ${date}
+    충전 일시: ${now}
     
     ▶${receiptID} ######
     ▶ 이전 잔액: ₩ ${beforeCost}

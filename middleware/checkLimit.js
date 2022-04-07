@@ -273,10 +273,8 @@ module.exports = {
       const findHuidx = await db.user.findByPk(findCompany.huidx, {
         attributes: ["user_email", "user_phone"],
       });
-      // 이메일 보내기
-      const now = moment().format("YY/MM/DD HH:mm:ss");
 
-      sendFileStoreEmailLimit(now, 1, 1, findHuidx.user_email);
+      sendFileStoreEmailLimit(1, 1, findHuidx.user_email);
 
       // 알림톡 보내기
       fileStoreLimitKakaoPush(findHuidx.replace(/\./g, ""));
