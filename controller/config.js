@@ -515,7 +515,6 @@ module.exports = {
     if (!payResult.success) {
       await db.card.update(
         {
-          active: false,
           message_active: false,
         },
         {
