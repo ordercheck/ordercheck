@@ -262,7 +262,7 @@ module.exports = {
       );
     }
     // 100% 찼을 때
-    if (limitPlan[findPlanResult.plan].fileStore <= tbFileSize) {
+    if (true) {
       const alarmMessage = alarm.fileLimitAlarm100();
       const insertData = {
         message: alarmMessage,
