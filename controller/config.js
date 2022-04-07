@@ -1076,6 +1076,7 @@ module.exports = {
         });
 
         checkMembers.forEach(async (data) => {
+          console.log(data);
           if (data.user_idx !== findMember.user_idx) {
             await db.user.update(
               { login_access: false },
