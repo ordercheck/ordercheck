@@ -1,10 +1,6 @@
 const {
-  checkUserCompany,
-  getFileName,
   createFileStore,
   getDetailCustomerInfo,
-  sendCompanyAlarm,
-  findMemberExceptMe,
   decreasePriceAndHistory,
 } = require("../lib/apiFunctions");
 const { Form } = require("../lib/classes/FormClass");
@@ -30,6 +26,7 @@ const {
   customerkakaoPushNewForm,
   customerkakaoPushNewCal,
   checkKakaoPushResult,
+  failSmsPay,
 } = require("../lib/kakaoPush");
 
 const {
@@ -735,9 +732,15 @@ module.exports = {
       alarm.sendMultiAlarm(insertData, sendMember, io);
 
       const findHuidx = await db.user.findByPk(huidx, {
-        attributes: ["user_email"],
+        attributes: ["user_email", "user_phone"],
       });
       noCostText(companyFindResult.company_name, 123, findHuidx.user_email);
+
+      failSmsPay(
+        companyFindResult.company_name,
+        findHuidx.user_phone.replace(/\./g, "")
+      );
+
       return;
     }
 
