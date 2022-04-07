@@ -415,6 +415,7 @@ router.post("/company/check", async (req, res, next) => {
       company_name,
       company_subdomain,
       huidx: findUser.idx,
+      resetDate: moment().add("1", "m"),
     });
 
     await db.sms.create({ company_idx: company_data.idx });
