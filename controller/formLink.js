@@ -54,7 +54,7 @@ module.exports = {
           ],
         },
         {
-          attributes: ["idx"],
+          attributes: ["idx", "company_subdomain"],
         }
       );
 
@@ -93,9 +93,8 @@ module.exports = {
         );
 
         const data = {
-          form_idx: createResult.idx,
+          path: `${findCompanyOwner.company_subdomain}/consulting_form/detail/${createResult.idx}/form-edit`,
           message,
-          company_idx,
           alarm_type: 25,
         };
         const io = req.app.get("io");
@@ -287,12 +286,14 @@ module.exports = {
       const findUser = await db.user.findByPk(user_idx, {
         attributes: ["user_name"],
       });
-
+      const checkCompany = await db.company.findByPk(company_idx, {
+        attributes: ["company_subdomain"],
+      });
       const message = alarm.delFormAlarm(findUser.user_name, formTitle.title);
 
       const data = {
         message,
-        company_idx,
+        path: `${checkCompany.company_subdomain}/consulting_form`,
         alarm_type: 26,
       };
 

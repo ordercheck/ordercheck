@@ -205,7 +205,7 @@ module.exports = {
     });
 
     const findCompany = await db.company.findByPk(company_idx, {
-      attributes: ["huidx"],
+      attributes: ["huidx", "company_subdomain"],
     });
 
     // 50% 찼을 때
@@ -216,6 +216,7 @@ module.exports = {
       const alarmMessage = alarm.fileLimitAlarm50();
       const insertData = {
         message: alarmMessage,
+        path: `${findCompany.company_subdomain}/setting/manage_subscribe`,
         alarm_type: 27,
       };
       const sendMember = [findCompany.huidx];
@@ -246,6 +247,7 @@ module.exports = {
       const insertData = {
         message: alarmMessage,
         alarm_type: 28,
+        path: `${findCompany.company_subdomain}/file_storage`,
       };
       const sendMember = [findCompany.huidx];
       alarm.sendMultiAlarm(insertData, sendMember, io);
@@ -268,6 +270,7 @@ module.exports = {
     if (limitPlan[findPlanResult.plan].fileStore <= tbFileSize) {
       const alarmMessage = alarm.fileLimitAlarm100();
       const insertData = {
+        path: `${findCompany.company_subdomain}/setting/manage_subscribe`,
         message: alarmMessage,
         alarm_type: 29,
       };

@@ -721,12 +721,13 @@ module.exports = {
       text_cost,
       repay,
       sms_idx,
+      company_idx,
       huidxToken,
     } = req;
     const alarm = new Alarm({});
     const io = req.app.get("io");
-    const companyFindResult = await db.company.findByPk(req.company_idx, {
-      attributes: ["company_name"],
+    const companyFindResult = await db.company.findByPk(company_idx, {
+      attributes: ["company_name", "company_subdomain"],
     });
     // 알림톡 보내기 전 알림톡 비용 체크
     if (text_cost < 10) {
@@ -735,6 +736,7 @@ module.exports = {
       const message = alarm.failedSendAlimTalkAlarm();
       const insertData = {
         message,
+        path: `${companyFindResult.company_subdomain}/setting/message`,
         alarm_type: 35,
       };
 
@@ -879,6 +881,7 @@ module.exports = {
       const message = alarm.messageCostAlarm(alarmSMS.text_cost);
       const insertData = {
         message,
+        path: `${companyFindResult.company_subdomain}/setting/message`,
         alarm_type: 36,
       };
       const sendMember = [huidx];

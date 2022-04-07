@@ -455,6 +455,7 @@ router.post("/company/check", async (req, res, next) => {
       const message = alarm.startFreeAlarm(diffTime);
       const insertData = {
         message,
+        path: `${company_subdomain}/setting/manage_subscribe`,
         alarm_type: 37,
       };
       const sendMember = [findUser.idx];

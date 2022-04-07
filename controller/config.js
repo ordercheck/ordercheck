@@ -502,7 +502,7 @@ module.exports = {
     }
     // 영수증 등록 로직
     const findCompany = await db.company.findByPk(company_idx, {
-      attributes: ["company_name"],
+      attributes: ["company_name", "company_subdomain"],
     });
 
     const merchant_uid = _f.random5();
@@ -550,6 +550,7 @@ module.exports = {
 
       const insertData = {
         message,
+        path: `${findCompany.company_subdomain}/setting/payment_history`,
         alarm_type: 34,
       };
 
@@ -953,6 +954,7 @@ module.exports = {
 
         const invitedMemberData = {
           message: inviteMessage,
+          path: `${checkCompany.company_subdomain}/consulting_form/detail/${formId}/form-edit`,
           alarm_type: 22,
           user_idx: data,
         };
@@ -985,6 +987,7 @@ module.exports = {
             path: `${checkCompany.company_subdomain}/consulting_form/detail/${formId}/form-edit`,
             user_idx: data,
           };
+
           // 알람 대상에 자기 자신 제외
           const sendMembers = [];
           if (data !== user_idx) {
@@ -1004,6 +1007,7 @@ module.exports = {
 
         const deletedMemberData = {
           message: deletedMessage,
+          path: `${checkCompany.company_subdomain}/consulting_form`,
           alarm_type: 24,
           user_idx: data,
         };
