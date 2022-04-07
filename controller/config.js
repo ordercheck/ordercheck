@@ -47,6 +47,7 @@ module.exports = {
           card.message_active AS messageActive,
           companyexist,
           card.active AS cardActive,
+          plan_active,
           text_cost,
           plan.whiteLabelChecked,  
           chatChecked, 
@@ -515,6 +516,7 @@ module.exports = {
     if (!payResult.success) {
       await db.card.update(
         {
+          active: false,
           message_active: false,
         },
         {

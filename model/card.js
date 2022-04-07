@@ -66,6 +66,13 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: true,
       type: DataTypes.BOOLEAN,
     },
+
+    plan_active: {
+      allowNull: false,
+      defaultValue: true,
+      type: DataTypes.BOOLEAN,
+    },
+
     main: {
       allowNull: false,
       defaultValue: true,
