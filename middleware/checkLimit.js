@@ -271,7 +271,7 @@ module.exports = {
       const sendMember = [findCompany.huidx];
       alarm.sendMultiAlarm(insertData, sendMember, io);
       const findHuidx = await db.user.findByPk(findCompany.huidx, {
-        attributes: ["user_email"],
+        attributes: ["user_email", "user_phone"],
       });
       // 이메일 보내기
       const now = moment().format("YY/MM/DD HH:mm:ss");
@@ -279,8 +279,7 @@ module.exports = {
       sendFileStoreEmailLimit(now, 1, 1, findHuidx.user_email);
 
       // 알림톡 보내기
-
-      fileStoreLimitKakaoPush();
+      fileStoreLimitKakaoPush(findHuidx.replace(/\./g, ""));
     }
     return;
   },
