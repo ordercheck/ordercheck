@@ -8,6 +8,8 @@ const {
   sendFileStoreEmail,
   sendFileStoreEmailLimit,
 } = require("../mail/sendOrdercheckEmail");
+
+const { fileStoreLimitKakaoPush } = require("../lib/kakaoPush");
 // 고객 체크
 const checkCustomerCount = async (company_idx, data) => {
   const findCompanyData = await db.company.findByPk(company_idx, {
@@ -275,6 +277,10 @@ module.exports = {
       const now = moment().format("YY/MM/DD HH:mm:ss");
 
       sendFileStoreEmailLimit(now, 1, 1, findHuidx.user_email);
+
+      // 알림톡 보내기
+
+      fileStoreLimitKakaoPush();
     }
     return;
   },

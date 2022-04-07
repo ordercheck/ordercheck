@@ -196,7 +196,6 @@ module.exports = {
               user_phone,
               bodyData.title,
               bodyData.customer_name,
-              "확인하기",
               bodyData.customer_phoneNumber
             );
 
@@ -765,7 +764,6 @@ module.exports = {
       companyFindResult.company_name,
       customerFindResult.customer_name,
       calculateNumber,
-      "견적서 확인",
       fileUrl
     );
 

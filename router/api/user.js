@@ -140,6 +140,7 @@ router.post("/login", async (req, res, next) => {
     ],
     attributes: ["company_idx"],
   });
+
   if (!company_subdomain) {
     const loginToken = await createToken({ user_idx: check.idx });
     res.send({
