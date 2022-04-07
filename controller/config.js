@@ -1066,6 +1066,23 @@ module.exports = {
           { config_idx: findTeamTemplate.idx },
           { where: { company_idx, config_idx: templateId } }
         );
+
+        const checkMembers = await db.userCompany.findAll({
+          where: {
+            company_idx,
+          },
+          attributes: ["user_idx"],
+          raw: true,
+        });
+
+        checkMembers.forEach(async (data) => {
+          if (data.user_idx !== findMember.user_idx) {
+            await db.user.update(
+              { active: false },
+              { where: { idx: data.user_idx } }
+            );
+          }
+        });
       }
       // 검색용 usre_name 변경, config 변경
       await db.userCompany.update(
