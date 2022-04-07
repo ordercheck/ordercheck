@@ -7,6 +7,7 @@ const { Op } = require("sequelize");
 const { Company } = require("../lib/classes/CompanyClass");
 const { Template } = require("../lib/classes/TemplateClass");
 const { createConfig } = require("../lib/standardTemplate");
+const { failSmsPay } = require("../lib/kakaoPush");
 const axios = require("axios");
 const {
   payNow,
@@ -478,7 +479,7 @@ module.exports = {
       body: { text_cost },
     } = req;
     const findHuidx = await db.user.findByPk(user_idx, {
-      attributes: ["user_email"],
+      attributes: ["user_email", "user_phone"],
     });
     const findCardResult = await db.card.findOne({
       where: { user_idx, main: true },
@@ -557,6 +558,12 @@ module.exports = {
       alarm.sendMultiAlarm(insertData, sendMember, io);
 
       sendFailCostEmail(findCompany.company_name, 123, findHuidx.user_email);
+
+      failSmsPay(
+        findCompany.company_name,
+        findHuidx.user_name.replace(/\./g, "")
+      );
+
       return;
     }
 
