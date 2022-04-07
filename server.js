@@ -50,7 +50,7 @@ io.on("connection", (socket) => {
         scheduleAlarm.push(findAllAlarms[i]);
       }
     }
-    console.log(scheduleAlarm);
+
     io.to(user.user_idx).emit("sendAlarm", scheduleAlarm);
   });
 });
