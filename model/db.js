@@ -206,28 +206,6 @@ db.alarm.belongsTo(db.user, {
   foreignKey: "user_idx",
 });
 
-db.alarm.belongsTo(db.company, {
-  foreignKey: "company_idx",
-});
-db.company.hasMany(db.alarm, {
-  foreignKey: "company_idx",
-  onDelete: "cascade",
-});
-
-db.alarm.belongsTo(db.customer, {
-  foreignKey: "customer_idx",
-});
-db.customer.hasMany(db.alarm, {
-  foreignKey: "customer_idx",
-});
-
-db.alarm.belongsTo(db.formLink, {
-  foreignKey: "form_idx",
-});
-db.formLink.hasMany(db.alarm, {
-  foreignKey: "form_idx",
-});
-
 // company와 formLink
 db.company.hasMany(db.formLink, {
   foreignKey: "company_idx",

@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes) {
   //테이블을 정의
-  return sequelize.define('alarm', {
+  return sequelize.define("alarm", {
     idx: {
       autoIncrement: true,
       primaryKey: true,
@@ -8,7 +8,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     message: {
       allowNull: false,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
 
@@ -30,6 +30,11 @@ module.exports = function (sequelize, DataTypes) {
 
     expiry_date: {
       type: DataTypes.DATE(),
+    },
+
+    path: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
     },
   });
 };

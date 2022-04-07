@@ -106,7 +106,7 @@ module.exports = {
 
     const { success, findCompanyData, findPlanResult, message } = await check(
       form_link,
-      ["form_link_count", "huidx"]
+      ["form_link_count", "huidx", "company_subdomain"]
     );
 
     if (!success) {
@@ -124,6 +124,7 @@ module.exports = {
       const insertData = {
         message: alarmMessage,
         alarm_type: 17,
+        path: `${findCompanyData.company_subdomain}/setting/manage_subscribe`,
       };
       const sendMember = [findCompanyData.huidx];
 
@@ -143,6 +144,7 @@ module.exports = {
       const insertData = {
         message: alarmMessage,
         alarm_type: 18,
+        path: `${findCompanyData.company_subdomain}/setting/manage_subscribe`,
       };
       const sendMember = [findCompanyData.huidx];
 
@@ -163,6 +165,7 @@ module.exports = {
       const insertData = {
         message: alarmMessage,
         alarm_type: 19,
+        path: "ordercheck_info/detail/price_guide",
       };
       const sendMember = [findCompanyData.huidx];
 

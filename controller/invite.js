@@ -195,7 +195,7 @@ ${company_url}
     const io = req.app.get("io");
     const alarm = new Alarm({});
     const findCompany = await db.company.findByPk(company_idx, {
-      attributes: ["company_name"],
+      attributes: ["company_name", "company_subdomain"],
     });
 
     // 가입 신청자 알람
@@ -205,6 +205,7 @@ ${company_url}
       company_idx,
       user_idx: findUserCompanyResult.user_idx,
       alarm_type: 5,
+      path: findCompany.company_subdomain,
     });
 
     //팀원들 알람
@@ -234,11 +235,16 @@ ${company_url}
     );
 
     const members = [];
+
     findCompanyMembers.forEach((data) => {
       members.push(data.user_idx);
     });
 
-    const insertData = { message, alarm_type: 6 };
+    const insertData = {
+      message,
+      alarm_type: 6,
+      path: `${findCompany.company_subdomain}/setting/manage_member`,
+    };
     alarm.sendMultiAlarm(insertData, members, io);
 
     io.to(findUserCompanyResult.user_idx).emit("invite", "approve");

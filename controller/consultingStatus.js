@@ -334,7 +334,7 @@ module.exports = {
       );
 
       const consultResult = await getDetailCustomerInfo(
-        { idx: customer_idx, company_idx: req.company_idx },
+        { idx: customer_idx, company_idx },
         next
       );
       if (!consultResult) {
@@ -348,6 +348,11 @@ module.exports = {
         const check = await db.user.findByPk(user_idx, {
           attributes: ["user_name"],
         });
+
+        const checkCompany = await db.company.findByPk(company_idx, {
+          attributes: ["company_subdomain"],
+        });
+
         const io = req.app.get("io");
 
         const alarm = new Alarm({});
@@ -360,7 +365,7 @@ module.exports = {
           user_idx: contract_person,
           company_idx,
           alarm_type: 11,
-          customer_idx: consultResult.idx,
+          path: `${checkCompany.company_subdomain}/custom_manage/detail/${consultResult.idx}/time_line`,
         };
         sendMember = [contract_person];
         alarm.sendMultiAlarm(insertData, sendMember, io);
@@ -420,27 +425,33 @@ module.exports = {
 
       res.send({ success: 200 });
 
-      const alarm = new Alarm({});
+      if (user_idx !== findCustomerResult.contact_person) {
+        const checkCompany = await db.company.findByPk(company_idx, {
+          attributes: ["company_subdomain"],
+        });
+        const alarm = new Alarm({});
 
-      const findUser = await db.user.findByPk(user_idx, {
-        attributes: ["user_name"],
-      });
+        const findUser = await db.user.findByPk(user_idx, {
+          attributes: ["user_name"],
+        });
 
-      const message = alarm.delCustomerAlarm(
-        findUser.user_name,
-        findCustomerResult.customer_name
-      );
+        const message = alarm.delCustomerAlarm(
+          findUser.user_name,
+          findCustomerResult.customer_name
+        );
 
-      const data = {
-        message,
-        alarm_type: 13,
-      };
+        const insertData = {
+          message,
+          alarm_type: 13,
+          path: `${checkCompany.company_subdomain}/custom_manage`,
+        };
 
-      const findMembers = [findCustomerResult.contact_person];
+        const findMembers = [findCustomerResult.contact_person];
 
-      const io = req.app.get("io");
+        const io = req.app.get("io");
 
-      alarm.sendMultiAlarm(data, findMembers, io);
+        alarm.sendMultiAlarm(insertData, findMembers, io);
+      }
     } catch (err) {
       next(err);
     }
@@ -740,7 +751,6 @@ module.exports = {
         companyFindResult.company_name,
         findHuidx.user_phone.replace(/\./g, "")
       );
-
       return;
     }
 
@@ -990,6 +1000,10 @@ module.exports = {
 
       res.send({ success: 200, findSameUser });
 
+      const checkCompany = await db.company.findByPk(company_idx, {
+        attributes: ["company_subdomain"],
+      });
+
       const alarm = new Alarm({});
 
       const integratingUser = await db.user.findByPk(user_idx, {
@@ -1039,6 +1053,7 @@ module.exports = {
       const insertData = {
         message,
         alarm_type: 8,
+        path: `${checkCompany}/custom_manage/detail/${body.main_idx}/time_line`,
       };
       alarm.sendMultiAlarm(insertData, contactArr, io);
     } catch (err) {

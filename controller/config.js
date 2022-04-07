@@ -874,6 +874,7 @@ module.exports = {
       params: { formId },
       body: { members },
       user_idx,
+      company_idx,
     } = req;
 
     try {
@@ -925,6 +926,11 @@ module.exports = {
       await db.formOpen.destroy({ where: { idx: delData } });
 
       res.send({ success: 200 });
+
+      const checkCompany = await db.company.findByPk(company_idx, {
+        attributes: ["company_subdomain"],
+      });
+
       const alarm = new Alarm({});
       const io = req.app.get("io");
 
@@ -976,6 +982,7 @@ module.exports = {
           const invitedMemberData = {
             message: inviteDefaultAlarm,
             alarm_type: 23,
+            path: `${checkCompany.company_subdomain}/consulting_form/detail/${formId}/form-edit`,
             user_idx: data,
           };
           // 알람 대상에 자기 자신 제외

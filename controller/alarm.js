@@ -44,8 +44,6 @@ module.exports = {
         findAlarmAttributes
       );
 
-      console.log(time);
-
       await alarm.updateAlarms({ confirm: true }, { idx: alarmId });
 
       findAlarmResult.confirm = false;
