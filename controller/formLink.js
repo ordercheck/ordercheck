@@ -237,7 +237,7 @@ module.exports = {
 
     // 웹 알림 소유주 체크
     const checkHuidx = await db.company.findByPk(company_idx, {
-      attributes: ["huidx"],
+      attributes: ["huidx", "company_subdomain"],
     });
 
     if (checkHuidx.huidx !== user_idx) {
@@ -249,9 +249,8 @@ module.exports = {
       const message = alarm.createFormAlarm(findUser.user_name, duplicateTitle);
 
       const data = {
-        form_idx: duplicateForm.idx,
+        path: `${checkHuidx.company_subdomain}/consulting_form/detail/${duplicateForm.idx}/form-edit`,
         message,
-        company_idx,
         alarm_type: 25,
       };
       const io = req.app.get("io");
