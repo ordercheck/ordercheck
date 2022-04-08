@@ -63,7 +63,7 @@ module.exports = {
 
     // 로그인 제한 풀기
 
-    const checkCompany = await db.company.findAll({
+    const checkCompany = await db.userCompany.findAll({
       where: { company_idx },
       attributes: ["user_idx"],
       raw: true,
