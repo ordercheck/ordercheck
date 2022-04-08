@@ -1090,6 +1090,7 @@ module.exports = {
                 { where: { idx: data.user_idx } }
               );
             }
+            console.log(data.user_idx);
             io.to(data.user_idx).emit("changeOwner", "true");
           });
         }
