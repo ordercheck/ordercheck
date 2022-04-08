@@ -1046,6 +1046,7 @@ module.exports = {
       body: { user_name, user_email, templateId },
       params: { memberId },
       company_idx,
+      user_idx,
     } = req;
     try {
       const findTemplate = await db.config.findByPk(templateId, {
@@ -1097,15 +1098,21 @@ module.exports = {
                 { where: { idx: data.user_idx } }
               );
             }
-            console.log(data.user_idx);
-            io.to(data.user_idx).emit("changeOwner", false);
+            if (data.user_idx !== user_idx) {
+              io.to(data.user_idx).emit("changeOwner", false);
+            }
           });
         } else {
           checkMembers.forEach((data) => {
-            console.log(data.user_idx);
             io.to(data.user_idx).emit("changeOwner", true);
           });
         }
+
+        // 기존 소유주 카드로 된 플랜 결제 예정 취소
+        await cancelSchedule(
+          findMainCardResult.customer_uid,
+          findPlanResult.merchant_uid
+        );
       }
       // 검색용 usre_name 변경, config 변경
       await db.userCompany.update(
