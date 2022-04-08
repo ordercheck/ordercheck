@@ -29,10 +29,12 @@ module.exports = {
         attributes: ["company_idx"],
       });
 
-      const checkAnotherCompany = await db.company.findByPk(
-        checkCompany.company_idx
-      );
+      const checkAnotherCompany = await db.company.findOne({
+        idx: checkCompany.company_idx,
+        companyexist: true,
+      });
 
+      console.log();
       if (!checkAnotherCompany) {
         //   다른회사 가입 안되있을 때
         return res.send({ success: 200, message: 0 });
