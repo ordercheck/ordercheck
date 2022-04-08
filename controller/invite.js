@@ -237,7 +237,9 @@ ${company_url}
     const members = [];
 
     findCompanyMembers.forEach((data) => {
-      members.push(data.user_idx);
+      if (data.user_idx !== user_idx) {
+        members.push(data.user_idx);
+      }
     });
 
     const insertData = {

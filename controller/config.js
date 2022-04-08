@@ -1110,15 +1110,15 @@ module.exports = {
           });
         }
 
-        // 기존 소유주 카드로 된 플랜 결제 예정 취소
-        const checkMainCard = await db.card.findOne({
-          where: { user_idx, main: true },
-        });
+        // // 기존 소유주 카드로 된 플랜 결제 예정 취소
+        // const checkMainCard = await db.card.findOne({
+        //   where: { user_idx, main: true },
+        // });
 
-        const checkPlan = await db.plan.findOne({
-          where: { company_idx, active: 3 },
-        });
-        cancelSchedule(checkMainCard.customer_uid, checkPlan.merchant_uid);
+        // const checkPlan = await db.plan.findOne({
+        //   where: { company_idx, active: 3 },
+        // });
+        // cancelSchedule(checkMainCard.customer_uid, checkPlan.merchant_uid);
       }
       // 검색용 usre_name 변경, config 변경
       await db.userCompany.update(
