@@ -118,16 +118,18 @@ router.post("/login", async (req, res, next) => {
   if (!check) {
     return res.send({ success: 400, message: "비밀번호 혹은 전화번호 오류" });
   }
-  // 로그인 제한 걸렸을 때
-  if (!check.login_access) {
-    return res.send({ success: 400, message: "로그인 제한" });
-  }
+
   const compareResult = await bcrypt.compare(
     user_password,
     check.user_password
   );
   if (!compareResult) {
     return res.send({ success: 400, message: "비밀번호 혹은 전화번호 오류" });
+  }
+
+  // 로그인 제한 걸렸을 때
+  if (!check.login_access) {
+    return res.send({ success: 400, message: "로그인 제한" });
   }
 
   const companyInfo = await db.userCompany.findOne({
