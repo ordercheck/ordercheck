@@ -5,15 +5,15 @@ moment.tz.setDefault("Asia/Seoul");
 const transport = nodemailer.createTransport({
   service: "Gmail",
   auth: {
-    user: "rlxo6919@gmail.com",
-    pass: "tnvj79135@",
+    user: process.env.SEND_EMAIL_ID,
+    pass: process.env.SEND_PASSWORD,
   },
 });
 
 const sendInviteEmail = async (company_url, company_name, inviter, target) => {
   let mailOptions = {
-    from: "김기태",
-    to: target,
+    from: process.env.SEND_EMAIL_ID,
+    to: `${김기태}<${target}>`,
     subject: "오더체크",
     html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
