@@ -10,6 +10,7 @@ const {
   sendSMS,
   rejoinCompany,
   cancelJoinCompany,
+  joinToCompany,
 } = require("../../controller/invite");
 
 // update Company
@@ -19,6 +20,7 @@ router.get("/standby", loginCheck, showStandbyUser);
 router.get("/join/do/:memberId", loginCheck, joinStandbyUser);
 router.get("/refuse/:memberId", loginCheck, refuseUser);
 router.post("/rejoin", loginCheck, rejoinCompany);
+router.get("/join/:company_subdomain", loginCheck, joinToCompany);
 router.post("/join/cancel", loginCheck, cancelJoinCompany);
 
 module.exports = router;

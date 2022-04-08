@@ -23,11 +23,13 @@ module.exports = {
         where: { user_idx },
       });
       if (checkAnotherCompany == 0) {
+        //   다른회사 가입 안되있을 때
         return res.send({ success: 200, message: 0 });
       }
+      //   다른회사 가입 되있을 때
       return res.send({ success: 200, message: 1 });
     }
-
+    //   해당 회사에 가입
     return res.send({ success: 200, message: 2 });
   },
 };

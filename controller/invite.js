@@ -18,6 +18,7 @@ const { createToken } = require("../lib/jwtfunctions");
 const { Template } = require("../lib/classes/TemplateClass");
 const attributes = require("../lib/attributes");
 const { Alarm } = require("../lib/classes/AlarmClass");
+const { defaultValueSchemable } = require("sequelize/types/lib/utils");
 
 module.exports = {
   sendEmail: async (req, res, next) => {
@@ -389,5 +390,41 @@ ${company_url}
     } catch (err) {
       next(err);
     }
+  },
+
+  joinToCompany: async (req, res, next) => {
+    const {
+      user_idx,
+      params: { company_subdomain },
+    } = req;
+
+    const findCompany = await db.company.findOne({
+      where: { company_subdomain },
+      attributes: ["idx"],
+    });
+
+    const checkUser = await db.user.findByPk(user_idx, {
+      attributes: ["idx", "user_name"],
+    });
+    const template = new Template({});
+
+    const findConfigResult = await template.findConfig(
+      {
+        template_name: "팀원",
+        company_idx: findCompany.idx,
+      },
+      ["idx"]
+    );
+
+    await includeUserToCompany({
+      user_idx: checkUser.idx,
+      company_idx: findCompany.idx,
+      standBy: true,
+      active: true,
+      searchingName: checkUser.user_name,
+      config_idx: findConfigResult.idx,
+    });
+
+    return res.send({ success: 200, message: "가입 신청 완료" });
   },
 };
