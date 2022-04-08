@@ -30,8 +30,7 @@ module.exports = {
       });
 
       const checkAnotherCompany = await db.company.findOne({
-        idx: checkCompany.company_idx,
-        companyexist: true,
+        where: { idx: checkCompany.company_idx, companyexist: true },
       });
 
       console.log(checkAnotherCompany);
