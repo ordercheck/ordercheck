@@ -182,9 +182,7 @@ class AppServer extends http.Server {
     this.app.use("/api/info", infoRouter);
     this.app.use("/api/home", homeRouter);
     this.app.use("/api/store", storeRouter);
-
     this.app.use("/api/check", checkRouter);
-
     this.app.use("/api/schedule/pay", schedulePayRouter);
     this.app.use("/s3", s3ControllRouter);
     this.app.use("/api/invite", inviteRouter);

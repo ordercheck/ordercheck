@@ -18,7 +18,6 @@ const { createToken } = require("../lib/jwtfunctions");
 const { Template } = require("../lib/classes/TemplateClass");
 const attributes = require("../lib/attributes");
 const { Alarm } = require("../lib/classes/AlarmClass");
-const { defaultValueSchemable } = require("sequelize/types/lib/utils");
 
 module.exports = {
   sendEmail: async (req, res, next) => {
