@@ -142,4 +142,22 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/invite/join/{company_subdomain}:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       - invite
+ *      summary: 회사 가입 신청
+ *      parameters:
+ *         - in: path
+ *           name: company_subdomain
+ *           schema:
+ *             type: string
+ *           example: "company_subdomain"
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */
