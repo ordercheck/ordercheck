@@ -24,16 +24,16 @@ module.exports = {
 
     // 서브도메인 회사에 가입 안되어 있음
     if (checkCompanyMember == 0) {
-      const checkAnotherCompany = await db.userCompany.count({
+      const checkCompany = await db.userCompany.findOne({
         where: { user_idx },
-        include: [
-          {
-            model: db.company,
-            where: { companyexist: true },
-          },
-        ],
+        attributes: ["company_idx"],
       });
-      if (checkAnotherCompany == 0) {
+
+      const checkAnotherCompany = await db.company.findByPk(
+        checkCompany.company_idx
+      );
+
+      if (!checkAnotherCompany) {
         //   다른회사 가입 안되있을 때
         return res.send({ success: 200, message: 0 });
       }
