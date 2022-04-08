@@ -3,9 +3,9 @@ const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
 const transport = nodemailer.createTransport({
-  service: "Naver",
+  service: "Gmail",
   auth: {
-    user: "rlxo6919@naver.com",
+    user: "rlxo6919@gmail.com",
     pass: "tnvj79135@",
   },
 });
