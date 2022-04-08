@@ -132,7 +132,7 @@ module.exports = {
       const findHuidx = await db.user.findByPk(findCompanyData.huidx, {
         attributes: ["user_email"],
       });
-      sendForm5080(123, 50, 1, findHuidx.user_email);
+      // sendForm5080(123, 50, 1, findHuidx.user_email);
     }
 
     // 80% 찼을 때
@@ -153,7 +153,7 @@ module.exports = {
       const findHuidx = await db.user.findByPk(findCompanyData.huidx, {
         attributes: ["user_email"],
       });
-      sendForm5080(123, 80, 1, findHuidx.user_email);
+      // sendForm5080(123, 80, 1, findHuidx.user_email);
     }
 
     // 초과 했을 때
@@ -174,7 +174,7 @@ module.exports = {
       const findHuidx = await db.user.findByPk(findCompanyData.huidx, {
         attributes: ["user_email"],
       });
-      sendFormLimit(123, 1, findHuidx.user_email);
+      // sendFormLimit(123, 1, findHuidx.user_email);
     }
     return;
   },
@@ -228,14 +228,14 @@ module.exports = {
         attributes: ["user_email"],
       });
 
-      sendFileStoreEmail(
-        50,
-        123,
-        123,
-        limitPlan[findPlanResult.plan].fileStore,
-        restMB,
-        findHuidx.user_email
-      );
+      // sendFileStoreEmail(
+      //   50,
+      //   123,
+      //   123,
+      //   limitPlan[findPlanResult.plan].fileStore,
+      //   restMB,
+      //   findHuidx.user_email
+      // );
     }
 
     // 80% 찼을 때
@@ -257,14 +257,14 @@ module.exports = {
       const restMB =
         (limitPlan[findPlanResult.plan].fileStore - tbFileSize) * 1000000;
 
-      sendFileStoreEmail(
-        80,
-        123,
-        123,
-        limitPlan[findPlanResult.plan].fileStore,
-        restMB,
-        findHuidx.user_email
-      );
+      // sendFileStoreEmail(
+      //   80,
+      //   123,
+      //   123,
+      //   limitPlan[findPlanResult.plan].fileStore,
+      //   restMB,
+      //   findHuidx.user_email
+      // );
     }
     // 100% 찼을 때
     if (limitPlan[findPlanResult.plan].fileStore <= tbFileSize) {
@@ -280,7 +280,7 @@ module.exports = {
         attributes: ["user_email", "user_phone"],
       });
 
-      sendFileStoreEmailLimit(1, 1, findHuidx.user_email);
+      // sendFileStoreEmailLimit(1, 1, findHuidx.user_email);
 
       // 알림톡 보내기
       fileStoreLimitKakaoPush(findHuidx.user_phone.replace(/\./g, ""));

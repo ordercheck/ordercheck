@@ -558,7 +558,7 @@ module.exports = {
       const io = req.app.get("io");
       alarm.sendMultiAlarm(insertData, sendMember, io);
 
-      sendFailCostEmail(findCompany.company_name, 123, findHuidx.user_email);
+      // sendFailCostEmail(findCompany.company_name, 123, findHuidx.user_email);
 
       failSmsPay(
         findCompany.company_name,
@@ -600,15 +600,15 @@ module.exports = {
       card_number: findCardResult.card_number,
     });
 
-    sendTextPayEmail(
-      findCompany.company_name,
-      receiptId,
-      beforeCost,
-      plusCost,
-      addCost,
-      123,
-      findHuidx.user_email
-    );
+    // sendTextPayEmail(
+    //   findCompany.company_name,
+    //   receiptId,
+    //   beforeCost,
+    //   plusCost,
+    //   addCost,
+    //   123,
+    //   findHuidx.user_email
+    // );
   },
   showSmsHistory: async (req, res, next) => {
     const { user_idx, company_idx } = req;

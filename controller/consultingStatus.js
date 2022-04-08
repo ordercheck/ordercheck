@@ -173,13 +173,13 @@ module.exports = {
           const now = moment().format("YYYY.MM.DD HH:mm:ss");
           getMembers.forEach(async (data) => {
             // 이메일 먼저 보내기
-            await sendAddFormEmail(
-              now,
-              bodyData.title,
-              bodyData.customer_name,
-              bodyData.customer_phoneNumber,
-              data.userCompany.user.user_email
-            );
+            // await sendAddFormEmail(
+            //   now,
+            //   bodyData.title,
+            //   bodyData.customer_name,
+            //   bodyData.customer_phoneNumber,
+            //   data.userCompany.user.user_email
+            // );
 
             // if (text_cost < 10) {
             //   return;
@@ -740,7 +740,7 @@ module.exports = {
       const findHuidx = await db.user.findByPk(huidx, {
         attributes: ["user_email", "user_phone"],
       });
-      noCostText(companyFindResult.company_name, 123, findHuidx.user_email);
+      // noCostText(companyFindResult.company_name, 123, findHuidx.user_email);
 
       failSmsPay(
         companyFindResult.company_name,
