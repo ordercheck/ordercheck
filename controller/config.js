@@ -1071,22 +1071,28 @@ module.exports = {
           { where: { company_idx, config_idx: templateId } }
         );
 
-        const checkMembers = await db.userCompany.findAll({
-          where: {
-            company_idx,
-          },
-          attributes: ["user_idx"],
-          raw: true,
+        const checkOwnerCard = await db.card.findOne({
+          user_idx: findMember.user_idx,
         });
-
-        checkMembers.forEach(async (data) => {
-          if (data.user_idx !== findMember.user_idx) {
-            await db.user.update(
-              { login_access: false },
-              { where: { idx: data.user_idx } }
-            );
-          }
-        });
+        if (!checkOwnerCard) {
+          const checkMembers = await db.userCompany.findAll({
+            where: {
+              company_idx,
+            },
+            attributes: ["user_idx"],
+            raw: true,
+          });
+          const io = req.app.get("io");
+          checkMembers.forEach(async (data) => {
+            if (data.user_idx !== findMember.user_idx) {
+              await db.user.update(
+                { login_access: false },
+                { where: { idx: data.user_idx } }
+              );
+            }
+            io.to(data.user_idx).emit("changeOwner", "true");
+          });
+        }
       }
       // 검색용 usre_name 변경, config 변경
       await db.userCompany.update(
