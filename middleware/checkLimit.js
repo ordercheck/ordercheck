@@ -106,7 +106,7 @@ module.exports = {
 
     const { success, findCompanyData, findPlanResult, message } = await check(
       form_link,
-      ["form_link_count", "huidx", "company_subdomain"]
+      ["form_link_count", "huidx"]
     );
 
     if (!success) {
@@ -124,7 +124,7 @@ module.exports = {
       const insertData = {
         message: alarmMessage,
         alarm_type: 17,
-        path: `${findCompanyData.company_subdomain}/setting/manage_subscribe`,
+        path: `/setting/manage_subscribe`,
       };
       const sendMember = [findCompanyData.huidx];
 
@@ -144,7 +144,7 @@ module.exports = {
       const insertData = {
         message: alarmMessage,
         alarm_type: 18,
-        path: `${findCompanyData.company_subdomain}/setting/manage_subscribe`,
+        path: `/setting/manage_subscribe`,
       };
       const sendMember = [findCompanyData.huidx];
 
@@ -216,7 +216,7 @@ module.exports = {
       const alarmMessage = alarm.fileLimitAlarm50();
       const insertData = {
         message: alarmMessage,
-        path: `${findCompany.company_subdomain}/setting/manage_subscribe`,
+        path: `/setting/manage_subscribe`,
         alarm_type: 27,
       };
       const sendMember = [findCompany.huidx];
@@ -247,7 +247,7 @@ module.exports = {
       const insertData = {
         message: alarmMessage,
         alarm_type: 28,
-        path: `${findCompany.company_subdomain}/file_storage`,
+        path: `/file_storage`,
       };
       const sendMember = [findCompany.huidx];
       alarm.sendMultiAlarm(insertData, sendMember, io);
@@ -270,7 +270,7 @@ module.exports = {
     if (limitPlan[findPlanResult.plan].fileStore <= tbFileSize) {
       const alarmMessage = alarm.fileLimitAlarm100();
       const insertData = {
-        path: `${findCompany.company_subdomain}/setting/manage_subscribe`,
+        path: `/setting/manage_subscribe`,
         message: alarmMessage,
         alarm_type: 29,
       };

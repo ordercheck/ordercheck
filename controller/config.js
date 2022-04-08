@@ -550,7 +550,7 @@ module.exports = {
 
       const insertData = {
         message,
-        path: `${findCompany.company_subdomain}/setting/payment_history`,
+        path: "/setting/payment_history",
         alarm_type: 34,
       };
 
@@ -932,10 +932,6 @@ module.exports = {
 
       res.send({ success: 200 });
 
-      const checkCompany = await db.company.findByPk(company_idx, {
-        attributes: ["company_subdomain"],
-      });
-
       const alarm = new Alarm({});
       const io = req.app.get("io");
 
@@ -958,7 +954,7 @@ module.exports = {
 
         const invitedMemberData = {
           message: inviteMessage,
-          path: `${checkCompany.company_subdomain}/consulting_form/detail/${formId}/form-edit`,
+          path: `/consulting_form/detail/${formId}/form-edit`,
           alarm_type: 22,
           user_idx: data,
         };
@@ -988,7 +984,7 @@ module.exports = {
           const invitedMemberData = {
             message: inviteDefaultAlarm,
             alarm_type: 23,
-            path: `${checkCompany.company_subdomain}/consulting_form/detail/${formId}/form-edit`,
+            path: `/consulting_form/detail/${formId}/form-edit`,
             user_idx: data,
           };
 
@@ -1011,7 +1007,7 @@ module.exports = {
 
         const deletedMemberData = {
           message: deletedMessage,
-          path: `${checkCompany.company_subdomain}/consulting_form`,
+          path: `/consulting_form`,
           alarm_type: 24,
           user_idx: data,
         };

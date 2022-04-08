@@ -349,10 +349,6 @@ module.exports = {
           attributes: ["user_name"],
         });
 
-        const checkCompany = await db.company.findByPk(company_idx, {
-          attributes: ["company_subdomain"],
-        });
-
         const io = req.app.get("io");
 
         const alarm = new Alarm({});
@@ -365,7 +361,7 @@ module.exports = {
           user_idx: contract_person,
           company_idx,
           alarm_type: 11,
-          path: `${checkCompany.company_subdomain}/custom_manage/detail/${consultResult.idx}/time_line`,
+          path: `/custom_manage/detail/${consultResult.idx}/time_line`,
         };
         sendMember = [contract_person];
         alarm.sendMultiAlarm(insertData, sendMember, io);
@@ -426,9 +422,6 @@ module.exports = {
       res.send({ success: 200 });
 
       if (user_idx !== findCustomerResult.contact_person) {
-        const checkCompany = await db.company.findByPk(company_idx, {
-          attributes: ["company_subdomain"],
-        });
         const alarm = new Alarm({});
 
         const findUser = await db.user.findByPk(user_idx, {
@@ -443,7 +436,7 @@ module.exports = {
         const insertData = {
           message,
           alarm_type: 13,
-          path: `${checkCompany.company_subdomain}/custom_manage`,
+          path: `/custom_manage`,
         };
 
         const findMembers = [findCustomerResult.contact_person];
@@ -736,7 +729,7 @@ module.exports = {
       const message = alarm.failedSendAlimTalkAlarm();
       const insertData = {
         message,
-        path: `${companyFindResult.company_subdomain}/setting/message`,
+        path: `/setting/message`,
         alarm_type: 35,
       };
 
@@ -881,7 +874,7 @@ module.exports = {
       const message = alarm.messageCostAlarm(alarmSMS.text_cost);
       const insertData = {
         message,
-        path: `${companyFindResult.company_subdomain}/setting/message`,
+        path: `/setting/message`,
         alarm_type: 36,
       };
       const sendMember = [huidx];
@@ -1003,10 +996,6 @@ module.exports = {
 
       res.send({ success: 200, findSameUser });
 
-      const checkCompany = await db.company.findByPk(company_idx, {
-        attributes: ["company_subdomain"],
-      });
-
       const alarm = new Alarm({});
 
       const integratingUser = await db.user.findByPk(user_idx, {
@@ -1056,7 +1045,7 @@ module.exports = {
       const insertData = {
         message,
         alarm_type: 8,
-        path: `${checkCompany}/custom_manage/detail/${body.main_idx}/time_line`,
+        path: `/custom_manage/detail/${body.main_idx}/time_line`,
       };
       alarm.sendMultiAlarm(insertData, contactArr, io);
     } catch (err) {

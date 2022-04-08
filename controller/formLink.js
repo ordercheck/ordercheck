@@ -93,7 +93,7 @@ module.exports = {
         );
 
         const data = {
-          path: `${findCompanyOwner.company_subdomain}/consulting_form/detail/${createResult.idx}/form-edit`,
+          path: `/consulting_form/detail/${createResult.idx}/form-edit`,
           message,
           alarm_type: 25,
         };
@@ -152,9 +152,7 @@ module.exports = {
       const findUser = await db.user.findByPk(user_idx, {
         attributes: ["user_name"],
       });
-      const checkCompany = await db.company.findByPk(company_idx, {
-        attributes: ["company_subdomain"],
-      });
+
       const message = alarm.changeFormAlarm(
         findUser.user_name,
         formDetail.title
@@ -163,7 +161,7 @@ module.exports = {
       const data = {
         message,
         alarm_type: 20,
-        path: `${checkCompany.company_subdomain}/consulting_form/detail/${formId}/form-edit`,
+        path: `/consulting_form/detail/${formId}/form-edit`,
       };
       const findOpenMemberResult = await db.formOpen.findAll({
         where: { formLink_idx: formId, user_idx: { [Op.ne]: user_idx } },
@@ -249,7 +247,7 @@ module.exports = {
       const message = alarm.createFormAlarm(findUser.user_name, duplicateTitle);
 
       const data = {
-        path: `${checkHuidx.company_subdomain}/consulting_form/detail/${duplicateForm.idx}/form-edit`,
+        path: `/consulting_form/detail/${duplicateForm.idx}/form-edit`,
         message,
         alarm_type: 25,
       };
@@ -285,14 +283,12 @@ module.exports = {
       const findUser = await db.user.findByPk(user_idx, {
         attributes: ["user_name"],
       });
-      const checkCompany = await db.company.findByPk(company_idx, {
-        attributes: ["company_subdomain"],
-      });
+
       const message = alarm.delFormAlarm(findUser.user_name, formTitle.title);
 
       const data = {
         message,
-        path: `${checkCompany.company_subdomain}/consulting_form`,
+        path: `/consulting_form`,
         alarm_type: 26,
       };
 
@@ -363,14 +359,12 @@ module.exports = {
       const findUser = await db.user.findByPk(user_idx, {
         attributes: ["user_name"],
       });
-      const checkCompany = await db.company.findByPk(company_idx, {
-        attributes: ["company_subdomain"],
-      });
+
       const message = alarm.changeFormAlarm(findUser.user_name, title);
 
       const data = {
         message,
-        path: `${checkCompany.company_subdomain}/consulting_form/detail/${formId}/form-edit`,
+        path: `/consulting_form/detail/${formId}/form-edit`,
         alarm_type: 20,
       };
 
@@ -413,9 +407,7 @@ module.exports = {
       const findUser = await db.user.findByPk(user_idx, {
         attributes: ["user_name"],
       });
-      const checkCompany = await db.company.findByPk(company_idx, {
-        attributes: ["company_subdomain"],
-      });
+
       const formTitle = await db.formLink.findByPk(formId, {
         attributes: ["title"],
       });
@@ -424,7 +416,7 @@ module.exports = {
 
       const data = {
         message,
-        path: `${checkCompany.company_subdomain}/consulting_form/detail/${formId}/form-edit`,
+        path: `/consulting_form/detail/${formId}/form-edit`,
         alarm_type: 20,
       };
       const findOpenMemberResult = await db.formOpen.findAll({
@@ -479,9 +471,6 @@ module.exports = {
         attributes: ["user_name"],
       });
 
-      const checkCompany = await db.company.findByPk(company_idx, {
-        attributes: ["company_subdomain"],
-      });
       const message = alarm.changeFormTitleAlarm(
         findUser.user_name,
         beforeFormLink.title,
@@ -489,7 +478,7 @@ module.exports = {
       );
 
       const data = {
-        path: `${checkCompany.company_subdomain}/consulting_form/detail/${formId}/form-edit`,
+        path: `/consulting_form/detail/${formId}/form-edit`,
         message,
         alarm_type: 21,
       };

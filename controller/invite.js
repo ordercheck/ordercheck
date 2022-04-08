@@ -245,7 +245,7 @@ ${company_url}
     const insertData = {
       message,
       alarm_type: 6,
-      path: `${findCompany.company_subdomain}/setting/manage_member`,
+      path: `/setting/manage_member`,
     };
     alarm.sendMultiAlarm(insertData, members, io);
 
