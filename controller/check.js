@@ -14,7 +14,12 @@ module.exports = {
     });
 
     const checkCompanyMember = await db.userCompany.count({
-      where: { company_idx: checkCompany.idx, user_idx },
+      where: {
+        company_idx: checkCompany.idx,
+        user_idx,
+        active: true,
+        standBy: false,
+      },
     });
 
     // 서브도메인 회사에 가입 안되어 있음
