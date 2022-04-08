@@ -205,7 +205,6 @@ ${company_url}
       company_idx,
       user_idx: findUserCompanyResult.user_idx,
       alarm_type: 5,
-      path: findCompany.company_subdomain,
     });
 
     //팀원들 알람
