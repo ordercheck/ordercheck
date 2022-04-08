@@ -1072,7 +1072,7 @@ module.exports = {
 
         await db.userCompany.update(
           { config_idx: findTeamTemplate.idx },
-          { where: { company_idx, config_idx: templateId } }
+          { where: { user_idx, company_idx, config_idx: templateId } }
         );
 
         // 회사에 속한 멤버들 찾기
@@ -1109,10 +1109,14 @@ module.exports = {
         }
 
         // 기존 소유주 카드로 된 플랜 결제 예정 취소
-        // await cancelSchedule(
-        //   findMainCardResult.customer_uid,
-        //   findPlanResult.merchant_uid
-        // );
+        const checkMainCard = await db.card.findOne({
+          where: { user_idx, main: true },
+        });
+
+        const checkPlan = await db.plan.findOne({
+          where: { company_idx, active: 3 },
+        });
+        cancelSchedule(checkMainCard.customer_uid, checkPlan.merchant_uid);
       }
       // 검색용 usre_name 변경, config 변경
       await db.userCompany.update(
