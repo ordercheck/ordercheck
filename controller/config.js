@@ -179,6 +179,7 @@ module.exports = {
     const { company_idx, user_idx } = req;
     const company = new Company({});
     try {
+      console.log("호출출");
       const findResult = await company.findMembers(
         {
           company_idx,
