@@ -191,22 +191,11 @@ module.exports = {
         });
       }
 
-      await db.userCompany.destroy({
-        where: {
-          company_idx,
-          user_idx,
-        },
-      });
-      await db.userCompany.update(
-        { active: true },
-        { where: { user_idx, active: false, standBy: false } }
-      );
-
       const findCompanySub = await db.company.findOne({
         where: { huidx: user_idx },
       });
 
-      let companySubdomain = findCompanySub.company_subdomain;
+      let companySubdomain;
 
       // 회사가 없을 때 랜덤 회사 만들기
       if (!findCompanySub) {
@@ -240,7 +229,20 @@ module.exports = {
         // 무료 플랜 만들기
         await createFreePlan(randomCompany.idx);
         companySubdomain = randomCompany.company_subdomain;
+      } else {
+        await db.userCompany.update(
+          { active: true },
+          { where: { user_idx, active: false, standBy: false } }
+        );
+        companySubdomain = findCompanySub.company_subdomain;
       }
+
+      await db.userCompany.destroy({
+        where: {
+          company_idx,
+          user_idx,
+        },
+      });
 
       return res.send({
         success: 200,
