@@ -14,7 +14,7 @@ const sendInviteEmail = async (company_url, company_name, inviter, target) => {
   let mailOptions = {
     from: `오더체크<${process.env.SEND_EMAIL_ID}>`,
     to: target,
-    subject: "오더체크",
+    subject: `[초대] '${company_name}'에서 초대장이 도착했습니다.`,
     html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
@@ -291,7 +291,7 @@ const sendJoinEmail = async (invitedPeople, company_name, target) => {
   let mailOptions = {
     from: `오더체크<${process.env.SEND_EMAIL_ID}>`,
     to: target,
-    subject: "오더체크",
+    subject: `[가입승인] ${company_name} 가입이 승인되었습니다.`,
     html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
@@ -650,7 +650,7 @@ const sendAddFormEmail = async (
   let mailOptions = {
     from: `오더체크<${process.env.SEND_EMAIL_ID}>`,
     to: target,
-    subject: "오더체크",
+    subject: "[알림] 새로운 상담 신청이 접수되었습니다.",
     html: `[알림] 새로운 상담 신청이 접수되었습니다. 
 
     ${formTitle}
@@ -676,7 +676,7 @@ const sendForm5080 = async (date, persent, confirmLink, target) => {
   let mailOptions = {
     from: `오더체크<${process.env.SEND_EMAIL_ID}>`,
     to: target,
-    subject: "오더체크",
+    subject: "[안내] 신청폼 접수가 곧 마감됩니다.",
     html: `[안내] 신청폼 접수가 곧 마감됩니다.
 
     당월 상담 신청 수가  ${persent}% 찼습니다.
@@ -703,7 +703,7 @@ const sendFormLimit = async (date, confirmLink, target) => {
   let mailOptions = {
     from: `오더체크<${process.env.SEND_EMAIL_ID}>`,
     to: target,
-    subject: "오더체크",
+    subject: "[안내] 신청폼 접수가 마감되었습니다.",
     html: `[안내] 신청폼 접수가 마감되었습니다.
 
     당월 상담 신청 접수가 마감되었습니다.
@@ -738,7 +738,7 @@ const sendFileStoreEmail = async (
   let mailOptions = {
     from: `오더체크<${process.env.SEND_EMAIL_ID}>`,
     to: target,
-    subject: "오더체크",
+    subject: "[안내] 파일보관함 저장용량이 거의 가득 찼습니다.",
     html: `[안내] 파일보관함 저장용량이 거의 가득 찼습니다.
 
     사용중인 파일 보관함 용량이 ${persent}% 찼습니다. 
@@ -771,7 +771,7 @@ const sendFileStoreEmailLimit = async (
   let mailOptions = {
     from: `오더체크<${process.env.SEND_EMAIL_ID}>`,
     to: target,
-    subject: "오더체크",
+    subject: "[안내] 파일보관함 저장용량을 초과하였습니다.",
     html: `[안내] 파일보관함 저장용량을 초과하였습니다.
 
     사용중인 파일보관함 용량이 가득 찼습니다.
@@ -808,7 +808,7 @@ const sendTextPayEmail = async (
   let mailOptions = {
     from: `오더체크<${process.env.SEND_EMAIL_ID}>`,
     to: target,
-    subject: "오더체크",
+    subject: "[결제 완료] 자동문자 충전이 완료되었습니다.",
     html: `[결제 완료] 자동문자 충전이 완료되었습니다.
 
     ${companyName} 님,
@@ -842,7 +842,7 @@ const sendFailCostEmail = async (companyName, confirmLink, target) => {
   let mailOptions = {
     from: `오더체크<${process.env.SEND_EMAIL_ID}>`,
     to: target,
-    subject: "오더체크",
+    subject: "[결제 실패] 자동 문자 충전이 실패하였습니다.",
     html: `[결제 실패] 자동 문자 충전이 실패하였습니다.
 
     ${companyName} 님,
@@ -868,7 +868,7 @@ const noCostText = async (companyName, smsPayLink, target) => {
   let mailOptions = {
     from: `오더체크<${process.env.SEND_EMAIL_ID}>`,
     to: target,
-    subject: "오더체크",
+    subject: "[안내] 자동 문자 잔액이 부족합니다.",
     html: `[안내] 자동 문자 잔액이 부족합니다.
 
    ${companyName} 님,
