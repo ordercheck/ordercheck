@@ -1051,6 +1051,7 @@ module.exports = {
       const findTemplate = await db.config.findByPk(templateId, {
         attributes: ["template_name"],
       });
+
       if (findTemplate.template_name == "소유주") {
         const io = req.app.get("io");
 
@@ -1073,6 +1074,7 @@ module.exports = {
           { where: { company_idx, config_idx: templateId } }
         );
 
+        // 회사에 속한 멤버들 찾기
         const checkMembers = await db.userCompany.findAll({
           where: {
             company_idx,
@@ -1086,6 +1088,7 @@ module.exports = {
           where: { user_idx: findMember.user_idx },
         });
 
+        // 카드등록이 안되어있을 때
         if (!checkOwnerCard) {
           checkMembers.forEach(async (data) => {
             if (data.user_idx !== findMember.user_idx) {
@@ -1094,10 +1097,12 @@ module.exports = {
                 { where: { idx: data.user_idx } }
               );
             }
+            console.log(data.user_idx);
             io.to(data.user_idx).emit("changeOwner", false);
           });
         } else {
           checkMembers.forEach((data) => {
+            console.log(data.user_idx);
             io.to(data.user_idx).emit("changeOwner", true);
           });
         }
