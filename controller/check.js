@@ -21,6 +21,12 @@ module.exports = {
     if (checkCompanyMember == 0) {
       const checkAnotherCompany = await db.userCompany.count({
         where: { user_idx },
+        include: [
+          {
+            model: db.company,
+            where: { companyexist: true },
+          },
+        ],
       });
       if (checkAnotherCompany == 0) {
         //   다른회사 가입 안되있을 때
