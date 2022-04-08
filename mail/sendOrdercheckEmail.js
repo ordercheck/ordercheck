@@ -3,16 +3,16 @@ const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
 const transport = nodemailer.createTransport({
-  service: "Gmail",
+  service: "Naver",
   auth: {
-    user: process.env.SEND_EMAIL_ID,
-    pass: process.env.SEND_PASSWORD,
+    user: "rlxo6919@naver.com",
+    pass: "tnvj79135@",
   },
 });
 
 const sendInviteEmail = async (company_url, company_name, inviter, target) => {
   let mailOptions = {
-    from: "testtest",
+    from: process.env.SEND_EMAIL_ID,
     to: target,
     subject: "오더체크",
     html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
