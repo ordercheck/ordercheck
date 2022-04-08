@@ -1053,16 +1053,9 @@ module.exports = {
       });
       if (findTemplate.template_name == "소유주") {
         const io = req.app.get("io");
+
         const findMember = await db.userCompany.findByPk(memberId, {
           attributes: ["user_idx"],
-        });
-
-        const checkMembers = await db.userCompany.findAll({
-          where: {
-            company_idx,
-          },
-          attributes: ["user_idx"],
-          raw: true,
         });
 
         await db.company.update(
@@ -1079,13 +1072,20 @@ module.exports = {
           { config_idx: findTeamTemplate.idx },
           { where: { company_idx, config_idx: templateId } }
         );
+
+        const checkMembers = await db.userCompany.findAll({
+          where: {
+            company_idx,
+          },
+          attributes: ["user_idx"],
+          raw: true,
+        });
+
         // 새로운 소유주 카드 등록 여부 체크
         const checkOwnerCard = await db.card.findOne({
           where: { user_idx: findMember.user_idx },
         });
-        checkMembers.forEach((data) => {
-          io.to(data.user_idx).emit("changeOwner", true);
-        });
+
         if (!checkOwnerCard) {
           checkMembers.forEach(async (data) => {
             if (data.user_idx !== findMember.user_idx) {
@@ -1095,6 +1095,10 @@ module.exports = {
               );
             }
             io.to(data.user_idx).emit("changeOwner", false);
+          });
+        } else {
+          checkMembers.forEach((data) => {
+            io.to(data.user_idx).emit("changeOwner", true);
           });
         }
       }
