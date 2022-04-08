@@ -6,6 +6,7 @@ module.exports = {
   enrollmentCard: async (req, res, next) => {
     const {
       user_idx,
+      company_idx,
       body: { token },
     } = req;
 
@@ -58,6 +59,20 @@ module.exports = {
     cardInfo.card_code = createResult.card_code;
     cardInfo.main = createResult.main;
 
-    return res.send({ success: 200, cardInfo });
+    res.send({ success: 200, cardInfo });
+
+    // 로그인 제한 풀기
+
+    const checkCompany = await db.company.findAll({
+      where: { company_idx },
+      attributes: ["user_idx"],
+      raw: true,
+    });
+    checkCompany.forEach(async (data) => {
+      await db.user.update(
+        { login_access: true },
+        { where: { idx: data.user_idx } }
+      );
+    });
   },
 };
