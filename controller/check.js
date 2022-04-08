@@ -34,7 +34,7 @@ module.exports = {
         companyexist: true,
       });
 
-      console.log();
+      console.log(checkAnotherCompany);
       if (!checkAnotherCompany) {
         //   다른회사 가입 안되있을 때
         return res.send({ success: 200, message: 0 });
