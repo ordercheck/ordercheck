@@ -1070,9 +1070,9 @@ module.exports = {
           { config_idx: findTeamTemplate.idx },
           { where: { company_idx, config_idx: templateId } }
         );
-
+        // 새로운 소유주 카드 등록 여부 체크
         const checkOwnerCard = await db.card.findOne({
-          user_idx: findMember.user_idx,
+          where: { user_idx: findMember.user_idx },
         });
         if (!checkOwnerCard) {
           const checkMembers = await db.userCompany.findAll({
