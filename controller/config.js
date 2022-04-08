@@ -1109,10 +1109,10 @@ module.exports = {
         }
 
         // 기존 소유주 카드로 된 플랜 결제 예정 취소
-        await cancelSchedule(
-          findMainCardResult.customer_uid,
-          findPlanResult.merchant_uid
-        );
+        // await cancelSchedule(
+        //   findMainCardResult.customer_uid,
+        //   findPlanResult.merchant_uid
+        // );
       }
       // 검색용 usre_name 변경, config 변경
       await db.userCompany.update(
