@@ -1099,13 +1099,11 @@ module.exports = {
               );
             }
             if (data.user_idx !== user_idx) {
-              console.log("카드 없을 때 나", data.user_idx);
               io.to(data.user_idx).emit("changeOwner", false);
             }
           });
         } else {
           checkMembers.forEach((data) => {
-            console.log("카드 있을때", data.user_idx);
             io.to(data.user_idx).emit("changeOwner", true);
           });
         }

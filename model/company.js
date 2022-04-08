@@ -13,6 +13,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     company_subdomain: {
       allowNull: false,
+      unique: true,
       defaultValue: "",
       type: DataTypes.STRING(100),
     },
