@@ -1052,8 +1052,17 @@ module.exports = {
         attributes: ["template_name"],
       });
       if (findTemplate.template_name == "소유주") {
+        const io = req.app.get("io");
         const findMember = await db.userCompany.findByPk(memberId, {
           attributes: ["user_idx"],
+        });
+
+        const checkMembers = await db.userCompany.findAll({
+          where: {
+            company_idx,
+          },
+          attributes: ["user_idx"],
+          raw: true,
         });
 
         await db.company.update(
@@ -1074,15 +1083,10 @@ module.exports = {
         const checkOwnerCard = await db.card.findOne({
           where: { user_idx: findMember.user_idx },
         });
+        checkMembers.forEach((data) => {
+          io.to(data.user_idx).emit("changeOwner", true);
+        });
         if (!checkOwnerCard) {
-          const checkMembers = await db.userCompany.findAll({
-            where: {
-              company_idx,
-            },
-            attributes: ["user_idx"],
-            raw: true,
-          });
-          const io = req.app.get("io");
           checkMembers.forEach(async (data) => {
             if (data.user_idx !== findMember.user_idx) {
               await db.user.update(
@@ -1090,8 +1094,7 @@ module.exports = {
                 { where: { idx: data.user_idx } }
               );
             }
-            console.log(data.user_idx);
-            io.to(data.user_idx).emit("changeOwner", "true");
+            io.to(data.user_idx).emit("changeOwner", false);
           });
         }
       }
