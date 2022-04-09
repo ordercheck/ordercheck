@@ -33,14 +33,16 @@ module.exports = {
         where: { idx: checkCompany.company_idx, companyexist: true },
       });
 
-      console.log(checkAnotherCompany);
       if (!checkAnotherCompany) {
+        console.log("다른회사 가입 안되 있음");
         //   다른회사 가입 안되있을 때
         return res.send({ success: 200, message: 0 });
       }
+      console.log("다른회사 가입");
       //   다른회사 가입 되있을 때
       return res.send({ success: 200, message: 1 });
     }
+    console.log("해당 회사에 가입");
     //   해당 회사에 가입
     return res.send({ success: 200, message: 2 });
   },
