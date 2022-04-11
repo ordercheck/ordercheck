@@ -66,12 +66,8 @@ router.get(
   showTotalConsultingDefault
 );
 
-// 해당 회사 고객정보 보여주기
-// router.get('/customer/:form_link', loginCheck, showCustomers);
-
-// 유저 리스트 sorting
-// router.get('/sort', loginCheck, sortRouter);
 // *****************************changeStatus*********************************
+
 // 컨설팅 상태 수정 및 메모
 router.patch("/status/:customer_idx", loginCheck, patchConsultingStatus);
 // 견적서 다운로드

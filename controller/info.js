@@ -346,7 +346,6 @@ module.exports = {
       user_idx,
     } = req;
     try {
-      console.log("조인 호출출");
       // 회사 정보 먼저 찾기
       const findCompanyResult = await db.company.findOne({
         where: { company_subdomain },
@@ -361,8 +360,7 @@ module.exports = {
         nest: true,
         attributes: ["idx", "company_name"],
       });
-      console.log(findCompanyResult.idx);
-      console.log(user_idx);
+
       // 이미 가입 신청 되어 있는지 체크
       const checkJoinCompany = await db.userCompany.count({
         where: {
@@ -372,8 +370,6 @@ module.exports = {
           standBy: true,
         },
       });
-
-      console.log(checkJoinCompany);
 
       if (checkJoinCompany !== 0) {
         return res.send({
@@ -393,6 +389,16 @@ module.exports = {
         company_idx: findCompanyResult.idx,
         user_idx,
         config_idx: findCompanyResult.configs.idx,
+      });
+
+      // 가입 거절된 데이터 삭제
+      await db.userCompany.destroy({
+        where: {
+          active: false,
+          standBy: true,
+          company_idx: findCompanyResult.idx,
+          user_idx,
+        },
       });
 
       return res.send({
