@@ -464,9 +464,9 @@ const sendJoinEmail = async (invitedPeople, company_name, target) => {
                       padding: 30px 0px;
                     "
                   >
-                    <b>홍길동</b> 님,<br />
-                    <b>오더체크</b> 로의 가입이 승인되었습니다.<br />
-                    고객님은 앞으로 <b>오더체크</b> 이(가) 사용하는 워크스페이스에
+                    <b>${invitedPeople}</b> 님,<br />
+                    <b>${company_name}</b> 로의 가입이 승인되었습니다.<br />
+                    고객님은 앞으로 <b>${company_name}</b> 이(가) 사용하는 워크스페이스에
                     참여하실 수 있습니다.<br />
                     시작할 때 도움이 되는 몇 가지 팁이 제공됩니다.
                   </td>
