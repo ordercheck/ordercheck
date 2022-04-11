@@ -7,8 +7,6 @@ const {
 } = require("../lib/apiFunctions");
 const { random5 } = require("../lib/functions");
 const { Op } = require("sequelize");
-const { copyAndDelete, s3_get, s3_delete_objects } = require("../lib/aws/aws");
-const { delFile } = require("../lib/aws/fileupload").ufile;
 
 const {
   showDetailFileAttributes,
@@ -19,39 +17,6 @@ const {
 
 const { fileStoreSort } = require("../lib/checkData");
 
-const deleteFileToS3 = async (title, req) => {
-  if (req.query.path !== "null") {
-    delFile(
-      title,
-      `ordercheck/fileStore/${req.params.customerFile_idx}/${req.query.path}`
-    );
-  } else {
-    delFile(title, `ordercheck/fileStore/${req.params.customerFile_idx}`);
-  }
-};
-
-const checkFile = (
-  req,
-  params,
-  beforeTitle,
-  newTitle,
-  beforePath,
-  afterPath
-) => {
-  // 파일 안일 경우
-  let CopySource = encodeURI(
-    `ordercheck/fileStore/${req.params.customerFile_idx}/${beforePath}/${beforeTitle}`
-  );
-  let Key = `fileStore/${req.params.customerFile_idx}/${afterPath}/${newTitle}`;
-
-  CopySource = CopySource.replace("/null", "");
-  Key = Key.replace("/null", "");
-
-  params.CopySource = CopySource;
-  params.Key = Key;
-
-  return params;
-};
 const getFolderPath = async (pathData, customerFile_idx, joinData) => {
   const pathArr = pathData.split("/");
 

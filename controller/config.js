@@ -28,12 +28,9 @@ const {
   getReceiptListAttributes,
   showFormListAttributes,
 } = require("../lib/attributes");
-const attributes = require("../lib/attributes");
+
 const { Alarm } = require("../lib/classes/AlarmClass");
-const {
-  sendTextPayEmail,
-  sendFailCostEmail,
-} = require("../mail/sendOrdercheckEmail");
+
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
 

@@ -4,21 +4,17 @@ const {
   createRandomCompany,
   includeUserToCompany,
   createFreePlan,
-  findMemberExceptMe,
 } = require("../lib/apiFunctions");
 const { masterConfig } = require("../lib/standardTemplate");
 const { showUserAlarmConfigAttributes } = require("../lib/attributes");
 const { Template } = require("../lib/classes/TemplateClass");
 const { cancelSchedule } = require("../lib/payFunction");
 const bcrypt = require("bcrypt");
-const { Op } = require("sequelize");
+
 const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
-const _f = require("../lib/functions");
-const { EventBridge } = require("aws-sdk");
-const attributes = require("../lib/attributes");
-const { user } = require("../model/db");
+
 const checkUserPassword = async (userIdx, userPassword) => {
   // 유저 전화번호 먼저 찾기
   const findUser = await db.user.findByPk(userIdx, {

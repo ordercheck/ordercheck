@@ -2,7 +2,7 @@ const {
   includeUserToCompany,
   createRandomCompany,
   createFreePlan,
-  findMembers,
+
   decreasePriceAndHistory,
 } = require("../lib/apiFunctions");
 const { masterConfig } = require("../lib/standardTemplate");
@@ -12,11 +12,11 @@ const {
 } = require("../mail/sendOrdercheckEmail");
 const { Company } = require("../lib/classes/CompanyClass");
 const axios = require("axios");
-const { Op } = require("sequelize");
+
 const db = require("../model/db");
 const { createToken } = require("../lib/jwtfunctions");
 const { Template } = require("../lib/classes/TemplateClass");
-const attributes = require("../lib/attributes");
+
 const { Alarm } = require("../lib/classes/AlarmClass");
 
 module.exports = {

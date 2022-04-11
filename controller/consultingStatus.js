@@ -11,7 +11,7 @@ const _f = require("../lib/functions");
 const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
-const { sendAddFormEmail, noCostText } = require("../mail/sendOrdercheckEmail");
+
 const {
   patchCalculateAttributes,
   findSameUserAttributes,
@@ -23,7 +23,6 @@ const { s3_get } = require("../lib/aws/aws");
 const { delFile } = require("../lib/aws/fileupload").ufile;
 const {
   TeamkakaoPushNewForm,
-  customerkakaoPushNewForm,
   customerkakaoPushNewCal,
   checkKakaoPushResult,
   failSmsPay,

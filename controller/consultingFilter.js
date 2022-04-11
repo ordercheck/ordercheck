@@ -1,5 +1,5 @@
 const { checkPage, addUserId } = require("../lib/apiFunctions");
-const { changeDate, makePureText, isEmptyObj } = require("../lib/apiFunctions");
+const { changeDate } = require("../lib/apiFunctions");
 const db = require("../model/db");
 const { Op } = require("sequelize");
 const { sortElements, giveNumbering } = require("../lib/checkData");
