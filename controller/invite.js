@@ -410,7 +410,7 @@ ${company_url}
         standBy: true,
       },
     });
-    console.log(checkJoinCompany);
+
     if (checkJoinCompany !== 0) {
       return res.send({
         success: 400,
