@@ -79,5 +79,10 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: true,
       type: DataTypes.BOOLEAN,
     },
+
+    regist_region: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
   });
 };
