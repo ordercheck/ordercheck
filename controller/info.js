@@ -361,6 +361,23 @@ module.exports = {
         attributes: ["idx", "company_name"],
       });
 
+      // 이미 가입 신청 되어 있는지 체크
+      const checkJoinCompany = await db.userCompany.count({
+        where: {
+          user_idx,
+          company_idx: findCompanyResult.idx,
+          active: true,
+          standBy: true,
+        },
+      });
+
+      if (checkJoinCompany !== 0) {
+        return res.send({
+          success: 400,
+          message: "이미 가입 신청 되어 있습니다.",
+        });
+      }
+
       const findUserName = await db.user.findByPk(user_idx, {
         attributes: ["user_name"],
       });
