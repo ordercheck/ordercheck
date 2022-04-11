@@ -232,6 +232,7 @@ const sendInviteEmail = async (company_url, company_name, inviter, target) => {
                             font-family: Noto Sans KR;
                             font-size: 16px;
                             line-height: 26px;
+                            text-align: center;
                             width: 900px;
                             color: #02164f;
                             font-weight: 400;
@@ -260,6 +261,7 @@ const sendInviteEmail = async (company_url, company_name, inviter, target) => {
                               line-height: 24px;
                               color: #8f98b0;
                               width: 900px;
+                              text-align: center;
                               font-weight: 400;
                             "
                             ><u>오더체크 더 자세히 알아보기</u></a
@@ -294,9 +296,7 @@ const sendInviteEmail = async (company_url, company_name, inviter, target) => {
           </tr>
         </table>
       </body>
-    </html>
-    
-    `,
+    </html>`,
   };
   try {
     const result = await transport.sendMail(mailOptions);
