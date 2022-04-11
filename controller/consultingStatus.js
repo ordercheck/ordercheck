@@ -1010,7 +1010,7 @@ module.exports = {
         attributes: mainCustomerAttributes,
       });
 
-      const integrateMemberCount = body.target_idx.length() - 1;
+      const integrateMemberCount = body.target_idx.length - 1;
 
       const message = alarm.integrateCustomer(
         integratingUser.user_name,
