@@ -254,7 +254,7 @@ const sendInviteEmail = async (company_url, company_name, inviter, target) => {
                         <td height="20" style="line-height: 20px"></td>
                         <td style="width: 167px">
                           <a
-                            src="https://ordercheck.io"
+                            href="https://ordercheck.io"
                             style="
                               font-family: Noto Sans KR;
                               font-size: 14px;
