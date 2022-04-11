@@ -200,56 +200,74 @@ const sendInviteEmail = async (company_url, company_name, inviter, target) => {
                   </td>
                 </tr>
                 <tr>
-                  <td
-                    style="
-                      font-family: Noto Sans KR;
-                      font-size: 24px;
-                      line-height: 150%;
-                      color: #02164f;
-                      display: flex;
-                      font-weight: 400;
-                      justify-content: center;
-                      text-align: left;
-                      margin: 22px 0px;
-                    "
-                  >
-                    <b>오더체크</b>를 소개합니다!
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    style="
-                      font-family: Noto Sans KR;
-                      font-size: 16px;
-                      line-height: 26px;
-                      color: #02164f;
-                      display: flex;
-                      font-weight: 400;
-                      justify-content: center;
-                      text-align: center;
-                    "
-                  >
-                    오더체크는 인테리어 업체를 위한 온라인 고객 응대 관리
-                    솔루션입니다.<br />
-                    손쉬운 고객 응대의 시작으로 인테리어도 이제 온라인에서 편리하게
-                    관리하세요. 😊<br />
+                  <td>
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                      <tr>
+                        <td height="36" style="line-height: 36px"></td>
+                        <td
+                          style="
+                            font-family: Noto Sans KR;
+                            font-size: 24px;
+                            line-height: 150%;
+                            color: #02164f;
+                            font-weight: 400;
+                            width: 900px;
+                            padding: 22px 0px;
+                          "
+                        >
+                          <b>오더체크</b>를 소개합니다!
+                        </td>
+                        <td height="36" style="line-height: 36px"></td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    <a
-                      style="
-                        font-family: Noto Sans KR;
-                        font-size: 14px;
-                        line-height: 24px;
-                        color: #8f98b0;
-                        display: flex;
-                        font-weight: 400;
-                        justify-content: center;
-                        text-align: center;
-                      "
-                      ><u>오더체크 더 자세히 알아보기</u></a
-                    >
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                      <tr>
+                        <td height="52" style="line-height: 52px"></td>
+                        <td
+                          style="
+                            font-family: Noto Sans KR;
+                            font-size: 16px;
+                            line-height: 26px;
+                            width: 900px;
+                            color: #02164f;
+                            font-weight: 400;
+                          "
+                        >
+                          오더체크는 인테리어 업체를 위한 온라인 고객 응대 관리
+                          솔루션입니다.<br />
+                          손쉬운 고객 응대의 시작으로 인테리어도 이제 온라인에서
+                          편리하게 관리하세요. 😊<br />
+                        </td>
+                        <td height="52" style="line-height: 52px"></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                      <tr>
+                        <td height="52" style="line-height: 52px"></td>
+                        <td>
+                          <a
+                            style="
+                              font-family: Noto Sans KR;
+                              font-size: 14px;
+                              line-height: 24px;
+                              color: #8f98b0;
+                              width: 900px;
+                              font-weight: 400;
+                            "
+                            ><u>오더체크 더 자세히 알아보기</u></a
+                          >
+                        </td>
+                        <td height="52" style="line-height: 52px"></td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
                 <tr>
@@ -277,6 +295,7 @@ const sendInviteEmail = async (company_url, company_name, inviter, target) => {
         </table>
       </body>
     </html>
+    
     `,
   };
   try {

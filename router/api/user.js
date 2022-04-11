@@ -148,9 +148,8 @@ router.post("/login", async (req, res, next) => {
     ],
     attributes: ["company_idx"],
   });
-
+  const loginToken = await createToken({ user_idx: check.idx });
   if (!company_subdomain) {
-    const loginToken = await createToken({ user_idx: check.idx });
     res.send({
       success: 200,
       loginToken,
@@ -168,14 +167,34 @@ router.post("/login", async (req, res, next) => {
       ],
     });
 
-    const loginToken = await createToken({ user_idx: check.idx });
     if (checkAlready) {
-      res.send({
-        success: 200,
-        loginToken,
-        status: "already",
-        company_subdomain: companyInfo.company.company_subdomain,
+      // 가입 되어 있는 회사가 해당 회사일 때
+      const findIncludeCompany = await db.userCompany.findOne({
+        where: { user_idx: check.idx, active: true, standBy: false },
+        attributes: ["company_idx"],
       });
+      const findCompanySubdomain = await db.company.findByPk(
+        findIncludeCompany.company_idx,
+        {
+          attributes: ["company_subdomain"],
+        }
+      );
+
+      if (findCompanySubdomain.company_subdomain == company_subdomain) {
+        res.send({
+          success: 200,
+          loginToken,
+          status: "access",
+          company_subdomain: companyInfo.company.company_subdomain,
+        });
+      } else {
+        res.send({
+          success: 200,
+          loginToken,
+          status: "already",
+          company_subdomain: companyInfo.company.company_subdomain,
+        });
+      }
     } else {
       // 링크로 로그인 할 때
       const findCompany = await db.company.findOne({
