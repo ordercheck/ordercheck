@@ -407,11 +407,11 @@ ${company_url}
         user_idx,
         company_idx: findCompany.idx,
         active: true,
-        standBy: false,
+        standBy: true,
       },
     });
-
-    if (checkJoinCompany == 0) {
+    console.log(checkJoinCompany);
+    if (checkJoinCompany !== 0) {
       return res.send({
         success: 400,
         message: "이미 가입 신청 되어 있습니다.",
