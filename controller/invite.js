@@ -401,6 +401,23 @@ ${company_url}
       attributes: ["idx"],
     });
 
+    // 이미 가입 되어 있는지 체크
+    const checkJoinCompany = await db.userCompany.count({
+      where: {
+        user_idx,
+        company_idx: findCompany.idx,
+        active: true,
+        standBy: false,
+      },
+    });
+
+    if (checkJoinCompany == 0) {
+      return res.send({
+        success: 400,
+        message: "이미 가입 신청 되어 있습니다.",
+      });
+    }
+
     const checkUser = await db.user.findByPk(user_idx, {
       attributes: ["idx", "user_name"],
     });
