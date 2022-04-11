@@ -401,6 +401,8 @@ ${company_url}
       attributes: ["idx"],
     });
 
+    console.log(findCompany.idx);
+    console.log(user_idx);
     // 이미 가입 되어 있는지 체크
     const checkJoinCompany = await db.userCompany.count({
       where: {
@@ -410,7 +412,7 @@ ${company_url}
         standBy: true,
       },
     });
-
+    console.log(checkJoinCompany);
     if (checkJoinCompany !== 0) {
       return res.send({
         success: 400,
