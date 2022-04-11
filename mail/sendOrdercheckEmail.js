@@ -204,16 +204,15 @@ const sendInviteEmail = async (company_url, company_name, inviter, target) => {
                     style="
                       font-family: Noto Sans KR;
                       font-size: 24px;
+                      width: 900px;
+                      min-width: 900px;
+                      padding: 22px;
                       line-height: 150%;
                       color: #02164f;
-                      display: flex;
                       font-weight: 400;
-                      justify-content: center;
-                      text-align: left;
-                      margin: 22px 0px;
                     "
                   >
-                    <div><b>오더체크</b>를 소개합니다!</div>
+                    <b>오더체크</b>를 소개합니다!
                   </td>
                 </tr>
                 <tr>
@@ -223,18 +222,13 @@ const sendInviteEmail = async (company_url, company_name, inviter, target) => {
                       font-size: 16px;
                       line-height: 26px;
                       color: #02164f;
-                      display: flex;
                       font-weight: 400;
-                      justify-content: center;
-                      text-align: center;
                     "
                   >
-                    <div>
-                      오더체크는 인테리어 업체를 위한 온라인 고객 응대 관리
-                      솔루션입니다.<br />
-                      손쉬운 고객 응대의 시작으로 인테리어도 이제 온라인에서
-                      편리하게 관리하세요. 😊<br />
-                    </div>
+                    오더체크는 인테리어 업체를 위한 온라인 고객 응대 관리
+                    솔루션입니다.<br />
+                    손쉬운 고객 응대의 시작으로 인테리어도 이제 온라인에서 편리하게
+                    관리하세요. 😊<br />
                   </td>
                 </tr>
                 <tr>
@@ -245,10 +239,7 @@ const sendInviteEmail = async (company_url, company_name, inviter, target) => {
                         font-size: 14px;
                         line-height: 24px;
                         color: #8f98b0;
-                        display: flex;
                         font-weight: 400;
-                        justify-content: center;
-                        text-align: center;
                       "
                       ><u>오더체크 더 자세히 알아보기</u></a
                     >
@@ -279,7 +270,6 @@ const sendInviteEmail = async (company_url, company_name, inviter, target) => {
         </table>
       </body>
     </html>
-    
     `,
   };
   try {
