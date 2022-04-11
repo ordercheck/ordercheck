@@ -91,13 +91,14 @@ const sendInviteEmail = async (company_url, company_name, inviter, target) => {
           }
         </style>
       </head>
-      <body>
+      <body style="font-family: Noto Sans KR">
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
           <tr class="header">
             <td>
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                <tbody style="display: flex; justify-content: center">
+                <tbody>
                   <tr>
+                    <td height="20" style="line-height: 20px"></td>
                     <td width="116" height="20" style="line-height: 20px">
                       <img
                         src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/header.png"
@@ -106,6 +107,7 @@ const sendInviteEmail = async (company_url, company_name, inviter, target) => {
                         height="89"
                       />
                     </td>
+                    <td height="20" style="line-height: 20px"></td>
                   </tr>
                 </tbody>
               </table>
@@ -115,25 +117,26 @@ const sendInviteEmail = async (company_url, company_name, inviter, target) => {
             <td>
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr>
+                  <td height="90" style="line-height: 90px"></td>
                   <td
                     style="
                       font-family: Noto Sans KR;
                       font-size: 15px;
                       line-height: 150%;
                       color: #41495d;
-                      display: flex;
-                      justify-content: center;
-                      text-align: left;
                       margin: 30px 0px;
+                      width: 497px;
+                      min-width: 497px;
+                      padding: 30px 0px;
+                      text-align: left;
                     "
                   >
-                    <div>
-                      안녕하세요!<br />
-                      <b>‘${inviter}’</b>님이 <b>‘${company_name}’</b> 회사에
-                      고객님을 초대합니다.<br /><br />
-                      아래 버튼을 눌러 함께하세요!
-                    </div>
+                    안녕하세요!<br />
+                    <b>‘${inviter}’</b>님이 <b>‘${company_name}’</b> 회사에 고객님을
+                    초대합니다.<br /><br />
+                    아래 버튼을 눌러 함께하세요!
                   </td>
+                  <td height="90" style="line-height: 90px"></td>
                 </tr>
               </table>
             </td>
@@ -276,6 +279,7 @@ const sendInviteEmail = async (company_url, company_name, inviter, target) => {
         </table>
       </body>
     </html>
+    
     `,
   };
   try {

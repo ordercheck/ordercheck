@@ -309,6 +309,7 @@ router.post("/join/do", async (req, res, next) => {
     user_data.private_agree = private_agree;
     user_data.marketing_agree = marketing_agree;
     user_data.regist_region = lookup(ip).city;
+
     if (user_data) {
       const { createUserResult, success, message } = await joinFunction(
         user_data
