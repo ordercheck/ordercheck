@@ -251,21 +251,22 @@ const sendInviteEmail = async (company_url, company_name, inviter, target) => {
                   <td>
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                       <tr>
-                        <td height="52" style="line-height: 52px"></td>
-                        <td>
+                        <td height="20" style="line-height: 20px"></td>
+                        <td style="width: 167px">
                           <a
+                            src="https://ordercheck.io"
                             style="
                               font-family: Noto Sans KR;
                               font-size: 14px;
                               line-height: 24px;
                               color: #8f98b0;
-                              width: 167px;
                               font-weight: 400;
+                              cursor: pointer;
                             "
                             ><u>오더체크 더 자세히 알아보기</u></a
                           >
                         </td>
-                        <td height="52" style="line-height: 52px"></td>
+                        <td height="20" style="line-height: 20px"></td>
                       </tr>
                     </table>
                   </td>
@@ -280,13 +281,50 @@ const sendInviteEmail = async (company_url, company_name, inviter, target) => {
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding: 60px 0px 0px 0px; text-align: center">
-                    <img
-                      src="https://ordercheck.s3.ap-northeast-2.amazonaws.com/emailTemp/footer_other.png"
-                      alt=""
-                      width="900"
-                      height="116"
+                  <td
+                    class="info"
+                    style="
+                      padding: 30px 0px 0px 0px;
+                      width: 900px;
+                      min-width: 900px;
+                      line-height: 20px;
+                    "
+                  >
+                    <hr
+                      style="
+                        width: 860px;
+                        border: 0px;
+                        height: 1px;
+                        background-color: #9a9a9a80;
+                        margin: 0px auto 15px auto;
+                      "
                     />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                      <tr>
+                        <td height="20" style="line-height: 20px"></td>
+                        <td
+                          style="
+                            width: 900px;
+                            max-width: 900px;
+                            box-sizing: border-box;
+                            line-height: 20px;
+                            text-align: left;
+                            padding: 0px 27px;
+                          "
+                        >
+                          <span style="color: #9a9a9a; font-size: 13px"
+                            >© 오더체크. ALL RIGHTS RESERVED. <br />
+                            본 메일은 발신 전용으로 회신을 통한 문의는 처리되지
+                            않습니다.</span
+                          >
+                        </td>
+                        <td height="20" style="line-height: 20px"></td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
