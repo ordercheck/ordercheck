@@ -112,8 +112,7 @@ const addPlanAndSchedule = async (
 // 로그인 라우터
 router.post("/login", async (req, res, next) => {
   const { user_phone, user_password, company_subdomain } = req.body;
-  const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-  console.log(lookup(ip));
+
   const template = new Template({});
   const last_login = moment();
   let check = await db.user.findOne({ where: { user_phone } });
@@ -302,12 +301,14 @@ router.post("/join/do", async (req, res, next) => {
     req.body;
   const template = new Template({});
   try {
+    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+
     let user_data = await verify_data(token);
     // 동의 여부 체크
     user_data.use_agree = use_agree;
     user_data.private_agree = private_agree;
     user_data.marketing_agree = marketing_agree;
-
+    user_data.regist_region = lookup(ip).city;
     if (user_data) {
       const { createUserResult, success, message } = await joinFunction(
         user_data
