@@ -346,6 +346,7 @@ module.exports = {
       user_idx,
     } = req;
     try {
+      console.log("조인 호출출");
       // 회사 정보 먼저 찾기
       const findCompanyResult = await db.company.findOne({
         where: { company_subdomain },
