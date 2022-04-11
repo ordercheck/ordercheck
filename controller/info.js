@@ -360,7 +360,8 @@ module.exports = {
         nest: true,
         attributes: ["idx", "company_name"],
       });
-
+      console.log(findCompanyResult.idx);
+      console.log(user_idx);
       // 이미 가입 신청 되어 있는지 체크
       const checkJoinCompany = await db.userCompany.count({
         where: {
@@ -370,6 +371,8 @@ module.exports = {
           standBy: true,
         },
       });
+
+      console.log(checkJoinCompany);
 
       if (checkJoinCompany !== 0) {
         return res.send({
