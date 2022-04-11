@@ -43,6 +43,7 @@
     "express-mysql-session": "^2.1.4",
     "express-session": "^1.17.1",
     "filereader": "^0.10.3",
+    "geoip-lite": "^1.4.4",
     "helmet": "^3.23.3",
     "http": "0.0.1-security",
     "jsdom": "^16.4.0",

@@ -2,7 +2,7 @@ const express = require("express");
 const uuid = require("uuid").v1;
 const router = express.Router();
 const bcrypt = require("bcrypt");
-// const { lookup } = require("geoip-lite");
+const { lookup } = require("geoip-lite");
 const {
   addCard,
   payNow,
@@ -113,7 +113,7 @@ const addPlanAndSchedule = async (
 router.post("/login", async (req, res, next) => {
   const { user_phone, user_password, company_subdomain } = req.body;
   const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-  // console.log(lookup(ip));
+  console.log(lookup(ip));
   const template = new Template({});
   const last_login = moment();
   let check = await db.user.findOne({ where: { user_phone } });
