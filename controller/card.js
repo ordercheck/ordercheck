@@ -1,6 +1,7 @@
 const db = require("../model/db");
 
 const { verify_data } = require("../lib/jwtfunctions");
+const { schedulePay } = require("../lib/payFunction");
 
 module.exports = {
   enrollmentCard: async (req, res, next) => {
@@ -16,6 +17,7 @@ module.exports = {
     const countCard = await db.card.count({
       where: { card_number: card_data.card_number, user_idx },
     });
+
     if (countCard !== 0) {
       return res.send({ success: 400, message: "이미 등록된 카드 입니다." });
     }
@@ -26,6 +28,7 @@ module.exports = {
     const checkMainCard = await db.card.findOne({
       where: { user_idx, main: true },
     });
+
     // 카드가 메인이 있는지 없는지 체크
     if (!checkMainCard) {
       card_data.main = true;
@@ -39,7 +42,6 @@ module.exports = {
       : (card_data.corporation_yn = true);
 
     // 카드 정보 등록 후
-
     const createResult = await db.card.create(card_data);
 
     const cardInfo = {};
@@ -61,13 +63,43 @@ module.exports = {
 
     res.send({ success: 200, cardInfo });
 
-    // 로그인 제한 풀기
+    // 플랜이 결제 예정에 등록되어 있는지 체크
+    const findPlanResult = await db.plan.findOne({
+      where: { company_idx, active: 3 },
+    });
+    if (findPlanResult.enrollment == false) {
+      const Hour = moment().format("HH");
 
+      const findUserResult = await db.user.findByPk(user_idx);
+
+      const startDate = findPlanResult.start_plan.replace(/\./g, "-");
+
+      const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
+
+      const nextMerchant_uid = generateRandomCode(6);
+
+      schedulePay(
+        changeToUnix,
+        findCardResult.customer_uid,
+        findPlanResult.result_price_levy,
+        findUserResult.user_name,
+        findUserResult.user_phone,
+        findUserResult.user_email,
+        nextMerchant_uid
+      );
+      db.plan.update(
+        { merchant_uid: nextMerchant_uid },
+        { where: { idx: findPlanResult.idx } }
+      );
+    }
+
+    // 로그인 제한 풀기
     const checkCompany = await db.userCompany.findAll({
       where: { company_idx },
       attributes: ["user_idx"],
       raw: true,
     });
+
     checkCompany.forEach(async (data) => {
       await db.user.update(
         { login_access: true },

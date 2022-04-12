@@ -104,7 +104,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
     },
     enrollment: {
-      allowNull: false,
+      allowNull: true,
       defaultValue: true,
       type: DataTypes.BOOLEAN,
     },
