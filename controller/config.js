@@ -1116,8 +1116,11 @@ module.exports = {
               io.to(data.user_idx).emit("changeOwner", false);
             }
           });
+          // 기존 소유주가 등록된 카드가 있을 때
+          if (checkMainCard) {
+            cancelSchedule(checkMainCard.customer_uid, checkPlan.merchant_uid);
+          }
 
-          cancelSchedule(checkMainCard.customer_uid, checkPlan.merchant_uid);
           db.plan.update(
             { enrollment: false },
             { where: { idx: checkPlan.idx } }
@@ -1126,10 +1129,14 @@ module.exports = {
           checkMembers.forEach((data) => {
             io.to(data.user_idx).emit("changeOwner", true);
           });
-          await cancelSchedule(
-            checkMainCard.customer_uid,
-            checkPlan.merchant_uid
-          );
+          // 기존 소유주가 등록된 카드가 있을 때
+          if (checkMainCard) {
+            await cancelSchedule(
+              checkMainCard.customer_uid,
+              checkPlan.merchant_uid
+            );
+          }
+
           //  카드가 있으므로 새로운 소유주 카드로 플랜 결제 예정
 
           // 새로운 카드로 결제 예약
