@@ -744,4 +744,29 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/config/company/plan/change:
+ *   patch:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       -  config
+ *      summary: 플랜 요금제 변경
+ *      requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               company_subdomain:
+ *                 type: string
+ *               company_name:
+ *                 type: string
+ *             example:
+ *               company_subdomain: "회사 서브 도메인"
+ *               company_name: '회사 이름'
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

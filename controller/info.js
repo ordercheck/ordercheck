@@ -200,7 +200,6 @@ module.exports = {
         const randomCompany = await createRandomCompany(user_idx);
 
         // master template 만들기
-
         masterConfig.company_idx = randomCompany.idx;
 
         const createTempalteResult = await template.createConfig(masterConfig);

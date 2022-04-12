@@ -88,7 +88,7 @@ const addPlanAndSchedule = async (
     await schedulePay(
       changeToUnix,
       card_data.customer_uid,
-      plan_data.result_price_levy,
+      0,
       user_data.user_name,
       user_data.user_phone,
       user_data.user_email,
