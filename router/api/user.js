@@ -102,7 +102,10 @@ const addPlanAndSchedule = async (
     });
 
     await db.plan.create(plan_data);
-
+    await db.user.update(
+      { used_free_period: true },
+      { where: { idx: findUser.idx } }
+    );
     return { success: true };
   } catch (err) {
     return { success: false, err };
