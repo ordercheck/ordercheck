@@ -744,6 +744,7 @@ module.exports = {
       );
 
       // 새로운 카드로 결제 예약
+      const Hour = moment().format("HH");
 
       const findCardResult = await db.card.findByPk(cardId);
 
@@ -1049,20 +1050,24 @@ module.exports = {
       if (findTemplate.template_name == "소유주") {
         const io = req.app.get("io");
 
+        // 새로운 소유주 정보
         const findMember = await db.userCompany.findByPk(memberId, {
           attributes: ["user_idx"],
         });
 
+        // 회사 소유주 변경
         await db.company.update(
           { huidx: findMember.user_idx },
           { where: { idx: company_idx } }
         );
 
+        // 템플릿 변경
         const findTeamTemplate = await db.config.findOne({
           where: { company_idx, template_name: "팀원" },
           attributes: ["idx"],
         });
 
+        // 기존 소유주 템플릿 변경
         await db.userCompany.update(
           { config_idx: findTeamTemplate.idx },
           { where: { user_idx, company_idx, config_idx: templateId } }
@@ -1082,6 +1087,16 @@ module.exports = {
           where: { user_idx: findMember.user_idx },
         });
 
+        // 기존 소유주의 등록된 카드
+        const checkMainCard = await db.card.findOne({
+          where: { user_idx, main: true },
+        });
+
+        // 회사 플랜 결제 예정 정보
+        const checkPlan = await db.plan.findOne({
+          where: { company_idx, active: 3 },
+        });
+
         // 카드등록이 안되어있을 때
         if (!checkOwnerCard) {
           checkMembers.forEach(async (data) => {
@@ -1095,21 +1110,38 @@ module.exports = {
               io.to(data.user_idx).emit("changeOwner", false);
             }
           });
+
+          cancelSchedule(checkMainCard.customer_uid, checkPlan.merchant_uid);
         } else {
           checkMembers.forEach((data) => {
             io.to(data.user_idx).emit("changeOwner", true);
           });
+          cancelSchedule(checkMainCard.customer_uid, checkPlan.merchant_uid);
+          //  카드가 있으므로 새로운 소유주 카드로 플랜 결제 예정
+
+          // 새로운 카드로 결제 예약
+          const Hour = moment().format("HH");
+
+          const findCardResult = await db.card.findByPk(checkOwnerCard.idx);
+
+          const findUserResult = await db.user.findByPk(findMember.user_idx);
+
+          const startDate = checkPlan.start_plan.replace(/\./g, "-");
+
+          const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
+
+          // 다음 카드 결제 신청
+
+          await schedulePay(
+            changeToUnix,
+            findCardResult.customer_uid,
+            checkPlan.result_price_levy,
+            findUserResult.user_name,
+            findUserResult.user_phone,
+            findUserResult.user_email,
+            checkPlan.merchant_uid
+          );
         }
-
-        // // 기존 소유주 카드로 된 플랜 결제 예정 취소
-        // const checkMainCard = await db.card.findOne({
-        //   where: { user_idx, main: true },
-        // });
-
-        // const checkPlan = await db.plan.findOne({
-        //   where: { company_idx, active: 3 },
-        // });
-        // cancelSchedule(checkMainCard.customer_uid, checkPlan.merchant_uid);
       }
       // 검색용 usre_name 변경, config 변경
       await db.userCompany.update(
