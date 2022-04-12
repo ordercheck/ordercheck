@@ -729,11 +729,7 @@ router.post("/company/check/later", async (req, res, next) => {
       attributes: ["idx", "user_name"],
     });
 
-    // 기존 무료 플랜 비활성화
-    db.userCompany.update(
-      { active: false },
-      { where: { user_idx: findUser.idx } }
-    );
+    await db.company.destroy({ where: { huidx: findUser.idx } });
 
     // 랜덤 회사 만들기
     const randomCompany = await createRandomCompany(findUser.idx);
