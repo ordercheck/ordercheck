@@ -1105,9 +1105,9 @@ module.exports = {
 
         // 카드등록이 안되어있을 때
         if (!checkOwnerCard) {
-          checkMembers.forEach(async (data) => {
+          checkMembers.forEach((data) => {
             if (data.user_idx !== findMember.user_idx) {
-              await db.user.update(
+              db.user.update(
                 { login_access: false },
                 { where: { idx: data.user_idx } }
               );
@@ -1127,6 +1127,10 @@ module.exports = {
           );
         } else {
           checkMembers.forEach((data) => {
+            db.user.update(
+              { login_access: false },
+              { where: { idx: data.user_idx } }
+            );
             io.to(data.user_idx).emit("changeOwner", true);
           });
           // 기존 소유주가 등록된 카드가 있을 때
@@ -1162,14 +1166,14 @@ module.exports = {
             nextMerchant_uid
           );
 
-          await db.plan.update(
-            { merchant_uid: nextMerchant_uid },
+          db.plan.update(
+            { merchant_uid: nextMerchant_uid, enrollment: true },
             { where: { idx: checkPlan.idx } }
           );
         }
       }
       // 검색용 usre_name 변경, config 변경
-      await db.userCompany.update(
+      db.userCompany.update(
         { searchingName: user_name, config_idx: templateId },
         { where: { idx: memberId } }
       );
@@ -1179,13 +1183,13 @@ module.exports = {
         attributes: ["user_idx"],
       });
       // user 정보 변경
-      await db.user.update(
+      db.user.update(
         { user_name, user_email },
         { where: { idx: findUserResult.user_idx } }
       );
 
       // formOpen 정보 변경
-      await db.formOpen.update(
+      db.formOpen.update(
         { user_name },
         { where: { user_idx: findUserResult.user_idx } }
       );
