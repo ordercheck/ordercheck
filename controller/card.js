@@ -82,7 +82,7 @@ module.exports = {
 
       schedulePay(
         changeToUnix,
-        cardInfo.customer_uid,
+        createResult.customer_uid,
         findPlanResult.result_price_levy,
         findUserResult.user_name,
         findUserResult.user_phone,
