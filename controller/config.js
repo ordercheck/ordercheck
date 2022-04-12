@@ -1128,7 +1128,7 @@ module.exports = {
         } else {
           checkMembers.forEach((data) => {
             db.user.update(
-              { login_access: false },
+              { login_access: true },
               { where: { idx: data.user_idx } }
             );
             io.to(data.user_idx).emit("changeOwner", true);
