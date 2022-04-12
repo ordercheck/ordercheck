@@ -1090,7 +1090,7 @@ module.exports = {
 
         // 새로운 소유주 카드 등록 여부 체크
         const checkOwnerCard = await db.card.findOne({
-          where: { user_idx: findMember.user_idx },
+          where: { user_idx: findMember.user_idx, main: true },
         });
 
         // 기존 소유주의 등록된 카드
@@ -1118,6 +1118,10 @@ module.exports = {
           });
 
           cancelSchedule(checkMainCard.customer_uid, checkPlan.merchant_uid);
+          db.plan.update(
+            { enrollment: false },
+            { where: { idx: checkPlan.idx } }
+          );
         } else {
           checkMembers.forEach((data) => {
             io.to(data.user_idx).emit("changeOwner", true);

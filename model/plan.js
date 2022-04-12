@@ -103,5 +103,10 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: 1,
       type: DataTypes.INTEGER,
     },
+    enrollment: {
+      allowNull: false,
+      defaultValue: true,
+      type: DataTypes.BOOLEAN,
+    },
   });
 };
