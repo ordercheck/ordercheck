@@ -103,11 +103,8 @@ module.exports = {
       raw: true,
     });
 
-    checkCompany.forEach(async (data) => {
-      await db.user.update(
-        { login_access: true },
-        { where: { idx: data.user_idx } }
-      );
+    checkCompany.forEach((data) => {
+      db.user.update({ login_access: true }, { where: { idx: data.user_idx } });
     });
   },
 };

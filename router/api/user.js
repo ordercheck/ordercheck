@@ -730,7 +730,7 @@ router.post("/company/check/later", async (req, res, next) => {
     });
 
     // 기존 무료 플랜 비활성화
-    await db.userCompany.update(
+    db.userCompany.update(
       { active: false },
       { where: { user_idx: findUser.idx } }
     );
