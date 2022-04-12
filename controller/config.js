@@ -1116,7 +1116,7 @@ module.exports = {
           checkMembers.forEach((data) => {
             io.to(data.user_idx).emit("changeOwner", true);
           });
-          cancelSchedule(checkMainCard.customer_uid, checkPlan.merchant_uid);
+          // cancelSchedule(checkMainCard.customer_uid, checkPlan.merchant_uid);
           //  카드가 있으므로 새로운 소유주 카드로 플랜 결제 예정
 
           // 새로운 카드로 결제 예약
@@ -1131,7 +1131,6 @@ module.exports = {
           const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
           // 다음 카드 결제 신청
-
           await schedulePay(
             changeToUnix,
             findCardResult.customer_uid,
