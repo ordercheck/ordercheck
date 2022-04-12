@@ -89,6 +89,7 @@ module.exports = {
         findUserResult.user_email,
         nextMerchant_uid
       );
+
       db.plan.update(
         { merchant_uid: nextMerchant_uid },
         { where: { idx: findPlanResult.idx } }
