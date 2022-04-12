@@ -1113,6 +1113,7 @@ module.exports = {
 
           cancelSchedule(checkMainCard.customer_uid, checkPlan.merchant_uid);
         } else {
+          console.log("등록된 카드 있음");
           checkMembers.forEach((data) => {
             io.to(data.user_idx).emit("changeOwner", true);
           });
