@@ -754,6 +754,8 @@ module.exports = {
 
       const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
+      const nextMerchant_uid = generateRandomCode(6);
+
       await schedulePay(
         changeToUnix,
         findCardResult.customer_uid,
@@ -761,9 +763,13 @@ module.exports = {
         findUserResult.user_name,
         findUserResult.user_phone,
         findUserResult.user_email,
-        findPlanResult.merchant_uid
+        nextMerchant_uid
       );
 
+      await db.plan.update(
+        { merchant_uid: nextMerchant_uid },
+        { where: { idx: findPlanResult.idx } }
+      );
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
@@ -1133,6 +1139,7 @@ module.exports = {
 
           const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
+          const nextMerchant_uid = generateRandomCode(6);
           // 다음 카드 결제 신청
           await schedulePay(
             changeToUnix,
@@ -1141,7 +1148,12 @@ module.exports = {
             findUserResult.user_name,
             findUserResult.user_phone,
             findUserResult.user_email,
-            checkPlan.merchant_uid
+            nextMerchant_uid
+          );
+
+          await db.plan.update(
+            { merchant_uid: nextMerchant_uid },
+            { where: { idx: checkPlan.idx } }
           );
         }
       }
