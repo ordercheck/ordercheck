@@ -111,6 +111,92 @@ const addPlanAndSchedule = async (
     return { success: false, err };
   }
 };
+// 플랜 수동으로 넣기
+router.post("/selfPlan", async (req, res) => {
+  const {
+    start_plan,
+    customer_uid,
+    result_price_levy,
+    user_name,
+    user_phone,
+    user_email,
+    nextMerchant_uid,
+  } = req.body;
+
+  // 시간을 unix형태로 변경(실제)
+  const Hour = moment().format("HH");
+
+  const startDate = start_plan.replace(/\./g, "-");
+
+  const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
+
+  await schedulePay(
+    changeToUnix,
+    customer_uid,
+    result_price_levy,
+    user_name,
+    user_phone,
+    user_email,
+    nextMerchant_uid
+  );
+  return res.send({ success: 200 });
+});
+
+// 플랜 수동으로 넣기
+router.patch("/selfPlanChange", async (req, res) => {
+  const { huidx, company_idx } = req.body;
+  await db.plan.destroy({ where: { company_idx } });
+  const merchant_uid = generateRandomCode(6);
+  await db.plan.create({
+    plan: 팀,
+    huidx,
+    start_plan: "2022.06.28",
+    free_plan: "2022.04.12",
+    expire_plan: "2022.07.27",
+    plan_price: "125300",
+    result_price: "125300",
+    result_price_levy: "137830",
+    whiteLabelChecked: false,
+    chatChecked: false,
+    analysticChecked: false,
+    whiteLabel_price: "150400",
+    chat_price: "150400",
+    analystic_price: "150400",
+    merchant_uid,
+    pay_type: "month",
+    active: 3,
+    company_idx,
+    enrollment: true,
+  });
+  await db.plan.create({
+    plan: 팀,
+    huidx,
+    start_plan: "2022.06.28",
+    free_plan: "2022.04.12",
+    expire_plan: "2022.07.27",
+    plan_price: "125300",
+    result_price: "125300",
+    result_price_levy: "137830",
+    whiteLabelChecked: false,
+    chatChecked: false,
+    analysticChecked: false,
+    whiteLabel_price: "150400",
+    chat_price: "150400",
+    analystic_price: "150400",
+    merchant_uid,
+    pay_type: "month",
+    active: 1,
+    company_idx,
+    enrollment: true,
+  });
+  await db.company.update(
+    {
+      companyexist: true,
+    },
+    { where: { idx: company_idx } }
+  );
+  return res.send({ success: 200 });
+});
 
 // 로그인 라우터
 router.post("/login", async (req, res, next) => {

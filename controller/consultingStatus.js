@@ -258,6 +258,8 @@ module.exports = {
         ],
         attributes: ["company_idx", "title", "tempType", "idx"],
       });
+      console.log(body.form_link);
+      console.log(formLinkCompany);
       body.formIdx = formLinkCompany.idx;
       body.company_name = formLinkCompany.company.company_name;
       body.title = formLinkCompany.title;
