@@ -131,6 +131,10 @@ router.post("/", async (req, res, next) => {
 
         // 이전 결제 예약은 제거
         await db.plan.destroy({ where: { merchant_uid, active: 3 } });
+        await db.plan.update(
+          { free_plan: null },
+          { where: { merchant_uid: newMerchant_uid, active: 3 } }
+        );
         res.send({ success: 200 });
 
         //알람 생성
@@ -246,6 +250,10 @@ router.post("/", async (req, res, next) => {
         merchant_uid: newMerchant_uid,
         active: 3,
       });
+      await db.plan.update(
+        { free_plan: null },
+        { where: { merchant_uid: newMerchant_uid, active: 3 } }
+      );
       res.send({ success: 200 });
 
       //알람 생성
