@@ -112,11 +112,11 @@ module.exports = {
       user_idx,
       company_idx,
     } = req;
-
+    console.log(user_password);
     try {
       const checkResult = await checkUserPassword(user_idx, user_password);
       if (!checkResult) {
-        res.send({
+        return res.send({
           success: 400,
           message: "비밀번호가 일치하지 않습니다.",
         });
