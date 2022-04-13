@@ -156,12 +156,6 @@ module.exports = {
           idx: user_idx,
         },
       });
-      // 회사 탈퇴 처리
-      await db.company.destroy({
-        where: {
-          huidx: user_idx,
-        },
-      });
 
       // 탈퇴사유 생성
       await db.delReason.create({ reason });
