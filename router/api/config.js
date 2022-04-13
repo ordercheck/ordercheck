@@ -35,6 +35,7 @@ const {
   showFormOpenMember,
   changeWhiteLabel,
   addTemplate,
+  changePlan,
 } = require("../../controller/config");
 const {
   multer_upload_img,
@@ -106,5 +107,5 @@ router.patch(
 router.get("/company/chat/template", loginCheck, showChatTemplate);
 router.patch("/whiteLabel/:check", loginCheck, changeWhiteLabel);
 router.post("/company/exist", loginCheck, createCompany);
-
+router.patch("/company/plan", loginCheck, changePlan);
 module.exports = router;

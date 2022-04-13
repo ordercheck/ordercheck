@@ -744,7 +744,7 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/config/company/plan/change:
+ * /api/config/company/plan/:
  *   patch:
  *      security:
  *       - bearerAuth: []
@@ -757,13 +757,19 @@
  *           schema:
  *             type: object
  *             properties:
- *               company_subdomain:
- *                 type: string
+ *               ct:
+ *                type: string
+ *               pt:
+ *                type: string
  *               company_name:
- *                 type: string
+ *                type: string
+ *               company_subdomain:
+ *                type: string
  *             example:
+ *               ct: "cardToken"
+ *               pt: "planToken"
+ *               company_name: "회사 이름"
  *               company_subdomain: "회사 서브 도메인"
- *               company_name: '회사 이름'
  *      responses:
  *       '200':
  *         description: 성공

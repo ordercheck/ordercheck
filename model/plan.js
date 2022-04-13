@@ -108,5 +108,8 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: true,
       type: DataTypes.BOOLEAN,
     },
+    will_free: {
+      type: DataTypes.DATE(),
+    },
   });
 };

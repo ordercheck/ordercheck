@@ -44,7 +44,7 @@ router.post("/", async (req, res, next) => {
       const startDateUnix = moment(startDate).unix();
 
       const newMerchant_uid = generateRandomCode(6);
-      console.log("여기1");
+
       // 기존의 expireDate를 이용하여 다음 스케쥴 등록
       await schedulePay(
         startDateUnix,
@@ -55,7 +55,7 @@ router.post("/", async (req, res, next) => {
         getResult.buyer_email,
         newMerchant_uid
       );
-      console.log("여기2");
+
       // free_plan 이용중인지 체크
       const findActivePlanResult = await db.plan.findOne({
         where: { merchant_uid, active: 1 },
