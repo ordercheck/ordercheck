@@ -88,10 +88,10 @@ module.exports = {
           //   return;
           // }
 
-          // const customer_phoneNumber = bodyData.customer_phoneNumber.replace(
-          //   /\./g,
-          //   ""
-          // );
+          const customer_phoneNumber = bodyData.customer_phoneNumber.replace(
+            /\./g,
+            ""
+          );
 
           const { kakaoPushResult, message } = await customerkakaoPushNewForm(
             customer_phoneNumber,
