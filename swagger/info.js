@@ -757,17 +757,17 @@
  *           schema:
  *             type: object
  *             properties:
- *               ct:
+ *               card_data:
  *                type: string
- *               pt:
+ *               plan_data:
  *                type: string
  *               company_name:
  *                type: string
  *               company_subdomain:
  *                type: string
  *             example:
- *               ct: "cardToken"
- *               pt: "planToken"
+ *               card_data: "cardData"
+ *               plan_data: "planData"
  *               company_name: "회사 이름"
  *               company_subdomain: "회사 서브 도메인"
  *      responses:
