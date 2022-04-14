@@ -745,11 +745,12 @@ module.exports = {
       );
 
       // 새로운 카드로 결제 예약
-      const Hour = moment().format("HH");
 
       const findCardResult = await db.card.findByPk(cardId);
 
       const findUserResult = await db.user.findByPk(user_idx);
+
+      const Hour = moment().format("HH");
 
       const startDate = findPlanResult.start_plan.replace(/\./g, "-");
 

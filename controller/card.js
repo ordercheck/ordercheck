@@ -70,9 +70,9 @@ module.exports = {
       where: { company_idx, active: 3 },
     });
     if (findPlanResult.enrollment == false) {
-      const Hour = moment().format("HH");
-
       const findUserResult = await db.user.findByPk(user_idx);
+
+      const Hour = moment().format("HH");
 
       const startDate = findPlanResult.start_plan.replace(/\./g, "-");
 
