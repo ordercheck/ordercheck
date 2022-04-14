@@ -1354,93 +1354,34 @@ module.exports = {
   },
 
   changePlan: async (req, res, next) => {
-    const {
-      body: { ct, pt, company_name, company_subdomain },
+    let {
+      body: { card_data, plan_data, company_name, company_subdomain },
       user_idx,
       company_idx,
     } = req;
 
-    const plan_data = await verify_data(pt);
+    console.log("바디 정보", req.body);
 
-    const user_data = await db.user.findByPk(user_idx);
-    let card_data;
-    if (!ct) {
-      // 이미 메인 카드가 있을 때
-      card_data = await db.card.findOne({
-        where: { user_idx, main: true, active: true },
-      });
-    } else {
-      card_data = await verify_data(ct);
-    }
+    try {
+      // 유저정보 찾기
+      const user_data = await db.user.findByPk(user_idx);
 
-    // 현재 플랜 체크
-    const scheduledPlan = await db.plan.findOne({
-      where: { company_idx, active: 1 },
-    });
+      if (!card_data) {
+        // 이미 메인 카드가 있을 때
+        card_data = await db.card.findOne({
+          where: { user_idx, main: true, active: true },
+        });
+      }
 
-    // 현재 플랜이 프리일 때
-    if (scheduledPlan.plan == "프리") {
-      await db.plan.destroy({ where: { idx: scheduledPlan.idx } });
-
-      // 시간을 unix형태로 변경(실제)
-      const Hour = moment().format("HH");
-
-      const startDate = plan_data.start_plan.replace(/\./g, "-");
-
-      const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
-
-      const nextMerchant_uid = generateRandomCode(6);
-
-      plan_data.merchant_uid = nextMerchant_uid;
-      plan_data.company_idx = company_idx;
-
-      // 다음 카드 결제 신청
-      await schedulePay(
-        changeToUnix,
-        card_data.customer_uid,
-        plan_data.result_price_levy,
-        user_data.user_name,
-        user_data.user_phone,
-        user_data.user_email,
-        nextMerchant_uid
-      );
-
-      await db.plan.create({
-        ...plan_data,
-        active: 3,
+      // 현재 플랜 체크
+      const nowPlan = await db.plan.findOne({
+        where: { company_idx, active: 1 },
       });
 
-      await db.plan.create(plan_data);
-      await db.company.update(
-        {
-          company_name,
-          company_subdomain,
-          companyexist: true,
-        },
-        { where: { idx: company_idx } }
-      );
-    } else {
-      const scheduledPlan = await db.plan.findOne({
-        where: { company_idx, active: 3 },
-      });
-      // 프리로 다운그레이드 할 때
-      if (plan_data.plan == "프리") {
-        await cancelSchedule(
-          card_data.customer_uid,
-          scheduledPlan.merchant_uid
-        );
-        await db.plan.update(
-          { will_free: scheduledPlan.start_plan },
-          { where: { idx: scheduledPlan.idx } }
-        );
-      } else {
-        // 무료체험 사용중인지 체크
+      // 프리플랜에서 요금제 가입 할 때
+      if (nowPlan.plan == "프리") {
+        await db.plan.destroy({ where: { idx: nowPlan.idx } });
 
-        await db.plan.destroy({ where: { idx: scheduledPlan.idx } });
-        await cancelSchedule(
-          card_data.customer_uid,
-          scheduledPlan.merchant_uid
-        );
         // 시간을 unix형태로 변경(실제)
         const Hour = moment().format("HH");
 
@@ -1452,19 +1393,84 @@ module.exports = {
 
         plan_data.merchant_uid = nextMerchant_uid;
         plan_data.company_idx = company_idx;
-        const newPlan = await db.plan.create({ ...plan_data, active: 3 });
 
         // 다음 카드 결제 신청
         await schedulePay(
           changeToUnix,
           card_data.customer_uid,
-          newPlan.result_price_levy,
+          plan_data.result_price_levy,
           user_data.user_name,
           user_data.user_phone,
           user_data.user_email,
           nextMerchant_uid
         );
+
+        await db.plan.create({
+          ...plan_data,
+          active: 3,
+        });
+
+        await db.plan.create(plan_data);
+        await db.company.update(
+          {
+            company_name,
+            company_subdomain,
+            companyexist: true,
+          },
+          { where: { idx: company_idx } }
+        );
+      } else {
+        // 결제 예약 플랜 찾기
+        const scheduledPlan = await db.plan.findOne({
+          where: { company_idx, active: 3 },
+        });
+        // 프리로 다운그레이드 할 때
+        if (plan_data.plan == "프리") {
+          await cancelSchedule(
+            card_data.customer_uid,
+            scheduledPlan.merchant_uid
+          );
+          await db.plan.update(
+            { will_free: scheduledPlan.start_plan },
+            { where: { idx: scheduledPlan.idx } }
+          );
+        } else {
+          await db.plan.destroy({ where: { idx: scheduledPlan.idx } });
+          await cancelSchedule(
+            card_data.customer_uid,
+            scheduledPlan.merchant_uid
+          );
+          // 시간을 unix형태로 변경(실제)
+          const Hour = moment().format("HH");
+
+          const startDate = plan_data.start_plan.replace(/\./g, "-");
+
+          const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
+
+          const nextMerchant_uid = generateRandomCode(6);
+
+          plan_data.merchant_uid = nextMerchant_uid;
+          plan_data.company_idx = company_idx;
+          const newPlan = await db.plan.create({ ...plan_data, active: 3 });
+
+          // 다음 카드 결제 신청
+          await schedulePay(
+            changeToUnix,
+            card_data.customer_uid,
+            newPlan.result_price_levy,
+            user_data.user_name,
+            user_data.user_phone,
+            user_data.user_email,
+            nextMerchant_uid
+          );
+          if (scheduledPlan.free_plan) {
+            await db.plan.destroy({ where: { idx: nowPlan.idx } });
+            await db.plan.create({ ...plan_data, active: 1 });
+          }
+        }
       }
+    } catch (err) {
+      next(err);
     }
 
     return res.send({ success: 200 });
