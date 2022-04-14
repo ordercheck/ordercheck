@@ -93,8 +93,6 @@ module.exports = {
           //   ""
           // );
 
-          console.log("가즈아아");
-
           const { kakaoPushResult, message } = await customerkakaoPushNewForm(
             customer_phoneNumber,
             bodyData.company_name,
