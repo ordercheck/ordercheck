@@ -44,7 +44,6 @@ module.exports = {
               plan.whiteLabelChecked,plan.chatChecked,plan.analysticChecked,
               sms.text_cost,
               huidx,
-              used_free_period,
               card.active AS cardActive,
               companyexist,
               date_format(user.createdAt, '%Y.%m.%d') as createdAt

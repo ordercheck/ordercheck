@@ -1461,11 +1461,6 @@ module.exports = {
           { resetDate: moment().add("1", "M") },
           { where: { company_idx } }
         );
-        // 유저 무료체험기간 사용 변경
-        await db.user.update(
-          { used_free_period: true },
-          { where: { user_idx } }
-        );
       } else {
         // 결제 예약 플랜 찾기
         const scheduledPlan = await db.plan.findOne({
