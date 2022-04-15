@@ -1459,7 +1459,7 @@ module.exports = {
         // 회사 초기화 날짜 수정
         await db.company.update(
           { resetDate: moment().add("1", "M") },
-          { where: { company_idx } }
+          { where: { idx: company_idx } }
         );
       } else {
         // 결제 예약 플랜 찾기
