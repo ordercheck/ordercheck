@@ -31,6 +31,7 @@ const {
 } = require("../lib/attributes");
 
 const { Alarm } = require("../lib/classes/AlarmClass");
+const { plan } = require("../model/db");
 
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
@@ -1423,11 +1424,24 @@ module.exports = {
       const scheduledPlan = await db.plan.findOne({
         where: { company_idx, active: 3 },
       });
+
+      let nextExpireDate;
+      if (plan_data.pay_type == "month") {
+        const startPlan = scheduledPlan.start_plan.replace(/\./gi, "-");
+        nextExpireDate = moment(startPlan).add("1", "M");
+      } else {
+        const startPlan = scheduledPlan.start_plan.replace(/\./gi, "-");
+        nextExpireDate = moment(startPlan).add("1", "Y");
+      }
+
       // 프리플랜에서 요금제 가입 할 때
       if (nowPlan.plan == "프리") {
         console.log("프리 플랜에서 요금제 가입 할 때");
         await db.plan.destroy({ where: { idx: nowPlan.idx } });
-        await db.plan.destroy({ where: { idx: scheduledPlan.idx } });
+        if (scheduledPlan) {
+          await db.plan.destroy({ where: { idx: scheduledPlan.idx } });
+        }
+
         // 시간을 unix형태로 변경(실제)
         const Hour = moment().format("HH");
 
@@ -1473,7 +1487,7 @@ module.exports = {
             plan_data.company_idx = company_idx;
             plan_data.free_plan = nowPlan.free_plan;
             plan_data.start_plan = nowPlan.start_plan;
-            plan_data.expire_plan = nowPlan.expire_plan;
+            plan_data.expire_plan = nextExpireDate;
             plan_data.enrollment = null;
             await db.plan.destroy({ where: { idx: nowPlan.idx } });
             // 결제 예약 플랜 삭제
@@ -1519,10 +1533,9 @@ module.exports = {
           plan_data.merchant_uid = nextMerchant_uid;
           plan_data.company_idx = company_idx;
           plan_data.start_plan = nowPlan.start_plan;
-          plan_data.expire_plan = nowPlan.expire_plan;
+          plan_data.expire_plan = nowPlan.nextExpireDate;
           const newPlan = await db.plan.create({ ...plan_data, active: 3 });
 
-          console.log("새로운 결제 등록");
           // 다음 카드 결제 신청
           await schedulePay(
             changeToUnix,
