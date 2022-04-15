@@ -1466,15 +1466,27 @@ module.exports = {
         });
         // 프리로 다운그레이드 할 때
         if (plan_data.plan == "프리") {
+          // 현재 플랜이 무료체험 기간일 때
+          if (scheduledPlan.free_plan) {
+            await db.plan.destroy({ where: { idx: nowPlan.idx } });
+            // 결제 예약 플랜 삭제
+            await db.plan.destroy({ where: { idx: scheduledPlan.idx } });
+            await db.plan.create({
+              company_idx,
+              free_plan: nowPlan.free_plan,
+              enrollment: null,
+            });
+          } else {
+            // 무료플랜 전환 예정 업데이트
+            await db.plan.update(
+              { will_free: scheduledPlan.start_plan },
+              { where: { idx: scheduledPlan.idx } }
+            );
+          }
           // 기존의 결제 예정 취소
           await cancelSchedule(
             card_data.customer_uid,
             scheduledPlan.merchant_uid
-          );
-          // 무료플랜 전환 예정 업데이트
-          await db.plan.update(
-            { will_free: scheduledPlan.start_plan },
-            { where: { idx: scheduledPlan.idx } }
           );
         } else {
           // 결제 예약 플랜 삭제
@@ -1515,6 +1527,7 @@ module.exports = {
             plan_data.free_plan = nowPlan.free_plan;
             await db.plan.destroy({ where: { idx: nowPlan.idx } });
             await db.plan.create({ ...plan_data, active: 1 });
+
             await db.plan.update(
               { free_plan: nowPlan.free_plan },
               { where: { idx: newPlan.idx } }

@@ -4,5 +4,5 @@ const { joinDoCustomer, getHome } = require("../../controller/mypage");
 const loginCheck = require("../../middleware/auth");
 
 router.post("/customer/join/do", joinDoCustomer);
-router.post("/customer/home", getHome);
+router.post("/customer/home", loginCheck, getHome);
 module.exports = router;
