@@ -1452,6 +1452,8 @@ module.exports = {
 
           plan_data.merchant_uid = nextMerchant_uid;
           plan_data.company_idx = company_idx;
+          plan_data.start_plan = nowPlan.start_plan;
+          plan_data.expire_plan = nowPlan.expire_plan;
           const newPlan = await db.plan.create({ ...plan_data, active: 3 });
 
           // 다음 카드 결제 신청
@@ -1465,6 +1467,9 @@ module.exports = {
             nextMerchant_uid
           );
           if (scheduledPlan.free_plan) {
+            plan_data.start_plan = nowPlan.start_plan;
+            plan_data.free_plan = nowPlan.free_plan;
+            plan_data.expire_plan = nowPlan.expire_plan;
             await db.plan.destroy({ where: { idx: nowPlan.idx } });
             await db.plan.create({ ...plan_data, active: 1 });
           }
