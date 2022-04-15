@@ -1419,12 +1419,15 @@ module.exports = {
       const nowPlan = await db.plan.findOne({
         where: { company_idx, active: 1 },
       });
-
+      // 결제 예약 플랜 찾기
+      const scheduledPlan = await db.plan.findOne({
+        where: { company_idx, active: 3 },
+      });
       // 프리플랜에서 요금제 가입 할 때
       if (nowPlan.plan == "프리") {
         console.log("프리 플랜에서 요금제 가입 할 때");
         await db.plan.destroy({ where: { idx: nowPlan.idx } });
-
+        await db.plan.destroy({ where: { idx: scheduledPlan.idx } });
         // 시간을 unix형태로 변경(실제)
         const Hour = moment().format("HH");
 
@@ -1462,10 +1465,6 @@ module.exports = {
           { where: { idx: company_idx } }
         );
       } else {
-        // 결제 예약 플랜 찾기
-        const scheduledPlan = await db.plan.findOne({
-          where: { company_idx, active: 3 },
-        });
         // 프리로 다운그레이드 할 때
         if (plan_data.plan == "프리") {
           // 현재 플랜이 무료체험 기간일 때
