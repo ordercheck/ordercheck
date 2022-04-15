@@ -1427,11 +1427,21 @@ module.exports = {
 
       let nextExpireDate;
       if (plan_data.pay_type == "month") {
-        const startPlan = scheduledPlan.start_plan.replace(/\./gi, "-");
-        nextExpireDate = moment(startPlan).add("1", "M").format("YYYY.MM.DD");
+        if (scheduledPlan) {
+          const startPlan = scheduledPlan.start_plan.replace(/\./gi, "-");
+          nextExpireDate = moment(startPlan)
+            .add("1", "M")
+            .subtract("1", "days")
+            .format("YYYY.MM.DD");
+        }
       } else {
-        const startPlan = scheduledPlan.start_plan.replace(/\./gi, "-");
-        nextExpireDate = moment(startPlan).add("1", "Y").format("YYYY.MM.DD");
+        if (scheduledPlan) {
+          const startPlan = scheduledPlan.start_plan.replace(/\./gi, "-");
+          nextExpireDate = moment(startPlan)
+            .add("1", "Y")
+            .subtract("1", "days")
+            .format("YYYY.MM.DD");
+        }
       }
       console.log(nextExpireDate);
       // 프리플랜에서 요금제 가입 할 때
@@ -1441,7 +1451,6 @@ module.exports = {
         if (scheduledPlan) {
           await db.plan.destroy({ where: { idx: scheduledPlan.idx } });
         }
-
         // 시간을 unix형태로 변경(실제)
         const Hour = moment().format("HH");
 
@@ -1533,7 +1542,7 @@ module.exports = {
           plan_data.merchant_uid = nextMerchant_uid;
           plan_data.company_idx = company_idx;
           plan_data.start_plan = nowPlan.start_plan;
-          plan_data.expire_plan = nowPlan.nextExpireDate;
+          plan_data.expire_plan = nextExpireDate;
           const newPlan = await db.plan.create({ ...plan_data, active: 3 });
 
           // 다음 카드 결제 신청
