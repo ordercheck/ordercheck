@@ -1428,12 +1428,12 @@ module.exports = {
       let nextExpireDate;
       if (plan_data.pay_type == "month") {
         const startPlan = scheduledPlan.start_plan.replace(/\./gi, "-");
-        nextExpireDate = moment(startPlan).add("1", "M");
+        nextExpireDate = moment(startPlan).add("1", "M").format("YYYY.MM.DD");
       } else {
         const startPlan = scheduledPlan.start_plan.replace(/\./gi, "-");
-        nextExpireDate = moment(startPlan).add("1", "Y");
+        nextExpireDate = moment(startPlan).add("1", "Y").format("YYYY.MM.DD");
       }
-
+      console.log(nextExpireDate);
       // 프리플랜에서 요금제 가입 할 때
       if (nowPlan.plan == "프리") {
         console.log("프리 플랜에서 요금제 가입 할 때");
