@@ -1363,6 +1363,7 @@ module.exports = {
 
     let card_data = await verify_data(ct);
     const plan_data = await verify_data(pt);
+
     console.log("카드 정보", card_data);
     console.log("플랜 정보", plan_data);
 
@@ -1455,7 +1456,7 @@ module.exports = {
           // 시간을 unix형태로 변경(실제)
           const Hour = moment().format("HH");
 
-          const startDate = plan_data.start_plan.replace(/\./g, "-");
+          const startDate = nowPlan.start_plan.replace(/\./g, "-");
 
           const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
@@ -1480,9 +1481,7 @@ module.exports = {
           );
           // 현재 플랜이 무료체험 기간일 때
           if (scheduledPlan.free_plan) {
-            plan_data.start_plan = nowPlan.start_plan;
             plan_data.free_plan = nowPlan.free_plan;
-            plan_data.expire_plan = nowPlan.expire_plan;
             await db.plan.destroy({ where: { idx: nowPlan.idx } });
             await db.plan.create({ ...plan_data, active: 1 });
           }
