@@ -93,8 +93,39 @@ module.exports = {
         free_plan: findPlan.free_plan ? true : false,
         pay_type: findPlan.pay_type,
       };
-      companyProfile[0].planDetail = planDetail;
+      const findNextPlan = await db.plan.findOne({
+        where: { company_idx, active: 3 },
+        attributes: [
+          "plan",
+          "chat_price",
+          "analystic_price",
+          "whiteLabel_price",
+          "expire_plan",
+          "plan_price",
+          "free_plan",
+          "start_plan",
+          "pay_type",
+        ],
+      });
 
+      const nextPlan = {
+        plan: findNextPlan.plan,
+        plan_price: findNextPlan.plan_price.toLocaleString(),
+        chat_price: findNextPlan.chat_price.toLocaleString(),
+        analystic_price: findNextPlan.analystic_price.toLocaleString(),
+        whiteLabel_price: findNextPlan.whiteLabel_price.toLocaleString(),
+        start_plan: findNextPlan.start_plan ? findNextPlan.start_plan : false,
+        expire_plan: findNextPlan.expire_plan
+          ? moment(findNextPlan.expire_plan.replace(/\./g, "-"))
+              .add(1, "d")
+              .format("YYYY.MM.DD")
+          : false,
+        free_plan: findNextPlan.free_plan ? true : false,
+        pay_type: findNextPlan.pay_type,
+      };
+
+      companyProfile[0].planDetail = planDetail;
+      companyProfile[0].nextPlan = nextPlan;
       return res.send({ success: 200, companyProfile: companyProfile[0] });
     } catch (err) {
       next(err);
