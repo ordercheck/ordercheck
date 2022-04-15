@@ -108,21 +108,24 @@ module.exports = {
         ],
       });
 
-      const nextPlan = {
-        plan: findNextPlan.plan,
-        plan_price: findNextPlan.plan_price.toLocaleString(),
-        chat_price: findNextPlan.chat_price.toLocaleString(),
-        analystic_price: findNextPlan.analystic_price.toLocaleString(),
-        whiteLabel_price: findNextPlan.whiteLabel_price.toLocaleString(),
-        start_plan: findNextPlan.start_plan ? findNextPlan.start_plan : false,
-        expire_plan: findNextPlan.expire_plan
-          ? moment(findNextPlan.expire_plan.replace(/\./g, "-"))
-              .add(1, "d")
-              .format("YYYY.MM.DD")
-          : false,
-        free_plan: findNextPlan.free_plan ? true : false,
-        pay_type: findNextPlan.pay_type,
-      };
+      let nextPlan = null;
+      if (findNextPlan) {
+        nextPlan = {
+          plan: findNextPlan.plan,
+          plan_price: findNextPlan.plan_price.toLocaleString(),
+          chat_price: findNextPlan.chat_price.toLocaleString(),
+          analystic_price: findNextPlan.analystic_price.toLocaleString(),
+          whiteLabel_price: findNextPlan.whiteLabel_price.toLocaleString(),
+          start_plan: findNextPlan.start_plan ? findNextPlan.start_plan : false,
+          expire_plan: findNextPlan.expire_plan
+            ? moment(findNextPlan.expire_plan.replace(/\./g, "-"))
+                .add(1, "d")
+                .format("YYYY.MM.DD")
+            : false,
+          free_plan: findNextPlan.free_plan ? true : false,
+          pay_type: findNextPlan.pay_type,
+        };
+      }
 
       companyProfile[0].planDetail = planDetail;
       companyProfile[0].nextPlan = nextPlan;
