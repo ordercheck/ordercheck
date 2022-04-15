@@ -1484,6 +1484,10 @@ module.exports = {
             plan_data.free_plan = nowPlan.free_plan;
             await db.plan.destroy({ where: { idx: nowPlan.idx } });
             await db.plan.create({ ...plan_data, active: 1 });
+            await db.plan.update(
+              { free_plan: nowPlan.free_plan },
+              { where: { idx: newPlan.idx } }
+            );
           }
         }
       }

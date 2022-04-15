@@ -49,6 +49,7 @@ db.config = sequelize.import(__dirname + "/config.js");
 db.userConfig = sequelize.import(__dirname + "/userConfig.js");
 db.alarm = sequelize.import(__dirname + "/alarm.js");
 db.receipt = sequelize.import(__dirname + "/receipt.js");
+db.customerAccount = sequelize.import(__dirname + "/customerAccount.js");
 db.chatTemplate = sequelize.import(__dirname + "/chatTemplate.js");
 db.customerFile = sequelize.import(__dirname + "/customerFile.js");
 db.userCompany = sequelize.import(__dirname + "/userCompany.js");
@@ -304,6 +305,7 @@ db.company.hasMany(db.config, {
 db.config.belongsTo(db.company, {
   foreignKey: "company_idx",
 });
+
 //추후에 연결된 sequelize 객체를 통해, 직접적으로 데이터베이스에 쿼리도 날릴 수 있습니다
 //그래서 앞으로 우리가 사용할 db 객체에 sequelize 객체와 바로 위에서 만든 모델들을 채워 넣습니다.
 db.sequelize = sequelize;

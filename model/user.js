@@ -74,6 +74,7 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.DATE(),
     },
+
     login_access: {
       allowNull: false,
       defaultValue: true,
