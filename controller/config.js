@@ -1419,6 +1419,7 @@ module.exports = {
 
       // 프리플랜에서 요금제 가입 할 때
       if (nowPlan.plan == "프리") {
+        console.log("프리 플랜에서 요금제 가입 할 때");
         await db.plan.destroy({ where: { idx: nowPlan.idx } });
 
         // 시간을 unix형태로 변경(실제)
@@ -1468,6 +1469,7 @@ module.exports = {
         if (plan_data.plan == "프리") {
           // 현재 플랜이 무료체험 기간일 때
           if (scheduledPlan.free_plan) {
+            console.log("유료에서 프리로 다운그레이드인데 무료체험기간");
             await db.plan.destroy({ where: { idx: nowPlan.idx } });
             // 결제 예약 플랜 삭제
             await db.plan.destroy({ where: { idx: scheduledPlan.idx } });
@@ -1477,18 +1479,23 @@ module.exports = {
               enrollment: null,
             });
           } else {
+            console.log(
+              "유료에서 프리로 다운그레이드인데 무료체험기간 끝났을 때"
+            );
             // 무료플랜 전환 예정 업데이트
             await db.plan.update(
               { will_free: scheduledPlan.start_plan },
               { where: { idx: scheduledPlan.idx } }
             );
           }
+          console.log("기존 결제 예정 취소");
           // 기존의 결제 예정 취소
           await cancelSchedule(
             card_data.customer_uid,
             scheduledPlan.merchant_uid
           );
         } else {
+          console.log("유료에서 유료로 업그레이드 다운그레이드 할 때");
           // 결제 예약 플랜 삭제
           await db.plan.destroy({ where: { idx: scheduledPlan.idx } });
           // 스케쥴 취소
@@ -1512,6 +1519,7 @@ module.exports = {
           plan_data.expire_plan = nowPlan.expire_plan;
           const newPlan = await db.plan.create({ ...plan_data, active: 3 });
 
+          console.log("새로운 결제 등록");
           // 다음 카드 결제 신청
           await schedulePay(
             changeToUnix,
@@ -1524,10 +1532,10 @@ module.exports = {
           );
           // 현재 플랜이 무료체험 기간일 때
           if (scheduledPlan.free_plan) {
+            console.log("유료에서 유료로 바꾸는데 무료체험 기간일 때");
             plan_data.free_plan = nowPlan.free_plan;
             await db.plan.destroy({ where: { idx: nowPlan.idx } });
             await db.plan.create({ ...plan_data, active: 1 });
-
             await db.plan.update(
               { free_plan: nowPlan.free_plan },
               { where: { idx: newPlan.idx } }
