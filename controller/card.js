@@ -91,7 +91,7 @@ module.exports = {
       );
 
       db.plan.update(
-        { merchant_uid: nextMerchant_uid },
+        { merchant_uid: nextMerchant_uid, enrollment: true },
         { where: { idx: findPlanResult.idx } }
       );
     }

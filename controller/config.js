@@ -1356,7 +1356,7 @@ module.exports = {
 
   changePlan: async (req, res, next) => {
     let {
-      body: { ct, pt, company_name, company_subdomain },
+      body: { ct, pt },
       user_idx,
       company_idx,
     } = req;
@@ -1365,6 +1365,7 @@ module.exports = {
     const plan_data = await verify_data(pt);
     console.log("카드 정보", card_data);
     console.log("플랜 정보", plan_data);
+
     try {
       // 유저정보 찾기
       const user_data = await db.user.findByPk(user_idx);
@@ -1414,14 +1415,6 @@ module.exports = {
         });
 
         await db.plan.create(plan_data);
-        await db.company.update(
-          {
-            company_name,
-            company_subdomain,
-            companyexist: true,
-          },
-          { where: { idx: company_idx } }
-        );
       } else {
         // 결제 예약 플랜 찾기
         const scheduledPlan = await db.plan.findOne({
