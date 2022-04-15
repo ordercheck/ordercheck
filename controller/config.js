@@ -1356,13 +1356,15 @@ module.exports = {
 
   changePlan: async (req, res, next) => {
     let {
-      body: { card_data, plan_data, company_name, company_subdomain },
+      body: { ct, pt, company_name, company_subdomain },
       user_idx,
       company_idx,
     } = req;
 
-    console.log("바디 정보", req.body);
-
+    let card_data = await verify_data(ct);
+    let plan_data = await verify_data(pt);
+    console.log("카드 정보", card_data);
+    console.log("플랜 정보", plan_data);
     try {
       // 유저정보 찾기
       const user_data = await db.user.findByPk(user_idx);
