@@ -1473,14 +1473,17 @@ module.exports = {
           // 현재 플랜이 무료체험 기간일 때
           if (scheduledPlan.free_plan) {
             console.log("유료에서 프리로 다운그레이드인데 무료체험기간");
+            plan_data.company_idx = company_idx;
+            plan_data.free_plan = nowPlan.free_plan;
+            plan_data.start_plan = nowPlan.start_plan;
+            plan_data.expire_plan = nowPlan.expire_plan;
+            plan_data.enrollment = null;
             await db.plan.destroy({ where: { idx: nowPlan.idx } });
             // 결제 예약 플랜 삭제
             await db.plan.destroy({ where: { idx: scheduledPlan.idx } });
-            await db.plan.create({
-              company_idx,
-              free_plan: nowPlan.free_plan,
-              enrollment: null,
-            });
+            await db.plan.create(plan_data);
+
+            await db.plan.create({ ...plan_data, active: 3, will_free: true });
           } else {
             console.log(
               "유료에서 프리로 다운그레이드인데 무료체험기간 끝났을 때"
