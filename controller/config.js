@@ -1375,6 +1375,8 @@ module.exports = {
         card_data = await db.card.findOne({
           where: { user_idx, main: true, active: true },
         });
+      } else {
+        await db.card.create(card_data);
       }
 
       // 현재 플랜 체크
