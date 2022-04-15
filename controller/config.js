@@ -1362,7 +1362,7 @@ module.exports = {
     } = req;
 
     let card_data = await verify_data(ct);
-    let plan_data = await verify_data(pt);
+    const plan_data = await verify_data(pt);
     console.log("카드 정보", card_data);
     console.log("플랜 정보", plan_data);
     try {
