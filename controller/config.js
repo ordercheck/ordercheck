@@ -1376,6 +1376,7 @@ module.exports = {
           where: { user_idx, main: true, active: true },
         });
       } else {
+        card_data.user_idx;
         await db.card.create(card_data);
       }
 
@@ -1417,6 +1418,7 @@ module.exports = {
         });
 
         await db.plan.create(plan_data);
+        await db.user.update({ used_free_period: true });
       } else {
         // 결제 예약 플랜 찾기
         const scheduledPlan = await db.plan.findOne({
