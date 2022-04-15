@@ -1412,16 +1412,20 @@ module.exports = {
           nextMerchant_uid
         );
 
+        // 결제 예약 플랜 생성
         await db.plan.create({
           ...plan_data,
           active: 3,
         });
-
+        // 현재 플랜 생성
         await db.plan.create(plan_data);
+
+        // 회사 초기화 날짜 수정
         await db.company.update(
           { resetDate: moment().add("1", "M") },
           { where: { company_idx } }
         );
+        // 유저 무료체험기간 사용 변경
         await db.user.update({ used_free_period: true });
       } else {
         // 결제 예약 플랜 찾기
@@ -1430,16 +1434,20 @@ module.exports = {
         });
         // 프리로 다운그레이드 할 때
         if (plan_data.plan == "프리") {
+          // 기존의 결제 예정 취소
           await cancelSchedule(
             card_data.customer_uid,
             scheduledPlan.merchant_uid
           );
+          // 무료플랜 전환 예정 업데이트
           await db.plan.update(
             { will_free: scheduledPlan.start_plan },
             { where: { idx: scheduledPlan.idx } }
           );
         } else {
+          // 결제 예약 플랜 삭제
           await db.plan.destroy({ where: { idx: scheduledPlan.idx } });
+          // 스케쥴 취소
           await cancelSchedule(
             card_data.customer_uid,
             scheduledPlan.merchant_uid
@@ -1453,6 +1461,7 @@ module.exports = {
 
           const nextMerchant_uid = generateRandomCode(6);
 
+          // 새로 변경될 플랜 생성
           plan_data.merchant_uid = nextMerchant_uid;
           plan_data.company_idx = company_idx;
           plan_data.start_plan = nowPlan.start_plan;
@@ -1469,6 +1478,7 @@ module.exports = {
             user_data.user_email,
             nextMerchant_uid
           );
+          // 현재 플랜이 무료체험 기간일 때
           if (scheduledPlan.free_plan) {
             plan_data.start_plan = nowPlan.start_plan;
             plan_data.free_plan = nowPlan.free_plan;
@@ -1478,10 +1488,9 @@ module.exports = {
           }
         }
       }
+      return res.send({ success: 200 });
     } catch (err) {
       next(err);
     }
-
-    return res.send({ success: 200 });
   },
 };
