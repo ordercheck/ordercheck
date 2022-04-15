@@ -1418,6 +1418,10 @@ module.exports = {
         });
 
         await db.plan.create(plan_data);
+        await db.company.update(
+          { resetDate: moment().add("1", "M") },
+          { where: { company_idx } }
+        );
         await db.user.update({ used_free_period: true });
       } else {
         // 결제 예약 플랜 찾기
