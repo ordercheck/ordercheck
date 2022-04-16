@@ -79,6 +79,8 @@ module.exports = {
         ],
       });
 
+      console.log(company_idx);
+
       const planDetail = {
         plan: findPlan.plan,
         plan_price: findPlan.plan_price.toLocaleString(),
