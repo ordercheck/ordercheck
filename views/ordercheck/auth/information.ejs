@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>고객</h1>
+    <% for(var i = 0; i < findAllUser.length; i++){ %>
+    <div>
+      이름: <%= findAllUser[i].user_name %>
+      <div>번호: <%= findAllUser[i].user_phone %></div>
+      <div>이메일: <%= findAllUser[i].user_email %></div>
+      <div>마지막 로그인 : <%= findAllUser[i].last_login %></div>
+      <div>
+        카드 등록 여부: <% if( findAllUser[i].cards.length == 0){ %> ㅇ <% }
+        else{ %> x <% } %>
+      </div>
+    </div>
+    <br />
+    <% } %>
+  </body>
+</html>

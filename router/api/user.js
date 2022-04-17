@@ -523,6 +523,7 @@ router.post("/company/check", async (req, res, next) => {
 
     // 회사 생성
     const company_data = await db.company.create({
+      used_free_period: true,
       company_name,
       company_subdomain,
       huidx: findUser.idx,
@@ -816,7 +817,10 @@ router.post("/company/check/later", async (req, res, next) => {
 
     // 랜덤 회사 만들기
     const randomCompany = await createRandomCompany(findUser.idx);
-
+    await db.company.update(
+      { used_free_period: true },
+      { where: { idx: randomCompany.idx } }
+    );
     // master template 만들기
     masterConfig.company_idx = randomCompany.idx;
     const createTempalteResult = await template.createConfig(masterConfig);

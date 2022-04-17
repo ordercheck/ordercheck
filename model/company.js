@@ -75,5 +75,11 @@ module.exports = function (sequelize, DataTypes) {
     resetDate: {
       type: DataTypes.DATE(),
     },
+
+    used_free_period: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
+    },
   });
 };

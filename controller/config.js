@@ -49,6 +49,7 @@ module.exports = {
           card.active AS cardActive,
           plan_active,
           text_cost,
+          used_free_period,
           plan.whiteLabelChecked,  
           chatChecked, 
           analysticChecked,
@@ -442,9 +443,13 @@ module.exports = {
     const { planId } = req.params;
     try {
       const findPlanResult = await db.plan.findOne({
-        where: { merchant_uid: planId },
+        where: {
+          merchant_uid: planId,
+          [Op.or]: [{ active: 1 }, { active: 0 }],
+        },
         attributes: showDetailPlanAttributes,
       });
+      console.log(findPlanResult);
       return res.send({ success: 200, findPlanResult });
     } catch (err) {
       next(err);
@@ -1414,7 +1419,7 @@ module.exports = {
           where: { user_idx, main: true, active: true },
         });
       } else {
-        card_data.user_idx;
+        card_data.user_idx = user_idx;
         await db.card.create(card_data);
       }
 

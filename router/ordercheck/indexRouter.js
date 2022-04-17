@@ -213,4 +213,32 @@ router.get("/password/complete", alwaysCheck, async (req, res, next) => {
   res.render("ordercheck/auth/password_complete", { title });
 });
 
+router.get("/information", async (req, res, next) => {
+  let findAllUser = await db.user.findAll({
+    include: [
+      {
+        model: db.card,
+        attributes: ["idx"],
+        require: false,
+      },
+      {
+        model: db.userCompany,
+        where: { active: true, standBy: false },
+        include: [
+          {
+            model: db.user,
+            attributes: ["user_name"],
+            require: false,
+          },
+        ],
+        require: false,
+      },
+    ],
+  });
+  findAllUser = JSON.parse(JSON.stringify(findAllUser));
+  console.log(findAllUser);
+  console.log(findAllUser[0].userCompanies);
+  res.render("ordercheck/auth/information", { findAllUser });
+});
+
 module.exports = router;
