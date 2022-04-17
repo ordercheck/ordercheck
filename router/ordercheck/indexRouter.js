@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { Op } = require("sequelize");
 const db = require("../../model/db");
 const _f = require("../../lib/functions");
 const user_session_check = (req, res, next) => {
@@ -226,6 +227,7 @@ router.get("/information", async (req, res, next) => {
   findAllUser = JSON.parse(JSON.stringify(findAllUser));
 
   let findCompany = await db.company.findAll({
+    where: { company_name: { [Op.ne]: "" } },
     include: [
       {
         model: db.userCompany,
@@ -235,7 +237,7 @@ router.get("/information", async (req, res, next) => {
   });
 
   findCompany = JSON.parse(JSON.stringify(findCompany));
-
+  console.log(findCompany);
   res.render("ordercheck/auth/information", { findAllUser, findCompany });
 });
 

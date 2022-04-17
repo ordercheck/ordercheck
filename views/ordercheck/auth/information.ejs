@@ -23,14 +23,15 @@
     <% } %>
 
     <h1>회사</h1>
-
     <% for(var i = 0; i < findCompany.length; i++){ %>
     <div>
       <div>회사: <%= findCompany[i].company_name %></div>
-      <!-- <div>번호: <%= findCompany[i].user_phone %></div>
-      <div>이메일: <%= findCompany[i].user_email %></div>
-      <div>마지막 로그인 : <%= findCompany[i].last_login %></div> -->
-    </div>
+  
+ <% for(var j = 0; i < findCompany[i].userCompanies.length; j++){ %>
+        asdfljf
+   <% } %>
+ 
+      
     <br />
     <% } %>
   </body>
