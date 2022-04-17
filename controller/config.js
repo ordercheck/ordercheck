@@ -80,8 +80,6 @@ module.exports = {
         ],
       });
 
-      console.log(company_idx);
-
       const planDetail = {
         plan: findPlan.plan,
         plan_price: findPlan.plan_price.toLocaleString(),
@@ -1420,7 +1418,7 @@ module.exports = {
         });
       } else {
         card_data.user_idx = user_idx;
-        await db.card.create(card_data);
+        card_data = await db.card.create(card_data);
       }
 
       // 현재 플랜 체크
