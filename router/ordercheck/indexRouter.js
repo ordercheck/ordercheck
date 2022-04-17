@@ -237,7 +237,7 @@ router.get("/information", async (req, res, next) => {
   });
 
   findCompany = JSON.parse(JSON.stringify(findCompany));
-  console.log(findCompany);
+
   res.render("ordercheck/auth/information", { findAllUser, findCompany });
 });
 
