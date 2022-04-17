@@ -1497,12 +1497,14 @@ module.exports = {
         if (plan_data.plan == "프리") {
           // 현재 플랜이 무료체험 기간일 때
           if (scheduledPlan.free_plan) {
+            const nextMerchant_uid = generateRandomCode(6);
             console.log("유료에서 프리로 다운그레이드인데 무료체험기간");
             plan_data.company_idx = company_idx;
             plan_data.free_plan = nowPlan.free_plan;
             plan_data.start_plan = nowPlan.start_plan;
             plan_data.expire_plan = nextExpireDate;
             plan_data.enrollment = null;
+            plan_data.merchant_uid = nextMerchant_uid;
             await db.plan.destroy({ where: { idx: nowPlan.idx } });
             // 결제 예약 플랜 삭제
             await db.plan.destroy({ where: { idx: scheduledPlan.idx } });

@@ -221,24 +221,22 @@ router.get("/information", async (req, res, next) => {
         attributes: ["idx"],
         require: false,
       },
-      {
-        model: db.userCompany,
-        where: { active: true, standBy: false },
-        include: [
-          {
-            model: db.user,
-            attributes: ["user_name"],
-            require: false,
-          },
-        ],
-        require: false,
-      },
     ],
   });
   findAllUser = JSON.parse(JSON.stringify(findAllUser));
-  console.log(findAllUser);
-  console.log(findAllUser[0].userCompanies);
-  res.render("ordercheck/auth/information", { findAllUser });
+
+  let findCompany = await db.company.findAll({
+    include: [
+      {
+        model: db.userCompany,
+        where: { active: true, standBy: false },
+      },
+    ],
+  });
+
+  findCompany = JSON.parse(JSON.stringify(findCompany));
+
+  res.render("ordercheck/auth/information", { findAllUser, findCompany });
 });
 
 module.exports = router;
