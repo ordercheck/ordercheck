@@ -79,22 +79,6 @@ module.exports = {
           "pay_type",
         ],
       });
-
-      const planDetail = {
-        plan: findPlan.plan,
-        plan_price: findPlan.plan_price.toLocaleString(),
-        chat_price: findPlan.chat_price.toLocaleString(),
-        analystic_price: findPlan.analystic_price.toLocaleString(),
-        whiteLabel_price: findPlan.whiteLabel_price.toLocaleString(),
-        start_plan: findPlan.start_plan ? findPlan.start_plan : false,
-        expire_plan: findPlan.expire_plan
-          ? moment(findPlan.expire_plan.replace(/\./g, "-"))
-              .add(1, "d")
-              .format("YYYY.MM.DD")
-          : false,
-        free_plan: findPlan.free_plan ? true : false,
-        pay_type: findPlan.pay_type,
-      };
       const findNextPlan = await db.plan.findOne({
         where: { company_idx, active: 3 },
         attributes: [
@@ -109,6 +93,22 @@ module.exports = {
           "pay_type",
         ],
       });
+
+      const planDetail = {
+        plan: findPlan.plan,
+        plan_price: findPlan.plan_price.toLocaleString(),
+        chat_price: findPlan.chat_price.toLocaleString(),
+        analystic_price: findPlan.analystic_price.toLocaleString(),
+        whiteLabel_price: findPlan.whiteLabel_price.toLocaleString(),
+        start_plan: findPlan.start_plan ? findPlan.start_plan : false,
+        expire_plan: findPlan.expire_plan
+          ? moment(findPlan.expire_plan.replace(/\./g, "-"))
+              .add(1, "d")
+              .format("YYYY.MM.DD")
+          : false,
+        free_plan: findNextPlan.free_plan ? true : false,
+        pay_type: findPlan.pay_type,
+      };
 
       let nextPlan = null;
       if (findNextPlan) {
