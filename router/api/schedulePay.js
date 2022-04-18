@@ -175,10 +175,10 @@ router.post("/", async (req, res, next) => {
         await db.plan.update(
           { active: 0 },
           {
-            where: { idx: beforePlanIdx },
+            where: { idx: beforePlanIdx.idx },
           }
         );
-        // 결제 예약 활성화
+        // 이전 결제 예약 활성화
         await db.plan.update(
           {
             active: 1,
@@ -238,9 +238,9 @@ router.post("/", async (req, res, next) => {
           .format(`YYYY.MM.DD`);
       }
 
-      findActivePlanResult.start_plan = moment(startDate).format("YYYY.MM.DD");
+      findPlanResult.start_plan = moment(startDate).format("YYYY.MM.DD");
 
-      findActivePlanResult.expire_plan = nextExpireDate;
+      findPlanResult.expire_plan = nextExpireDate;
 
       // 플랜 다음 결제 예약
       await db.plan.create({
