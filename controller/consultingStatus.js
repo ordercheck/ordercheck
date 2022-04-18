@@ -97,7 +97,7 @@ module.exports = {
             customer_phoneNumber,
             bodyData.company_name,
             bodyData.customer_name,
-            bodyData.title
+            bodyData.formTitle
           );
 
           if (kakaoPushResult) {
