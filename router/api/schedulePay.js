@@ -98,30 +98,26 @@ router.post("/", async (req, res, next) => {
           // 다음달 마지막 날
           let nextMonthLast = moment(startDate).add("1", "M").daysInMonth();
 
-          console.log("nextMonthLast", nextMonthLast);
           // 결제 당일 마지막 날
           let nowDate = moment(startDate).format("DD");
-          console.log("nowDate", nowDate);
+
           if (parseInt(nowDate) > nextMonthLast) {
             nextMonthLast -= 1;
-
+            nextMonthLast = String(nextMonthLast).padStart(2, "0");
             nextExpireDate = moment(startDate)
               .add("1", "M")
               .format(`YYYY.MM.${nextMonthLast}`);
           } else {
-            nowDate -= 1;
-            nowDate = String(nowDate).padStart(2, "0");
-            console.log("nowDate-1", nowDate);
             nextExpireDate = moment(startDate)
               .add("1", "M")
+              .subtract("1", "d")
               .format(`YYYY.MM.${nowDate}`);
           }
         } else {
-          nowDate -= 1;
-          nowDate = String(nowDate).padStart(2, "0");
           nextExpireDate = moment(startDate)
             .add("1", "Y")
-            .format(`YYYY.MM.${nowDate}`);
+            .subtract("1", "d")
+            .format(`YYYY.MM.DD`);
         }
 
         findActivePlanResult.start_plan =
@@ -221,25 +217,25 @@ router.post("/", async (req, res, next) => {
 
         if (parseInt(nowDate) > nextMonthLast) {
           nextMonthLast -= 1;
+          nextMonthLast = String(nextMonthLast).padStart(2, "0");
           nextExpireDate = moment(startDate)
             .add("1", "M")
             .format(`YYYY.MM.${nextMonthLast}`);
         } else {
-          nowDate -= 1;
-          nowDate = String(nowDate).padStart(2, "0");
           nextExpireDate = moment(startDate)
             .add("1", "M")
+            .subtract("1", "d")
             .format(`YYYY.MM.${nowDate}`);
         }
       } else {
-        nowDate -= 1;
-        nowDate = String(nowDate).padStart(2, "0");
         nextExpireDate = moment(startDate)
           .add("1", "Y")
+          .subtract("1", "d")
           .format(`YYYY.MM.${nowDate}`);
       }
 
       findActivePlanResult.start_plan = moment(startDate).format("YYYY.MM.DD");
+
       findActivePlanResult.expire_plan = nextExpireDate;
 
       // 플랜 다음 결제 예약
