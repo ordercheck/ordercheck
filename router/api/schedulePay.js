@@ -110,13 +110,13 @@ router.post("/", async (req, res, next) => {
           } else {
             nextExpireDate = moment(startDate)
               .add("1", "M")
-              .subtract("1", "d")
+              .subtract("1", "days")
               .format(`YYYY.MM.${nowDate}`);
           }
         } else {
           nextExpireDate = moment(startDate)
             .add("1", "Y")
-            .subtract("1", "d")
+            .subtract("1", "days")
             .format(`YYYY.MM.DD`);
         }
 
@@ -224,13 +224,13 @@ router.post("/", async (req, res, next) => {
         } else {
           nextExpireDate = moment(startDate)
             .add("1", "M")
-            .subtract("1", "d")
+            .subtract("1", "days")
             .format(`YYYY.MM.${nowDate}`);
         }
       } else {
         nextExpireDate = moment(startDate)
           .add("1", "Y")
-          .subtract("1", "d")
+          .subtract("1", "days")
           .format(`YYYY.MM.${nowDate}`);
       }
 
