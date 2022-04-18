@@ -98,4 +98,78 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/mypage/customer/calculate/set/favorites:
+ *   post:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       - myPage
+ *      summary: myPage 견적서 즐겨찾기
+ *      requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               calculate_idx:
+ *                 type: integer
+ *             example:
+ *               calculate_idx: "1"
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/mypage/customer/calculate/unset/favorites:
+ *   post:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       - myPage
+ *      summary: myPage 견적서 즐겨찾기 해제하기
+ *      requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               calculate_idx:
+ *                 type: integer
+ *             example:
+ *               calculate_idx: "1"
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/mypage/customer/calculate/favorites/list:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       - myPage
+ *      summary: myPage 유저 즐겨찾기 견적 리스트 가져오기
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/mypage/customer/calculate/detail/{calculate_idx}:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       - myPage
+ *      summary: myPage 유저 견적 디테일 가져오기
+ *      parameters:
+ *         - in: path
+ *           name: calculate_idx
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

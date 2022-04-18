@@ -18,10 +18,10 @@ module.exports = {
   getConsultList: async (req, res, next) => {
     const { customer_phoneNumber } = req;
 
-    let companyProfile = await db.sequelize
+    let findResult = await db.sequelize
       .query(
         `
-      SELECT consulting.idx, company_logo, consulting.createdAt, company_name, formTitle, customerConfirm
+      SELECT consulting.idx as consulting_idx, company_logo, consulting.createdAt, company_name, formTitle, customerConfirm
       FROM consulting 
       LEFT JOIN company ON consulting.company_idx = company.idx
       WHERE customer_phoneNumber = "${customer_phoneNumber}"
@@ -32,7 +32,7 @@ module.exports = {
         return makeSpreadArray(r);
       });
 
-    res.send({ success: 200, totalConsulting: companyProfile });
+    res.send({ success: 200, findResult });
     //  보여주고 나서 나머지 상담 신청폼 모두 확인 처리
     db.consulting.update(
       { customerConfirm: true },
@@ -67,12 +67,12 @@ module.exports = {
   getCalculateList: async (req, res, next) => {
     const { customer_phoneNumber } = req;
 
-    let companyProfile = await db.sequelize
+    let findResult = await db.sequelize
       .query(
         `
-    SELECT company_name, 
+    SELECT company_name, calNumber, predicted_price, customerConfirm, calculate.idx as calculate_idx, company.idx as company_idx, calculate.createdAt
     FROM customer 
-    LEFT JOIN calculate ON customer.idx = calculate.customer_idx
+    INNER JOIN calculate ON customer.idx = calculate.customer_idx
     LEFT JOIN company ON calculate.company_idx = company.idx
     WHERE customer_phoneNumber = "${customer_phoneNumber}"
     `
@@ -81,6 +81,80 @@ module.exports = {
         return makeSpreadArray(r);
       });
 
-    return res.send({ success: 200, companyProfile });
+    res.send({ success: 200, findResult });
+
+    findResult.forEach((data) => {
+      db.calculate.update(
+        { customerConfirm: true },
+        { where: { idx: data.calculate_idx } }
+      );
+    });
+  },
+  setFavoritesCalculate: (req, res, next) => {
+    const {
+      body: { calculate_idx },
+      customer_account_idx,
+    } = req;
+
+    db.calculate.update(
+      { favorites_customer_account_idx: customer_account_idx },
+      { where: { idx: calculate_idx } }
+    );
+    return res.send({ success: 200 });
+  },
+  unsetFavoritesCalculate: (req, res, next) => {
+    const {
+      body: { calculate_idx },
+    } = req;
+
+    db.calculate.update(
+      { favorites_customer_account_idx: null },
+      { where: { idx: calculate_idx } }
+    );
+
+    return res.send({ success: 200 });
+  },
+
+  getFavoritesCalculateList: async (req, res, next) => {
+    const { customer_account_idx } = req;
+
+    let findResult = await db.sequelize
+      .query(
+        `
+  SELECT company_logo, company_name, calNumber, predicted_price, customerConfirm, calculate.idx as calculate_idx, company.idx as company_idx, calculate.createdAt
+  FROM calculate 
+  LEFT JOIN company ON calculate.company_idx = company.idx
+  WHERE favorites_customer_account_idx = ${customer_account_idx}
+  `
+      )
+      .spread((r) => {
+        return makeSpreadArray(r);
+      });
+
+    return res.send({ success: 200, findResult });
+  },
+
+  getDetailCalculate: async (req, res, next) => {
+    const {
+      params: { calculate_idx },
+      customer_phoneNumber,
+    } = req;
+
+    const findResult = await db.calculate.findByPk(calculate_idx);
+
+    let calculateList = await db.sequelize
+      .query(
+        `
+        SELECT calculateNumber, calculate.idx as calculate_idx, calculate.createdAt
+        FROM customer 
+        INNER JOIN calculate ON customer.idx = calculate.customer_idx  AND calculate.company_idx = ${findResult.company_idx} 
+        WHERE customer_phoneNumber = "${customer_phoneNumber}"
+`
+      )
+      .spread((r) => {
+        return makeSpreadArray(r);
+      });
+
+    return res.send({ success: 200, findResult, calculateList });
   },
 };

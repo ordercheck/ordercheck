@@ -306,6 +306,14 @@ db.config.belongsTo(db.company, {
   foreignKey: "company_idx",
 });
 
+// customerAccount와 calculate 즐겨찾기
+db.customerAccount.hasMany(db.calculate, {
+  foreignKey: "favorites_customer_account_idx",
+});
+db.calculate.belongsTo(db.customerAccount, {
+  foreignKey: "favorites_customer_account_idx",
+});
+
 //추후에 연결된 sequelize 객체를 통해, 직접적으로 데이터베이스에 쿼리도 날릴 수 있습니다
 //그래서 앞으로 우리가 사용할 db 객체에 sequelize 객체와 바로 위에서 만든 모델들을 채워 넣습니다.
 db.sequelize = sequelize;
