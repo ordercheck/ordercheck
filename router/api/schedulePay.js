@@ -62,19 +62,17 @@ router.post("/", async (req, res, next) => {
         attributes: { exclude: ["createdAt", "updatedAt"] },
         raw: true,
       });
-
+      const findPlanAndCompany = await db.plan.findOne({
+        where: { merchant_uid },
+        include: [
+          {
+            model: db.company,
+          },
+        ],
+      });
       // 무료체험 끝나고 결제 한 경우
       if (findActivePlanResult) {
         // 영수증 발행
-        const findCompanyName = await db.plan.findOne({
-          where: { merchant_uid },
-          include: [
-            {
-              model: db.company,
-              attributes: ["company_name", "huidx"],
-            },
-          ],
-        });
 
         const findCardNumber = await db.card.findOne({
           where: { customer_uid: getResult.customer_uid },
@@ -90,7 +88,7 @@ router.post("/", async (req, res, next) => {
           receiptId,
           receipt_category: 1,
           card_number: findCardNumber.card_number,
-          company_name: findCompanyName.company.company_name,
+          company_name: findPlanAndCompany.company.company_name,
           receipt_kind: "구독",
         });
 
@@ -144,27 +142,22 @@ router.post("/", async (req, res, next) => {
 
         const createResult = await alarm.createAlarm({
           message,
-          user_idx: findCompanyName.company.huidx,
+          user_idx: findPlanAndCompany.company.huidx,
           alarm_type: 15,
         });
 
         // 알람 보내기
         const io = req.app.get("io");
         const sendAlarm = new Alarm(createResult);
-        io.to(findCompanyName.company.huidx).emit(
+        io.to(findPlanAndCompany.company.huidx).emit(
           "addAlarm",
           sendAlarm.alarmData.dataValues
         );
         return;
       } else {
-        const findPlanCompany = await db.plan.findOne(
-          { where: { merchant_uid } },
-          { attributes: ["company_idx"] }
-        );
-
         const beforePlanIdx = await db.plan.findOne(
           {
-            where: { active: 1, company_idx: findPlanCompany.company_idx },
+            where: { active: 1, company_idx: findPlanAndCompany.company.idx },
           },
           { attributes: ["idx"] }
         );
@@ -192,14 +185,6 @@ router.post("/", async (req, res, next) => {
         raw: true,
       });
 
-      // 영수증 발행
-      const findCompanyName = await db.company.findByPk(
-        findPlanResult.company_idx,
-        {
-          attributes: ["company_name", "huidx"],
-        }
-      );
-
       const findCardNumber = await db.card.findOne({
         where: { customer_uid: getResult.customer_uid },
         attributes: ["card_number"],
@@ -212,7 +197,7 @@ router.post("/", async (req, res, next) => {
         receiptId,
         receipt_category: 1,
         card_number: findCardNumber.card_number,
-        company_name: findCompanyName.company_name,
+        company_name: findPlanAndCompany.company.company_name,
         receipt_kind: "구독",
       });
 
@@ -263,14 +248,14 @@ router.post("/", async (req, res, next) => {
 
       const createResult = await alarm.createAlarm({
         message,
-        user_idx: findCompanyName.huidx,
+        user_idx: findPlanAndCompany.huidx,
         alarm_type: 15,
       });
 
       // 알람 보내기
       const io = req.app.get("io");
       const sendAlarm = new Alarm(createResult);
-      io.to(findCompanyName.huidx).emit(
+      io.to(findPlanAndCompany.huidx).emit(
         "addAlarm",
         sendAlarm.alarmData.dataValues
       );
@@ -322,7 +307,7 @@ router.post("/", async (req, res, next) => {
         where: { company_idx: findCompany.idx, active: true, standBy: false },
         raw: true,
       });
-      console.log(findCompanyMembers);
+
       findCompanyMembers.forEach((data) => {
         if (data.user_idx !== findCompany.huidx) {
           db.user.update(
