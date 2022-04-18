@@ -73,7 +73,7 @@ router.post("/", async (req, res, next) => {
       // 무료체험 끝나고 결제 한 경우
       if (findActivePlanResult) {
         // 영수증 발행
-
+        console.log("무료체험 끝나고 결제");
         const findCardNumber = await db.card.findOne({
           where: { customer_uid: getResult.customer_uid },
           attributes: ["card_number"],
@@ -97,16 +97,20 @@ router.post("/", async (req, res, next) => {
         if (checkPlan.pay_type == "month") {
           // 다음달 마지막 날
           let nextMonthLast = moment(startDate).add("1", "M").daysInMonth();
+
+          console.log("nextMonthLast", nextMonthLast);
           // 결제 당일 마지막 날
           let nowDate = moment(startDate).format("DD");
-
+          console.log("nowDate", nowDate);
           if (parseInt(nowDate) > nextMonthLast) {
             nextMonthLast -= 1;
+            console.log("nextMonthLast-1", nextMonthLast);
             nextExpireDate = moment(startDate)
               .add("1", "M")
               .format(`YYYY.MM.${nextMonthLast}`);
           } else {
             nowDate -= 1;
+            console.log("nowDate-1", nowDate);
             nextExpireDate = moment(startDate)
               .add("1", "M")
               .format(`YYYY.MM.${nowDate}`);
