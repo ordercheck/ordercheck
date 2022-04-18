@@ -110,6 +110,7 @@ router.post("/", async (req, res, next) => {
               .format(`YYYY.MM.${nextMonthLast}`);
           } else {
             nowDate -= 1;
+            nowDate = String(nowDate).padStart(2, "0");
             console.log("nowDate-1", nowDate);
             nextExpireDate = moment(startDate)
               .add("1", "M")
