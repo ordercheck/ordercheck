@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { multer_upload_formLink_img } = require("../../lib/aws/aws");
-const loginCheck = require("../../middleware/auth");
+const { loginCheck } = require("../../middleware/auth");
 const { checkFormLimit } = require("../../middleware/checkLimit");
 
 const {

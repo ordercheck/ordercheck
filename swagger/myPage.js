@@ -29,7 +29,6 @@
  *               use_agree: "서비스 이용 약관 동의"
  *               private_agree: "개인정보 수집 및 이용 동의"
  *               marketing_agree: "마케팅 정보 수신 및 동의(선택)"
- *
  *      responses:
  *       '200':
  *         description: 성공
@@ -42,7 +41,29 @@
  *      tags:
  *       - myPage
  *      summary: myPage 유저 home화면
-s *      responses:
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/mypage/customer/login:
+ *   post:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       - myPage
+ *      summary: myPage 유저 로그인
+ *      requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               customer_phoneNumber:
+ *                 type: string
+ *             example:
+ *               customer_phoneNumber: "010.6719.6919"
+ *      responses:
  *       '200':
  *         description: 성공
  *       '401':

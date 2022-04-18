@@ -5,7 +5,7 @@ const {
   confirmAlarm,
   repeatAlarm,
 } = require("../../controller/alarm");
-const loginCheck = require("../../middleware/auth");
+const { loginCheck } = require("../../middleware/auth");
 
 router.post("/confirm", loginCheck, confirmAlarm);
 

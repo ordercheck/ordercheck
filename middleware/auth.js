@@ -37,5 +37,27 @@ const loginCheck = async (req, res, next) => {
     return res.send({ success: 400, msg: "token err" });
   }
 };
+const customerLoginCheck = async (req, res, next) => {
+  const { authorization } = req.headers;
+  if (!authorization) {
+    return res.send({ success: 400, msg: "not login" });
+  }
 
-module.exports = loginCheck;
+  const [, token] = authorization.split(" ");
+  try {
+    const data = await verify_data(token);
+
+    const getCustomerInfo = await db.customerAccount.findByPk(data.user_idx, {
+      attributes: ["customer_phoneNumber"],
+    });
+
+    req.customer_phoneNumber = getCustomerInfo.customer_phoneNumber;
+    req.customer_account_idx = data.user_idx;
+    next();
+    return;
+  } catch (err) {
+    console.log(err);
+    return res.send({ success: 400, msg: "token err" });
+  }
+};
+module.exports = { loginCheck, customerLoginCheck };

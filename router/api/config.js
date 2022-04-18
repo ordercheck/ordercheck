@@ -41,7 +41,7 @@ const {
   multer_upload_img,
   multer_company_Enrollment_upload,
 } = require("../../lib/aws/aws");
-const loginCheck = require("../../middleware/auth");
+const { loginCheck } = require("../../middleware/auth");
 
 router.get("/company", loginCheck, getCompanyProfile);
 router.get("/company/member", loginCheck, getCompanyProfileMember);

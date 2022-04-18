@@ -261,7 +261,7 @@ module.exports = {
 
       body.formIdx = formLinkCompany.idx;
       body.company_name = formLinkCompany.company.company_name;
-      body.title = formLinkCompany.title;
+      body.formTitle = formLinkCompany.title;
       body.company_idx = formLinkCompany.company_idx;
       body.tempType = formLinkCompany.tempType;
 

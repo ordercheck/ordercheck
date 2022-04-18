@@ -194,5 +194,10 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: null,
       type: DataTypes.INTEGER,
     },
+
+    formTitle: {
+      allowNull: false,
+      type: DataTypes.STRING(100),
+    },
   });
 };

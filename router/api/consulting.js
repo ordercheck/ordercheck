@@ -4,7 +4,7 @@ const {
   multer_calculate_upload,
   multer_form_upload,
 } = require("../../lib/aws/aws");
-const loginCheck = require("../../middleware/auth");
+const { loginCheck } = require("../../middleware/auth");
 const { smsCheck, checkFormSns } = require("../../middleware/smsCheck");
 const { Filter, searchCustomer } = require("../../controller/consultingFilter");
 const {

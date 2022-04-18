@@ -14,7 +14,7 @@ const {
   joinCompany,
 } = require("../../controller/info");
 
-const loginCheck = require("../../middleware/auth");
+const { loginCheck } = require("../../middleware/auth");
 
 router.get("/user", loginCheck, getUserProfile);
 
