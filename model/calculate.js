@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes) {
   //테이블을 정의
-  return sequelize.define('calculate', {
+  return sequelize.define("calculate", {
     idx: {
       autoIncrement: true,
       primaryKey: true,
@@ -8,8 +8,14 @@ module.exports = function (sequelize, DataTypes) {
     },
 
     calculateNumber: {
-      allowNull: true,
-      defaultValue: '1차 견적서',
+      allowNull: false,
+      defaultValue: "1차 견적서",
+      type: DataTypes.STRING(100),
+    },
+
+    calNumber: {
+      allowNull: false,
+      defaultValue: "1차",
       type: DataTypes.STRING(100),
     },
 
@@ -32,7 +38,7 @@ module.exports = function (sequelize, DataTypes) {
 
     sharedDate: {
       allowNull: false,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
 

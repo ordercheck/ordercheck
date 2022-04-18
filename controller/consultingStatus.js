@@ -594,6 +594,7 @@ module.exports = {
         splitCalculateResult[0] = parseInt(splitCalculateResult[0]) + 1;
         splitCalculateResult = splitCalculateResult.join("차");
         body.calculateNumber = splitCalculateResult;
+        body.calNumber = `${parseInt(splitCalculateResult[0]) + 1}차`;
         calculateCreateResult = await db.calculate.create(body);
       }
 

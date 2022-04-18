@@ -34,13 +34,13 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/mypage/customer/home:
+ * /api/mypage/customer/consult/list:
  *   get:
  *      security:
  *       - bearerAuth: []
  *      tags:
  *       - myPage
- *      summary: myPage 유저 home화면
+ *      summary: myPage 유저 상담 신청 내역 리스트
  *      responses:
  *       '200':
  *         description: 성공
@@ -63,6 +63,36 @@
  *                 type: string
  *             example:
  *               customer_phoneNumber: "010.6719.6919"
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/mypage/customer/consult/{consulting_idx}:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       -  myPage
+ *     summary: 상담신청 디테일 보기
+ *     parameters:
+ *         - in: path
+ *           name: consulting_idx
+ *           schema:
+ *             type: integer
+ *           example: 1
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/mypage/customer/calculate/list:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       - myPage
+ *      summary: myPage 유저 견적 리스트 가져오기
  *      responses:
  *       '200':
  *         description: 성공

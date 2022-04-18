@@ -199,5 +199,10 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false,
       type: DataTypes.STRING(100),
     },
+
+    customerConfirm: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+    },
   });
 };
