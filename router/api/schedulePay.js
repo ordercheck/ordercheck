@@ -111,7 +111,7 @@ router.post("/", async (req, res, next) => {
             nextExpireDate = moment(startDate)
               .add("1", "M")
               .subtract("1", "days")
-              .format(`YYYY.MM.${nowDate}`);
+              .format(`YYYY.MM.DD`);
           }
         } else {
           nextExpireDate = moment(startDate)
@@ -225,13 +225,13 @@ router.post("/", async (req, res, next) => {
           nextExpireDate = moment(startDate)
             .add("1", "M")
             .subtract("1", "days")
-            .format(`YYYY.MM.${nowDate}`);
+            .format(`YYYY.MM.DD`);
         }
       } else {
         nextExpireDate = moment(startDate)
           .add("1", "Y")
           .subtract("1", "days")
-          .format(`YYYY.MM.${nowDate}`);
+          .format(`YYYY.MM.DD`);
       }
 
       findActivePlanResult.start_plan = moment(startDate).format("YYYY.MM.DD");
