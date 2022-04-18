@@ -322,7 +322,7 @@ router.post("/", async (req, res, next) => {
         where: { company_idx: findCompany.idx, active: true, standBy: false },
         raw: true,
       });
-
+      console.log(findCompanyMembers);
       findCompanyMembers.forEach((data) => {
         if (data.user_idx !== findCompany.huidx) {
           db.user.update(
