@@ -324,10 +324,12 @@ router.post("/", async (req, res, next) => {
       });
 
       findCompanyMembers.forEach((data) => {
-        db.user.update(
-          { login_access: false },
-          { where: { idx: data.user_idx } }
-        );
+        if (data.user_idx !== findCompany.huidx) {
+          db.user.update(
+            { login_access: false },
+            { where: { idx: data.user_idx } }
+          );
+        }
       });
 
       // 알람 보내기
