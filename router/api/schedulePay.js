@@ -279,18 +279,15 @@ router.post("/", async (req, res, next) => {
     // 정기결제 실패했을 때
     if (status == "failed") {
       const alarm = new Alarm({});
-      const findPlanCompany = await db.plan.findOne(
-        { where: { merchant_uid } },
-        { attributes: ["company_idx"] }
-      );
+      const findPlanCompany = await db.plan.findOne({
+        where: { merchant_uid, active: 3 },
+      });
 
       const findCompany = await db.company.findByPk(
-        findPlanCompany.company_idx,
-        { attributes: ["huidx"] }
+        findPlanCompany.company_idx
       );
 
       //알람 생성
-
       const message = `플랜 정기 결제가 실패하였습니다. 등록된 카드를 확인해주세요.`;
 
       const createResult = await alarm.createAlarm({
@@ -299,41 +296,44 @@ router.post("/", async (req, res, next) => {
         alarm_type: 23,
       });
 
+      const nextRepayDate = moment().add("7", "d").unix();
+      const newMerchant_uid = generateRandomCode(6);
+      // 일주일 후 재결제 등록
+      await schedulePay(
+        nextRepayDate,
+        getResult.customer_uid,
+        getResult.amount,
+        getResult.buyer_name,
+        getResult.buyer_tel,
+        getResult.buyer_email,
+        newMerchant_uid
+      );
+
+      //
+      db.plan.update(
+        {
+          merchant_uid: newMerchant_uid,
+          failed_count: findPlanCompany.failed_count + 1,
+        },
+        { where: { idx: findPlanCompany.idx } }
+      );
+
+      const findCompanyMembers = await db.userCompany.findAll({
+        where: { company_idx: findCompany.idx, active: true, standBy: false },
+        raw: true,
+      });
+
+      findCompanyMembers.forEach((data) => {
+        db.user.update(
+          { login_access: false },
+          { where: { idx: data.user_idx } }
+        );
+      });
+
       // 알람 보내기
       const io = req.app.get("io");
       const sendAlarm = new Alarm(createResult);
       io.to(findCompany.huidx).emit("addAlarm", sendAlarm.alarmData.dataValues);
-      const cancelldDate = "0 0 1 * * *";
-      const cancelPay = schedule.scheduleJob(cancelldDate, async function () {
-        try {
-          const findPlanResult = await db.plan.findOne(
-            { where: { merchant_uid } },
-            { attributes: ["company_idx"] }
-          );
-          await db.plan.update(
-            { active: 0 },
-            {
-              where: { merchant_uid },
-            }
-          );
-
-          await db.userCompany.update(
-            {
-              active: false,
-            },
-            {
-              where: {
-                company_idx: findPlanResult.company_idx,
-                standBy: false,
-              },
-            }
-          );
-          cancelPay.cancel();
-          return;
-        } catch (err) {
-          return res.send({ success: 400, message: err.message });
-        }
-      });
     }
   } catch (err) {
     next(err);
