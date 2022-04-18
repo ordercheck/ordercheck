@@ -104,7 +104,7 @@ router.post("/", async (req, res, next) => {
           console.log("nowDate", nowDate);
           if (parseInt(nowDate) > nextMonthLast) {
             nextMonthLast -= 1;
-            console.log("nextMonthLast-1", nextMonthLast);
+
             nextExpireDate = moment(startDate)
               .add("1", "M")
               .format(`YYYY.MM.${nextMonthLast}`);
@@ -118,6 +118,7 @@ router.post("/", async (req, res, next) => {
           }
         } else {
           nowDate -= 1;
+          nowDate = String(nowDate).padStart(2, "0");
           nextExpireDate = moment(startDate)
             .add("1", "Y")
             .format(`YYYY.MM.${nowDate}`);
@@ -225,19 +226,20 @@ router.post("/", async (req, res, next) => {
             .format(`YYYY.MM.${nextMonthLast}`);
         } else {
           nowDate -= 1;
+          nowDate = String(nowDate).padStart(2, "0");
           nextExpireDate = moment(startDate)
             .add("1", "M")
             .format(`YYYY.MM.${nowDate}`);
         }
       } else {
         nowDate -= 1;
+        nowDate = String(nowDate).padStart(2, "0");
         nextExpireDate = moment(startDate)
           .add("1", "Y")
           .format(`YYYY.MM.${nowDate}`);
       }
 
       findActivePlanResult.start_plan = moment(startDate).format("YYYY.MM.DD");
-
       findActivePlanResult.expire_plan = nextExpireDate;
 
       // 플랜 다음 결제 예약
