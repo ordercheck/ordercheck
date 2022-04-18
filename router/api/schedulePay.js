@@ -41,9 +41,13 @@ router.post("/", async (req, res, next) => {
         .add("1", "day")
         .format(`YYYY-MM-DD ${hour}:00`);
 
-      const startDateUnix = moment(startDate).unix();
+      // const startDateUnix = moment(startDate).unix();
 
       const newMerchant_uid = generateRandomCode(6);
+
+      const now = new Date();
+      let changeToTime = new Date(now.setSeconds(now.getSeconds() + 30));
+      startDateUnix = changeToTime.getTime() / 1000;
 
       // 기존의 expireDate를 이용하여 다음 스케쥴 등록
       await schedulePay(
@@ -292,6 +296,7 @@ router.post("/", async (req, res, next) => {
 
       const nextRepayDate = moment().add("7", "d").unix();
       const newMerchant_uid = generateRandomCode(6);
+
       // 일주일 후 재결제 등록
       await schedulePay(
         nextRepayDate,
