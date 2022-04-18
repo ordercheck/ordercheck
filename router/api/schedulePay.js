@@ -112,7 +112,10 @@ router.post("/", async (req, res, next) => {
               .format(`YYYY.MM.${nowDate}`);
           }
         } else {
-          nextExpireDate = moment(startDate).add("1", "Y").format("YYYY.MM.DD");
+          nowDate -= 1;
+          nextExpireDate = moment(startDate)
+            .add("1", "Y")
+            .format(`YYYY.MM.${nowDate}`);
         }
 
         findActivePlanResult.start_plan =
@@ -216,13 +219,16 @@ router.post("/", async (req, res, next) => {
             .add("1", "M")
             .format(`YYYY.MM.${nextMonthLast}`);
         } else {
-          monthLast -= 1;
+          nowDate -= 1;
           nextExpireDate = moment(startDate)
             .add("1", "M")
-            .format(`YYYY.MM.${monthLast}`);
+            .format(`YYYY.MM.${nowDate}`);
         }
       } else {
-        nextExpireDate = moment(startDate).add("1", "Y").format("YYYY.MM.DD");
+        nowDate -= 1;
+        nextExpireDate = moment(startDate)
+          .add("1", "Y")
+          .format(`YYYY.MM.${nowDate}`);
       }
 
       findActivePlanResult.start_plan = moment(startDate).format("YYYY.MM.DD");
