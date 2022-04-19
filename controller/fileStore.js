@@ -439,7 +439,7 @@ module.exports = {
         findTitleResult.forEach((data) => {
           addFileSize += data.file_size;
         });
-
+        addFileSize = addFileSize / 1e-6;
         const getDetailResult = await getFolderPath(
           path,
           customerFile_idx,
