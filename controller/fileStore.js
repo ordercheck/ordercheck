@@ -188,7 +188,7 @@ module.exports = {
   },
   addFile: async (req, res, next) => {
     const { files, company_idx } = req;
-
+    console.log(files);
     try {
       if (req.body.uuid) {
         req.body.folder_uuid = req.body.uuid;
@@ -219,7 +219,6 @@ module.exports = {
         req.body.uniqueKey = uniqueKey;
         req.body.title = title;
 
-        // kb 변환
         req.body.file_size = files[i].size;
 
         req.body.uuid = random5();
