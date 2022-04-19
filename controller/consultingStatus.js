@@ -48,7 +48,6 @@ const changeToSearch = (body) => {
 
 module.exports = {
   addConsultingForm: async (req, res, next) => {
-    const t = await db.sequelize.transaction();
     const selectUrl = (fileData) => {
       try {
         return (result = fileData.map((element) => {
@@ -58,6 +57,7 @@ module.exports = {
         return;
       }
     };
+    const t = await db.sequelize.transaction();
     try {
       // url을 string으로 연결
       const { body, files } = req;
