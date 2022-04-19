@@ -1434,6 +1434,7 @@ module.exports = {
         }
       }
       console.log(nextExpireDate);
+      const nextMerchant_uid = generateRandomCode(6);
       // 프리플랜에서 요금제 가입 할 때
 
       if (nowPlan.plan == "프리") {
@@ -1451,8 +1452,6 @@ module.exports = {
         const startDate = plan_data.start_plan.replace(/\./g, "-");
 
         const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
-
-        const nextMerchant_uid = generateRandomCode(6);
 
         plan_data.merchant_uid = nextMerchant_uid;
         plan_data.company_idx = company_idx;
@@ -1493,7 +1492,6 @@ module.exports = {
         if (plan_data.plan == "프리") {
           // 현재 플랜이 무료체험 기간일 때
           if (scheduledPlan.free_plan) {
-            const nextMerchant_uid = generateRandomCode(6);
             console.log("유료에서 프리로 다운그레이드인데 무료체험기간");
             plan_data.company_idx = company_idx;
             plan_data.free_plan = nowPlan.free_plan;
@@ -1555,8 +1553,6 @@ module.exports = {
           const startDate = nowPlan.start_plan.replace(/\./g, "-");
 
           const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
-
-          const nextMerchant_uid = generateRandomCode(6);
 
           // 새로 변경될 플랜 생성
           plan_data.merchant_uid = nextMerchant_uid;
