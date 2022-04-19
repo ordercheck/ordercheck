@@ -20,9 +20,7 @@ sequelize = new Sequelize(
       charset: "utf8mb4",
       dateStrings: true,
       typeCast: true,
-      options: {
-        requestTimeout: 3000,
-      },
+      connectTimeout: 5000,
     },
 
     logging: false,
