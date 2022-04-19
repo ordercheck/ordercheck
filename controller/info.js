@@ -82,6 +82,9 @@ module.exports = {
       );
 
       userProfile[0].fileStoreSize = fileStoreSize;
+
+      console.log(limitPlan[userProfile[0].plan].fileStore);
+
       userProfile[0].restFileStoreSize =
         limitPlan[userProfile[0].plan].fileStore - fileStoreSize;
 
