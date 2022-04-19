@@ -1382,6 +1382,8 @@ module.exports = {
       company_idx,
     } = req;
 
+    const t = await db.sequelize.transaction();
+
     let card_data = await verify_data(ct);
     const plan_data = await verify_data(pt);
 
@@ -1399,7 +1401,9 @@ module.exports = {
         });
       } else {
         card_data.user_idx = user_idx;
-        card_data = await db.card.create(card_data);
+        card_data = await db.card.create(card_data, {
+          transaction: t,
+        });
       }
 
       // 현재 플랜 체크
@@ -1431,11 +1435,15 @@ module.exports = {
       }
       console.log(nextExpireDate);
       // 프리플랜에서 요금제 가입 할 때
+
       if (nowPlan.plan == "프리") {
         console.log("프리 플랜에서 요금제 가입 할 때");
-        await db.plan.destroy({ where: { idx: nowPlan.idx } });
+        await db.plan.destroy({ where: { idx: nowPlan.idx }, transaction: t });
         if (scheduledPlan) {
-          await db.plan.destroy({ where: { idx: scheduledPlan.idx } });
+          await db.plan.destroy({
+            where: { idx: scheduledPlan.idx },
+            transaction: t,
+          });
         }
         // 시간을 unix형태로 변경(실제)
         const Hour = moment().format("HH");
@@ -1449,6 +1457,27 @@ module.exports = {
         plan_data.merchant_uid = nextMerchant_uid;
         plan_data.company_idx = company_idx;
 
+        // 결제 예약 플랜 생성
+        await db.plan.create(
+          {
+            ...plan_data,
+            active: 3,
+          },
+          {
+            transaction: t,
+          }
+        );
+        // 현재 플랜 생성
+        await db.plan.create(plan_data, {
+          transaction: t,
+        });
+
+        // 회사 초기화 날짜 수정
+        await db.company.update(
+          { resetDate: moment().add("1", "M") },
+          { where: { idx: company_idx }, transaction: t }
+        );
+
         // 다음 카드 결제 신청
         await schedulePay(
           changeToUnix,
@@ -1458,20 +1487,6 @@ module.exports = {
           user_data.user_phone,
           user_data.user_email,
           nextMerchant_uid
-        );
-
-        // 결제 예약 플랜 생성
-        await db.plan.create({
-          ...plan_data,
-          active: 3,
-        });
-        // 현재 플랜 생성
-        await db.plan.create(plan_data);
-
-        // 회사 초기화 날짜 수정
-        await db.company.update(
-          { resetDate: moment().add("1", "M") },
-          { where: { idx: company_idx } }
         );
       } else {
         // 프리로 다운그레이드 할 때
@@ -1486,12 +1501,25 @@ module.exports = {
             plan_data.expire_plan = nextExpireDate;
             plan_data.enrollment = null;
             plan_data.merchant_uid = nextMerchant_uid;
-            await db.plan.destroy({ where: { idx: nowPlan.idx } });
+            await db.plan.destroy({
+              where: { idx: nowPlan.idx },
+              transaction: t,
+            });
             // 결제 예약 플랜 삭제
-            await db.plan.destroy({ where: { idx: scheduledPlan.idx } });
-            await db.plan.create(plan_data);
+            await db.plan.destroy({
+              where: { idx: scheduledPlan.idx },
+              transaction: t,
+            });
+            await db.plan.create(plan_data, {
+              transaction: t,
+            });
 
-            await db.plan.create({ ...plan_data, active: 3, will_free: true });
+            await db.plan.create(
+              { ...plan_data, active: 3, will_free: true },
+              {
+                transaction: t,
+              }
+            );
           } else {
             console.log(
               "유료에서 프리로 다운그레이드인데 무료체험기간 끝났을 때"
@@ -1499,7 +1527,7 @@ module.exports = {
             // 무료플랜 전환 예정 업데이트
             await db.plan.update(
               { will_free: scheduledPlan.start_plan },
-              { where: { idx: scheduledPlan.idx } }
+              { where: { idx: scheduledPlan.idx }, transaction: t }
             );
           }
           console.log("기존 결제 예정 취소");
@@ -1511,12 +1539,11 @@ module.exports = {
         } else {
           console.log("유료에서 유료로 업그레이드 다운그레이드 할 때");
           // 결제 예약 플랜 삭제
-          await db.plan.destroy({ where: { idx: scheduledPlan.idx } });
-          // 스케쥴 취소
-          await cancelSchedule(
-            card_data.customer_uid,
-            scheduledPlan.merchant_uid
-          );
+          await db.plan.destroy({
+            where: { idx: scheduledPlan.idx },
+            transaction: t,
+          });
+
           // 시간을 unix형태로 변경(실제)
           const Hour = moment().format("HH");
 
@@ -1531,7 +1558,38 @@ module.exports = {
           plan_data.company_idx = company_idx;
           plan_data.start_plan = scheduledPlan.start_plan;
           plan_data.expire_plan = nextExpireDate;
-          const newPlan = await db.plan.create({ ...plan_data, active: 3 });
+          const newPlan = await db.plan.create(
+            { ...plan_data, active: 3 },
+            {
+              transaction: t,
+            }
+          );
+
+          // 현재 플랜이 무료체험 기간일 때
+          if (scheduledPlan.free_plan) {
+            console.log("유료에서 유료로 바꾸는데 무료체험 기간일 때");
+            plan_data.free_plan = nowPlan.free_plan;
+            await db.plan.destroy({
+              where: { idx: nowPlan.idx },
+              transaction: t,
+            });
+            await db.plan.create(
+              { ...plan_data, active: 1 },
+              {
+                transaction: t,
+              }
+            );
+            await db.plan.update(
+              { free_plan: nowPlan.free_plan },
+              { where: { idx: newPlan.idx }, transaction: t }
+            );
+          }
+
+          // 스케쥴 취소
+          await cancelSchedule(
+            card_data.customer_uid,
+            scheduledPlan.merchant_uid
+          );
 
           // 다음 카드 결제 신청
           await schedulePay(
@@ -1543,21 +1601,12 @@ module.exports = {
             user_data.user_email,
             nextMerchant_uid
           );
-          // 현재 플랜이 무료체험 기간일 때
-          if (scheduledPlan.free_plan) {
-            console.log("유료에서 유료로 바꾸는데 무료체험 기간일 때");
-            plan_data.free_plan = nowPlan.free_plan;
-            await db.plan.destroy({ where: { idx: nowPlan.idx } });
-            await db.plan.create({ ...plan_data, active: 1 });
-            await db.plan.update(
-              { free_plan: nowPlan.free_plan },
-              { where: { idx: newPlan.idx } }
-            );
-          }
         }
       }
+      await t.commit();
       return res.send({ success: 200 });
     } catch (err) {
+      await t.rollback();
       next(err);
     }
   },
