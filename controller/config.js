@@ -1436,7 +1436,7 @@ module.exports = {
       console.log(nextExpireDate);
       const nextMerchant_uid = +generateRandomCode(6);
       // 프리플랜에서 요금제 가입 할 때
-      console.log(nextMerchant_uid);
+      console.log(typeof nextMerchant_uid);
       if (nowPlan.plan == "프리") {
         console.log("프리 플랜에서 요금제 가입 할 때");
         await db.plan.destroy({ where: { idx: nowPlan.idx }, transaction: t });
