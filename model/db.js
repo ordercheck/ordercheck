@@ -20,8 +20,9 @@ sequelize = new Sequelize(
       charset: "utf8mb4",
       dateStrings: true,
       typeCast: true,
-      statement_timeout: 1000,
-      idle_in_transaction_session_timeout: 5000,
+      options: {
+        requestTimeout: 3000,
+      },
     },
 
     logging: false,
