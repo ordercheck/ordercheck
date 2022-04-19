@@ -19,7 +19,12 @@ sequelize = new Sequelize(
     dialectOptions: { charset: "utf8mb4", dateStrings: true, typeCast: true },
 
     logging: false,
-
+    pool: {
+      max: 20,
+      min: 0,
+      acquire: 60000,
+      idle: 10000,
+    },
     define: {
       charset: "utf8",
       collate: "utf8_general_ci",
