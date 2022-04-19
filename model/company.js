@@ -81,5 +81,10 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+
+    total_file_size: {
+      allowNull: true,
+      type: DataTypes.DOUBLE,
+    },
   });
 };

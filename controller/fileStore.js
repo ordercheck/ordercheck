@@ -187,7 +187,7 @@ module.exports = {
     }
   },
   addFile: async (req, res, next) => {
-    const { files } = req;
+    const { files, company_idx } = req;
 
     try {
       if (req.body.uuid) {
@@ -196,7 +196,7 @@ module.exports = {
       const createFileResult = [];
       for (let i = 0; i < files.length; i++) {
         // 회사 인덱스 저장
-        req.body.company_idx = req.company_idx;
+        req.body.company_idx = company_idx;
 
         req.body.customerFile_idx = req.params.customerFile_idx;
         const findUserResult = await db.user.findByPk(req.user_idx, {
@@ -223,6 +223,11 @@ module.exports = {
         req.body.uuid = random5();
 
         const createResult = await db.files.create(req.body);
+
+        db.company.increment(
+          { total_file_size: files[i].size / 1e6 },
+          { where: { idx: company_idx } }
+        );
 
         createFileResult.push(createResult.toJSON());
       }
