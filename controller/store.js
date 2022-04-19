@@ -1,10 +1,17 @@
-const db = require('../model/db');
+const db = require("../model/db");
 module.exports = {
   storeBread: async (req, res, next) => {
     const { body, user_idx } = req;
+    // 제일 최근 데이터가 같은 데이터인지 체크
+
     body.user_idx = user_idx;
-    await db.store.create(body);
-    return res.send({ success: 200 });
+
+    const checkDuplicate = await db.store.findOne({ where: body });
+    if (!checkDuplicate) {
+      await db.store.create(body);
+      return res.send({ success: 200 });
+    }
+    return res.send({ success: 400 });
   },
 
   delBread: async (req, res, next) => {
