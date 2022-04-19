@@ -8,7 +8,7 @@ module.exports = {
 
     const checkDuplicate = await db.store.findOne({ where: { user_idx } });
 
-    if (checkDuplicate.bread !== body.bread) {
+    if (!checkDuplicate || checkDuplicate.bread !== body.bread) {
       console.log("왜 만들어짐?");
       await db.store.create(body);
       return res.send({ success: 200 });
