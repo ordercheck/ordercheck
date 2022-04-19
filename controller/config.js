@@ -84,7 +84,7 @@ module.exports = {
               .add(1, "d")
               .format("YYYY.MM.DD")
           : false,
-        free_plan: findNextPlan.free_plan ? true : false,
+        free_plan: findPlan.free_plan ? true : false,
         pay_type: findPlan.pay_type,
       };
 

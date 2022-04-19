@@ -103,6 +103,11 @@ router.post("/", async (req, res, next) => {
         });
 
         const receiptId = generateRandomCode(6);
+
+        await db.plan.update(
+          { free_plan: null },
+          { where: { idx: findActivePlanResult.idx } }
+        );
         delete findActivePlanResult.idx;
 
         await db.receipt.create({
@@ -145,7 +150,7 @@ router.post("/", async (req, res, next) => {
           moment(startDate).format("YYYY.MM.DD");
 
         findActivePlanResult.expire_plan = nextExpireDate;
-
+        findActivePlanResult.free_plan = null;
         // 새로운 결제 예약
         await db.plan.create({
           ...findActivePlanResult,
@@ -155,10 +160,7 @@ router.post("/", async (req, res, next) => {
 
         // 이전 결제 예약은 제거
         await db.plan.destroy({ where: { merchant_uid, active: 3 } });
-        await db.plan.update(
-          { free_plan: null },
-          { where: { merchant_uid: newMerchant_uid, active: 3 } }
-        );
+
         res.send({ success: 200 });
 
         //알람 생성
