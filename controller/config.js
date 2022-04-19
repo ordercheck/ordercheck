@@ -1414,7 +1414,7 @@ module.exports = {
       const scheduledPlan = await db.plan.findOne({
         where: { company_idx, active: 3 },
       });
-
+      console.log(scheduledPlan.merchant_uid);
       let nextExpireDate;
       if (plan_data.pay_type == "month") {
         if (scheduledPlan) {
@@ -1535,7 +1535,7 @@ module.exports = {
           }
           console.log("기존 결제 예정 취소");
           console.log(card_data.customer_uid);
-          console.log(scheduledPlan.merchant_uid);
+
           // 기존의 결제 예정 취소
           await cancelSchedule(
             card_data.customer_uid,
