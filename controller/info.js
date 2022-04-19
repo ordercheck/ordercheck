@@ -9,8 +9,8 @@ const { masterConfig } = require("../lib/standardTemplate");
 const { showUserAlarmConfigAttributes } = require("../lib/attributes");
 const { Template } = require("../lib/classes/TemplateClass");
 const { cancelSchedule } = require("../lib/payFunction");
+const { limitPlan } = require("../lib/standardTemplate");
 const bcrypt = require("bcrypt");
-
 const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
@@ -73,6 +73,8 @@ module.exports = {
       findFilesResult.forEach((data) => {
         fileStoreSize += data.file_size;
       });
+
+      limitPlan;
 
       const findConfig = await template.findConfigFindByPk(
         userProfile[0].config_idx,
