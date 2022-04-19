@@ -202,7 +202,7 @@ module.exports = function (sequelize, DataTypes) {
     },
 
     customerConfirm: {
-      allowNull: false,
+      allowNull: true,
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
