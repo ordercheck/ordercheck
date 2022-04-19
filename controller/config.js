@@ -1502,7 +1502,6 @@ module.exports = {
             plan_data.enrollment = null;
             plan_data.merchant_uid = nextMerchant_uid;
 
-            console.log("플랜 데이터", plan_data);
             await db.plan.destroy({
               where: { idx: nowPlan.idx },
               transaction: t,
