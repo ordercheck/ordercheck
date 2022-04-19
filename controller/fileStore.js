@@ -467,7 +467,7 @@ module.exports = {
         " | "
       );
       getFileResult.path = getTitleRootResult;
-
+      getFileResult.file_size = getFileResult.file_size / 1e-6;
       return res.send({ succes: 200, getFileResult });
     } catch (err) {
       next(err);
