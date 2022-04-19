@@ -187,8 +187,9 @@ module.exports = {
     }
   },
   addFile: async (req, res, next) => {
+    console.log("요청");
     const { files, company_idx } = req;
-    console.log(files);
+
     try {
       if (req.body.uuid) {
         req.body.folder_uuid = req.body.uuid;
