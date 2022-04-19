@@ -15,7 +15,10 @@ const {
   findIncludeFolders,
   moveFile,
 } = require("../../controller/fileStore");
-const { checkFileLimit } = require("../../middleware/checkLimit");
+const {
+  checkFileLimit,
+  checkOverFile,
+} = require("../../middleware/checkLimit");
 const { multer_file_store_upload } = require("../../lib/aws/aws");
 const { loginCheck } = require("../../middleware/auth");
 router.get("/customer/list", loginCheck, getUserList);

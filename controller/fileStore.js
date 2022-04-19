@@ -224,11 +224,6 @@ module.exports = {
 
         const createResult = await db.files.create(req.body);
 
-        db.company.increment(
-          { total_file_size: files[i].size / 1e6 },
-          { where: { idx: company_idx } }
-        );
-
         createFileResult.push(createResult.toJSON());
       }
 

@@ -221,12 +221,12 @@ module.exports = {
       };
       const sendMember = [findCompany.huidx];
       alarm.sendMultiAlarm(insertData, sendMember, io);
-      const restMB =
-        (limitPlan[findPlanResult.plan].fileStore - tbFileSize) * 1000000;
+      // const restMB =
+      //   (limitPlan[findPlanResult.plan].fileStore - tbFileSize) * 1000000;
 
-      const findHuidx = await db.user.findByPk(findCompany.huidx, {
-        attributes: ["user_email"],
-      });
+      // const findHuidx = await db.user.findByPk(findCompany.huidx, {
+      //   attributes: ["user_email"],
+      // });
 
       // sendFileStoreEmail(
       //   50,
@@ -254,8 +254,8 @@ module.exports = {
       const findHuidx = await db.user.findByPk(findCompany.huidx, {
         attributes: ["user_email"],
       });
-      const restMB =
-        (limitPlan[findPlanResult.plan].fileStore - tbFileSize) * 1000000;
+      // const restMB =
+      //   (limitPlan[findPlanResult.plan].fileStore - tbFileSize) * 1000000;
 
       // sendFileStoreEmail(
       //   80,
