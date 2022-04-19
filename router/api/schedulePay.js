@@ -28,11 +28,30 @@ router.post("/", async (req, res, next) => {
     // 다음 결제 예약
     if (status == "paid") {
       const alarm = new Alarm({});
+
       const checkPlan = await db.plan.findOne({
         where: { merchant_uid, active: 3 },
         attributes: ["pay_type", "expire_plan"],
         raw: true,
       });
+
+      // 결제 한번 실패한 사태라면 팀원들 로그인 제한 풀어주기
+      if (checkPlan.failed_count !== 0) {
+        const findCompanyMembers = await db.userCompany.findAll({
+          where: {
+            company_idx: checkPlan.company_idx,
+            active: true,
+            standBy: false,
+          },
+          raw: true,
+        });
+        findCompanyMembers.forEach((data) => {
+          db.user.update(
+            { login_access: true },
+            { where: { idx: data.user_idx } }
+          );
+        });
+      }
 
       const expireDate = checkPlan.expire_plan.replace(/\./gi, "-");
       const hour = moment().format("HH");
