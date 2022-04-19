@@ -264,7 +264,6 @@ module.exports = {
   deleteFile: async (req, res, next) => {
     const { uuid, isfolder } = req.params;
 
-    const t = await db.sequelize.transaction();
     try {
       // 폴더가 아닐 때
       if (isfolder == 0) {
@@ -274,6 +273,7 @@ module.exports = {
 
         return res.send({ success: 200, message: "삭제 완료" });
       }
+      const t = await db.sequelize.transaction();
       // 폴더일때
       const findFolderUuid = await db.folders.findAll({
         where: { path: { [Op.like]: `%${uuid}%` } },
