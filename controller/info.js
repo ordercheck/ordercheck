@@ -69,19 +69,19 @@ module.exports = {
         raw: true,
       });
 
-      let fileStoreSize = 0;
-      findFilesResult.forEach((data) => {
-        fileStoreSize += data.file_size;
-      });
+      // let fileStoreSize = 0;
+      // findFilesResult.forEach((data) => {
+      //   fileStoreSize += data.file_size;
+      // });
 
-      const findConfig = await template.findConfigFindByPk(
-        userProfile[0].config_idx,
-        {
-          exclude: ["createdAt", "updatedAt", "company_idx", "duplicateCount"],
-        }
-      );
+      // const findConfig = await template.findConfigFindByPk(
+      //   userProfile[0].config_idx,
+      //   {
+      //     exclude: ["createdAt", "updatedAt", "company_idx", "duplicateCount"],
+      //   }
+      // );
 
-      userProfile[0].fileStoreSize = fileStoreSize;
+      // userProfile[0].fileStoreSize = fileStoreSize;
       userProfile[0].authList = findConfig;
       if (userProfile[0].huidx == req.user_idx && userProfile[0].companyexist) {
         userProfile[0].isOwner = true;
