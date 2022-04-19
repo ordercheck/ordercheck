@@ -6,7 +6,10 @@ module.exports = {
 
     body.user_idx = user_idx;
 
-    const checkDuplicate = await db.store.findOne({ where: { user_idx } });
+    const checkDuplicate = await db.store.findOne({
+      where: { user_idx },
+      order: [["createdAt", "ASC"]],
+    });
     console.log(checkDuplicate);
     if (!checkDuplicate || checkDuplicate.bread !== body.bread) {
       console.log("만들어져라");
