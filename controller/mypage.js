@@ -24,7 +24,7 @@ module.exports = {
       SELECT consulting.idx as consulting_idx, company_logo, consulting.createdAt, company_name, formTitle, customerConfirm
       FROM consulting 
       LEFT JOIN company ON consulting.company_idx = company.idx
-      WHERE customer_phoneNumber = "${customer_phoneNumber}"
+      WHERE customer_phoneNumber = "${customer_phoneNumber}" AND formTitle IS NOT NULL
       ORDER BY consulting.createdAt DESC;
       `
       )

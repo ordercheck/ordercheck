@@ -38,6 +38,7 @@ module.exports = {
         totalPage: 1,
       });
     }
+    console.log(req.body);
     const { firstDate, secondDate } = changeDate(date);
     const { start, intlimit, intPage } = await checkPage(
       limit,
