@@ -83,10 +83,11 @@ module.exports = {
 
       userProfile[0].fileStoreSize = fileStoreSize;
 
-      console.log(limitPlan[userProfile[0].plan].fileStore);
-
       userProfile[0].restFileStoreSize =
         limitPlan[userProfile[0].plan].fileStore - fileStoreSize;
+
+      userProfile[0].maxFileStoreSize =
+        limitPlan[userProfile[0].plan].fileStore;
 
       userProfile[0].authList = findConfig;
       if (userProfile[0].huidx == req.user_idx && userProfile[0].companyexist) {
