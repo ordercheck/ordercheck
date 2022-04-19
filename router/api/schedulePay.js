@@ -162,7 +162,7 @@ router.post("/", async (req, res, next) => {
         res.send({ success: 200 });
 
         //알람 생성
-        const month = moment().format("DD");
+        const month = moment().format("MM");
         const money = getResult.amount.toLocaleString();
         const message = `${month}월 구독료 ${money}원이 결제되었습니다. 오더체크를 이용해주셔서 감사합니다.`;
 
@@ -276,14 +276,14 @@ router.post("/", async (req, res, next) => {
 
       const createResult = await alarm.createAlarm({
         message,
-        user_idx: findPlanAndCompany.huidx,
+        user_idx: findPlanAndCompany.company.huidx,
         alarm_type: 15,
       });
 
       // 알람 보내기
       const io = req.app.get("io");
       const sendAlarm = new Alarm(createResult);
-      io.to(findPlanAndCompany.huidx).emit(
+      io.to(findPlanAndCompany.company.huidx).emit(
         "addAlarm",
         sendAlarm.alarmData.dataValues
       );
