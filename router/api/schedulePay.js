@@ -62,7 +62,7 @@ router.post("/", async (req, res, next) => {
 
       const startDateUnix = moment(startDate).unix();
 
-      const newMerchant_uid = +generateRandomCode(6);
+      const newMerchant_uid = +generateRandomCode();
 
       // const now = new Date();
       // let changeToTime = new Date(now.setSeconds(now.getSeconds() + 30));
@@ -102,7 +102,7 @@ router.post("/", async (req, res, next) => {
           attributes: ["card_number"],
         });
 
-        const receiptId = generateRandomCode(6);
+        const receiptId = generateRandomCode();
         // 사용하고 있떤 플랜 무료체험 종료
         await db.plan.update(
           { free_plan: null },
@@ -217,7 +217,7 @@ router.post("/", async (req, res, next) => {
         where: { customer_uid: getResult.customer_uid },
         attributes: ["card_number"],
       });
-      const receiptId = generateRandomCode(6);
+      const receiptId = generateRandomCode();
       delete findPlanResult.idx;
       await db.receipt.create({
         ...findPlanResult,
@@ -312,7 +312,7 @@ router.post("/", async (req, res, next) => {
       });
 
       const nextRepayDate = moment().add("7", "d").unix();
-      const newMerchant_uid = +generateRandomCode(6);
+      const newMerchant_uid = +generateRandomCode();
 
       // 일주일 후 재결제 등록
       await schedulePay(

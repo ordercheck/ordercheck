@@ -546,7 +546,7 @@ module.exports = {
         }
       );
       res.send({ success: 400, message: "문자 충전 실패" });
-      const receiptId = generateRandomCode(6);
+      const receiptId = generateRandomCode();
 
       await db.receipt.create({
         company_idx,
@@ -603,7 +603,7 @@ module.exports = {
 
     res.send({ success: 200, message: "충전 완료" });
 
-    const receiptId = generateRandomCode(6);
+    const receiptId = generateRandomCode();
 
     await db.receipt.create({
       company_idx,
@@ -777,7 +777,7 @@ module.exports = {
 
       const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
-      const nextMerchant_uid = +generateRandomCode(6);
+      const nextMerchant_uid = +generateRandomCode();
 
       await schedulePay(
         changeToUnix,
@@ -1177,7 +1177,7 @@ module.exports = {
 
           const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
-          const nextMerchant_uid = +generateRandomCode(6);
+          const nextMerchant_uid = +generateRandomCode();
           // 다음 카드 결제 신청
           await schedulePay(
             changeToUnix,
@@ -1434,7 +1434,7 @@ module.exports = {
         }
       }
       console.log(nextExpireDate);
-      const nextMerchant_uid = +generateRandomCode(6);
+      const nextMerchant_uid = +generateRandomCode();
       // 프리플랜에서 요금제 가입 할 때
       console.log(typeof nextMerchant_uid);
       if (nowPlan.plan == "프리") {

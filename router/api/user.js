@@ -77,7 +77,7 @@ const addPlanAndSchedule = async (
 
     const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
-    const nextMerchant_uid = +generateRandomCode(6);
+    const nextMerchant_uid = +generateRandomCode();
 
     //  테스트
     // const now = new Date();
@@ -288,7 +288,7 @@ router.post("/login", async (req, res, next) => {
 // 회원가입 체크 라우터
 router.post("/join/check", async (req, res) => {
   let { user_email, user_phone } = req.body;
-  const randomNumber = generateRandomCode(6);
+  const randomNumber = generateRandomCode();
   const message = `[인증번호:${randomNumber}] 오더체크 인증번호입니다.\n오더체크와 편리한 고객응대를 시작해보세요.`;
   let phoneCheck = await db.user
     .findAll({ where: { user_phone } })
@@ -327,7 +327,7 @@ router.post("/join/check", async (req, res) => {
 router.post("/check/pw", async (req, res) => {
   let { user_phone } = req.body;
 
-  const randomNumber = generateRandomCode(6);
+  const randomNumber = generateRandomCode();
   const message = `[인증번호: ${randomNumber}] \n 오더체크에서 보내는 인증번호입니다.`;
   user_phone = user_phone.replace(/\./g, "-");
 
