@@ -77,7 +77,7 @@ const addPlanAndSchedule = async (
 
     const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
-    const nextMerchant_uid = generateRandomCode(6);
+    const nextMerchant_uid = +generateRandomCode(6);
 
     //  테스트
     // const now = new Date();
@@ -135,62 +135,6 @@ router.post("/selfPlan", async (req, res) => {
     user_phone,
     user_email,
     nextMerchant_uid
-  );
-  return res.send({ success: 200 });
-});
-
-// 플랜 수동으로 넣기
-router.patch("/selfPlanChange", async (req, res) => {
-  const { huidx, company_idx } = req.body;
-  await db.plan.destroy({ where: { company_idx } });
-  const merchant_uid = generateRandomCode(6);
-  await db.plan.create({
-    plan: 팀,
-    huidx,
-    start_plan: "2022.06.28",
-    free_plan: "2022.04.12",
-    expire_plan: "2022.07.27",
-    plan_price: "125300",
-    result_price: "125300",
-    result_price_levy: "137830",
-    whiteLabelChecked: false,
-    chatChecked: false,
-    analysticChecked: false,
-    whiteLabel_price: "150400",
-    chat_price: "150400",
-    analystic_price: "150400",
-    merchant_uid,
-    pay_type: "month",
-    active: 3,
-    company_idx,
-    enrollment: true,
-  });
-  await db.plan.create({
-    plan: 팀,
-    huidx,
-    start_plan: "2022.06.28",
-    free_plan: "2022.04.12",
-    expire_plan: "2022.07.27",
-    plan_price: "125300",
-    result_price: "125300",
-    result_price_levy: "137830",
-    whiteLabelChecked: false,
-    chatChecked: false,
-    analysticChecked: false,
-    whiteLabel_price: "150400",
-    chat_price: "150400",
-    analystic_price: "150400",
-    merchant_uid,
-    pay_type: "month",
-    active: 1,
-    company_idx,
-    enrollment: true,
-  });
-  await db.company.update(
-    {
-      companyexist: true,
-    },
-    { where: { idx: company_idx } }
   );
   return res.send({ success: 200 });
 });

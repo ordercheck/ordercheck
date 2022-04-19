@@ -62,7 +62,7 @@ router.post("/", async (req, res, next) => {
 
       const startDateUnix = moment(startDate).unix();
 
-      const newMerchant_uid = generateRandomCode(6);
+      const newMerchant_uid = +generateRandomCode(6);
 
       // const now = new Date();
       // let changeToTime = new Date(now.setSeconds(now.getSeconds() + 30));
@@ -312,7 +312,7 @@ router.post("/", async (req, res, next) => {
       });
 
       const nextRepayDate = moment().add("7", "d").unix();
-      const newMerchant_uid = generateRandomCode(6);
+      const newMerchant_uid = +generateRandomCode(6);
 
       // 일주일 후 재결제 등록
       await schedulePay(

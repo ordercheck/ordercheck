@@ -777,7 +777,7 @@ module.exports = {
 
       const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
-      const nextMerchant_uid = generateRandomCode(6);
+      const nextMerchant_uid = +generateRandomCode(6);
 
       await schedulePay(
         changeToUnix,
@@ -1177,7 +1177,7 @@ module.exports = {
 
           const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
-          const nextMerchant_uid = generateRandomCode(6);
+          const nextMerchant_uid = +generateRandomCode(6);
           // 다음 카드 결제 신청
           await schedulePay(
             changeToUnix,
