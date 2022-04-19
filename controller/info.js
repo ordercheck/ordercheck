@@ -83,10 +83,8 @@ module.exports = {
 
       userProfile[0].fileStoreSize = fileStoreSize;
 
-      // userProfile[0].restFileStoreSize =
-      //   limitPlan[userProfile[0].plan].fileStore - fileStoreSize;
-
-      userProfile[0].restFileStoreSize = 1000000;
+      userProfile[0].restFileStoreSize =
+        limitPlan[userProfile[0].plan].fileStore - fileStoreSize;
 
       userProfile[0].maxFileStoreSize =
         limitPlan[userProfile[0].plan].fileStore;
