@@ -10,7 +10,7 @@ module.exports = {
       where: { user_idx },
       order: [["createdAt", "DESC"]],
     });
-    console.log(checkDuplicate);
+
     if (!checkDuplicate || checkDuplicate.bread !== body.bread) {
       console.log("만들어져라");
       await db.store.create(body);
