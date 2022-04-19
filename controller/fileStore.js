@@ -219,7 +219,8 @@ module.exports = {
         req.body.uniqueKey = uniqueKey;
         req.body.title = title;
 
-        req.body.file_size = files[i].size / 1e6;
+        // kb 변환
+        req.body.file_size = files[i].size * 0.001;
 
         req.body.uuid = random5();
 
