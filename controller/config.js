@@ -67,31 +67,9 @@ module.exports = {
         });
       const findPlan = await db.plan.findOne({
         where: { company_idx, active: 1 },
-        attributes: [
-          "plan",
-          "chat_price",
-          "analystic_price",
-          "whiteLabel_price",
-          "expire_plan",
-          "plan_price",
-          "free_plan",
-          "start_plan",
-          "pay_type",
-        ],
       });
       const findNextPlan = await db.plan.findOne({
         where: { company_idx, active: 3 },
-        attributes: [
-          "plan",
-          "chat_price",
-          "analystic_price",
-          "whiteLabel_price",
-          "expire_plan",
-          "plan_price",
-          "free_plan",
-          "start_plan",
-          "pay_type",
-        ],
       });
 
       const planDetail = {
@@ -126,6 +104,9 @@ module.exports = {
             : false,
           free_plan: findNextPlan.free_plan ? true : false,
           pay_type: findNextPlan.pay_type,
+          whiteLabelChecked: findNextPlan.whiteLabelChecked,
+          chatChecked: findNextPlan.chatChecked,
+          analysticChecked: findNextPlan.analysticChecked,
         };
       }
 
