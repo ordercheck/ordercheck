@@ -8,7 +8,7 @@ module.exports = {
 
     const checkDuplicate = await db.store.findOne({
       where: { user_idx },
-      order: [["createdAt", "ASC"]],
+      order: [["createdAt", "DESC"]],
     });
     console.log(checkDuplicate);
     if (!checkDuplicate || checkDuplicate.bread !== body.bread) {
