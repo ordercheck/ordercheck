@@ -439,7 +439,7 @@ module.exports = {
         findTitleResult.forEach((data) => {
           addFileSize += data.file_size;
         });
-        addFileSize = addFileSize / 1e-6;
+        addFileSize = addFileSize / 1e6;
         const getDetailResult = await getFolderPath(
           path,
           customerFile_idx,
@@ -457,7 +457,7 @@ module.exports = {
         where: { uuid, customerFile_idx },
         attributes: showDetailFileAttributes,
       });
-      getFileResult.file_size = getFileResult.file_size / 1e-6;
+      getFileResult.file_size = getFileResult.file_size / 1e6;
       // 파일이 폴더 밖에 있을때
       if (!path) {
         return res.send({ succes: 200, getFileResult });
