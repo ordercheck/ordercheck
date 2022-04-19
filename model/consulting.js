@@ -196,12 +196,14 @@ module.exports = function (sequelize, DataTypes) {
     },
 
     formTitle: {
-      allowNull: false,
+      allowNull: true,
+      defaultValue: null,
       type: DataTypes.STRING(100),
     },
 
     customerConfirm: {
       allowNull: false,
+      defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
   });
