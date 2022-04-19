@@ -103,7 +103,7 @@ router.post("/", async (req, res, next) => {
         });
 
         const receiptId = generateRandomCode(6);
-
+        // 사용하고 있떤 플랜 무료체험 종료
         await db.plan.update(
           { free_plan: null },
           { where: { idx: findActivePlanResult.idx } }
