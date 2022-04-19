@@ -187,7 +187,7 @@ module.exports = {
     }
   },
   addFile: async (req, res, next) => {
-    console.log("요청");
+    console.log("파일 올림");
     const { files, company_idx } = req;
 
     try {
