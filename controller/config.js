@@ -1501,6 +1501,7 @@ module.exports = {
             plan_data.expire_plan = nextExpireDate;
             plan_data.enrollment = null;
             plan_data.merchant_uid = nextMerchant_uid;
+            plan_data.will_free = nowPlan.start_plan;
             await db.plan.destroy({
               where: { idx: nowPlan.idx },
               transaction: t,
@@ -1515,7 +1516,7 @@ module.exports = {
             });
 
             await db.plan.create(
-              { ...plan_data, active: 3, will_free: true },
+              { ...plan_data, active: 3 },
               {
                 transaction: t,
               }
