@@ -85,5 +85,52 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
+
+    calculateReload: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
+    },
+    emailProductServiceAlarm: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
+    },
+    emailPromotionAlarm: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
+    },
+    emailCustomerStatusAlarm: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
+    },
+    emailAddConsultingAlarm: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
+    },
+
+    kakaoProductServiceAlarm: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
+    },
+    kakaoPromotionAlarm: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
+    },
+    kakaoCustomerStatusAlarm: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
+    },
+    kakaoAddConsultingAlarm: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
+    },
   });
 };

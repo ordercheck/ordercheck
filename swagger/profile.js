@@ -143,19 +143,31 @@
  *           schema:
  *             type: object
  *             properties:
- *               productServiceAlarm:
- *                 type: integer
- *               promotionAlarm:
- *                 type: integer
- *               customerStatusAlarm:
- *                 type: integer
- *               addConsultingAlarm:
- *                 type: integer
+ *               emailProductServiceAlarm:
+ *                 type: boolean
+ *               emailPromotionAlarm:
+ *                 type: boolean
+ *               emailCustomerStatusAlarm:
+ *                 type: boolean
+ *               emailAddConsultingAlarm:
+ *                 type: boolean
+ *               kakaoProductServiceAlarm:
+ *                 type: boolean
+ *               kakaoPromotionAlarm:
+ *                 type: boolean
+ *               kakaoCustomerStatusAlarm:
+ *                 type: boolean
+ *               kakaoAddConsultingAlarm:
+ *                 type: boolean
  *             example:
- *               productServiceAlarm: 1
- *               promotionAlarm: 1
- *               customerStatusAlarm: 2
- *               addConsultingAlarm: 2
+ *               emailProductServiceAlarm: true
+ *               emailPromotionAlarm: true
+ *               emailCustomerStatusAlarm: true
+ *               emailAddConsultingAlarm: true
+ *               kakaoProductServiceAlarm: true
+ *               kakaoPromotionAlarm: true
+ *               kakaoCustomerStatusAlarm: true
+ *               kakaoAddConsultingAlarm: true
  *      responses:
  *       '200':
  *         description: 성공
