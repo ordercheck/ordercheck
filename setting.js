@@ -1,16 +1,17 @@
-const { createServer } = require('./app.js');
+const { createServer } = require("./app.js");
+
 const config = {
   port: 80,
 };
 const server = createServer(config);
 
-const io = require('socket.io')(server, {
+const io = require("socket.io")(server, {
   cors: {
-    origin: '*',
-    methods: ['GET', 'POST'],
+    origin: "*",
+    methods: ["GET", "POST"],
   },
 });
-server.app.set('io', io);
+server.app.set("io", io);
 
 const port = config.port;
 server.listen(port, () => {

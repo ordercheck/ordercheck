@@ -13,7 +13,7 @@
  *       '401':
  *         description: 실패
  * /api/store/root:
- *   get:
+ *   post:
  *      security:
  *       - bearerAuth: []
  *      tags:
