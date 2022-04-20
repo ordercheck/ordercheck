@@ -1552,7 +1552,7 @@ module.exports = {
           // 시간을 unix형태로 변경(실제)
           const Hour = moment().format("HH");
 
-          const startDate = nowPlan.start_plan.replace(/\./g, "-");
+          const startDate = scheduledPlan.start_plan.replace(/\./g, "-");
 
           const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
