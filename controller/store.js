@@ -11,6 +11,7 @@ module.exports = {
         next(err);
       }
       if (data == body.bread) {
+        console.log(data);
         return res.send({ success: 200 });
       } else {
         body.user_idx = user_idx;
