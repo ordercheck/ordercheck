@@ -283,7 +283,12 @@ module.exports = {
       // sendFileStoreEmailLimit(1, 1, findHuidx.user_email);
 
       // 알림톡 보내기
-      fileStoreLimitKakaoPush(findHuidx.user_phone.replace(/\./g, ""));
+      fileStoreLimitKakaoPush(
+        findHuidx.user_phone.replace(
+          /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
+          ""
+        )
+      );
     }
     return;
   },

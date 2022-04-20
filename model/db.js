@@ -188,7 +188,7 @@ db.customer.hasMany(db.consulting, { foreignKey: "customer_idx" });
 db.consulting.belongsTo(db.customer, {
   foreignKey: "customer_idx",
 });
-
+// company와 customer
 db.company.hasMany(db.customer, {
   foreignKey: "company_idx",
   onDelete: "cascade",

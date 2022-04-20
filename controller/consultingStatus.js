@@ -184,7 +184,7 @@ module.exports = {
             //   return;
             // } else {
             const user_phone = data.userCompany.user.user_phone.replace(
-              /\./g,
+              /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
               ""
             );
 
@@ -746,7 +746,10 @@ module.exports = {
 
       failSmsPay(
         companyFindResult.company_name,
-        findHuidx.user_phone.replace(/\./g, "")
+        findHuidx.user_phone.replace(
+          /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
+          ""
+        )
       );
       return;
     }

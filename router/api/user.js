@@ -308,7 +308,10 @@ router.post("/join/check", async (req, res) => {
     return res.send({ success: 400, type: "email" });
   }
 
-  user_phone = user_phone.replace(/\./g, "-");
+  user_phone = user_phone.replace(
+    /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
+    ""
+  );
 
   let result = await axios({
     url: "/api/send/sms",
@@ -329,7 +332,10 @@ router.post("/check/pw", async (req, res) => {
 
   const randomNumber = generateRandomCode();
   const message = `[인증번호: ${randomNumber}] \n 오더체크에서 보내는 인증번호입니다.`;
-  user_phone = user_phone.replace(/\./g, "-");
+  user_phone = user_phone.replace(
+    /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
+    ""
+  );
 
   try {
     await axios({

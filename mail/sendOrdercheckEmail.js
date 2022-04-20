@@ -998,6 +998,40 @@ const noCostText = async (companyName, smsPayLink, target) => {
   }
 };
 
+const sendReport = async (
+  companyName,
+  confirmLink,
+  newConsulting,
+  delayCustomer,
+  issueCustomer
+) => {
+  let mailOptions = {
+    from: `오더체크<${process.env.SEND_EMAIL_ID}>`,
+    to: target,
+    subject: "[알림] 고객 리포트가 도착했습니다.",
+    html: `[알림] 고객 리포트가 도착했습니다.
+
+    ${companyName} 님, 
+    고객 리포트가 도착했습니다. 
+    
+    기간: {(전일)월, 일, 요일} 0시~24시
+    
+    ▶ 새 상담 신청 : ${newConsulting} 명
+    ▶ 상담 지연 : ${delayCustomer} 명
+    ▶ 이슈 상태 : ${issueCustomer} 명
+    
+    자세한 정보는 오더체크 페이지에서 확인하세요.
+    <고객 리스트 보기>${confirmLink}`,
+  };
+  try {
+    const result = await transport.sendMail(mailOptions);
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
 module.exports = {
   sendInviteEmail,
   sendJoinEmail,
