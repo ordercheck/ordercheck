@@ -52,7 +52,6 @@ module.exports = {
               LEFT JOIN company ON userCompany.company_idx = company.idx
               LEFT JOIN sms ON sms.company_idx = userCompany.company_idx
               LEFT JOIN card ON company.huidx = card.user_idx
-              LEFT JOIN userConfig ON user.idx = userConfig.user_idx
               LEFT JOIN plan ON userCompany.company_idx = plan.company_idx and plan.active = 1     
               WHERE user.idx = ${req.user_idx}`
         )
