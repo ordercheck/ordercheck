@@ -1,6 +1,6 @@
 const db = require("../model/db");
-const redis = require("redis");
-const client = redis.createClient();
+// const redis = require("redis");
+// const client = redis.createClient();
 module.exports = {
   storeBread: async (req, res, next) => {
     const { body, user_idx } = req;
@@ -8,7 +8,7 @@ module.exports = {
 
     // client.get(`${user_idx}`, (err, data) => {});
 
-    client.set(`${user_idx}`, `${body.body}`);
+    // client.set(`${user_idx}`, `${body.body}`);
     body.user_idx = user_idx;
 
     const checkDuplicate = await db.store.findOne({
