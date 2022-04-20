@@ -368,10 +368,6 @@ router.post("/join/do", async (req, res, next) => {
         return res.send({ success: 400, message: message });
       }
 
-      const createSmsUserConfig = async () => {
-        // 유저 설정 테이블 만들기
-        await db.userConfig.create({ user_idx: createUserResult.idx });
-      };
       const loginToken = await createToken({
         user_idx: createUserResult.idx,
       });
@@ -398,7 +394,7 @@ router.post("/join/do", async (req, res, next) => {
 
       // 무료 플랜 만들기
       await createFreePlan(randomCompany.idx);
-      await createSmsUserConfig();
+
       if (!company_subdomain) {
         return res.send({ success: 200 });
       }

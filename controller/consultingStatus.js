@@ -717,6 +717,7 @@ module.exports = {
       sms_idx,
       company_idx,
       huidxToken,
+      user_idx,
     } = req;
     const alarm = new Alarm({});
     const io = req.app.get("io");
@@ -851,10 +852,7 @@ module.exports = {
 
     // 견적서 다시보기 동의여부
     if (calculateReload !== "") {
-      await db.userConfig.update(
-        { calculateReload },
-        { where: { user_idx: req.user_idx } }
-      );
+      await db.user.update({ calculateReload }, { where: { idx: user_idx } });
     }
 
     await db.calculate.update(

@@ -317,8 +317,7 @@ module.exports = {
   showUserAlarmConfig: async (req, res, next) => {
     const { user_idx } = req;
 
-    const findResult = await db.userConfig.findOne({
-      where: { user_idx },
+    const findResult = await db.user.findByPk(user_idx, {
       attributes: showUserAlarmConfigAttributes,
     });
     return res.send({ success: 200, findResult });
@@ -333,7 +332,7 @@ module.exports = {
         }
       });
 
-      await db.userConfig.update(body, { where: { user_idx } });
+      await db.user.update(body, { where: { idx: user_idx } });
       return res.send({ success: 200 });
     } catch (err) {
       next(err);

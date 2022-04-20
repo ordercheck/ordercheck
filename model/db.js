@@ -51,7 +51,7 @@ db.company = sequelize.import(__dirname + "/company.js");
 db.consulting = sequelize.import(__dirname + "/consulting.js");
 db.sms = sequelize.import(__dirname + "/sms.js");
 db.config = sequelize.import(__dirname + "/config.js");
-db.userConfig = sequelize.import(__dirname + "/userConfig.js");
+
 db.alarm = sequelize.import(__dirname + "/alarm.js");
 db.receipt = sequelize.import(__dirname + "/receipt.js");
 db.customerAccount = sequelize.import(__dirname + "/customerAccount.js");
@@ -82,12 +82,6 @@ db.company.hasMany(db.chatTemplate, {
 });
 db.chatTemplate.belongsTo(db.company, {
   foreignKey: "company_idx",
-});
-
-// user와 userConfig
-db.user.hasOne(db.userConfig, { foreignKey: "user_idx", onDelete: "cascade" });
-db.userConfig.belongsTo(db.user, {
-  foreignKey: "user_idx",
 });
 
 // sms와 smsHistory
