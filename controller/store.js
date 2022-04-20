@@ -1,20 +1,17 @@
 const db = require("../model/db");
-// const redis = require("redis");
-// const client = redis.createClient();
+
 module.exports = {
   storeBread: async (req, res, next) => {
     const { body, user_idx } = req;
     // 제일 최근 데이터가 같은 데이터인지 체크
-
-    // client.get(`${user_idx}`, (err, data) => {});
-
-    // client.set(`${user_idx}`, `${body.body}`);
     body.user_idx = user_idx;
-
+    console.log(body);
     const checkDuplicate = await db.store.findOne({
       where: { user_idx },
       order: [["createdAt", "DESC"]],
     });
+
+    console.log(checkDuplicate);
 
     if (!checkDuplicate || checkDuplicate.bread !== body.bread) {
       console.log("만들어져라");
