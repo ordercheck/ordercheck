@@ -1496,14 +1496,14 @@ module.exports = {
         // 프리로 다운그레이드 할 때
         if (plan_data.plan == "프리") {
           // 현재 플랜이 무료체험 기간일 때
-          plan_data.company_idx = company_idx;
-          plan_data.free_plan = nowPlan.free_plan;
-          plan_data.start_plan = nowPlan.start_plan;
-          plan_data.expire_plan = nextExpireDate;
-          plan_data.enrollment = null;
-          plan_data.merchant_uid = nextMerchant_uid;
           if (scheduledPlan.free_plan) {
             console.log("유료에서 프리로 다운그레이드인데 무료체험기간");
+            plan_data.company_idx = company_idx;
+            plan_data.free_plan = nowPlan.free_plan;
+            plan_data.start_plan = nowPlan.start_plan;
+            plan_data.expire_plan = nextExpireDate;
+            plan_data.enrollment = null;
+            plan_data.merchant_uid = nextMerchant_uid;
 
             await db.plan.destroy({
               where: { idx: nowPlan.idx },
@@ -1532,16 +1532,13 @@ module.exports = {
             );
             // 무료플랜 전환 예정 업데이트
 
-            await db.plan.destroy({
-              where: { idx: scheduledPlan.idx },
-              transaction: t,
-            });
-            plan_data.will_free = nowPlan.start_plan;
-            await db.plan.create(
-              { ...plan_data, active: 3 },
+            await db.plan.update(
               {
-                transaction: t,
-              }
+                will_free: scheduledPlan.start_plan,
+                plan: "프리",
+                plan_price: 0,
+              },
+              { where: { idx: scheduledPlan.idx }, transaction: t }
             );
           }
           console.log("기존 결제 예정 취소");
