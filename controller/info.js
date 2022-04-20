@@ -325,13 +325,6 @@ module.exports = {
   changeUserAlarmConfig: async (req, res, next) => {
     const { body, user_idx } = req;
     try {
-      const result = Object.keys(body);
-      result.forEach((data) => {
-        if (!body[data]) {
-          delete body[data];
-        }
-      });
-
       await db.user.update(body, { where: { idx: user_idx } });
       return res.send({ success: 200 });
     } catch (err) {
