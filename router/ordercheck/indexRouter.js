@@ -7,7 +7,7 @@ const user_session_check = (req, res, next) => {
   next();
 };
 const fileUpload = require("../../lib/aws/fileupload.js");
-const multiparty = require("multiparty");
+
 const axios = require("axios");
 const aws = require("../../lib/aws/aws");
 const request = require("request");

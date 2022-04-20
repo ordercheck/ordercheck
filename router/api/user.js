@@ -29,7 +29,7 @@ const {
 } = require("../../lib/apiFunctions");
 const jwt = require("jsonwebtoken");
 const fileUpload = require("../../lib/aws/fileupload.js");
-const multiparty = require("multiparty");
+
 const axios = require("axios");
 const aws = require("../../lib/aws/aws");
 const request = require("request");
@@ -48,7 +48,7 @@ const {
 const functions = require("../../lib/functions");
 const { checkCard } = require("../../model/db");
 const attributes = require("../../lib/attributes");
-const { next } = require("cheerio/lib/api/traversing");
+// const { next } = require("cheerio/lib/api/traversing");
 const { Alarm } = require("../../lib/classes/AlarmClass");
 
 const addPlanAndSchedule = async (
