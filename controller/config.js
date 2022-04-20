@@ -72,6 +72,8 @@ module.exports = {
         where: { company_idx, active: 3 },
       });
 
+      console.log(company_idx);
+
       const planDetail = {
         plan: findPlan.plan,
         plan_price: findPlan.plan_price.toLocaleString(),
