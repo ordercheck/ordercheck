@@ -779,7 +779,7 @@ module.exports = {
 
       const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
-      const nextMerchant_uid = +generateRandomCode();
+      const nextMerchant_uid = generateRandomCode();
 
       await schedulePay(
         changeToUnix,
@@ -1179,7 +1179,7 @@ module.exports = {
 
           const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
-          const nextMerchant_uid = +generateRandomCode();
+          const nextMerchant_uid = generateRandomCode();
           // 다음 카드 결제 신청
           await schedulePay(
             changeToUnix,
@@ -1436,7 +1436,7 @@ module.exports = {
         }
       }
       console.log(nextExpireDate);
-      const nextMerchant_uid = +generateRandomCode();
+      const nextMerchant_uid = generateRandomCode();
       // 프리플랜에서 요금제 가입 할 때
       console.log(typeof nextMerchant_uid);
       if (nowPlan.plan == "프리") {

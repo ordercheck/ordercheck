@@ -78,7 +78,7 @@ module.exports = {
 
       const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
-      const nextMerchant_uid = +generateRandomCode();
+      const nextMerchant_uid = generateRandomCode();
 
       schedulePay(
         changeToUnix,

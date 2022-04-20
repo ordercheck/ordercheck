@@ -77,7 +77,7 @@ const addPlanAndSchedule = async (
 
     const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
 
-    const nextMerchant_uid = +generateRandomCode();
+    const nextMerchant_uid = generateRandomCode();
 
     //  테스트
     // const now = new Date();
