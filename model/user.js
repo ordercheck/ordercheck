@@ -93,22 +93,22 @@ module.exports = function (sequelize, DataTypes) {
     },
     emailProductServiceAlarm: {
       allowNull: false,
-      defaultValue: false,
+      defaultValue: true,
       type: DataTypes.BOOLEAN,
     },
     emailPromotionAlarm: {
       allowNull: false,
-      defaultValue: false,
+      defaultValue: true,
       type: DataTypes.BOOLEAN,
     },
     emailCustomerStatusAlarm: {
       allowNull: false,
-      defaultValue: false,
+      defaultValue: true,
       type: DataTypes.BOOLEAN,
     },
     emailAddConsultingAlarm: {
       allowNull: false,
-      defaultValue: false,
+      defaultValue: true,
       type: DataTypes.BOOLEAN,
     },
 

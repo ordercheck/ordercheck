@@ -7,8 +7,8 @@ const db = require("../model/db");
 const _f = require("../lib/functions");
 var fs = require("fs");
 const FileUpload = require("../lib/aws/fileupload.js");
-var FileReader = require("filereader"),
-  fileReader = new FileReader();
+// var FileReader = require("filereader"),
+//   fileReader = new FileReader();
 
 const run = (sec) => {
   schedule.scheduleJob(`*/${sec} * * * * *`, async () => {

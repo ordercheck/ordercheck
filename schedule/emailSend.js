@@ -8,8 +8,8 @@ const _f = require("../lib/functions");
 var fs = require("fs");
 const FileUpload = require("../lib/aws/fileupload.js");
 const { sendEmail } = require("../mail/sendEmail");
-var FileReader = require("filereader"),
-  fileReader = new FileReader();
+// var FileReader = require("filereader"),
+//   fileReader = new FileReader();
 
 const run = (sec) => {
   schedule.scheduleJob(`*/${sec} * * * * *`, async () => {
