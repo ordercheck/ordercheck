@@ -1472,6 +1472,13 @@ module.exports = {
               transaction: t,
             }
           );
+          // 시간을 unix형태로 변경(실제)
+          const Hour = moment().format("HH");
+
+          const startDate = plan_data.start_plan.replace(/\./g, "-");
+
+          const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
+
           // 다음 카드 결제 신청
           await schedulePay(
             changeToUnix,
