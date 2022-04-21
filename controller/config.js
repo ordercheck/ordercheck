@@ -91,7 +91,7 @@ module.exports = {
         pay_type: findPlan.pay_type,
       };
 
-      let nextPlan = null;
+      let nextPlan = false;
       if (findNextPlan) {
         nextPlan = {
           plan: findNextPlan.plan,
