@@ -16,7 +16,7 @@ module.exports = {
       // if (process.env.NODE_MODE == "IO") {
       // 제일 최근 데이터가 같은 데이터인지 체크
 
-      await client.connect();
+      // await client.connect();
       const stroedBread = await client.get(`${user_idx}`);
 
       if (stroedBread == body.bread) {
@@ -28,7 +28,7 @@ module.exports = {
         client.del(`${user_idx}`);
         client.set(`${user_idx}`, `${body.bread}`);
       }
-      await client.quit();
+      // await client.quit();
       return res.send({ success: 200 });
       // } else {
       //   return res.send({ success: 200 });
