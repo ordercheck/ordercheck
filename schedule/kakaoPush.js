@@ -9,9 +9,9 @@ var fs = require("fs");
 const FileUpload = require("../lib/aws/fileupload.js");
 var FileReader = require("filereader"),
   fileReader = new FileReader();
-var CryptoJS = require("crypto-js");
-var SHA256 = require("crypto-js/sha256");
-var Base64 = require("crypto-js/enc-base64");
+// var CryptoJS = require("crypto-js");
+// var SHA256 = require("crypto-js/sha256");
+// var Base64 = require("crypto-js/enc-base64");
 const { payments } = require("../model/db");
 
 const ks = "rgxK5LbLwpYk3eEzMMx1ck8Db4C3Tobai27jxTIW";

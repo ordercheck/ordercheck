@@ -1419,7 +1419,7 @@ module.exports = {
       const scheduledPlan = await db.plan.findOne({
         where: { company_idx, active: 3 },
       });
-      console.log(scheduledPlan.merchant_uid);
+
       let nextExpireDate;
       if (plan_data.pay_type == "month") {
         if (scheduledPlan) {

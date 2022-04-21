@@ -33,8 +33,8 @@ const fileUpload = require("../../lib/aws/fileupload.js");
 const axios = require("axios");
 const aws = require("../../lib/aws/aws");
 const request = require("request");
-const Cryptr = require("cryptr");
-const cryptr = new Cryptr("myTotalySecretKey");
+// const Cryptr = require("cryptr");
+// const cryptr = new Cryptr("myTotalySecretKey");
 const jusoKey = "devU01TX0FVVEgyMDIxMDUwNjE1Mjg1MzExMTEzNDQ=";
 
 const db_config = require("../../lib/config/db_config");
