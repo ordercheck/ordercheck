@@ -44,6 +44,7 @@ module.exports = function (sequelize, DataTypes) {
     },
 
     deleted: {
+      paranoid: true,
       allowNull: false,
       defaultValue: false,
       type: DataTypes.DOUBLE,
