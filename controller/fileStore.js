@@ -274,33 +274,18 @@ module.exports = {
 
         return res.send({ success: 200, message: "삭제 완료" });
       }
-      const t = await db.sequelize.transaction();
+
       // 폴더일때
       const findFolderUuid = await db.folders.findAll({
         where: { path: { [Op.like]: `%${uuid}%` } },
         attributes: ["idx", "path"],
         raw: true,
       });
-      console.log(findFolderUuid);
-      const deleteArr = [];
+      db.folders.update({ deleted: true }, { where: { uuid } });
       findFolderUuid.forEach((data) => {
-        deleteArr.push(data.idx);
+        db.files.update({ deleted: false }, { where: { path: data.path } });
       });
 
-      // await db.folders.destroy(
-      //   {
-      //     where: { idx: deleteArr },
-      //   },
-      //   { transaction: t }
-      // );
-
-      // await db.files.destroy(
-      //   {
-      //     where: { uuid },
-      //   },
-      //   { transaction: t }
-      // );
-      await t.commit();
       res.send({ success: 200, message: "삭제 완료" });
 
       return;
