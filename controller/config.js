@@ -1458,6 +1458,7 @@ module.exports = {
           plan_data.expire_plan = scheduledPlan.expire_plan;
           plan_data.free_plan = scheduledPlan.free_plan;
           plan_data.company_idx = company_idx;
+          plan_data.merchant_uid = nextMerchant_uid;
           await db.plan.update(
             { active: 0 },
             { where: { idx: nowPlan.idx }, transaction: t }
