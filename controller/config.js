@@ -1456,6 +1456,7 @@ module.exports = {
           });
           plan_data.start_plan = scheduledPlan.start_plan;
           plan_data.expire_plan = scheduledPlan.expire_plan;
+          plan_data.free_plan = scheduledPlan.free_plan;
           plan_data.company_idx = company_idx;
           await db.plan.update(
             { active: 0 },
