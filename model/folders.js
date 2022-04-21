@@ -50,7 +50,7 @@ module.exports = function (sequelize, DataTypes) {
     deleted: {
       allowNull: false,
       defaultValue: false,
-      type: DataTypes.DOUBLE,
+      type: DataTypes.BOOLEAN,
     },
   });
 };
