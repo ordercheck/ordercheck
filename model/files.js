@@ -42,5 +42,11 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: "",
       type: DataTypes.STRING(100),
     },
+
+    deleted: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.DOUBLE,
+    },
   });
 };

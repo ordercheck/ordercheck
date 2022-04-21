@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes) {
   //테이블을 정의
-  return sequelize.define('folders', {
+  return sequelize.define("folders", {
     idx: {
       autoIncrement: true,
       primaryKey: true,
@@ -8,23 +8,23 @@ module.exports = function (sequelize, DataTypes) {
     },
     uuid: {
       allowNull: true,
-      defaultValue: '',
+      defaultValue: "",
       unique: true,
       type: DataTypes.STRING(100),
     },
     upload_people: {
       allowNull: true,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
     title: {
       allowNull: true,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
     path: {
       allowNull: true,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
     root: {
@@ -34,7 +34,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     searchingTitle: {
       allowNull: true,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
     upperFolder: {
@@ -45,6 +45,12 @@ module.exports = function (sequelize, DataTypes) {
     duplicateCount: {
       defaultValue: 1,
       type: DataTypes.INTEGER,
+    },
+
+    deleted: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.DOUBLE,
     },
   });
 };

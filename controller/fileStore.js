@@ -265,9 +265,12 @@ module.exports = {
     try {
       // 폴더가 아닐 때
       if (isfolder == 0) {
-        await db.files.destroy({
-          where: { uuid },
-        });
+        await db.files.update(
+          { deleted: true },
+          {
+            where: { uuid },
+          }
+        );
 
         return res.send({ success: 200, message: "삭제 완료" });
       }
@@ -278,25 +281,25 @@ module.exports = {
         attributes: ["idx", "path"],
         raw: true,
       });
-
+      console.log(findFolderUuid);
       const deleteArr = [];
       findFolderUuid.forEach((data) => {
         deleteArr.push(data.idx);
       });
 
-      await db.folders.destroy(
-        {
-          where: { idx: deleteArr },
-        },
-        { transaction: t }
-      );
+      // await db.folders.destroy(
+      //   {
+      //     where: { idx: deleteArr },
+      //   },
+      //   { transaction: t }
+      // );
 
-      await db.files.destroy(
-        {
-          where: { uuid },
-        },
-        { transaction: t }
-      );
+      // await db.files.destroy(
+      //   {
+      //     where: { uuid },
+      //   },
+      //   { transaction: t }
+      // );
       await t.commit();
       res.send({ success: 200, message: "삭제 완료" });
 
