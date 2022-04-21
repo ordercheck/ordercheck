@@ -44,6 +44,7 @@ module.exports = {
         .query(
           `SELECT plan, company_name, company_logo, company_subdomain, address, 
           detail_address, company.business_number, business_enrollment, business_enrollment_title, user_name,
+          plan_price, chat_price, analystic_price, whiteLabel_price, start_plan, expire_plan, free_plan, pay_type,
           card.message_active AS messageActive,
           companyexist,
           card.active AS cardActive,
@@ -56,7 +57,7 @@ module.exports = {
           form_link_count
           FROM userCompany 
           LEFT JOIN company ON userCompany.company_idx = company.idx
-          LEFT JOIN plan ON userCompany.company_idx = plan.company_idx AND active = 1
+          LEFT JOIN plan ON userCompany.company_idx = plan.company_idx AND plan.active = 1
           LEFT JOIN user ON company.huidx = user.idx
           LEFT JOIN card ON card.user_idx = user.idx AND main=true
           LEFT JOIN sms ON sms.company_idx = userCompany.company_idx
@@ -72,7 +73,7 @@ module.exports = {
         where: { company_idx, active: 3 },
       });
 
-      console.log(company_idx);
+      console.log(companyProfile);
 
       const planDetail = {
         plan: findPlan.plan,
