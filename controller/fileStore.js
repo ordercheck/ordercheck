@@ -21,7 +21,7 @@ const getFolderPath = async (pathData, customerFile_idx, joinData) => {
   const pathArr = pathData.split("/");
 
   const findTitleResult = await db.folders.findAll({
-    where: { uuid: { [Op.in]: pathArr }, customerFile_idx },
+    where: { deleted: false, uuid: { [Op.in]: pathArr }, customerFile_idx },
     attributes: ["title"],
     order: [["createdAt", "ASC"]],
     raw: true,
@@ -93,7 +93,7 @@ module.exports = {
     sort = checkResult.sort;
 
     const folders = await db.folders.findAll({
-      where: { customerFile_idx, root: true },
+      where: { deleted: false, customerFile_idx, root: true },
       order: [[sort_field, sort]],
     });
 
@@ -278,7 +278,7 @@ module.exports = {
 
       // 폴더일때
       const findFolderUuid = await db.folders.findAll({
-        where: { path: { [Op.like]: `%${uuid}%` } },
+        where: { deleted: false, path: { [Op.like]: `%${uuid}%` } },
         attributes: ["idx", "path"],
         raw: true,
       });
@@ -495,7 +495,7 @@ module.exports = {
     const { customerFile_idx } = req.params;
     try {
       let findFolders = await db.folders.findAll({
-        where: { customerFile_idx, root: true },
+        where: { deleted: false, customerFile_idx, root: true },
         include: [
           {
             model: db.files,
@@ -534,7 +534,7 @@ module.exports = {
 
     try {
       const findFolders = await db.folders.findAll({
-        where: { uuid },
+        where: { deleted: false, uuid },
         include: [
           {
             model: db.files,
