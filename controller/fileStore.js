@@ -283,7 +283,7 @@ module.exports = {
       });
       db.folders.update({ deleted: true }, { where: { uuid } });
       findFolderUuid.forEach((data) => {
-        db.files.update({ deleted: false }, { where: { path: data.path } });
+        db.files.update({ deleted: true }, { where: { path: data.path } });
       });
 
       res.send({ success: 200, message: "삭제 완료" });
