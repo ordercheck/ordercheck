@@ -1505,10 +1505,13 @@ module.exports = {
             plan_data.enrollment = null;
             plan_data.merchant_uid = nextMerchant_uid;
 
-            await db.plan.destroy({
-              where: { idx: nowPlan.idx },
-              transaction: t,
-            });
+            await db.plan.update(
+              { active: 0 },
+              {
+                where: { idx: nowPlan.idx },
+                transaction: t,
+              }
+            );
             // 결제 예약 플랜 삭제
             await db.plan.destroy({
               where: { idx: scheduledPlan.idx },
@@ -1580,10 +1583,13 @@ module.exports = {
           if (scheduledPlan.free_plan) {
             console.log("유료에서 유료로 바꾸는데 무료체험 기간일 때");
             plan_data.free_plan = nowPlan.free_plan;
-            await db.plan.destroy({
-              where: { idx: nowPlan.idx },
-              transaction: t,
-            });
+            await db.plan.update(
+              { active: 0 },
+              {
+                where: { idx: nowPlan.idx },
+                transaction: t,
+              }
+            );
             await db.plan.create(
               { ...plan_data, active: 1 },
               {

@@ -1,12 +1,10 @@
 const db = require("../model/db");
-const redis = require("redis");
+// const redis = require("redis");
 
-const redisInfo = {
-  host: "ordercheckcache-ro.xnuldq.ng.0001.apn2.cache.amazonaws.com",
-  port: 6379,
-};
-
-const client = redis.createClient(redisInfo);
+// const client = redis.createClient({
+//   host: "ordercheckcache.xnuldq.ng.0001.apn2.cache.amazonaws.com",
+//   port: 6379,
+// });
 module.exports = {
   storeBread: async (req, res, next) => {
     try {
@@ -15,20 +13,28 @@ module.exports = {
       // io 인지 체크
       // if (process.env.NODE_MODE == "IO") {
       // 제일 최근 데이터가 같은 데이터인지 체크
-
       // await client.connect();
-      const stroedBread = await client.get(`${user_idx}`);
+      // client.set("name", "zerocho");
+      // client.get("name", (err, reply) => {
+      //   console.log(reply);
+      // });
 
-      if (stroedBread == body.bread) {
-        console.log(stroedBread);
-      } else {
-        console.log(stroedBread);
-        body.user_idx = user_idx;
-        await db.store.create(body);
-        client.del(`${user_idx}`);
-        client.set(`${user_idx}`, `${body.bread}`);
-      }
-      // await client.quit();
+      // client.get(`${user_idx}`, async (err, data) => {
+      //   if (err) {
+      //     console.log(err);
+      //   }
+
+      //   if (data == body.bread) {
+      //     console.log(data);
+      //   } else {
+      //     console.log(data);
+      //     body.user_idx = user_idx;
+      //     await db.store.create(body);
+      //     client.del(`${user_idx}`);
+      //     client.set(`${user_idx}`, `${body.bread}`);
+      //   }
+      // });
+      // await client.exit();
       return res.send({ success: 200 });
       // } else {
       //   return res.send({ success: 200 });
