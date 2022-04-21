@@ -61,6 +61,7 @@ module.exports = {
 
       const findFilesResult = await db.files.findAll({
         where: {
+          deleted: false,
           company_idx: userProfile[0].company_idx,
           isFolder: false,
         },

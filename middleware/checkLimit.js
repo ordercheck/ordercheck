@@ -185,6 +185,7 @@ module.exports = {
     const io = req.app.get("io");
     const findFilesResult = await db.files.findAll({
       where: {
+        deleted: false,
         company_idx,
         isFolder: false,
       },

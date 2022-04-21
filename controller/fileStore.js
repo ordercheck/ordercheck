@@ -99,6 +99,7 @@ module.exports = {
 
     const files = await db.files.findAll({
       where: {
+        deleted: false,
         customerFile_idx,
         folder_uuid: null,
       },
@@ -243,7 +244,7 @@ module.exports = {
       sort = checkResult.sort;
 
       let findFilesResult = await db.files.findAll({
-        where: { folder_uuid: req.body.uuid },
+        where: { folder_uuid: req.body.uuid, deleted: false },
         attributes: showFilesAttributes,
         order: [[sort_field, sort]],
       });
@@ -265,9 +266,12 @@ module.exports = {
     try {
       // 폴더가 아닐 때
       if (isfolder == 0) {
-        await db.files.destroy({
-          where: { uuid },
-        });
+        await db.files.update(
+          { deleted: true },
+          {
+            where: { uuid },
+          }
+        );
 
         return res.send({ success: 200, message: "삭제 완료" });
       }
@@ -406,7 +410,12 @@ module.exports = {
       if (isFolder == 1) {
         // 폴더 용량 구하기
         const findTitleResult = await db.files.findAll({
-          where: { folder_uuid: uuid, customerFile_idx, isFolder: false },
+          where: {
+            deleted: false,
+            folder_uuid: uuid,
+            customerFile_idx,
+            isFolder: false,
+          },
           attributes: ["file_size"],
           raw: true,
           nest: true,
@@ -464,7 +473,11 @@ module.exports = {
       params: { customerFile_idx },
     } = req;
     const findResult = await db.files.findAll({
-      where: { path: { [Op.like]: `%${uuid}%` }, isFolder: false },
+      where: {
+        path: { [Op.like]: `%${uuid}%` },
+        isFolder: false,
+        deleted: false,
+      },
       attributes: ["file_url", "title", "path"],
       raw: true,
       nest: true,
