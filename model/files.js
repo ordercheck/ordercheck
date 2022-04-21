@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes) {
   //테이블을 정의
-  return sequelize.define('files', {
+  return sequelize.define("files", {
     idx: {
       autoIncrement: true,
       primaryKey: true,
@@ -8,7 +8,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     uuid: {
       allowNull: true,
-      defaultValue: '',
+      defaultValue: "",
       unique: true,
       type: DataTypes.STRING(100),
     },
@@ -39,13 +39,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     searchingTitle: {
       allowNull: true,
-      defaultValue: '',
-      type: DataTypes.STRING(100),
-    },
-
-    uniqueKey: {
-      allowNull: true,
-      defaultValue: '',
+      defaultValue: "",
       type: DataTypes.STRING(100),
     },
   });

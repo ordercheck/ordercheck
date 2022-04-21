@@ -211,13 +211,11 @@ module.exports = {
 
         const getLastUrl = getFileName(files[i].key);
 
-        const uniqueKey = getLastUrl.substr(0, 5);
-
         // 그냥 text로 변환
         const pureText = makePureText(title.normalize("NFC"));
 
         req.body.searchingTitle = pureText;
-        req.body.uniqueKey = uniqueKey;
+
         req.body.title = title;
 
         req.body.file_size = files[i].size;
