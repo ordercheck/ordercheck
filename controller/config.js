@@ -56,7 +56,7 @@ module.exports = {
           form_link_count
           FROM userCompany 
           LEFT JOIN company ON userCompany.company_idx = company.idx
-          LEFT JOIN plan ON userCompany.company_idx = plan.company_idx
+          LEFT JOIN plan ON userCompany.company_idx = plan.company_idx AND active = 1
           LEFT JOIN user ON company.huidx = user.idx
           LEFT JOIN card ON card.user_idx = user.idx AND main=true
           LEFT JOIN sms ON sms.company_idx = userCompany.company_idx
@@ -1395,6 +1395,10 @@ module.exports = {
     console.log("카드 정보", card_data);
     console.log("플랜 정보", plan_data);
 
+    db.company.update(
+      { used_free_period: true },
+      { where: { idx: company_idx }, transaction: t }
+    );
     try {
       // 유저정보 찾기
       const user_data = await db.user.findByPk(user_idx);
