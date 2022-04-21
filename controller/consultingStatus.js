@@ -813,8 +813,8 @@ module.exports = {
         );
 
         user_phone = customerFindResult.customer_phoneNumber.replace(
-          /\./g,
-          "-"
+          /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
+          ""
         );
         await axios({
           url: "/api/send/sms",

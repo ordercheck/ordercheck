@@ -651,6 +651,7 @@ router.post("/decode/token/data", async (req, res) => {
 router.post("/send/sms", async (req, res) => {
   const { user_phone, message, type } = req.body;
   let result = await _f.smsPush(user_phone, message, type);
+
   return res.send(result);
 });
 // 중복된 핸드폰 번호 여부 확인
