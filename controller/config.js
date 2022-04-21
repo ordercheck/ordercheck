@@ -1449,54 +1449,93 @@ module.exports = {
       console.log(typeof nextMerchant_uid);
       if (nowPlan.plan == "프리") {
         console.log("프리 플랜에서 요금제 가입 할 때");
-        await db.plan.destroy({ where: { idx: nowPlan.idx }, transaction: t });
-        if (scheduledPlan) {
+        if (!plan_data.start_plan) {
           await db.plan.destroy({
             where: { idx: scheduledPlan.idx },
             transaction: t,
           });
-        }
-        // 시간을 unix형태로 변경(실제)
-        const Hour = moment().format("HH");
-
-        const startDate = plan_data.start_plan.replace(/\./g, "-");
-
-        const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
-
-        plan_data.merchant_uid = nextMerchant_uid;
-        plan_data.company_idx = company_idx;
-
-        // 결제 예약 플랜 생성
-        await db.plan.create(
-          {
-            ...plan_data,
-            active: 3,
-          },
-          {
+          plan_data.start_plan = scheduledPlan.start_plan;
+          plan_data.expire_plan = scheduledPlan.expire_plan;
+          await db.plan.update(
+            { active: 0 },
+            { where: { idx: nowPlan.idx }, transaction: t }
+          );
+          await db.plan.create(plan_data, {
             transaction: t,
+          });
+          await db.plan.create(
+            {
+              ...plan_data,
+              active: 3,
+            },
+            {
+              transaction: t,
+            }
+          );
+          // 다음 카드 결제 신청
+          await schedulePay(
+            changeToUnix,
+            card_data.customer_uid,
+            plan_data.result_price_levy,
+            user_data.user_name,
+            user_data.user_phone,
+            user_data.user_email,
+            nextMerchant_uid
+          );
+        } else {
+          await db.plan.destroy({
+            where: { idx: nowPlan.idx },
+            transaction: t,
+          });
+          if (scheduledPlan) {
+            await db.plan.destroy({
+              where: { idx: scheduledPlan.idx },
+              transaction: t,
+            });
           }
-        );
-        // 현재 플랜 생성
-        await db.plan.create(plan_data, {
-          transaction: t,
-        });
 
-        // 회사 초기화 날짜 수정
-        await db.company.update(
-          { resetDate: moment().add("1", "M") },
-          { where: { idx: company_idx }, transaction: t }
-        );
+          // 시간을 unix형태로 변경(실제)
+          const Hour = moment().format("HH");
 
-        // 다음 카드 결제 신청
-        await schedulePay(
-          changeToUnix,
-          card_data.customer_uid,
-          plan_data.result_price_levy,
-          user_data.user_name,
-          user_data.user_phone,
-          user_data.user_email,
-          nextMerchant_uid
-        );
+          const startDate = plan_data.start_plan.replace(/\./g, "-");
+
+          const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
+
+          plan_data.merchant_uid = nextMerchant_uid;
+          plan_data.company_idx = company_idx;
+
+          // 결제 예약 플랜 생성
+          await db.plan.create(
+            {
+              ...plan_data,
+              active: 3,
+            },
+            {
+              transaction: t,
+            }
+          );
+          // 현재 플랜 생성
+          await db.plan.create(plan_data, {
+            transaction: t,
+          });
+
+          // 회사 초기화 날짜 수정
+          await db.company.update(
+            { resetDate: moment().add("1", "M") },
+            { where: { idx: company_idx }, transaction: t }
+          );
+
+          // 다음 카드 결제 신청
+          await schedulePay(
+            changeToUnix,
+            card_data.customer_uid,
+            plan_data.result_price_levy,
+            user_data.user_name,
+            user_data.user_phone,
+            user_data.user_email,
+            nextMerchant_uid
+          );
+        }
       } else {
         // 프리로 다운그레이드 할 때
         if (plan_data.plan == "프리") {
