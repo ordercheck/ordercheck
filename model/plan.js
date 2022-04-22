@@ -14,7 +14,6 @@ module.exports = function (sequelize, DataTypes) {
 
     start_plan: {
       allowNull: true,
-
       type: DataTypes.STRING(100),
     },
     free_plan: {
@@ -104,6 +103,16 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false,
       defaultValue: 0,
       type: DataTypes.INTEGER,
+    },
+
+    free_period_start: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
+
+    free_period_expire: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
     },
   });
 };

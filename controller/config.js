@@ -1449,6 +1449,7 @@ module.exports = {
       console.log(typeof nextMerchant_uid);
       if (nowPlan.plan == "프리") {
         console.log("프리 플랜에서 요금제 가입 할 때");
+        // 무료체험 기간일 때
         if (!plan_data.start_plan) {
           await db.plan.destroy({
             where: { idx: scheduledPlan.idx },
@@ -1459,13 +1460,6 @@ module.exports = {
           plan_data.free_plan = scheduledPlan.free_plan;
           plan_data.company_idx = company_idx;
           plan_data.merchant_uid = nextMerchant_uid;
-          await db.plan.update(
-            { active: 0 },
-            { where: { idx: nowPlan.idx }, transaction: t }
-          );
-          await db.plan.create(plan_data, {
-            transaction: t,
-          });
           await db.plan.create(
             {
               ...plan_data,
@@ -1475,6 +1469,19 @@ module.exports = {
               transaction: t,
             }
           );
+
+          const startFreeDate = moment().format("YYYY.MM.DD");
+
+          await db.plan.update(
+            { active: 0, free_period_expire: startFreeDate },
+            { where: { idx: nowPlan.idx }, transaction: t }
+          );
+          plan_data.free_period_start = startFreeDate;
+          plan_data.free_period_expire = scheduledPlan.expire_plan;
+          await db.plan.create(plan_data, {
+            transaction: t,
+          });
+
           // 시간을 unix형태로 변경(실제)
           const Hour = moment().format("HH");
 
@@ -1559,8 +1566,11 @@ module.exports = {
             plan_data.enrollment = null;
             plan_data.merchant_uid = nextMerchant_uid;
 
+            const startFreeDate = moment().format("YYYY.MM.DD");
+            plan_data.free_period_start = startFreeDate;
+            plan_data.free_period_expire = scheduledPlan.expire_plan;
             await db.plan.update(
-              { active: 0 },
+              { active: 0, free_period_expire: startFreeDate },
               {
                 where: { idx: nowPlan.idx },
                 transaction: t,
@@ -1636,11 +1646,16 @@ module.exports = {
           // 현재 플랜이 무료체험 기간일 때
           if (scheduledPlan.free_plan) {
             console.log("유료에서 유료로 바꾸는데 무료체험 기간일 때");
+
+            const startFreeDate = moment().format("YYYY.MM.DD");
+            plan_data.free_period_start = startFreeDate;
+            plan_data.free_period_expire = scheduledPlan.expire_plan;
+
             plan_data.free_plan = nowPlan.free_plan;
             await db.plan.update(
               { active: 0 },
               {
-                where: { idx: nowPlan.idx },
+                where: { idx: nowPlan.idx, free_period_expire: startFreeDate },
                 transaction: t,
               }
             );
@@ -1650,6 +1665,7 @@ module.exports = {
                 transaction: t,
               }
             );
+
             await db.plan.update(
               { free_plan: nowPlan.free_plan },
               { where: { idx: newPlan.idx }, transaction: t }

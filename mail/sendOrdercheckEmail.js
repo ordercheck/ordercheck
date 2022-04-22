@@ -1003,7 +1003,8 @@ const sendReport = async (
   confirmLink,
   newConsulting,
   delayCustomer,
-  issueCustomer
+  issueCustomer,
+  target
 ) => {
   let mailOptions = {
     from: `오더체크<${process.env.SEND_EMAIL_ID}>`,
@@ -1034,6 +1035,7 @@ const sendReport = async (
 
 module.exports = {
   sendInviteEmail,
+  sendReport,
   sendJoinEmail,
   sendAddFormEmail,
   sendForm5080,
