@@ -114,5 +114,15 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
+
+    failed_date: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
+
+    next_repay_date: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
   });
 };
