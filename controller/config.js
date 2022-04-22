@@ -73,8 +73,7 @@ module.exports = {
         where: { company_idx, active: 3 },
       });
 
-      console.log(companyProfile);
-
+      console.log(findNextPlan.failed_date);
       const planDetail = {
         plan: findPlan.plan,
         plan_price: findPlan.plan_price.toLocaleString(),
