@@ -47,6 +47,7 @@ module.exports = {
           plan_price, chat_price, analystic_price, whiteLabel_price, start_plan, expire_plan, free_plan, pay_type,
           card.message_active AS messageActive,
           companyexist,
+          failed_count,
           card.active AS cardActive,
           plan_active,
           text_cost,

@@ -1,7 +1,7 @@
 const express = require("express");
 const { generateRandomCode } = require("../../lib/functions");
 const router = express.Router();
-const schedule = require("node-schedule");
+
 const { schedulePay, getPayment } = require("../../lib/payFunction");
 const { Alarm } = require("../../lib/classes/AlarmClass");
 
@@ -82,7 +82,14 @@ router.post("/", async (req, res, next) => {
       // free_plan 이용중인지 체크
       const findActivePlanResult = await db.plan.findOne({
         where: { merchant_uid, active: 1 },
-        attributes: { exclude: ["createdAt", "updatedAt"] },
+        attributes: {
+          exclude: [
+            "createdAt",
+            "updatedAt",
+            "free_period_start",
+            "free_period_expire",
+          ],
+        },
         raw: true,
       });
       const findPlanAndCompany = await db.plan.findOne({
@@ -105,7 +112,11 @@ router.post("/", async (req, res, next) => {
         const receiptId = generateRandomCode();
         // 사용하고 있떤 플랜 무료체험 종료
         await db.plan.update(
-          { free_plan: null },
+          {
+            free_plan: null,
+            free_period_start: null,
+            free_period_expire: null,
+          },
           { where: { idx: findActivePlanResult.idx } }
         );
         delete findActivePlanResult.idx;
