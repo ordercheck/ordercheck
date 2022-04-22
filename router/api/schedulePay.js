@@ -342,7 +342,7 @@ router.post("/", async (req, res, next) => {
         .add("7", "d")
         .format("YYYY.MM.DD");
       const expireDate = moment(
-        findPlanCompany.expire_plan.replace(/\./g, "-")
+        findPlanCompany.expire_plan.replace(/\./g, "-").add("7", "d")
       ).format("YYYY.MM.DD");
       const repayDate = moment().add("7", "d").format("YYYY.MM.DD");
 
