@@ -313,6 +313,12 @@ router.post("/", async (req, res, next) => {
       const findCompany = await db.company.findByPk(
         findPlanCompany.company_idx
       );
+      db.plan.update(
+        { free_plan: null },
+        {
+          where: { company_idx: findPlanCompany.company_idx, active: 1 },
+        }
+      );
 
       //알람 생성
       const message = `플랜 정기 결제가 실패하였습니다. 등록된 카드를 확인해주세요.`;
@@ -337,12 +343,22 @@ router.post("/", async (req, res, next) => {
         newMerchant_uid
       );
 
-      const next_repay_date = moment().add("7", "d").format("YYYY.MM.DD");
+      const startDate = moment(findPlanCompany.start_plan.replace(/\./g, "-"))
+        .add("7", "d")
+        .format("YYYY.MM.DD");
+      const expireDate = moment(
+        findPlanCompany.expire_plan.replace(/\./g, "-")
+      );
+      const repayDate = moment().add("7", "d").format("YYYY.MM.DD");
+
       db.plan.update(
         {
+          free_plan: null,
           merchant_uid: newMerchant_uid,
           failed_date: now,
-          next_repay_date,
+          start_plan: startDate,
+          expire_plan: expireDate,
+          next_repay_date: repayDate,
           failed_count: findPlanCompany.failed_count + 1,
         },
         { where: { idx: findPlanCompany.idx } }
