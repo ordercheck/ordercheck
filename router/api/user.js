@@ -103,7 +103,6 @@ const addPlanAndSchedule = async (
     plan_data.free_period_start = moment().format("YYYY.MM.DD");
     plan_data.free_period_expire = plan_data.expire_plan;
     await db.plan.create(plan_data);
-
     return { success: true };
   } catch (err) {
     return { success: false, err };
