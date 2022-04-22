@@ -1653,9 +1653,9 @@ module.exports = {
 
             plan_data.free_plan = nowPlan.free_plan;
             await db.plan.update(
-              { active: 0 },
+              { active: 0, free_period_expire: startFreeDate },
               {
-                where: { idx: nowPlan.idx, free_period_expire: startFreeDate },
+                where: { idx: nowPlan.idx },
                 transaction: t,
               }
             );
