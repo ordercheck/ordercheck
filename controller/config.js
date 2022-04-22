@@ -1532,6 +1532,9 @@ module.exports = {
               transaction: t,
             }
           );
+          const startFreeDate = moment().format("YYYY.MM.DD");
+          plan_data.free_period_start = startFreeDate;
+          plan_data.free_period_expire = plan_data.expire_plan;
           // 현재 플랜 생성
           await db.plan.create(plan_data, {
             transaction: t,
