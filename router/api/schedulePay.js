@@ -304,6 +304,7 @@ router.post("/", async (req, res, next) => {
     }
     // 정기결제 실패했을 때
     if (status == "failed") {
+      console.log("실패");
       const alarm = new Alarm({});
       const now = moment().format("YYYY.MM.DD");
       const findPlanCompany = await db.plan.findOne({
