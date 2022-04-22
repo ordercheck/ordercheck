@@ -45,9 +45,8 @@ module.exports = {
           `SELECT plan, company_name, company_logo, company_subdomain, address, 
           detail_address, company.business_number, business_enrollment, business_enrollment_title, user_name,
           plan_price, chat_price, analystic_price, whiteLabel_price, start_plan, expire_plan, free_plan, pay_type,
-          card.message_active AS messageActive, failed_date,
+          card.message_active AS messageActive,
           companyexist,
-          failed_count,
           card.active AS cardActive,
           plan_active,
           text_cost,
@@ -108,6 +107,12 @@ module.exports = {
             : false,
           free_plan: findNextPlan.free_plan ? findPlan.free_plan : false,
           pay_type: findNextPlan.pay_type,
+          failed_date: findNextPlan.failed_date
+            ? moment(findNextPlan.failed_date.replace(/\./g, "-"))
+                .add("1", "d")
+                .format("YYYY.MM.DD")
+            : null,
+          failed_count: findNextPlan.failed_count,
           whiteLabelChecked: findNextPlan.whiteLabelChecked,
           chatChecked: findNextPlan.chatChecked,
           analysticChecked: findNextPlan.analysticChecked,
