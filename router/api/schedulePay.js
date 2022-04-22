@@ -343,7 +343,7 @@ router.post("/", async (req, res, next) => {
         .format("YYYY.MM.DD");
       const expireDate = moment(
         findPlanCompany.expire_plan.replace(/\./g, "-")
-      );
+      ).format("YYYY.MM.DD");
       const repayDate = moment().add("7", "d").format("YYYY.MM.DD");
 
       db.plan.update(
