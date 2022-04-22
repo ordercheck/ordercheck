@@ -313,12 +313,6 @@ router.post("/", async (req, res, next) => {
       const findCompany = await db.company.findByPk(
         findPlanCompany.company_idx
       );
-      db.plan.update(
-        { free_plan: null },
-        {
-          where: { company_idx: findPlanCompany.company_idx, active: 1 },
-        }
-      );
 
       //알람 생성
       const message = `플랜 정기 결제가 실패하였습니다. 등록된 카드를 확인해주세요.`;
@@ -353,7 +347,6 @@ router.post("/", async (req, res, next) => {
 
       db.plan.update(
         {
-          free_plan: null,
           merchant_uid: newMerchant_uid,
           failed_date: now,
           start_plan: startDate,
