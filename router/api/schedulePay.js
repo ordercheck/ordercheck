@@ -305,6 +305,7 @@ router.post("/", async (req, res, next) => {
     // 정기결제 실패했을 때
     if (status == "failed") {
       const alarm = new Alarm({});
+      const now = moment().format("YYYY.MM.DD");
       const findPlanCompany = await db.plan.findOne({
         where: { merchant_uid, active: 3 },
       });
@@ -336,10 +337,12 @@ router.post("/", async (req, res, next) => {
         newMerchant_uid
       );
 
-      //
+      const next_repay_date = moment().add("7", "d").format("YYYY.MM.DD");
       db.plan.update(
         {
           merchant_uid: newMerchant_uid,
+          failed_date: now,
+          next_repay_date,
           failed_count: findPlanCompany.failed_count + 1,
         },
         { where: { idx: findPlanCompany.idx } }
