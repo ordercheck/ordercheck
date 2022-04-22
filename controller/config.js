@@ -121,6 +121,7 @@ module.exports = {
 
       companyProfile[0].planDetail = planDetail;
       companyProfile[0].nextPlan = nextPlan;
+      console.log(companyProfile[0]);
       return res.send({ success: 200, companyProfile: companyProfile[0] });
     } catch (err) {
       next(err);
