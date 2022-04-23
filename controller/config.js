@@ -39,7 +39,7 @@ moment.tz.setDefault("Asia/Seoul");
 module.exports = {
   getCompanyProfile: async (req, res, next) => {
     const { user_idx, company_idx } = req;
-
+    console.log("getCompanyProfile", user_idx);
     try {
       let companyProfile = await db.sequelize
         .query(
