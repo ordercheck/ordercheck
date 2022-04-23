@@ -185,6 +185,7 @@ module.exports = {
         completeConsulting,
       });
     } catch (err) {
+      console.log("홈인가?");
       next(err);
     }
   },
