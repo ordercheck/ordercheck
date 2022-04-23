@@ -23,7 +23,7 @@ module.exports = {
           client.del(`${user_idx}`);
           client.set(`${user_idx}`, `${body.bread}`);
         }
-        await client.exit();
+        await client.quit();
         return res.send({ success: 200 });
       } else {
         return res.send({ success: 200 });
