@@ -39,6 +39,7 @@ moment.tz.setDefault("Asia/Seoul");
 module.exports = {
   getCompanyProfile: async (req, res, next) => {
     const { user_idx, company_idx } = req;
+    console.log("유저 인덱스", user_idx);
     try {
       let companyProfile = await db.sequelize
         .query(
@@ -73,7 +74,6 @@ module.exports = {
         where: { company_idx, active: 3 },
       });
 
-      console.log(findNextPlan.failed_date);
       const planDetail = {
         plan: findPlan.plan,
         plan_price: findPlan.plan_price.toLocaleString(),
@@ -120,7 +120,7 @@ module.exports = {
 
       companyProfile[0].planDetail = planDetail;
       companyProfile[0].nextPlan = nextPlan;
-      console.log(companyProfile[0]);
+
       return res.send({ success: 200, companyProfile: companyProfile[0] });
     } catch (err) {
       next(err);

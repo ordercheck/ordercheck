@@ -35,6 +35,7 @@ const checkUserPassword = async (userIdx, userPassword) => {
 
 module.exports = {
   getUserProfile: async (req, res, next) => {
+    const { user_idx } = req;
     const template = new Template({});
     try {
       let userProfile = await db.sequelize
@@ -53,7 +54,7 @@ module.exports = {
               LEFT JOIN sms ON sms.company_idx = userCompany.company_idx
               LEFT JOIN card ON company.huidx = card.user_idx
               LEFT JOIN plan ON userCompany.company_idx = plan.company_idx and plan.active = 1     
-              WHERE user.idx = ${req.user_idx}`
+              WHERE user.idx = ${user_idx}`
         )
         .spread((r) => {
           return makeSpreadArray(r);
@@ -90,7 +91,7 @@ module.exports = {
         limitPlan[userProfile[0].plan].fileStore;
 
       userProfile[0].authList = findConfig;
-      if (userProfile[0].huidx == req.user_idx && userProfile[0].companyexist) {
+      if (userProfile[0].huidx == user_idx && userProfile[0].companyexist) {
         userProfile[0].isOwner = true;
       } else {
         userProfile[0].isOwner = false;
