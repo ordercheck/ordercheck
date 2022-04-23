@@ -19,6 +19,7 @@ io.on("connection", (socket) => {
     console.log("알람 시스템 조인");
     // 토큰으로 user idx 찾기
     const user = await verify_data(data);
+    console.log(user);
 
     // 개인 room 참가
     socket.join(user.user_idx);
