@@ -4,7 +4,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
-
+const morgan = require("morgan");
 const session = require("express-session");
 const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
@@ -173,6 +173,7 @@ class AppServer extends http.Server {
   }
 
   router() {
+    this.app.use(morgan("short"));
     this.app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
     this.app.use("/", ordercheckRouter);
     this.app.use("/api", apiRouter);

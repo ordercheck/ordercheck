@@ -99,7 +99,6 @@ module.exports = {
 
       return res.send({ success: 200, userProfile: userProfile[0] });
     } catch (err) {
-      console.log("getUserProfile");
       next(err);
     }
   },

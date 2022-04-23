@@ -123,7 +123,6 @@ module.exports = {
 
       return res.send({ success: 200, companyProfile: companyProfile[0] });
     } catch (err) {
-      console.log("getCOmpanyProfile");
       next(err);
     }
   },
