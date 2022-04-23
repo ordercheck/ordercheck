@@ -36,7 +36,7 @@ const checkUserPassword = async (userIdx, userPassword) => {
 module.exports = {
   getUserProfile: async (req, res, next) => {
     const { user_idx } = req;
-
+    console.log("유저 프로필", user_idx);
     const template = new Template({});
     try {
       let userProfile = await db.sequelize
