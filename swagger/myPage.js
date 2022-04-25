@@ -99,6 +99,12 @@
  *      tags:
  *       - myPage
  *      summary: myPage 유저 견적 리스트 가져오기
+ *      parameters:
+ *         - in: query
+ *           name: sort
+ *           schema:
+ *             type: integer
+ *           example: 0
  *      responses:
  *       '200':
  *         description: 성공

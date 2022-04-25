@@ -76,16 +76,32 @@ module.exports = {
     return res.send({ success: 200, findResult });
   },
   getCalculateList: async (req, res, next) => {
-    const { customer_phoneNumber } = req;
+    const {
+      customer_phoneNumber,
+      query: { sort },
+    } = req;
+
+    let sortList;
+    if (sort === "0") {
+      sortList = "calculate.createdAt DESC";
+    } else if (sort === "1") {
+      sortList = "calculate.createdAt ASC";
+    } else if (sort === "2") {
+      sortList = "REPLACE(calculate.predicted_price, ',', '') DESC";
+    } else {
+      sortList = "REPLACE(calculate.predicted_price, ',', '') ASC";
+    }
 
     let findResult = await db.sequelize
       .query(
         `
-    SELECT company_name, calNumber, predicted_price, customerConfirm, calculate.idx as calculate_idx, company.idx as company_idx, calculate.createdAt, company.deleted
+    SELECT company_name, calNumber, predicted_price, customerConfirm, calculate.idx as calculate_idx, 
+    company.idx as company_idx, calculate.createdAt, company.deleted
     FROM customer 
     INNER JOIN calculate ON customer.idx = calculate.customer_idx
     LEFT JOIN company ON calculate.company_idx = company.idx
     WHERE customer_phoneNumber = "${customer_phoneNumber}"
+    ORDER BY ${sortList}
     `
       )
       .spread((r) => {
@@ -152,21 +168,28 @@ module.exports = {
       customer_phoneNumber,
     } = req;
 
-    const findResult = await db.calculate.findByPk(calculate_idx);
+    try {
+      const findResult = await db.calculate.findByPk(calculate_idx);
+      if (!findResult) {
+        return res.send({ success: 400, message: "해당 견적서가 없습니다." });
+      }
+      let calculateList = await db.sequelize
+        .query(
+          `
+          SELECT calculateNumber, calculate.idx as calculate_idx, calculate.createdAt
+          FROM customer 
+          INNER JOIN calculate ON customer.idx = calculate.customer_idx  AND calculate.company_idx = ${findResult.company_idx} 
+          WHERE customer_phoneNumber = "${customer_phoneNumber}"
+          ORDER BY calculate.createdAt DESC
+  `
+        )
+        .spread((r) => {
+          return makeSpreadArray(r);
+        });
 
-    let calculateList = await db.sequelize
-      .query(
-        `
-        SELECT calculateNumber, calculate.idx as calculate_idx, calculate.createdAt
-        FROM customer 
-        INNER JOIN calculate ON customer.idx = calculate.customer_idx  AND calculate.company_idx = ${findResult.company_idx} 
-        WHERE customer_phoneNumber = "${customer_phoneNumber}"
-`
-      )
-      .spread((r) => {
-        return makeSpreadArray(r);
-      });
-
-    return res.send({ success: 200, findResult, calculateList });
+      return res.send({ success: 200, findResult, calculateList });
+    } catch (err) {
+      next(err);
+    }
   },
 };
