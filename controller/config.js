@@ -1530,21 +1530,17 @@ module.exports = {
           let nextStartDate;
           if (plan_data.pay_type == "month") {
             nextStartDate = moment(plan_data.expire_plan.replace(/\./g, "-"))
-              .add("1", "M")
-              .subtract("1", "days")
+              .add("1", "days")
               .format("YYYY.MM.DD");
             nextExpireDate = moment(nextStartDate.replace(/\./g, "-"))
-              .add("1", "M")
-              .subtract("1", "days")
+              .add("1", "days")
               .format("YYYY.MM.DD");
           } else {
             nextStartDate = moment(plan_data.expire_plan.replace(/\./g, "-"))
-              .add("1", "Y")
-              .subtract("1", "days")
+              .add("1", "days")
               .format("YYYY.MM.DD");
             nextExpireDate = moment(nextStartDate.replace(/\./g, "-"))
-              .add("1", "M")
-              .subtract("1", "days")
+              .add("1", "days")
               .format("YYYY.MM.DD");
           }
           plan_data.start_plan = nextStartDate;
