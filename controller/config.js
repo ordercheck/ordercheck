@@ -1516,7 +1516,7 @@ module.exports = {
           const nowStartPlan = plan_data.start_plan;
           const nowExpirePlan = plan_data.expire_plan;
           // 시간을 unix형태로 변경(실제)
-          const Hour = moment().add("1", "h").format("HH");
+          const Hour = moment().format("HH");
 
           plan_data.merchant_uid = nextMerchant_uid;
           plan_data.company_idx = company_idx;
