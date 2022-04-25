@@ -95,6 +95,7 @@ const addPlanAndSchedule = async (
       nextMerchant_uid
     );
     plan_data.merchant_uid = nextMerchant_uid;
+    plan_data.pay_hour = Hour;
     plan_data.company_idx = company_data.idx;
     await db.plan.create({
       ...plan_data,

@@ -16,6 +16,12 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
+
+    pay_hour: {
+      allowNull: true,
+      type: DataTypes.STRING(45),
+    },
+
     free_plan: {
       allowNull: true,
 

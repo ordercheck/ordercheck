@@ -783,11 +783,11 @@ module.exports = {
 
       const findUserResult = await db.user.findByPk(user_idx);
 
-      const Hour = moment().format("HH");
-
       const startDate = findPlanResult.start_plan.replace(/\./g, "-");
 
-      const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
+      const changeToUnix = moment(
+        `${startDate} ${findPlanResult.pay_hour}:00`
+      ).unix();
 
       const nextMerchant_uid = generateRandomCode();
 
@@ -1179,7 +1179,6 @@ module.exports = {
           //  카드가 있으므로 새로운 소유주 카드로 플랜 결제 예정
 
           // 새로운 카드로 결제 예약
-          const Hour = moment().format("HH");
 
           const findCardResult = await db.card.findByPk(checkOwnerCard.idx);
 
@@ -1187,7 +1186,9 @@ module.exports = {
 
           const startDate = checkPlan.start_plan.replace(/\./g, "-");
 
-          const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
+          const changeToUnix = moment(
+            `${startDate} ${checkPlan.pay_hour}:00`
+          ).unix();
 
           const nextMerchant_uid = generateRandomCode();
           // 다음 카드 결제 신청
@@ -1463,6 +1464,7 @@ module.exports = {
           });
           plan_data.start_plan = scheduledPlan.start_plan;
           plan_data.expire_plan = scheduledPlan.expire_plan;
+          plan_data.pay_hour = scheduledPlan.pay_hour;
           plan_data.free_plan = scheduledPlan.free_plan;
           plan_data.company_idx = company_idx;
           plan_data.merchant_uid = nextMerchant_uid;
@@ -1489,11 +1491,12 @@ module.exports = {
           });
 
           // 시간을 unix형태로 변경(실제)
-          const Hour = moment().format("HH");
 
           const startDate = plan_data.start_plan.replace(/\./g, "-");
 
-          const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
+          const changeToUnix = moment(
+            `${startDate} ${scheduledPlan.pay_hour}:00`
+          ).unix();
 
           // 다음 카드 결제 신청
           await schedulePay(
@@ -1634,15 +1637,17 @@ module.exports = {
           });
 
           // 시간을 unix형태로 변경(실제)
-          const Hour = moment().format("HH");
 
           const startDate = scheduledPlan.start_plan.replace(/\./g, "-");
 
-          const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
+          const changeToUnix = moment(
+            `${startDate} ${scheduledPlan.pay_hour}:00`
+          ).unix();
 
           // 새로 변경될 플랜 생성
           plan_data.merchant_uid = nextMerchant_uid;
           plan_data.company_idx = company_idx;
+          plan_data.pay_hour = scheduledPlan.pay_hour;
           plan_data.start_plan = scheduledPlan.start_plan;
           plan_data.expire_plan = nextExpireDate;
           const newPlan = await db.plan.create(

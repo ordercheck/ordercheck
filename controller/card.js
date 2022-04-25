@@ -72,11 +72,11 @@ module.exports = {
     if (findPlanResult.enrollment == false) {
       const findUserResult = await db.user.findByPk(user_idx);
 
-      const Hour = moment().format("HH");
-
       const startDate = findPlanResult.start_plan.replace(/\./g, "-");
 
-      const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
+      const changeToUnix = moment(
+        `${startDate} ${findPlanResult.pay_hour}:00`
+      ).unix();
 
       const nextMerchant_uid = generateRandomCode();
 
