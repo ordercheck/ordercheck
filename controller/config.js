@@ -1576,18 +1576,18 @@ module.exports = {
             { where: { idx: company_idx }, transaction: t }
           );
 
-          // 변경한 플랜 바로 결제
-          await payNow(
-            card_data.customer_uid,
-            plan_data.result_price_levy,
-            plan_data.merchant_uid,
-            "플랜 즉시 결제"
-          );
-
           let scheduleUnixTime;
           if (plan_data.free_plan) {
             scheduleUnixTime = moment(nowStartPlan.replace(/\./g, "-")).unix();
           } else {
+            // 변경한 플랜 바로 결제
+            await payNow(
+              card_data.customer_uid,
+              plan_data.result_price_levy,
+              plan_data.merchant_uid,
+              "플랜 즉시 결제"
+            );
+
             scheduleUnixTime = moment(nextStartDate.replace(/\./g, "-")).unix();
           }
 
