@@ -649,9 +649,10 @@ router.post("/decode/token/data", async (req, res) => {
 });
 // sms 보내기
 router.post("/send/sms", async (req, res) => {
+  console.log("hi");
   const { user_phone, message, type } = req.body;
   let result = await _f.smsPush(user_phone, message, type);
-
+  console.log(result);
   return res.send(result);
 });
 // 중복된 핸드폰 번호 여부 확인
