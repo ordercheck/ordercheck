@@ -21,7 +21,7 @@ module.exports = {
     let findResult = await db.sequelize
       .query(
         `
-      SELECT consulting.idx as consulting_idx, company_logo, consulting.createdAt, company_name, formTitle, customerConfirm
+      SELECT consulting.idx as consulting_idx, company_logo, consulting.createdAt, company_name, formTitle, customerConfirm, company.deleted
       FROM consulting 
       LEFT JOIN company ON consulting.company_idx = company.idx
       WHERE customer_phoneNumber = "${customer_phoneNumber}" AND formTitle IS NOT NULL
@@ -70,7 +70,7 @@ module.exports = {
     let findResult = await db.sequelize
       .query(
         `
-    SELECT company_name, calNumber, predicted_price, customerConfirm, calculate.idx as calculate_idx, company.idx as company_idx, calculate.createdAt
+    SELECT company_name, calNumber, predicted_price, customerConfirm, calculate.idx as calculate_idx, company.idx as company_idx, calculate.createdAt, company.deleted
     FROM customer 
     INNER JOIN calculate ON customer.idx = calculate.customer_idx
     LEFT JOIN company ON calculate.company_idx = company.idx
@@ -121,7 +121,8 @@ module.exports = {
     let findResult = await db.sequelize
       .query(
         `
-  SELECT company_logo, company_name, calNumber, predicted_price, customerConfirm, calculate.idx as calculate_idx, company.idx as company_idx, calculate.createdAt
+  SELECT company_logo, company_name, calNumber, predicted_price, customerConfirm, calculate.idx as calculate_idx, company.idx as company_idx, calculate.createdAt, 
+  company.deleted
   FROM calculate 
   LEFT JOIN company ON calculate.company_idx = company.idx
   WHERE favorites_customer_account_idx = ${customer_account_idx}
