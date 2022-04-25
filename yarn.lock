@@ -854,6 +854,11 @@
     "mysql" "2.18.1"
     "underscore" "1.13.1"
 
+"express-rate-limit@^6.4.0":
+  "integrity" "sha512-lxQRZI4gi3qAWTf0/Uqsyugsz57h8bd7QyllXBgJvd6DJKokzW7C5DTaNvwzvAQzwHGFaItybfYGhC8gpu0V2A=="
+  "resolved" "https://registry.npmjs.org/express-rate-limit/-/express-rate-limit-6.4.0.tgz"
+  "version" "6.4.0"
+
 "express-session@^1.17.1", "express-session@1.17.2":
   "integrity" "sha512-mPcYcLA0lvh7D4Oqr5aNJFMtBMKPLl++OKKxkHzZ0U0oDq1rpKBnkR5f5vCHR26VeArlTOEF9td4x5IjICksRQ=="
   "resolved" "https://registry.npmjs.org/express-session/-/express-session-1.17.2.tgz"
@@ -868,7 +873,7 @@
     "safe-buffer" "5.2.1"
     "uid-safe" "~2.1.5"
 
-"express@^4.17.1", "express@>=4.0.0":
+"express@^4 || ^5", "express@^4.17.1", "express@>=4.0.0":
   "integrity" "sha512-mHJ9O79RqluphRrcw2X/GTh3k9tVv8YcoyY4Kkh4WDMUYKRZUq0h1o0w2rrrxBqM7VoeUVqgb27xlEMXTnYt4g=="
   "resolved" "https://registry.npmjs.org/express/-/express-4.17.1.tgz"
   "version" "4.17.1"

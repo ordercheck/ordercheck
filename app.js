@@ -4,17 +4,24 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 const morgan = require("morgan");
 const session = require("express-session");
 const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger/config");
-
 const json2xls = require("json2xls");
 // const corsOptions = {
 //   origin: 'https://ordercheck-file.s3.ap-northeast-2.amazonaws.com',
 //   credentials: true,
 // };
+
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: "Too many request from this IP",
+});
+
 const allowedOrigins = [
   "https://ordercheck-file.s3.ap-northeast-2.amazonaws.com",
 ];
@@ -173,6 +180,7 @@ class AppServer extends http.Server {
   }
 
   router() {
+    this.app.use(limiter);
     this.app.use(morgan("tiny"));
     this.app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
     this.app.use("/", ordercheckRouter);
