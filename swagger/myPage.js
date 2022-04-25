@@ -41,6 +41,12 @@
  *      tags:
  *       - myPage
  *      summary: myPage 유저 상담 신청 내역 리스트
+ *      parameters:
+ *         - in: query
+ *           name: sort
+ *           schema:
+ *             type: integer
+ *           example: 0
  *      responses:
  *       '200':
  *         description: 성공

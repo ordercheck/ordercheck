@@ -470,6 +470,7 @@ router.post("/company/check", async (req, res, next) => {
     // 회사 생성
     const company_data = await db.company.create({
       used_free_period: true,
+      company_code: Math.random().toString(36).substr(2, 11),
       company_name,
       company_subdomain,
       huidx: findUser.idx,

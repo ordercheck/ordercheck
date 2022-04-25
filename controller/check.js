@@ -6,7 +6,7 @@ module.exports = {
       user_idx,
       params: { company_subdomain },
     } = req;
-    console.log("check subdomain", user_idx);
+
     // 멤버로 들어가있는지,
     const checkCompanyMember = await db.company.count({
       where: { company_subdomain },

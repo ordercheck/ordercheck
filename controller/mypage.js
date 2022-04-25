@@ -3,7 +3,6 @@ const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
 const { createToken } = require("../lib/jwtfunctions");
-const { Op } = require("sequelize");
 
 const { makeSpreadArray } = require("../lib/functions");
 module.exports = {
@@ -16,7 +15,19 @@ module.exports = {
     return res.send({ success: 200, loginToken });
   },
   getConsultList: async (req, res, next) => {
-    const { customer_phoneNumber } = req;
+    const {
+      customer_phoneNumber,
+      query: { sort },
+    } = req;
+
+    let sortList;
+    if (sort === "0") {
+      sortList = "consulting.createdAt DESC";
+    } else if (sort === "1") {
+      sortList = "consulting.createdAt ASC";
+    } else {
+      sortList = "company.company_name DESC";
+    }
 
     let findResult = await db.sequelize
       .query(
@@ -25,7 +36,7 @@ module.exports = {
       FROM consulting 
       LEFT JOIN company ON consulting.company_idx = company.idx
       WHERE customer_phoneNumber = "${customer_phoneNumber}" AND formTitle IS NOT NULL
-      ORDER BY consulting.createdAt DESC;
+      ORDER BY ${sortList}
       `
       )
       .spread((r) => {
