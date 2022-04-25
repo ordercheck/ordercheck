@@ -192,7 +192,7 @@ module.exports = {
       }
 
       const findCompanySub = await db.company.findOne({
-        where: { huidx: user_idx },
+        where: { huidx: user_idx, deleted: null },
       });
 
       let companySubdomain;
@@ -343,7 +343,7 @@ module.exports = {
     try {
       // 회사 정보 먼저 찾기
       const findCompanyResult = await db.company.findOne({
-        where: { company_subdomain },
+        where: { company_subdomain, deleted: null },
         include: [
           {
             model: db.config,

@@ -228,7 +228,7 @@ router.post("/login", async (req, res, next) => {
     } else {
       // 링크로 로그인 할 때
       const findCompany = await db.company.findOne({
-        where: { company_subdomain },
+        where: { company_subdomain, deleted: null },
       });
       let checkCompanyStandBy = await db.userCompany.findOne({
         where: {
@@ -407,7 +407,7 @@ router.post("/join/do", async (req, res, next) => {
 
       // subdomain
       const findCompany = await db.company.findOne({
-        where: { company_subdomain },
+        where: { company_subdomain, deleted: null },
       });
 
       const findConfigResult = await template.findConfig(
@@ -690,7 +690,7 @@ router.post("/check/subdomain", async (req, res) => {
   const { company_subdomain } = req.body;
   try {
     const result = await db.company.findOne({
-      where: { company_subdomain },
+      where: { company_subdomain, deleted: null },
     });
     if (!result) {
       return res.send({ success: 400, msg: "존재하지 않는 도메인입니다." });
@@ -710,7 +710,7 @@ router.post("/check/company-name", async (req, res) => {
   const { company_name } = req.body;
   try {
     const result = await db.company.findOne({
-      where: { company_name },
+      where: { company_name, deleted: null },
     });
     if (!result) {
       return res.send({ success: 200 });

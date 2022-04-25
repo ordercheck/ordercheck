@@ -301,7 +301,7 @@ ${company_url}
 
     // 재가입 신청 하고자 하는 회사 정보 먼저 찾기
     const findCompany = await db.company.findOne(
-      { where: { company_subdomain } },
+      { where: { company_subdomain, deleted: null } },
       { attributes: ["idx"] }
     );
 
@@ -329,7 +329,7 @@ ${company_url}
     try {
       const loginToken = await createToken({ user_idx });
       const findCompany = await db.company.findOne(
-        { where: { company_subdomain } },
+        { where: { company_subdomain, deleted: null } },
         { attributes: ["idx"] }
       );
 
@@ -342,6 +342,7 @@ ${company_url}
       const checkCompany = await db.company.findOne({
         where: {
           huidx: user_idx,
+          deleted: null,
         },
       });
 
@@ -400,7 +401,7 @@ ${company_url}
     } = req;
 
     const findCompany = await db.company.findOne({
-      where: { company_subdomain },
+      where: { company_subdomain, deleted: null },
       attributes: ["idx"],
     });
 
