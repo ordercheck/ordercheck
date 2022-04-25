@@ -1,14 +1,13 @@
 const db = require("../model/db");
 const redis = require("redis");
 
-const client = redis.createClient({
-  url: process.env.REDIS_URL,
-});
 module.exports = {
   storeBread: async (req, res, next) => {
     try {
+      const client = redis.createClient({
+        url: process.env.REDIS_URL,
+      });
       const { body, user_idx } = req;
-
       // io 인지 체크
       // if (process.env.NODE_MODE == "IO") {
       // 제일 최근 데이터가 같은 데이터인지 체크
