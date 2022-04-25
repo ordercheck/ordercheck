@@ -145,7 +145,7 @@ router.post("/login", async (req, res, next) => {
 
   const template = new Template({});
   const last_login = moment();
-  let check = await db.user.findOne({ where: { user_phone } });
+  let check = await db.user.findOne({ where: { user_phone, deleted: null } });
 
   if (!check) {
     return res.send({ success: 400, message: "비밀번호 혹은 전화번호 오류" });
@@ -455,7 +455,7 @@ router.post("/company/check", async (req, res, next) => {
     }
     // user idx 찾기
     const findUser = await db.user.findOne({
-      where: { user_phone: user_data.user_phone },
+      where: { user_phone: user_data.user_phone, deleted: null },
       attributes: ["idx", "user_name"],
     });
 
@@ -536,9 +536,11 @@ router.post("/company/check", async (req, res, next) => {
 // 핸드폰 등록 여부 확인 라우터
 router.post("/phone/check", async (req, res) => {
   const { user_phone } = req.body;
-  let check = await db.user.findAll({ where: { user_phone } }).then((r) => {
-    return makeArray(r);
-  });
+  let check = await db.user
+    .findAll({ where: { user_phone, deleted: null } })
+    .then((r) => {
+      return makeArray(r);
+    });
   if (check.length > 0) {
     return res.send({ success: 200 });
   } else {
@@ -548,7 +550,7 @@ router.post("/phone/check", async (req, res) => {
 // 패스워드 수정 라우터
 router.post("/password/reset", async (req, res) => {
   const { user_phone, user_password } = req.body;
-  let check = await db.user.findOne({ where: { user_phone } });
+  let check = await db.user.findOne({ where: { user_phone, deleted: null } });
   if (check) {
     const newHashPassword = await bcrypt.hash(
       user_password,
@@ -658,7 +660,7 @@ router.post("/duplicate/phoneNumber", async (req, res) => {
   const { user_phone } = req.body;
   try {
     const result = await db.user.findOne({
-      where: { user_phone },
+      where: { user_phone, deleted: null },
     });
 
     if (!result) {
@@ -674,7 +676,7 @@ router.post("/duplicate/email", async (req, res) => {
   const { user_email } = req.body;
   try {
     const result = await db.user.findOne({
-      where: { user_email },
+      where: { user_email, deleted: null },
     });
     if (!result) {
       return res.send({ success: 200 });
@@ -726,7 +728,7 @@ router.post("/check/password", async (req, res) => {
   const { user_password, user_phone } = req.body;
   try {
     const findUserResult = await db.user.findOne({
-      where: { user_phone },
+      where: { user_phone, deleted: null },
     });
 
     const comparePasswordResult = await bcrypt.compare(
@@ -755,7 +757,7 @@ router.post("/company/check/later", async (req, res, next) => {
   try {
     // user idx 찾기
     const findUser = await db.user.findOne({
-      where: { user_phone: user_data.user_phone },
+      where: { user_phone: user_data.user_phone, deleted: null },
       attributes: ["idx", "user_name"],
     });
 
@@ -815,7 +817,7 @@ router.post("/token/login", async (req, res, next) => {
     const user_data = await verify_data(ut);
 
     const findUser = await db.user.findOne({
-      where: { user_phone: user_data.user_phone },
+      where: { user_phone: user_data.user_phone, deleted: null },
       include: [
         {
           model: db.userCompany,
