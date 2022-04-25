@@ -1533,7 +1533,7 @@ module.exports = {
               .add("1", "M")
               .subtract("1", "days")
               .format("YYYY.MM.DD");
-            nextExpireDate = moment(plan_data.nextStartDate.replace(/\./g, "-"))
+            nextExpireDate = moment(nextStartDate.replace(/\./g, "-"))
               .add("1", "M")
               .subtract("1", "days")
               .format("YYYY.MM.DD");
@@ -1542,7 +1542,7 @@ module.exports = {
               .add("1", "Y")
               .subtract("1", "days")
               .format("YYYY.MM.DD");
-            nextExpireDate = moment(plan_data.nextStartDate.replace(/\./g, "-"))
+            nextExpireDate = moment(nextStartDate.replace(/\./g, "-"))
               .add("1", "M")
               .subtract("1", "days")
               .format("YYYY.MM.DD");
