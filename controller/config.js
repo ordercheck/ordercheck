@@ -1538,8 +1538,12 @@ module.exports = {
               .add("1", "days")
               .format("YYYY.MM.DD");
           }
-          plan_data.start_plan = nextStartDate;
-          plan_data.expire_plan = nextExpireDate;
+          // 무료플랜이 아닐 때
+          if (!plan_data.free_plan) {
+            plan_data.start_plan = nextStartDate;
+            plan_data.expire_plan = nextExpireDate;
+          }
+
           await db.plan.create(
             {
               ...plan_data,
