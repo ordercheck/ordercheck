@@ -6,6 +6,7 @@ const config = {
 const server = createServer(config);
 
 const io = require("socket.io")(server, {
+  perMessageDeflate: false,
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
