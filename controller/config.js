@@ -1585,7 +1585,7 @@ module.exports = {
           );
 
           let scheduleUnixTime;
-          if (lan_data.free_plan) {
+          if (plan_data.free_plan) {
             scheduleUnixTime = moment(nowStartPlan.replace(/\./g, "-")).unix();
           } else {
             scheduleUnixTime = moment(nextStartDate.replace(/\./g, "-")).unix();
