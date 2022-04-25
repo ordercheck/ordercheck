@@ -1528,7 +1528,7 @@ module.exports = {
               .add("1", "days")
               .format("YYYY.MM.DD");
             nextExpireDate = moment(nextStartDate.replace(/\./g, "-"))
-              .add("1", "m")
+              .add("1", "M")
               .subtract("1", "days")
               .format("YYYY.MM.DD");
           } else {
@@ -1536,7 +1536,7 @@ module.exports = {
               .add("1", "days")
               .format("YYYY.MM.DD");
             nextExpireDate = moment(nextStartDate.replace(/\./g, "-"))
-              .add("1", "y")
+              .add("1", "Y")
               .subtract("1", "days")
               .format("YYYY.MM.DD");
           }
