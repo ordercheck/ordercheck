@@ -1517,7 +1517,7 @@ module.exports = {
           const nowStartPlan = plan_data.start_plan;
           const nowExpirePlan = plan_data.expire_plan;
           // 시간을 unix형태로 변경(실제)
-          const Hour = moment().format("HH");
+          const Hour = moment().add("1", "h").format("HH");
 
           const startDate = plan_data.start_plan.replace(/\./g, "-");
 
@@ -1527,33 +1527,33 @@ module.exports = {
           plan_data.company_idx = company_idx;
           plan_data.pay_hour = Hour;
           // 결제 예약 플랜 생성
-          let nextStartDate;
-          if (plan_data.pay_type == "month") {
-            nextStartDate = moment(plan_data.expire_plan.replace(/\./g, "-"))
-              .add("1", "days")
-              .format("YYYY.MM.DD");
-            nextExpireDate = moment(nextStartDate.replace(/\./g, "-"))
-              .add("1", "days")
-              .format("YYYY.MM.DD");
-          } else {
-            nextStartDate = moment(plan_data.expire_plan.replace(/\./g, "-"))
-              .add("1", "days")
-              .format("YYYY.MM.DD");
-            nextExpireDate = moment(nextStartDate.replace(/\./g, "-"))
-              .add("1", "days")
-              .format("YYYY.MM.DD");
-          }
-          plan_data.start_plan = nextStartDate;
-          plan_data.expire_plan = nextExpireDate;
-          await db.plan.create(
-            {
-              ...plan_data,
-              active: 3,
-            },
-            {
-              transaction: t,
-            }
-          );
+          // let nextStartDate;
+          // if (plan_data.pay_type == "month") {
+          //   nextStartDate = moment(plan_data.expire_plan.replace(/\./g, "-"))
+          //     .add("1", "days")
+          //     .format("YYYY.MM.DD");
+          //   nextExpireDate = moment(nextStartDate.replace(/\./g, "-"))
+          //     .add("1", "days")
+          //     .format("YYYY.MM.DD");
+          // } else {
+          //   nextStartDate = moment(plan_data.expire_plan.replace(/\./g, "-"))
+          //     .add("1", "days")
+          //     .format("YYYY.MM.DD");
+          //   nextExpireDate = moment(nextStartDate.replace(/\./g, "-"))
+          //     .add("1", "days")
+          //     .format("YYYY.MM.DD");
+          // }
+          // plan_data.start_plan = nextStartDate;
+          // plan_data.expire_plan = nextExpireDate;
+          // await db.plan.create(
+          //   {
+          //     ...plan_data,
+          //     active: 3,
+          //   },
+          //   {
+          //     transaction: t,
+          //   }
+          // );
           const startFreeDate = moment().format("YYYY.MM.DD");
           plan_data.free_period_start = startFreeDate;
           plan_data.free_period_expire = plan_data.expire_plan;
