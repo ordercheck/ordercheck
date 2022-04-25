@@ -1528,14 +1528,16 @@ module.exports = {
               .add("1", "days")
               .format("YYYY.MM.DD");
             nextExpireDate = moment(nextStartDate.replace(/\./g, "-"))
-              .add("1", "days")
+              .add("1", "h")
+              .subtract("1", "days")
               .format("YYYY.MM.DD");
           } else {
             nextStartDate = moment(plan_data.expire_plan.replace(/\./g, "-"))
               .add("1", "days")
               .format("YYYY.MM.DD");
             nextExpireDate = moment(nextStartDate.replace(/\./g, "-"))
-              .add("1", "days")
+              .add("1", "y")
+              .subtract("1", "days")
               .format("YYYY.MM.DD");
           }
           // 무료플랜이 아닐 때
@@ -1582,9 +1584,16 @@ module.exports = {
             user_data.user_name
           );
 
+          let scheduleUnixTime;
+          if (lan_data.free_plan) {
+            scheduleUnixTime = moment(nowStartPlan.replace(/\./g, "-")).unix();
+          } else {
+            scheduleUnixTime = moment(nextStartDate.replace(/\./g, "-")).unix();
+          }
+
           // 다음 카드 결제 신청
           await schedulePay(
-            nextStartDate,
+            scheduleUnixTime,
             card_data.customer_uid,
             plan_data.result_price_levy,
             user_data.user_name,
