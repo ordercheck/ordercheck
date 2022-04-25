@@ -1581,7 +1581,7 @@ module.exports = {
             card_data.customer_uid,
             plan_data.result_price_levy,
             plan_data.merchant_uid,
-            user_data.user_name
+            "플랜 즉시 결제"
           );
 
           let scheduleUnixTime;

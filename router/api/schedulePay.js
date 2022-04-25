@@ -19,6 +19,7 @@ router.post("/", async (req, res, next) => {
     console.log(getResult);
     if (
       getResult.amount == 1000 ||
+      getResult.name == "플랜 즉시 결제" ||
       status == "cancelled" ||
       !getResult.buyer_email
     ) {
