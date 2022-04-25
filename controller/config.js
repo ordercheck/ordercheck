@@ -1450,10 +1450,9 @@ module.exports = {
             .format("YYYY.MM.DD");
         }
       }
-      console.log(nextExpireDate);
+
       const nextMerchant_uid = generateRandomCode();
       // 프리플랜에서 요금제 가입 할 때
-      console.log(typeof nextMerchant_uid);
       if (nowPlan.plan == "프리") {
         console.log("프리 플랜에서 요금제 가입 할 때");
         // 무료체험 기간일 때
@@ -1519,48 +1518,47 @@ module.exports = {
           // 시간을 unix형태로 변경(실제)
           const Hour = moment().add("1", "h").format("HH");
 
-          const startDate = plan_data.start_plan.replace(/\./g, "-");
-
-          const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
-
           plan_data.merchant_uid = nextMerchant_uid;
           plan_data.company_idx = company_idx;
           plan_data.pay_hour = Hour;
           // 결제 예약 플랜 생성
-          // let nextStartDate;
-          // if (plan_data.pay_type == "month") {
-          //   nextStartDate = moment(plan_data.expire_plan.replace(/\./g, "-"))
-          //     .add("1", "days")
-          //     .format("YYYY.MM.DD");
-          //   nextExpireDate = moment(nextStartDate.replace(/\./g, "-"))
-          //     .add("1", "days")
-          //     .format("YYYY.MM.DD");
-          // } else {
-          //   nextStartDate = moment(plan_data.expire_plan.replace(/\./g, "-"))
-          //     .add("1", "days")
-          //     .format("YYYY.MM.DD");
-          //   nextExpireDate = moment(nextStartDate.replace(/\./g, "-"))
-          //     .add("1", "days")
-          //     .format("YYYY.MM.DD");
-          // }
-          // plan_data.start_plan = nextStartDate;
-          // plan_data.expire_plan = nextExpireDate;
-          // await db.plan.create(
-          //   {
-          //     ...plan_data,
-          //     active: 3,
-          //   },
-          //   {
-          //     transaction: t,
-          //   }
-          // );
+          let nextStartDate;
+          if (plan_data.pay_type == "month") {
+            nextStartDate = moment(plan_data.expire_plan.replace(/\./g, "-"))
+              .add("1", "days")
+              .format("YYYY.MM.DD");
+            nextExpireDate = moment(nextStartDate.replace(/\./g, "-"))
+              .add("1", "days")
+              .format("YYYY.MM.DD");
+          } else {
+            nextStartDate = moment(plan_data.expire_plan.replace(/\./g, "-"))
+              .add("1", "days")
+              .format("YYYY.MM.DD");
+            nextExpireDate = moment(nextStartDate.replace(/\./g, "-"))
+              .add("1", "days")
+              .format("YYYY.MM.DD");
+          }
+          plan_data.start_plan = nextStartDate;
+          plan_data.expire_plan = nextExpireDate;
+          await db.plan.create(
+            {
+              ...plan_data,
+              active: 3,
+            },
+            {
+              transaction: t,
+            }
+          );
           const startFreeDate = moment().format("YYYY.MM.DD");
           plan_data.free_period_start = startFreeDate;
           plan_data.free_period_expire = plan_data.expire_plan;
-
           plan_data.start_plan = nowStartPlan;
           plan_data.expire_plan = nowExpirePlan;
 
+          // 무료플랜이 아닐 때
+          if (!plan_data.free_plan) {
+            plan_data.merchant_uid = generateRandomCode();
+          }
           // 현재 플랜 생성
           await db.plan.create(plan_data, {
             transaction: t,
@@ -1572,9 +1570,17 @@ module.exports = {
             { where: { idx: company_idx }, transaction: t }
           );
 
+          // 변경한 플랜 바로 결제
+          await payNow(
+            card_data.customer_uid,
+            plan_data.result_price_levy,
+            plan_data.merchant_uid,
+            user_data.user_name
+          );
+
           // 다음 카드 결제 신청
           await schedulePay(
-            changeToUnix,
+            nextStartDate,
             card_data.customer_uid,
             plan_data.result_price_levy,
             user_data.user_name,
