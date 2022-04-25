@@ -135,6 +135,7 @@ ${company_url}
       const message = alarm.messageCostAlarm(checkSmsCost.text_cost);
       const insertData = {
         message,
+        path: `/setting/message`,
         alarm_type: 36,
       };
       const sendMember = [huidx];
