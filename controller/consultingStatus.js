@@ -35,7 +35,10 @@ const {
 } = require("../lib/attributes");
 
 const changeToSearch = (body) => {
-  const searchingPhoneNumber = body.customer_phoneNumber.replace(/\./g, "");
+  const searchingPhoneNumber = body.customer_phoneNumber.replace(
+    /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
+    ""
+  );
   const searchingAddress = `${body.address.replace(
     / /g,
     ""
@@ -89,7 +92,7 @@ module.exports = {
           // }
 
           const customer_phoneNumber = bodyData.customer_phoneNumber.replace(
-            /\./g,
+            /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
             ""
           );
 
@@ -550,7 +553,10 @@ module.exports = {
       });
 
       if (!checkFileStore) {
-        const searchingPhoneNumber = customer_phoneNumber.replace(/\./g, "");
+        const searchingPhoneNumber = customer_phoneNumber.replace(
+          /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
+          ""
+        );
 
         const findCustomer = await db.customer.findOne({
           where: { customer_phoneNumber, company_idx },
@@ -771,7 +777,10 @@ module.exports = {
     const sharedDate = moment().format("YYYY.MM.DD");
 
     const customer_phoneNumber =
-      customerFindResult.customer_phoneNumber.replace(/\./g, "");
+      customerFindResult.customer_phoneNumber.replace(
+        /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
+        ""
+      );
     const { kakaoPushResult, message } = await customerkakaoPushNewCal(
       customer_phoneNumber,
       companyFindResult.company_name,

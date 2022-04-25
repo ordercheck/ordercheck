@@ -80,9 +80,12 @@ ${findInviter.user_name}님이 ${findCompany.company_name} 회사에 초대합�
 참여하기:
 ${company_url}
  `;
-    console.log("보낼거야");
+
     for (i = 0; i < target_phoneNumber.length; i++) {
-      const user_phone = target_phoneNumber[i].replace(/\./g, "-");
+      const user_phone = target_phoneNumber[i].replace(
+        /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
+        ""
+      );
 
       await axios({
         url: "/api/send/sms",
