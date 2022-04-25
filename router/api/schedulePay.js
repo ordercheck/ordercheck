@@ -220,7 +220,9 @@ router.post("/", async (req, res, next) => {
       // 새로운 결제 예약 등록
       const findPlanResult = await db.plan.findOne({
         where: { merchant_uid, active: 1 },
-        attributes: { exclude: ["createdAt", "updatedAt"] },
+        attributes: {
+          exclude: ["createdAt", "updatedAt"],
+        },
         raw: true,
       });
 
