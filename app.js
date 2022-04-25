@@ -173,7 +173,7 @@ class AppServer extends http.Server {
   }
 
   router() {
-    this.app.use(morgan("combined"));
+    this.app.use(morgan("tiny"));
     this.app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
     this.app.use("/", ordercheckRouter);
     this.app.use("/api", apiRouter);

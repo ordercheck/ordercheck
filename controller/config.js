@@ -1483,7 +1483,7 @@ module.exports = {
             { where: { idx: nowPlan.idx }, transaction: t }
           );
           plan_data.free_period_start = startFreeDate;
-          plan_data.free_period_expire = scheduledPlan.expire_plan;
+          plan_data.free_period_expire = nextExpireDate;
           await db.plan.create(plan_data, {
             transaction: t,
           });
@@ -1538,7 +1538,7 @@ module.exports = {
             }
           );
           const startFreeDate = moment().format("YYYY.MM.DD");
-          plan_data.free_period_start = startFreeDate;
+          plan_data.free_period_start = plan_data.start_plan;
           plan_data.free_period_expire = plan_data.expire_plan;
           // 현재 플랜 생성
           await db.plan.create(plan_data, {
@@ -1577,7 +1577,7 @@ module.exports = {
 
             const startFreeDate = moment().format("YYYY.MM.DD");
             plan_data.free_period_start = startFreeDate;
-            plan_data.free_period_expire = scheduledPlan.expire_plan;
+            plan_data.free_period_expire = nextExpireDate;
             await db.plan.update(
               { active: 0, free_period_expire: startFreeDate },
               {
@@ -1658,7 +1658,7 @@ module.exports = {
 
             const startFreeDate = moment().format("YYYY.MM.DD");
             plan_data.free_period_start = startFreeDate;
-            plan_data.free_period_expire = scheduledPlan.expire_plan;
+            plan_data.free_period_expire = nextExpireDate;
 
             plan_data.free_plan = nowPlan.free_plan;
             await db.plan.update(
