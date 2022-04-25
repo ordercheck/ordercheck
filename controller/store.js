@@ -12,23 +12,17 @@ module.exports = {
       // if (process.env.NODE_MODE == "IO") {
       // 제일 최근 데이터가 같은 데이터인지 체크
       await client.connect();
-      console.log("hihi");
-      const storedBread = await client.get(`${user_idx}`);
-      console.log("저장된 bread", storedBread);
-      if (storedBread == body.bread) {
-        console.log(storedBread);
-      } else {
-        console.log(storedBread);
+
+      const storedBread = await client.get(`bread${user_idx}`);
+
+      if (storedBread !== body.bread) {
         body.user_idx = user_idx;
         await db.store.create(body);
-        client.del(`${user_idx}`);
-        client.set(`${user_idx}`, `${body.bread}`);
+        client.del(`bread${user_idx}`);
+        client.set(`bread${user_idx}`, `${body.bread}`);
       }
       await client.quit();
       return res.send({ success: 200 });
-      // } else {
-      //   return res.send({ success: 200 });
-      // }
     } catch (err) {
       next(err);
     }
