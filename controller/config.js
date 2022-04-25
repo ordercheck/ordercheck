@@ -1557,7 +1557,7 @@ module.exports = {
           );
           const startFreeDate = moment().format("YYYY.MM.DD");
           plan_data.free_period_start = startFreeDate;
-          plan_data.free_period_expire = plan_data.expire_plan;
+          plan_data.free_period_expire = nowExpirePlan;
           plan_data.start_plan = nowStartPlan;
           plan_data.expire_plan = nowExpirePlan;
 
