@@ -47,4 +47,20 @@ module.exports = {
     //   해당 회사에 가입
     return res.send({ success: 200, message: 2 });
   },
+  getSubDomain: async (req, res, next) => {
+    const { user_idx } = req;
+
+    const findCompanyResult = await db.userCompany.findOne({
+      where: { user_idx, active: true, standBy: false },
+      include: [
+        {
+          model: db.company,
+        },
+      ],
+    });
+    return res.send({
+      success: 200,
+      subdomain: findCompanyResult.company.company_subdomain,
+    });
+  },
 };

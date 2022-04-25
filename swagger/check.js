@@ -18,6 +18,17 @@
  *         description: 성공
  *       '401':
  *         description: 실패
-
+ * /api/check/company/subdomain:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       - check
+ *      summary: 회사 서브 도메인 가져오기
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
 
 */
