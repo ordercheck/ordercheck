@@ -1577,7 +1577,7 @@ module.exports = {
             plan_data.expire_plan = nextExpireDate;
             plan_data.enrollment = null;
             plan_data.merchant_uid = nextMerchant_uid;
-
+            plan_data.pay_hour = scheduledPlan.pay_hour;
             const startFreeDate = moment().format("YYYY.MM.DD");
             plan_data.free_period_start = startFreeDate;
             plan_data.free_period_expire = nextExpireDate;
