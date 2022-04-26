@@ -1581,12 +1581,17 @@ module.exports = {
             scheduleUnixTime = moment(nowStartPlan.replace(/\./g, "-")).unix();
           } else {
             // 변경한 플랜 바로 결제
-            await payNow(
+            const { success } = await payNow(
               card_data.customer_uid,
               plan_data.result_price_levy,
               plan_data.merchant_uid,
               "플랜 즉시 결제"
             );
+
+            if (!success) {
+              await t.rollback();
+              return res.send({ success: 400, message: "결제 실패" });
+            }
 
             scheduleUnixTime = moment(nextStartDate.replace(/\./g, "-")).unix();
           }
