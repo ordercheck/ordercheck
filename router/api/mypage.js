@@ -3,7 +3,7 @@ const router = express.Router();
 const {
   joinDoCustomer,
   getConsultList,
-  loginMyPage,
+  checkCustomer,
   getDetailConsulting,
   getCalculateList,
   setFavoritesCalculate,
@@ -15,7 +15,7 @@ const { customerLoginCheck } = require("../../middleware/auth");
 
 router.post("/customer/join/do", joinDoCustomer);
 
-router.post("/customer/login", loginMyPage);
+router.post("/customer/check/customer", checkCustomer);
 
 router.get("/customer/consult/list", customerLoginCheck, getConsultList);
 

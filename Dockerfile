@@ -1,15 +1,13 @@
-FROM node:14.18.3
+FROM node:10
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
 COPY package.json ./
 
-RUN npm install node-gyp@8.4.1
-
-RUN npm install 
+RUN npm install
 
 COPY ./ ./
 
-CMD ["npm", "run", "dev"]
+CMD ["node", "server.js"]
 
 EXPOSE 80

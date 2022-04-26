@@ -56,7 +56,7 @@ module.exports = {
     );
   },
 
-  loginMyPage: async (req, res, next) => {
+  checkCustomer: async (req, res, next) => {
     const { customer_phoneNumber } = req.body;
     const checkCustomer = await db.customerAccount.findOne({
       where: { customer_phoneNumber },

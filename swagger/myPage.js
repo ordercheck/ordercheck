@@ -52,13 +52,13 @@
  *         description: 성공
  *       '401':
  *         description: 실패
- * /api/mypage/customer/login:
+ * /api/mypage/customer/check/customer:
  *   post:
  *      security:
  *       - bearerAuth: []
  *      tags:
  *       - myPage
- *      summary: myPage 유저 로그인
+ *      summary: myPage 유저 회원가입 되어있는지 체크
  *      requestBody:
  *       content:
  *         application/json:
