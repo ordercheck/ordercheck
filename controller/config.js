@@ -1578,7 +1578,9 @@ module.exports = {
 
           let scheduleUnixTime;
           if (plan_data.free_plan) {
-            scheduleUnixTime = moment(nowStartPlan.replace(/\./g, "-")).unix();
+            scheduleUnixTime = moment(
+              `${nowStartPlan.replace(/\./g, "-")} ${Hour}:00`
+            ).unix();
           } else {
             // 변경한 플랜 바로 결제
             const { success } = await payNow(
@@ -1593,7 +1595,9 @@ module.exports = {
               return res.send({ success: 400, message: "결제 실패" });
             }
 
-            scheduleUnixTime = moment(nextStartDate.replace(/\./g, "-")).unix();
+            scheduleUnixTime = moment(
+              `${nextStartDate.replace(/\./g, "-")} ${Hour}:00`
+            ).unix();
           }
 
           // 다음 카드 결제 신청
