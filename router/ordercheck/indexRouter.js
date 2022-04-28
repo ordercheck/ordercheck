@@ -216,6 +216,7 @@ router.get("/password/complete", alwaysCheck, async (req, res, next) => {
 
 router.get("/information", async (req, res, next) => {
   let findAllUser = await db.user.findAll({
+    where: { deleted: null },
     include: [
       {
         model: db.card,
@@ -227,17 +228,21 @@ router.get("/information", async (req, res, next) => {
   findAllUser = JSON.parse(JSON.stringify(findAllUser));
 
   let findCompany = await db.company.findAll({
-    where: { company_name: { [Op.ne]: "" } },
+    where: { company_name: { [Op.ne]: "" }, deleted: null },
     include: [
       {
         model: db.userCompany,
         where: { active: true, standBy: false },
       },
+      {
+        model: db.plan,
+        where: { active: 1 },
+      },
     ],
   });
 
   findCompany = JSON.parse(JSON.stringify(findCompany));
-
+  console.log(findCompany[0].plans[0].plan);
   res.render("ordercheck/auth/information", { findAllUser, findCompany });
 });
 

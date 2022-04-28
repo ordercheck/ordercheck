@@ -33,6 +33,7 @@
     <table class="table">
       <thead>
         <tr>
+          <th scope="col">No</th>
           <th scope="col">이름</th>
           <th scope="col">번호</th>
           <th scope="col">이메일</th>
@@ -43,6 +44,7 @@
       <tbody>
         <% for(var i = 0; i < findAllUser.length; i++){ %>
         <tr>
+          <td><%= i+1 %></td>
           <td><%= findAllUser[i].user_name %></td>
           <td><%= findAllUser[i].user_phone %></td>
           <td><%= findAllUser[i].user_email %></td>
@@ -61,14 +63,18 @@
     <table class="table">
       <thead>
         <tr>
+          <th scope="col">No</th>
           <th scope="col">회사</th>
+          <th scope="col">플랜</th>
           <th scope="col">멤버</th>
         </tr>
       </thead>
       <tbody>
         <% for(var i = 0; i < findCompany.length; i++){ %>
         <tr>
+          <td><%= i+1 %></td>
           <td><%= findCompany[i].company_name %></td>
+          <td><%= findCompany[i].plans[0].plan %></td>
           <td>
             <% for(var j = 0; j< findCompany[i].userCompanies.length; j++){ %>
             <%= findCompany[i].userCompanies[j].searchingName %>, <% } %>

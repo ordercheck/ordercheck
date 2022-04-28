@@ -70,7 +70,7 @@ db.store = sequelize.import(__dirname + "/store.js");
 db.customer = sequelize.import(__dirname + "/customer.js");
 
 // usre와 store
-db.user.hasMany(db.store, { foreignKey: "user_idx", onDelete: "cascade" });
+db.user.hasMany(db.store, { foreignKey: "user_idx" });
 db.store.belongsTo(db.user, {
   foreignKey: "user_idx",
 });
@@ -78,7 +78,6 @@ db.store.belongsTo(db.user, {
 // company와 chatTemplate
 db.company.hasMany(db.chatTemplate, {
   foreignKey: "company_idx",
-  onDelete: "cascade",
 });
 db.chatTemplate.belongsTo(db.company, {
   foreignKey: "company_idx",
@@ -91,7 +90,7 @@ db.smsHistory.belongsTo(db.sms, {
 });
 
 // company와 sms
-db.company.hasOne(db.sms, { foreignKey: "company_idx", onDelete: "cascade" });
+db.company.hasOne(db.sms, { foreignKey: "company_idx" });
 db.sms.belongsTo(db.company, {
   foreignKey: "company_idx",
 });
@@ -99,7 +98,6 @@ db.sms.belongsTo(db.company, {
 // company와 customerFile
 db.company.hasMany(db.customerFile, {
   foreignKey: "company_idx",
-  onDelete: "cascade",
 });
 db.customerFile.belongsTo(db.company, {
   foreignKey: "company_idx",
@@ -107,7 +105,6 @@ db.customerFile.belongsTo(db.company, {
 // company와 receipt
 db.company.hasMany(db.receipt, {
   foreignKey: "company_idx",
-  onDelete: "cascade",
 });
 db.receipt.belongsTo(db.company, {
   foreignKey: "company_idx",
@@ -116,7 +113,6 @@ db.receipt.belongsTo(db.company, {
 // customerFile과 folders
 db.customerFile.hasMany(db.folders, {
   foreignKey: "customerFile_idx",
-  onDelete: "cascade",
 });
 db.folders.belongsTo(db.customerFile, {
   foreignKey: "customerFile_idx",
@@ -133,7 +129,6 @@ db.files.belongsTo(db.customerFile, {
 // company와 files
 db.company.hasMany(db.files, {
   foreignKey: "company_idx",
-  onDelete: "cascade",
 });
 db.files.belongsTo(db.company, {
   foreignKey: "company_idx",
@@ -142,7 +137,6 @@ db.files.belongsTo(db.company, {
 // company와 folders
 db.company.hasMany(db.folders, {
   foreignKey: "company_idx",
-  onDelete: "cascade",
 });
 db.folders.belongsTo(db.company, {
   foreignKey: "company_idx",
@@ -152,7 +146,6 @@ db.folders.belongsTo(db.company, {
 db.folders.hasMany(db.files, {
   foreignKey: "folder_uuid",
   sourceKey: "uuid",
-  onDelete: "cascade",
 });
 db.files.belongsTo(db.folders, {
   foreignKey: "folder_uuid",
@@ -173,7 +166,6 @@ db.calculate.belongsTo(db.customer, {
 // company와 calculate
 db.company.hasMany(db.calculate, {
   foreignKey: "company_idx",
-  onDelete: "cascade",
 });
 db.calculate.belongsTo(db.company, {
   foreignKey: "company_idx",
@@ -191,7 +183,6 @@ db.consulting.belongsTo(db.customer, {
 // company와 customer
 db.company.hasMany(db.customer, {
   foreignKey: "company_idx",
-  onDelete: "cascade",
 });
 db.customer.belongsTo(db.company, {
   foreignKey: "company_idx",
@@ -200,7 +191,6 @@ db.customer.belongsTo(db.company, {
 // alarm과 user, company, customer, formLink
 db.user.hasMany(db.alarm, {
   foreignKey: "user_idx",
-  onDelete: "cascade",
 });
 db.alarm.belongsTo(db.user, {
   foreignKey: "user_idx",
@@ -209,21 +199,18 @@ db.alarm.belongsTo(db.user, {
 // company와 formLink
 db.company.hasMany(db.formLink, {
   foreignKey: "company_idx",
-  onDelete: "cascade",
 });
 db.formLink.belongsTo(db.company, { foreignKey: "company_idx" });
 
 // consulting과 company
 db.company.hasMany(db.consulting, {
   foreignKey: "company_idx",
-  onDelete: "cascade",
 });
 db.consulting.belongsTo(db.company, { foreignKey: "company_idx" });
 
 // plan과 company
 db.company.hasMany(db.plan, {
   foreignKey: "company_idx",
-  onDelete: "cascade",
 });
 
 db.plan.belongsTo(db.company, {
@@ -233,7 +220,6 @@ db.plan.belongsTo(db.company, {
 // company와 user
 db.user.hasOne(db.company, {
   foreignKey: "huidx",
-  onDelete: "cascade",
 });
 db.company.belongsTo(db.user, {
   foreignKey: "huidx",
@@ -242,7 +228,6 @@ db.company.belongsTo(db.user, {
 // card와 user
 db.user.hasMany(db.card, {
   foreignKey: "user_idx",
-  onDelete: "cascade",
 });
 
 db.card.belongsTo(db.user, {
@@ -252,7 +237,6 @@ db.card.belongsTo(db.user, {
 // userCompany와 user
 db.user.hasMany(db.userCompany, {
   foreignKey: "user_idx",
-  onDelete: "cascade",
 });
 db.userCompany.belongsTo(db.user, {
   foreignKey: "user_idx",
@@ -269,7 +253,6 @@ db.userCompany.belongsTo(db.config, {
 
 db.company.hasMany(db.userCompany, {
   foreignKey: "company_idx",
-  onDelete: "cascade",
 });
 // userCompany와 company
 db.userCompany.belongsTo(db.company, {
@@ -280,7 +263,6 @@ db.userCompany.belongsTo(db.company, {
 db.userCompany.hasMany(db.formOpen, {
   foreignKey: "user_idx",
   sourceKey: "user_idx",
-  onDelete: "cascade",
 });
 db.formOpen.belongsTo(db.userCompany, {
   targetKey: "user_idx",
@@ -299,7 +281,6 @@ db.customer.belongsTo(db.userCompany, {
 // config와 company
 db.company.hasMany(db.config, {
   foreignKey: "company_idx",
-  onDelete: "cascade",
 });
 db.config.belongsTo(db.company, {
   foreignKey: "company_idx",
