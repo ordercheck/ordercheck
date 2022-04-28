@@ -96,7 +96,17 @@ module.exports = {
         userProfile[0].isOwner = false;
       }
 
-      return res.send({ success: 200, userProfile: userProfile[0] });
+      res.send({ success: 200, userProfile: userProfile[0] });
+      const last_login = moment();
+      await db.user.update(
+        { last_login },
+        {
+          where: {
+            idx: check.idx,
+          },
+        }
+      );
+      return;
     } catch (err) {
       next(err);
     }
