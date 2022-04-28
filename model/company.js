@@ -33,7 +33,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(100),
     },
 
-    road_address: {
+    address: {
       allowNull: false,
       defaultValue: "",
       type: DataTypes.STRING(100),

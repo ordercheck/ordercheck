@@ -19,7 +19,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(100),
     },
 
-    road_address: { allowNull: true, type: DataTypes.STRING(100) },
+    address: { allowNull: true, type: DataTypes.STRING(100) },
     detail_address: { allowNull: true, type: DataTypes.STRING(100) },
 
     choice: {
