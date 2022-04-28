@@ -28,12 +28,12 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(100),
     },
 
-    road_address: {
+    jibun_address: {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
 
-    address: {
+    road_address: {
       allowNull: false,
       defaultValue: "",
       type: DataTypes.STRING(100),

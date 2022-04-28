@@ -51,7 +51,7 @@ db.company = sequelize.import(__dirname + "/company.js");
 db.consulting = sequelize.import(__dirname + "/consulting.js");
 db.sms = sequelize.import(__dirname + "/sms.js");
 db.config = sequelize.import(__dirname + "/config.js");
-
+db.pairPace = sequelize.import(__dirname + "/pairPace.js");
 db.alarm = sequelize.import(__dirname + "/alarm.js");
 db.receipt = sequelize.import(__dirname + "/receipt.js");
 db.customerAccount = sequelize.import(__dirname + "/customerAccount.js");

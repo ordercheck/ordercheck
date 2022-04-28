@@ -29,7 +29,7 @@
     <title>Document</title>
   </head>
   <body>
-    <h1>유저</h1>
+    <h1 id="user">유저</h1>
     <table class="table">
       <thead>
         <tr>
@@ -58,15 +58,14 @@
       </tbody>
     </table>
 
-    <h1>회사</h1>
-
+    <h1 id="company">회사</h1>
     <table class="table">
       <thead>
         <tr>
           <th scope="col">No</th>
           <th scope="col">회사</th>
-          <th scope="col">플랜</th>
           <th scope="col">멤버</th>
+          <th scope="col">플랜</th>
         </tr>
       </thead>
       <tbody>
@@ -74,14 +73,18 @@
         <tr>
           <td><%= i+1 %></td>
           <td><%= findCompany[i].company_name %></td>
-          <td><%= findCompany[i].plans[0].plan %></td>
           <td>
             <% for(var j = 0; j< findCompany[i].userCompanies.length; j++){ %>
             <%= findCompany[i].userCompanies[j].searchingName %>, <% } %>
           </td>
+          <td><%= findCompany[i].plans[0].plan %></td>
         </tr>
         <% } %>
       </tbody>
     </table>
+
+    <script>
+      const user = document.getElementById("user");
+    </script>
   </body>
 </html>
