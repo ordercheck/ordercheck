@@ -21,13 +21,14 @@ module.exports = {
     } = req;
 
     let sortList;
-    if (sort === "0") {
-      sortList = "consulting.createdAt DESC";
-    } else if (sort === "1") {
-      sortList = "consulting.createdAt ASC";
-    } else {
-      sortList = "company.company_name DESC";
-    }
+
+    const sortOB = {
+      0: "consulting.createdAt DESC",
+      1: "consulting.createdAt ASC",
+      2: "company.company_name DESC",
+    };
+
+    sortList = sortOB[+sort];
 
     let findResult = await db.sequelize
       .query(
@@ -81,16 +82,14 @@ module.exports = {
       query: { sort },
     } = req;
 
-    let sortList;
-    if (sort === "0") {
-      sortList = "calculate.createdAt DESC";
-    } else if (sort === "1") {
-      sortList = "calculate.createdAt ASC";
-    } else if (sort === "2") {
-      sortList = "REPLACE(calculate.predicted_price, ',', '') DESC";
-    } else {
-      sortList = "REPLACE(calculate.predicted_price, ',', '') ASC";
-    }
+    const sortOB = {
+      0: "calculate.createdAt DESC",
+      1: "calculate.createdAt ASC",
+      2: "REPLACE(calculate.predicted_price, ',', '') DESC",
+      3: "REPLACE(calculate.predicted_price, ',', '') ASC",
+    };
+
+    sortList = sortOB[+sort];
 
     let findResult = await db.sequelize
       .query(

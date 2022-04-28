@@ -9,6 +9,16 @@ module.exports = function (sequelize, DataTypes) {
 
     customer_name: { allowNull: true, type: DataTypes.STRING(100) },
     customer_phoneNumber: { allowNull: true, type: DataTypes.STRING(100) },
+    post_address: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
+
+    road_address: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
+
     address: { allowNull: true, type: DataTypes.STRING(100) },
     detail_address: { allowNull: true, type: DataTypes.STRING(100) },
 

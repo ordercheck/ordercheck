@@ -4,33 +4,78 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+
     <title>Document</title>
   </head>
   <body>
-    <h1>고객</h1>
-    <% for(var i = 0; i < findAllUser.length; i++){ %>
-    <div>
-      이름: <%= findAllUser[i].user_name %>
-      <div>번호: <%= findAllUser[i].user_phone %></div>
-      <div>이메일: <%= findAllUser[i].user_email %></div>
-      <div>마지막 로그인 : <%= findAllUser[i].last_login %></div>
-      <div>
-        카드 등록 여부: <% if( findAllUser[i].cards.length == 0){ %> x <% }
-        else{ %> ㅇ <% } %>
-      </div>
-    </div>
-    <br />
-    <% } %>
+    <h1>유저</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">이름</th>
+          <th scope="col">번호</th>
+          <th scope="col">이메일</th>
+          <th scope="col">마지막 로그인</th>
+          <th scope="col">카드 등록 여부</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(var i = 0; i < findAllUser.length; i++){ %>
+        <tr>
+          <td><%= findAllUser[i].user_name %></td>
+          <td><%= findAllUser[i].user_phone %></td>
+          <td><%= findAllUser[i].user_email %></td>
+          <td><%= findAllUser[i].last_login %></td>
+          <td>
+            <% if( findAllUser[i].cards.length == 0){ %> x <% } else{ %> ㅇ <% }
+            %>
+          </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
 
     <h1>회사</h1>
-    <% for(var i = 0; i < findCompany.length; i++){ %>
-    <div>
-      <div>회사: <%= findCompany[i].company_name %></div>
-  <div>멤버:     <% for(var j = 0; j< findCompany[i].userCompanies.length; j++){ %>
-    <%= findCompany[i].userCompanies[j].searchingName %>,   
-<% } %>     </div>
 
-    <br />
-    <% } %>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">회사</th>
+          <th scope="col">멤버</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(var i = 0; i < findCompany.length; i++){ %>
+        <tr>
+          <td><%= findCompany[i].company_name %></td>
+          <td>
+            <% for(var j = 0; j< findCompany[i].userCompanies.length; j++){ %>
+            <%= findCompany[i].userCompanies[j].searchingName %>, <% } %>
+          </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
   </body>
 </html>
