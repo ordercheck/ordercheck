@@ -207,7 +207,7 @@ class AppServer extends http.Server {
     this.app.use("/api/socket", socketRouter);
     // 에러처리
     this.app.use((err, req, res, next) => {
-      console.log(err);
+      console.error(err.stack);
       return res.send({ success: 500, message: err.message });
     });
   }

@@ -47,7 +47,6 @@ module.exports = {
       });
 
       if (check.huidx == user_idx) {
-        console.log("이거 타라");
         const findAllCustomers = await db.customerFile.findAll({
           where: { company_idx },
           attributes: getUserListAttributes,

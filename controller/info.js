@@ -36,7 +36,6 @@ const checkUserPassword = async (userIdx, userPassword) => {
 module.exports = {
   getUserProfile: async (req, res, next) => {
     const { user_idx } = req;
-    console.log("유저 프로필", user_idx);
     const template = new Template({});
     try {
       let userProfile = await db.sequelize
@@ -97,7 +96,6 @@ module.exports = {
         userProfile[0].isOwner = false;
       }
 
-      console.log("유저 조회 끝");
       return res.send({ success: 200, userProfile: userProfile[0] });
     } catch (err) {
       next(err);
