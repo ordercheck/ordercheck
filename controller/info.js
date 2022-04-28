@@ -71,10 +71,9 @@ module.exports = {
         raw: true,
       });
 
-      let fileStoreSize = 0;
-      findFilesResult.forEach((data) => {
-        fileStoreSize += data.file_size;
-      });
+      const fileStoreSize = findFilesResult.reduce((firstFileSize, data) => {
+        return firstFileSize + data.file_size;
+      }, 0);
 
       const findConfig = await template.findConfigFindByPk(
         userProfile[0].config_idx,

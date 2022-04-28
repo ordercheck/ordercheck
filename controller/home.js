@@ -8,7 +8,7 @@ const { consultingCountArrAttributes } = require("../lib/attributes");
 module.exports = {
   getHomeBoard: async (req, res, next) => {
     const { company_idx, user_idx } = req;
-    console.log("홈", user_idx);
+
     try {
       const customerCount = await db.customer.count({
         where: { company_idx, deleted: null, status: 0 },

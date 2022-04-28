@@ -11,6 +11,7 @@ const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger/config");
 const json2xls = require("json2xls");
+const compression = require("compression");
 
 // const corsOptions = {
 //   origin: 'https://ordercheck-file.s3.ap-northeast-2.amazonaws.com',
@@ -152,7 +153,7 @@ class AppServer extends http.Server {
     this.app.use("/public", express.static(__dirname + "/public"));
     this.app.use(session(sess));
     this.app.use(json2xls.middleware);
-
+    this.app.use(compression());
     this.app.use(async (req, res, next) => {
       var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
       // console.log("IP::" + ip)
