@@ -102,7 +102,7 @@ module.exports = {
         { last_login },
         {
           where: {
-            idx: check.idx,
+            idx: user_idx,
           },
         }
       );
