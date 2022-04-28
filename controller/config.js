@@ -43,7 +43,7 @@ module.exports = {
     try {
       let companyProfile = await db.sequelize
         .query(
-          `SELECT plan, company_name, company_logo, company_subdomain, address, 
+          `SELECT plan, company_name, company_logo, company_subdomain, road_address, 
           detail_address, company.business_number, business_enrollment, business_enrollment_title, user_name,
           plan_price, chat_price, analystic_price, whiteLabel_price, start_plan, expire_plan, free_plan, pay_type,
           card.message_active AS messageActive,

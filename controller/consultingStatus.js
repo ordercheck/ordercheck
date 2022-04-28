@@ -39,7 +39,7 @@ const changeToSearch = (body) => {
     /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
     ""
   );
-  const searchingAddress = `${body.address.replace(
+  const searchingAddress = `${body.road_address.replace(
     / /g,
     ""
   )}${body.detail_address.replace(/ /g, "")}`;
@@ -516,7 +516,7 @@ module.exports = {
         room_size,
         contract_possibility,
         detail_address,
-        address,
+        road_address,
         customer_phoneNumber,
         customer_name,
         memo,
@@ -532,7 +532,7 @@ module.exports = {
       room_size,
       contract_possibility,
       detail_address,
-      address,
+      road_address,
       customer_phoneNumber,
       customer_name,
       memo,
