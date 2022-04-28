@@ -25,12 +25,16 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
-
     <title>Document</title>
   </head>
   <body>
-    <h1 id="user">유저</h1>
-    <table class="table">
+
+    <div style="margin: 20px;">
+    <button id="user" type="button" class="btn btn-primary">유저</button>
+    <button id="company" type="button" class="btn btn-primary">회사</button>
+  </div>
+    <div style="padding:100px 200px">
+    <table id="userTable" class="table" hidden="true">
       <thead>
         <tr>
           <th scope="col">No</th>
@@ -56,10 +60,11 @@
         </tr>
         <% } %>
       </tbody>
+    </div>
+    <div>
     </table>
 
-    <h1 id="company">회사</h1>
-    <table class="table">
+    <table id="companyTable" class="table" hidden="true">
       <thead>
         <tr>
           <th scope="col">No</th>
@@ -82,9 +87,28 @@
         <% } %>
       </tbody>
     </table>
-
+  </div>
     <script>
       const user = document.getElementById("user");
+      const company = document.getElementById("company");
+      const userTable = document.getElementById("userTable");
+      const companyTable = document.getElementById("companyTable");
+
+      const showUserTable = () => {
+       
+        userTable.hidden
+          ? (userTable.hidden = false ,  companyTable.hidden = true)
+          : (userTable.hidden = true );
+      };
+
+      const showComapnyTable = () => {
+
+        companyTable.hidden
+          ? (companyTable.hidden = false,  userTable.hidden = true)
+          : (companyTable.hidden = true);
+      };
+      company.addEventListener("click", showComapnyTable);
+      user.addEventListener("click", showUserTable);
     </script>
   </body>
 </html>
