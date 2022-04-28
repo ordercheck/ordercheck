@@ -121,7 +121,7 @@ class AppServer extends http.Server {
 
   middleWare() {
     this.app.enable("trust proxy");
-
+    this.app.use(compression());
     this.app.use(helmet());
 
     this.app.use(cors());
@@ -153,7 +153,7 @@ class AppServer extends http.Server {
     this.app.use("/public", express.static(__dirname + "/public"));
     this.app.use(session(sess));
     this.app.use(json2xls.middleware);
-    this.app.use(compression());
+
     this.app.use(async (req, res, next) => {
       var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
       // console.log("IP::" + ip)
