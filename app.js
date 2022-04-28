@@ -11,7 +11,7 @@ const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger/config");
 const json2xls = require("json2xls");
-const compression = require("compression");
+// const compression = require("compression");
 
 // const corsOptions = {
 //   origin: 'https://ordercheck-file.s3.ap-northeast-2.amazonaws.com',
@@ -121,7 +121,7 @@ class AppServer extends http.Server {
 
   middleWare() {
     this.app.enable("trust proxy");
-    this.app.use(compression());
+    // this.app.use(compression());
     this.app.use(helmet());
 
     this.app.use(cors());
