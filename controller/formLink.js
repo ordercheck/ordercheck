@@ -389,7 +389,6 @@ module.exports = {
       const {
         params: { formId },
         user_idx,
-        company_idx,
       } = req;
       // formLink thumbNail, thumbNail_title 초기화
       await db.formLink.update(

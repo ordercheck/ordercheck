@@ -95,6 +95,7 @@ module.exports = {
       .query(
         `
     SELECT company_name, calNumber, predicted_price, customerConfirm, calculate.idx as calculate_idx, 
+    favorites_customer_account_idx,
     company.idx as company_idx, calculate.createdAt, company.deleted
     FROM customer 
     INNER JOIN calculate ON customer.idx = calculate.customer_idx
