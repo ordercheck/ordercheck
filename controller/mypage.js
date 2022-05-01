@@ -180,7 +180,13 @@ module.exports = {
     } = req;
 
     try {
-      const findResult = await db.calculate.findByPk(calculate_idx);
+      const findResult = await db.calculate.findByPk(calculate_idx, {
+        include: [
+          {
+            model: db.company,
+          },
+        ],
+      });
       if (!findResult) {
         return res.send({ success: 400, message: "해당 견적서가 없습니다." });
       }
