@@ -143,8 +143,18 @@ module.exports = {
   },
 
   getFavoritesCalculateList: async (req, res, next) => {
-    const { customer_account_idx } = req;
+    const {
+      customer_account_idx,
+      query: { sort },
+    } = req;
+    const sortOB = {
+      0: "calculate.createdAt DESC",
+      1: "calculate.createdAt ASC",
+      2: "REPLACE(calculate.predicted_price, ',', '') DESC",
+      3: "REPLACE(calculate.predicted_price, ',', '') ASC",
+    };
 
+    sortList = sortOB[+sort];
     let findResult = await db.sequelize
       .query(
         `
@@ -153,6 +163,7 @@ module.exports = {
   FROM calculate 
   LEFT JOIN company ON calculate.company_idx = company.idx
   WHERE favorites_customer_account_idx = ${customer_account_idx}
+  ORDER BY ${sortList}
   `
       )
       .spread((r) => {
