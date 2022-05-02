@@ -7,11 +7,22 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
     },
 
-    company_name: {
-      allowNull: false,
+    customer_idx: {
+      allowNull: true,
       type: DataTypes.STRING(100),
     },
-
+    strPpAppliIdx: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
+    address: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
+    detail_address: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
     post_address: {
       allowNull: true,
       type: DataTypes.STRING(100),
@@ -21,24 +32,27 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
-    address: {
-      allowNull: false,
-      defaultValue: "",
-      type: DataTypes.STRING(100),
-    },
-
-    detail_address: {
+    form_type: {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
 
-    customer_idx: {
-      allowNull: false,
-      type: DataTypes.INTEGER,
+    customoer_name: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
+
+    company_name: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
+    },
+    customer_phone: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
     },
 
     submission_date: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.DATE(),
     },
   });
