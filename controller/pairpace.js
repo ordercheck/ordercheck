@@ -17,19 +17,22 @@ module.exports = {
       formType: form_type,
       strPpAppliIdx,
     } = req.body;
-    console.log(strPpAppliIdx);
-    await db.pairPace.create({
-      customer_idx,
-      strPpAppliIdx,
-      post_address,
-      address,
-      jibun_address,
-      detail_address,
-      company_name,
-      customer_name,
-      customer_phone,
-      form_type,
-      submission_date,
-    });
+    try {
+      await db.pairPace.create({
+        customer_idx,
+        strPpAppliIdx,
+        post_address,
+        address,
+        jibun_address,
+        detail_address,
+        company_name,
+        customer_name,
+        customer_phone,
+        form_type,
+        submission_date,
+      });
+    } catch (err) {
+      next(err);
+    }
   },
 };
