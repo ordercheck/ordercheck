@@ -34,8 +34,17 @@ module.exports = {
       .query(
         `
     SELECT consulting.idx as consulting_idx, company_logo, 
-
      CASE
+     WHEN 
+     ABS(TIMESTAMPDIFF(second, '${moment().format(
+       "YYYY-MM-DD HH:mm:ss"
+     )}', date_format(consulting.createdAt, '%Y-%m-%d %H:%i:%s'))) < 60
+	   THEN CONCAT(
+      ABS(TIMESTAMPDIFF(second, '${moment().format(
+        "YYYY-MM-DD HH:mm"
+      )}', date_format(consulting.createdAt, '%Y-%m-%d %H:%i:%s')))
+ , '초 전')
+
 	   WHEN 
      ABS(TIMESTAMPDIFF(minute, '${moment().format(
        "YYYY-MM-DD HH:mm"
@@ -46,20 +55,11 @@ module.exports = {
       )}', date_format(consulting.createdAt, '%Y-%m-%d %H:%i')))
  , '분 전')
 
-
- 
-     WHEN 
-    24 < ABS(TIMESTAMPDIFF(minute, '${moment().format(
-      "YYYY-MM-DD HH:mm"
-    )}', date_format(consulting.createdAt, '%Y-%m-%d %H:%i'))) < 525600
-    THEN date_format(consulting.createdAt, '%c월 %e일')
-
-
-	   WHEN  ABS(TIMESTAMPDIFF(minute, '${moment().format(
-       "YYYY-MM-DD HH:mm"
-     )}', date_format(consulting.createdAt, '%Y-%m-%d %H:%i'))) > 525600
+	   WHEN ABS(TIMESTAMPDIFF(year, '${moment().format(
+       "YYYY-MM-DD"
+     )}', date_format(consulting.createdAt, '%Y-%m-%d'))) > 0
 	   THEN date_format(consulting.createdAt, '%Y.%m.%d')
-
+     ELSE date_format(consulting.createdAt, '%c월 %e일')
      END AS createdAt,
 
       company_name, formTitle, customerConfirm, company.deleted
@@ -128,30 +128,34 @@ module.exports = {
     company.idx as company_idx, 
     
     CASE
+
+    WHEN 
+    ABS(TIMESTAMPDIFF(second, '${moment().format(
+      "YYYY-MM-DD HH:mm:ss"
+    )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i:%s'))) < 60
+    THEN CONCAT(
+     ABS(TIMESTAMPDIFF(second, '${moment().format(
+       "YYYY-MM-DD HH:mm"
+     )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i:%s')))
+, '초 전')
+
+
     WHEN 
     ABS(TIMESTAMPDIFF(minute, '${moment().format(
       "YYYY-MM-DD HH:mm"
     )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i'))) < 24
-    THEN  THEN CONCAT(
+    THEN CONCAT(
       ABS(TIMESTAMPDIFF(minute, '${moment().format(
         "YYYY-MM-DD HH:mm"
       )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i')))
  , '분 전')
 
-
-
-    WHEN 
-   24 < ABS(TIMESTAMPDIFF(minute, '${moment().format(
-     "YYYY-MM-DD HH:mm"
-   )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i'))) < 525600
-   THEN date_format(calculate.createdAt, '%c월 %e일')
-
-
-    WHEN  ABS(TIMESTAMPDIFF(minute, '${moment().format(
-      "YYYY-MM-DD HH:mm"
-    )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i'))) > 525600
+    WHEN  ABS(TIMESTAMPDIFF(year, '${moment().format(
+      "YYYY-MM-DD"
+    )}', date_format(calculate.createdAt, '%Y-%m-%d'))) > 0
     THEN date_format(calculate.createdAt, '%Y.%m.%d')
-
+  
+    ELSE date_format(calculate.createdAt, '%c월 %e일')
     END AS createdAt,
     
     
@@ -219,24 +223,35 @@ module.exports = {
         `
   SELECT company_logo, company_name, calNumber, predicted_price, customerConfirm, calculate.idx as calculate_idx, company.idx as company_idx,
   CASE
+
+  WHEN 
+  ABS(TIMESTAMPDIFF(second, '${moment().format(
+    "YYYY-MM-DD HH:mm:ss"
+  )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i:%s'))) < 60
+  THEN CONCAT(
+   ABS(TIMESTAMPDIFF(second, '${moment().format(
+     "YYYY-MM-DD HH:mm"
+   )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i:%s')))
+, '초 전')
+
+
+
   WHEN 
   ABS(TIMESTAMPDIFF(minute, '${moment().format(
     "YYYY-MM-DD HH:mm"
   )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i'))) < 24
-  THEN '분이 나와야 함'
+  THEN CONCAT(
+    ABS(TIMESTAMPDIFF(minute, '${moment().format(
+      "YYYY-MM-DD HH:mm"
+    )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i')))
+, '분 전')
 
-  WHEN 
- 24 < ABS(TIMESTAMPDIFF(minute, '${moment().format(
-   "YYYY-MM-DD HH:mm"
- )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i'))) < 525600
- THEN date_format(calculate.createdAt, '%c월 %e일')
-
-
-  WHEN  ABS(TIMESTAMPDIFF(minute, '${moment().format(
-    "YYYY-MM-DD HH:mm"
-  )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i'))) > 525600
+  WHEN  ABS(TIMESTAMPDIFF(year, '${moment().format(
+    "YYYY-MM-DD"
+  )}', date_format(calculate.createdAt, '%Y-%m-%d'))) > 0
   THEN date_format(calculate.createdAt, '%Y.%m.%d')
 
+  ELSE date_format(calculate.createdAt, '%c월 %e일')
   END AS createdAt,
   company.deleted
   FROM calculate 
@@ -272,25 +287,36 @@ module.exports = {
       let calculateList = await db.sequelize
         .query(
           `
-          SELECT calculateNumber, calculate.idx as calculate_idx, CASE
+          SELECT calculateNumber, calculate.idx as calculate_idx, 
+          CASE
+
+          WHEN 
+
+          ABS(TIMESTAMPDIFF(second, '${moment().format(
+            "YYYY-MM-DD HH:mm:ss"
+          )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i:%s'))) < 60
+          THEN CONCAT(
+           ABS(TIMESTAMPDIFF(second, '${moment().format(
+             "YYYY-MM-DD HH:mm"
+           )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i:%s')))
+      , '초 전')
+  
+  
           WHEN 
           ABS(TIMESTAMPDIFF(minute, '${moment().format(
             "YYYY-MM-DD HH:mm"
           )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i'))) < 24
-          THEN '분이 나와야 함'
+          THEN CONCAT(
+            ABS(TIMESTAMPDIFF(minute, '${moment().format(
+              "YYYY-MM-DD HH:mm"
+            )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i')))
+       , '분 전')
       
-          WHEN 
-         24 < ABS(TIMESTAMPDIFF(minute, '${moment().format(
-           "YYYY-MM-DD HH:mm"
-         )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i'))) < 525600
-         THEN date_format(calculate.createdAt, '%c월 %e일')
-      
-      
-          WHEN  ABS(TIMESTAMPDIFF(minute, '${moment().format(
-            "YYYY-MM-DD HH:mm"
-          )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i'))) > 525600
+          WHEN  ABS(TIMESTAMPDIFF(year, '${moment().format(
+            "YYYY-MM-DD"
+          )}', date_format(calculate.createdAt, '%Y-%m-%d'))) > 0
           THEN date_format(calculate.createdAt, '%Y.%m.%d')
-      
+          ELSE date_format(calculate.createdAt, '%c월 %e일')
           END AS createdAt
           FROM customer 
           INNER JOIN calculate ON customer.idx = calculate.customer_idx  AND calculate.company_idx = ${
