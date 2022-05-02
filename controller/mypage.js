@@ -65,7 +65,7 @@ module.exports = {
       company_name, formTitle, customerConfirm, company.deleted
       FROM consulting 
       LEFT JOIN company ON consulting.company_idx = company.idx
-      WHERE customer_phoneNumber = "${customer_phoneNumber}" AND formTitle IS NOT NULL
+      WHERE searchingPhoneNumber = "${customer_phoneNumber}" AND formTitle IS NOT NULL
       ORDER BY ${sortList}
       `
       )
@@ -163,7 +163,7 @@ module.exports = {
     FROM customer 
     INNER JOIN calculate ON customer.idx = calculate.customer_idx
     LEFT JOIN company ON calculate.company_idx = company.idx
-    WHERE customer_phoneNumber = "${customer_phoneNumber}"
+    WHERE searchingPhoneNumber = "${customer_phoneNumber}"
     ORDER BY ${sortList}
     `
       )
@@ -322,7 +322,7 @@ module.exports = {
           INNER JOIN calculate ON customer.idx = calculate.customer_idx  AND calculate.company_idx = ${
             findResult.company_idx
           } 
-          WHERE customer_phoneNumber = "${customer_phoneNumber}"
+          WHERE searchingPhoneNumber = "${customer_phoneNumber}"
           ORDER BY calculate.createdAt DESC
   `
         )

@@ -51,7 +51,10 @@ const customerLoginCheck = async (req, res, next) => {
       attributes: ["customer_phoneNumber"],
     });
 
-    req.customer_phoneNumber = getCustomerInfo.customer_phoneNumber;
+    req.customer_phoneNumber = getCustomerInfo.customer_phoneNumber.replace(
+      /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
+      ""
+    );
     req.customer_account_idx = data.user_idx;
     next();
     return;
