@@ -40,8 +40,14 @@ module.exports = {
      ABS(TIMESTAMPDIFF(minute, '${moment().format(
        "YYYY-MM-DD HH:mm"
      )}', date_format(consulting.createdAt, '%Y-%m-%d %H:%i'))) < 24
-	   THEN '분이 나와야 함'
+	   THEN CONCAT(
+      ABS(TIMESTAMPDIFF(minute, '${moment().format(
+        "YYYY-MM-DD HH:mm"
+      )}', date_format(consulting.createdAt, '%Y-%m-%d %H:%i')))
+ , '분 전')
 
+
+ 
      WHEN 
     24 < ABS(TIMESTAMPDIFF(minute, '${moment().format(
       "YYYY-MM-DD HH:mm"
@@ -126,7 +132,13 @@ module.exports = {
     ABS(TIMESTAMPDIFF(minute, '${moment().format(
       "YYYY-MM-DD HH:mm"
     )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i'))) < 24
-    THEN '분이 나와야 함'
+    THEN  THEN CONCAT(
+      ABS(TIMESTAMPDIFF(minute, '${moment().format(
+        "YYYY-MM-DD HH:mm"
+      )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i')))
+ , '분 전')
+
+
 
     WHEN 
    24 < ABS(TIMESTAMPDIFF(minute, '${moment().format(
