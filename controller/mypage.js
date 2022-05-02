@@ -76,12 +76,17 @@ module.exports = {
 
     res.send({ success: 200, findResult });
     //  보여주고 나서 나머지 상담 신청폼 모두 확인 처리
+
+    const updateArr = [];
+    findResult.forEach((data) => {
+      updateArr.push(data.consulting_idx);
+    });
+
     db.consulting.update(
       { customerConfirm: true },
       {
         where: {
-          customer_phoneNumber,
-          customerConfirm: false,
+          idx: updateArr,
         },
       }
     );
