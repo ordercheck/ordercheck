@@ -128,7 +128,6 @@ module.exports = {
     company.idx as company_idx, 
     
     CASE
-
     WHEN 
     ABS(TIMESTAMPDIFF(second, '${moment().format(
       "YYYY-MM-DD HH:mm:ss"
@@ -157,9 +156,8 @@ module.exports = {
   
     ELSE date_format(calculate.createdAt, '%c월 %e일')
     END AS createdAt,
-    
-    
-     company.deleted
+  
+    company.deleted
     FROM customer 
     INNER JOIN calculate ON customer.idx = calculate.customer_idx
     LEFT JOIN company ON calculate.company_idx = company.idx
@@ -192,6 +190,7 @@ module.exports = {
     );
     return res.send({ success: 200 });
   },
+
   unsetFavoritesCalculate: (req, res, next) => {
     const {
       body: { calculate_idx },
@@ -222,8 +221,8 @@ module.exports = {
       .query(
         `
   SELECT company_logo, company_name, calNumber, predicted_price, customerConfirm, calculate.idx as calculate_idx, company.idx as company_idx,
-  CASE
 
+  CASE
   WHEN 
   ABS(TIMESTAMPDIFF(second, '${moment().format(
     "YYYY-MM-DD HH:mm:ss"
@@ -233,8 +232,6 @@ module.exports = {
      "YYYY-MM-DD HH:mm"
    )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i:%s')))
 , '초 전')
-
-
 
   WHEN 
   ABS(TIMESTAMPDIFF(minute, '${moment().format(
@@ -288,10 +285,9 @@ module.exports = {
         .query(
           `
           SELECT calculateNumber, calculate.idx as calculate_idx, 
+
           CASE
-
           WHEN 
-
           ABS(TIMESTAMPDIFF(second, '${moment().format(
             "YYYY-MM-DD HH:mm:ss"
           )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i:%s'))) < 60
@@ -300,7 +296,6 @@ module.exports = {
              "YYYY-MM-DD HH:mm"
            )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i:%s')))
       , '초 전')
-  
   
           WHEN 
           ABS(TIMESTAMPDIFF(minute, '${moment().format(
@@ -316,6 +311,7 @@ module.exports = {
             "YYYY-MM-DD"
           )}', date_format(calculate.createdAt, '%Y-%m-%d'))) > 0
           THEN date_format(calculate.createdAt, '%Y.%m.%d')
+
           ELSE date_format(calculate.createdAt, '%c월 %e일')
           END AS createdAt
           FROM customer 
