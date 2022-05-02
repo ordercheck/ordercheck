@@ -6,7 +6,6 @@ module.exports = {
   storePairpaceInfo: async (req, res, next) => {
     const {
       strUserIdx: customer_idx,
-      strPpAppliIdx,
       zipCode: post_address,
       firstAddr: address,
       secondAddr: jibun_address,
@@ -14,10 +13,11 @@ module.exports = {
       company: company_name,
       orderCheckClient: customer_name,
       orderCheckClientContact: customer_phone,
-      formType,
       applyDate: submission_date,
+      formType: form_type,
+      strPpAppliIdx,
     } = req.body;
-    console.log(req.body);
+    console.log(strPpAppliIdx);
     await db.pairPace.create({
       customer_idx,
       strPpAppliIdx,
@@ -28,7 +28,7 @@ module.exports = {
       company_name,
       customer_name,
       customer_phone,
-      formType,
+      form_type,
       submission_date,
     });
   },

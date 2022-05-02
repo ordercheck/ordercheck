@@ -37,7 +37,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(100),
     },
 
-    customoer_name: {
+    customer_name: {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
