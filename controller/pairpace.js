@@ -7,6 +7,7 @@ require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
 module.exports = {
   storePairpaceInfo: async (req, res, next) => {
+    console.log(req.body);
     console.log(req.body.되나요 ?? client);
   },
 };
