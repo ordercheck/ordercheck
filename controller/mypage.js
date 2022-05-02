@@ -33,7 +33,7 @@ module.exports = {
     let findResult = await db.sequelize
       .query(
         `
-      SELECT consulting.idx as consulting_idx, company_logo, consulting.createdAt, company_name, formTitle, customerConfirm, company.deleted
+      SELECT consulting.idx as consulting_idx, company_logo, date_format(consulting.createdAt, '%Y.%m.%d') as createdAt, company_name, formTitle, customerConfirm, company.deleted
       FROM consulting 
       LEFT JOIN company ON consulting.company_idx = company.idx
       WHERE customer_phoneNumber = "${customer_phoneNumber}" AND formTitle IS NOT NULL
@@ -96,7 +96,7 @@ module.exports = {
         `
     SELECT company_name, calNumber, predicted_price, customerConfirm, calculate.idx as calculate_idx, 
     favorites_customer_account_idx,
-    company.idx as company_idx, calculate.createdAt, company.deleted
+    company.idx as company_idx, date_format(calculate.createdAt, '%Y.%m.%d') as createdAt, company.deleted
     FROM customer 
     INNER JOIN calculate ON customer.idx = calculate.customer_idx
     LEFT JOIN company ON calculate.company_idx = company.idx
@@ -158,7 +158,8 @@ module.exports = {
     let findResult = await db.sequelize
       .query(
         `
-  SELECT company_logo, company_name, calNumber, predicted_price, customerConfirm, calculate.idx as calculate_idx, company.idx as company_idx, calculate.createdAt, 
+  SELECT company_logo, company_name, calNumber, predicted_price, customerConfirm, calculate.idx as calculate_idx, company.idx as company_idx,
+  date_format(calculate.createdAt, '%Y.%m.%d') as createdAt,
   company.deleted
   FROM calculate 
   LEFT JOIN company ON calculate.company_idx = company.idx
@@ -193,7 +194,7 @@ module.exports = {
       let calculateList = await db.sequelize
         .query(
           `
-          SELECT calculateNumber, calculate.idx as calculate_idx, calculate.createdAt
+          SELECT calculateNumber, calculate.idx as calculate_idx, date_format(calculate.createdAt, '%Y.%m.%d') as createdAt 
           FROM customer 
           INNER JOIN calculate ON customer.idx = calculate.customer_idx  AND calculate.company_idx = ${findResult.company_idx} 
           WHERE customer_phoneNumber = "${customer_phoneNumber}"

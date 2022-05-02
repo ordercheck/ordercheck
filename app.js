@@ -80,6 +80,8 @@ const homeRouter = require("./router/api/home");
 const storeRouter = require("./router/api/store");
 const socketRouter = require("./router/api/socket");
 const s3ControllRouter = require("./router/api/s3");
+const pairpaceRouter = require("./router/api/pairpace");
+
 const db = require("./model/db");
 
 class AppServer extends http.Server {
@@ -196,7 +198,6 @@ class AppServer extends http.Server {
     this.app.use("/api/home", homeRouter);
     this.app.use("/api/admin", adminRouter);
     this.app.use("/api/mypage", myPageRouter);
-
     this.app.use("/api/store", storeRouter);
     this.app.use("/api/check", checkRouter);
     this.app.use("/api/schedule/pay", schedulePayRouter);
@@ -205,6 +206,8 @@ class AppServer extends http.Server {
     this.app.use("/api/card", cardRouter);
     this.app.use("/api/file/store", fileRouter);
     this.app.use("/api/socket", socketRouter);
+    this.app.use("/api/pairpace", pairpaceRouter);
+
     // 에러처리
     this.app.use((err, req, res, next) => {
       console.error(err.stack);
