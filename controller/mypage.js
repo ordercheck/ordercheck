@@ -29,11 +29,34 @@ module.exports = {
     };
 
     sortList = sortOB[+sort];
-
+    console.log(moment().format("YYYY-MM-DD HH:mm"));
     let findResult = await db.sequelize
       .query(
         `
-      SELECT consulting.idx as consulting_idx, company_logo, date_format(consulting.createdAt, '%Y.%m.%d') as createdAt, company_name, formTitle, customerConfirm, company.deleted
+    SELECT consulting.idx as consulting_idx, company_logo, 
+
+     CASE
+	   WHEN 
+     ABS(TIMESTAMPDIFF(minute, '${moment().format(
+       "YYYY-MM-DD HH:mm"
+     )}', date_format(consulting.createdAt, '%Y-%m-%d %H:%i'))) < 24
+	   THEN '분이 나와야 함'
+
+     WHEN 
+    24 < ABS(TIMESTAMPDIFF(minute, '${moment().format(
+      "YYYY-MM-DD HH:mm"
+    )}', date_format(consulting.createdAt, '%Y-%m-%d %H:%i'))) < 525600
+    THEN date_format(consulting.createdAt, '%c월 %e일')
+
+
+	   WHEN  ABS(TIMESTAMPDIFF(minute, '${moment().format(
+       "YYYY-MM-DD HH:mm"
+     )}', date_format(consulting.createdAt, '%Y-%m-%d %H:%i'))) > 525600
+	   THEN date_format(consulting.createdAt, '%Y.%m.%d')
+
+     END AS createdAt,
+
+      company_name, formTitle, customerConfirm, company.deleted
       FROM consulting 
       LEFT JOIN company ON consulting.company_idx = company.idx
       WHERE customer_phoneNumber = "${customer_phoneNumber}" AND formTitle IS NOT NULL
@@ -96,7 +119,31 @@ module.exports = {
         `
     SELECT company_name, calNumber, predicted_price, customerConfirm, calculate.idx as calculate_idx, 
     favorites_customer_account_idx,
-    company.idx as company_idx, date_format(calculate.createdAt, '%Y.%m.%d') as createdAt, company.deleted
+    company.idx as company_idx, 
+    
+    CASE
+    WHEN 
+    ABS(TIMESTAMPDIFF(minute, '${moment().format(
+      "YYYY-MM-DD HH:mm"
+    )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i'))) < 24
+    THEN '분이 나와야 함'
+
+    WHEN 
+   24 < ABS(TIMESTAMPDIFF(minute, '${moment().format(
+     "YYYY-MM-DD HH:mm"
+   )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i'))) < 525600
+   THEN date_format(calculate.createdAt, '%c월 %e일')
+
+
+    WHEN  ABS(TIMESTAMPDIFF(minute, '${moment().format(
+      "YYYY-MM-DD HH:mm"
+    )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i'))) > 525600
+    THEN date_format(calculate.createdAt, '%Y.%m.%d')
+
+    END AS createdAt,
+    
+    
+     company.deleted
     FROM customer 
     INNER JOIN calculate ON customer.idx = calculate.customer_idx
     LEFT JOIN company ON calculate.company_idx = company.idx
@@ -159,7 +206,26 @@ module.exports = {
       .query(
         `
   SELECT company_logo, company_name, calNumber, predicted_price, customerConfirm, calculate.idx as calculate_idx, company.idx as company_idx,
-  date_format(calculate.createdAt, '%Y.%m.%d') as createdAt,
+  CASE
+  WHEN 
+  ABS(TIMESTAMPDIFF(minute, '${moment().format(
+    "YYYY-MM-DD HH:mm"
+  )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i'))) < 24
+  THEN '분이 나와야 함'
+
+  WHEN 
+ 24 < ABS(TIMESTAMPDIFF(minute, '${moment().format(
+   "YYYY-MM-DD HH:mm"
+ )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i'))) < 525600
+ THEN date_format(calculate.createdAt, '%c월 %e일')
+
+
+  WHEN  ABS(TIMESTAMPDIFF(minute, '${moment().format(
+    "YYYY-MM-DD HH:mm"
+  )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i'))) > 525600
+  THEN date_format(calculate.createdAt, '%Y.%m.%d')
+
+  END AS createdAt,
   company.deleted
   FROM calculate 
   LEFT JOIN company ON calculate.company_idx = company.idx
@@ -194,9 +260,30 @@ module.exports = {
       let calculateList = await db.sequelize
         .query(
           `
-          SELECT calculateNumber, calculate.idx as calculate_idx, date_format(calculate.createdAt, '%Y.%m.%d') as createdAt 
+          SELECT calculateNumber, calculate.idx as calculate_idx, CASE
+          WHEN 
+          ABS(TIMESTAMPDIFF(minute, '${moment().format(
+            "YYYY-MM-DD HH:mm"
+          )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i'))) < 24
+          THEN '분이 나와야 함'
+      
+          WHEN 
+         24 < ABS(TIMESTAMPDIFF(minute, '${moment().format(
+           "YYYY-MM-DD HH:mm"
+         )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i'))) < 525600
+         THEN date_format(calculate.createdAt, '%c월 %e일')
+      
+      
+          WHEN  ABS(TIMESTAMPDIFF(minute, '${moment().format(
+            "YYYY-MM-DD HH:mm"
+          )}', date_format(calculate.createdAt, '%Y-%m-%d %H:%i'))) > 525600
+          THEN date_format(calculate.createdAt, '%Y.%m.%d')
+      
+          END AS createdAt
           FROM customer 
-          INNER JOIN calculate ON customer.idx = calculate.customer_idx  AND calculate.company_idx = ${findResult.company_idx} 
+          INNER JOIN calculate ON customer.idx = calculate.customer_idx  AND calculate.company_idx = ${
+            findResult.company_idx
+          } 
           WHERE customer_phoneNumber = "${customer_phoneNumber}"
           ORDER BY calculate.createdAt DESC
   `
