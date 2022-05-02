@@ -17,7 +17,7 @@ module.exports = {
       formType,
       applyDate: submission_date,
     } = req.body;
-
+    console.log(req.body);
     await db.pairPace.create({
       customer_idx,
       strPpAppliIdx,
