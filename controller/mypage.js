@@ -114,7 +114,13 @@ module.exports = {
       attributes: showMyPageDetailConsultingAttributes,
     });
 
-    return res.send({ success: 200, findResult });
+    if (!findResult.floor_plan && !findResult.hope_concept) {
+      return res.send({ success: 200, findResult });
+    } else {
+      findResult.floor_plan = JSON.parse(findResult.floor_plan);
+      findResult.hope_concept = JSON.parse(findResult.hope_concept);
+      return res.send({ success: 200, findResult });
+    }
   },
   getCalculateList: async (req, res, next) => {
     const {
