@@ -5,7 +5,7 @@ moment.tz.setDefault("Asia/Seoul");
 module.exports = {
   storePairpaceInfo: async (req, res, next) => {
     const {
-      saenderIdx: sender_idx,
+      sender_idx: sender_idx,
       strUserIdx: customer_idx,
       zipCode: post_address,
       firstAddr: address,
@@ -34,11 +34,12 @@ module.exports = {
         form_type,
         submission_date,
       });
-
+      console.log(req.body);
       const io = req.app.get("io");
+
       io.to(+sender_idx).emit("closePairpace", {
         isclosed: true,
-        saenderIdx: sender_idx,
+        sender_idx,
       });
       return res.send({ success: 200 });
     } catch (err) {
