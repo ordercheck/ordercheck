@@ -29,7 +29,7 @@ module.exports = {
     };
 
     sortList = sortOB[+sort];
-    console.log(moment().format("YYYY-MM-DD HH:mm"));
+
     let findResult = await db.sequelize
       .query(
         `
@@ -79,7 +79,9 @@ module.exports = {
 
     const updateArr = [];
     findResult.forEach((data) => {
-      updateArr.push(data.consulting_idx);
+      if (data.customerConfirm == 0) {
+        updateArr.push(data.consulting_idx);
+      }
     });
 
     db.consulting.update(
@@ -177,12 +179,17 @@ module.exports = {
 
     res.send({ success: 200, findResult });
 
+    const updateArr = [];
     findResult.forEach((data) => {
-      db.calculate.update(
-        { customerConfirm: true },
-        { where: { idx: data.calculate_idx } }
-      );
+      if (data.customerConfirm == 0) {
+        updateArr.push(data.consulting_idx);
+      }
     });
+
+    db.calculate.update(
+      { customerConfirm: true },
+      { where: { idx: updateArr } }
+    );
   },
   setFavoritesCalculate: (req, res, next) => {
     const {

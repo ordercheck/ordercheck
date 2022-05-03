@@ -31,6 +31,9 @@ module.exports = {
         form_type,
         submission_date,
       });
+
+      const io = req.app.get("io");
+      io.to(user.user_idx).emit("sendAlarm", scheduleAlarm);
     } catch (err) {
       next(err);
     }
