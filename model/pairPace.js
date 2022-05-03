@@ -57,7 +57,7 @@ module.exports = function (sequelize, DataTypes) {
 
     submission_date: {
       allowNull: true,
-      type: DataTypes.DATE(),
+      type: DataTypes.STRING(100),
     },
   });
 };
