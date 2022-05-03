@@ -18,7 +18,7 @@ module.exports = {
       formType: form_type,
       strPpAppliIdx,
     } = req.body;
-
+    console.log(submission_date);
     try {
       await db.pairPace.create({
         sender_idx,
