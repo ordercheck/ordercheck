@@ -66,7 +66,7 @@ module.exports = {
       FROM customer 
       LEFT JOIN company ON customer.company_idx = company.idx
       LEFT JOIN consulting ON consulting.customer_idx = customer.idx
-      WHERE searchingPhoneNumber = "${customer_phoneNumber}" AND formTitle IS NOT NULL
+      WHERE searchingPhoneNumber = "${customer_phoneNumber}"
       ORDER BY ${sortList}
       `
       )
