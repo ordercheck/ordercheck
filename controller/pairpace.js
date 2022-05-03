@@ -33,7 +33,7 @@ module.exports = {
       });
 
       const io = req.app.get("io");
-      io.to(user.user_idx).emit("sendAlarm", scheduleAlarm);
+      io.to(+customer_idx).emit("closePairpace", "리다이렉트 시켜줘어어");
     } catch (err) {
       next(err);
     }
