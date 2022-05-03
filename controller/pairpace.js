@@ -33,8 +33,8 @@ module.exports = {
       });
 
       const io = req.app.get("io");
-      io.to(+customer_idx).emit("closePairpace", "리다이렉트 시켜줘어어");
-      return;
+      io.to(+customer_idx).emit("closePairpace", true);
+      return res.send({ success: 200 });
     } catch (err) {
       next(err);
     }
