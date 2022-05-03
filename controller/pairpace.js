@@ -36,7 +36,7 @@ module.exports = {
       });
 
       const io = req.app.get("io");
-      io.to(+user_idx).emit("closePairpace", {
+      io.to(+sender_idx).emit("closePairpace", {
         isclosed: true,
         saenderIdx: sender_idx,
       });
