@@ -18,6 +18,7 @@ module.exports = {
       formType: form_type,
       strPpAppliIdx,
     } = req.body;
+    console.log(req.body);
     try {
       await db.pairPace.create({
         user_idx,
