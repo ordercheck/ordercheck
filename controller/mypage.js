@@ -3,7 +3,7 @@ const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
 const { createToken } = require("../lib/jwtfunctions");
-
+const { showMyPageDetailConsultingAttributes } = require("../lib/attributes");
 const { makeSpreadArray } = require("../lib/functions");
 module.exports = {
   joinDoCustomer: async (req, res, next) => {
@@ -110,7 +110,10 @@ module.exports = {
   },
   getDetailConsulting: async (req, res, next) => {
     const { consulting_idx } = req.params;
-    const findResult = await db.consulting.findByPk(consulting_idx);
+    const findResult = await db.consulting.findByPk(consulting_idx, {
+      attributes: showMyPageDetailConsultingAttributes,
+    });
+
     return res.send({ success: 200, findResult });
   },
   getCalculateList: async (req, res, next) => {
@@ -233,7 +236,8 @@ module.exports = {
     let findResult = await db.sequelize
       .query(
         `
-  SELECT company_logo, company_name, calNumber, predicted_price, customerConfirm, calculate.idx as calculate_idx, company.idx as company_idx,
+  SELECT company_logo, company_name, calNumber, predicted_price, customerConfirm, 
+  calculate.idx as calculate_idx, company.idx as company_idx,
 
   CASE
   WHEN 
