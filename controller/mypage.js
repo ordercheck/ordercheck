@@ -344,4 +344,13 @@ module.exports = {
       next(err);
     }
   },
+  getCustomerProfile: async (req, res, next) => {
+    const { customer_account_idx } = req;
+    try {
+      const userProfile = await db.customerAccount.findByPk(
+        customer_account_idx
+      );
+      return res.send({ success: 200, userProfile });
+    } catch (err) {}
+  },
 };

@@ -184,4 +184,16 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/mypage/customer/profile:
+ *   get:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       - myPage
+ *      summary: myPage 유저 정보 가져오기
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

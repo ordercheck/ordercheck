@@ -10,6 +10,7 @@ const {
   unsetFavoritesCalculate,
   getFavoritesCalculateList,
   getDetailCalculate,
+  getCustomerProfile,
 } = require("../../controller/mypage");
 const { customerLoginCheck } = require("../../middleware/auth");
 
@@ -50,5 +51,7 @@ router.get(
   customerLoginCheck,
   getDetailCalculate
 );
+
+router.get("/customer/profile", customerLoginCheck, getCustomerProfile);
 
 module.exports = router;
