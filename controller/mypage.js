@@ -113,14 +113,9 @@ module.exports = {
     const findResult = await db.consulting.findByPk(consulting_idx, {
       attributes: showMyPageDetailConsultingAttributes,
     });
-
-    if (!findResult.floor_plan && !findResult.hope_concept) {
-      return res.send({ success: 200, findResult });
-    } else {
-      findResult.floor_plan = JSON.parse(findResult.floor_plan);
-      findResult.hope_concept = JSON.parse(findResult.hope_concept);
-      return res.send({ success: 200, findResult });
-    }
+    findResult.floor_plan = JSON.parse(findResult.floor_plan);
+    findResult.hope_concept = JSON.parse(findResult.hope_concept);
+    return res.send({ success: 200, findResult });
   },
   getCalculateList: async (req, res, next) => {
     const {
