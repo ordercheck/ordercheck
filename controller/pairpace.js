@@ -20,14 +20,15 @@ module.exports = {
       jwtToken,
       strPpAppliIdx,
     } = req.body;
-    console.log(req.body);
+
+    const io = req.app.get("io");
+
     try {
       jwt.verify(jwtToken, process.env.PAIRPACE_JWT_SECRET);
 
       await db.pairPace.create({
         sender_idx,
         customer_idx,
-        slfijsf,
         strPpAppliIdx,
         post_address,
         address,
@@ -40,14 +41,16 @@ module.exports = {
         submission_date,
       });
 
-      const io = req.app.get("io");
-
       io.to(+sender_idx).emit("closePairpace", {
         isclosed: true,
         sender_idx,
       });
       return res.send({ success: 200 });
     } catch (err) {
+      io.to(+sender_idx).emit("closePairpace", {
+        isclosed: true,
+        sender_idx,
+      });
       return res.send({ success: 500 });
     }
   },
