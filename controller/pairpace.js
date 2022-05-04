@@ -20,6 +20,7 @@ module.exports = {
       token,
       strPpAppliIdx,
     } = req.body;
+    console.log(req.body);
     try {
       const check = jwt.verify(token, process.env.PAIRPACE_JWT_SECRET);
       console.log(check);
