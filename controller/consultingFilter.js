@@ -39,7 +39,7 @@ module.exports = {
         totalPage: 1,
       });
     }
-    x;
+
     const { firstDate, secondDate } = changeDate(date);
     const { start, intlimit, intPage } = await checkPage(
       limit,
