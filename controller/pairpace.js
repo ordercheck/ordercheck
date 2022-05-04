@@ -22,6 +22,7 @@ module.exports = {
     } = req.body;
     console.log(req.body);
     try {
+      console.log(process.env.PAIRPACE_JWT_SECRET);
       const check = jwt.verify(jwtToken, process.env.PAIRPACE_JWT_SECRET);
       console.log(check);
       if (check) {
