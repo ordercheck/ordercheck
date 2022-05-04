@@ -22,11 +22,12 @@ module.exports = {
     } = req.body;
     console.log(req.body);
     try {
-      jwt.verify(jwtToken, "process.env.PAIRPACE_JWT_SECRET");
+      jwt.verify(jwtToken, process.env.PAIRPACE_JWT_SECRET);
 
       await db.pairPace.create({
         sender_idx,
         customer_idx,
+        slfijsf,
         strPpAppliIdx,
         post_address,
         address,
