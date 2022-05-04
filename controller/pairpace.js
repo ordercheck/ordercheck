@@ -22,35 +22,32 @@ module.exports = {
     } = req.body;
     console.log(req.body);
     try {
-      console.log(process.env.PAIRPACE_JWT_SECRET);
-      const check = jwt.verify(jwtToken, process.env.PAIRPACE_JWT_SECRET);
-      console.log(check);
-      if (check) {
-        await db.pairPace.create({
-          sender_idx,
-          customer_idx,
-          strPpAppliIdx,
-          post_address,
-          address,
-          jibun_address,
-          detail_address,
-          company_name,
-          customer_name,
-          customer_phone,
-          form_type,
-          submission_date,
-        });
+      jwt.verify(jwtToken, "process.env.PAIRPACE_JWT_SECRET");
 
-        const io = req.app.get("io");
+      await db.pairPace.create({
+        sender_idx,
+        customer_idx,
+        strPpAppliIdx,
+        post_address,
+        address,
+        jibun_address,
+        detail_address,
+        company_name,
+        customer_name,
+        customer_phone,
+        form_type,
+        submission_date,
+      });
 
-        io.to(+sender_idx).emit("closePairpace", {
-          isclosed: true,
-          sender_idx,
-        });
-        return res.send({ success: 200 });
-      }
+      const io = req.app.get("io");
+
+      io.to(+sender_idx).emit("closePairpace", {
+        isclosed: true,
+        sender_idx,
+      });
+      return res.send({ success: 200 });
     } catch (err) {
-      next(err);
+      return res.send({ success: 500 });
     }
   },
 };
