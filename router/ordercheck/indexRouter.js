@@ -242,8 +242,16 @@ router.get("/information", async (req, res, next) => {
   });
 
   findCompany = JSON.parse(JSON.stringify(findCompany));
-  console.log(findCompany[0].plans[0].plan);
-  res.render("ordercheck/auth/information", { findAllUser, findCompany });
+
+  let findReceipt = await db.receipt.findAll({
+    where: { receipt_kind: "자동 문자 충전" },
+  });
+
+  res.render("ordercheck/auth/information", {
+    findAllUser,
+    findCompany,
+    findReceipt,
+  });
 });
 
 module.exports = router;

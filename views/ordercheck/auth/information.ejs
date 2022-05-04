@@ -32,6 +32,7 @@
     <div style="margin: 20px;">
     <button id="user" type="button" class="btn btn-primary">유저</button>
     <button id="company" type="button" class="btn btn-primary">회사</button>
+    <button id="receiptText" type="button" class="btn btn-primary">문자 충전 내역</button>
   </div>
     <div style="padding:100px 200px">
     <table id="userTable" class="table" hidden="true">
@@ -61,9 +62,8 @@
         <% } %>
       </tbody>
     </div>
-    <div>
     </table>
-
+    <div>
     <table id="companyTable" class="table" hidden="true">
       <thead>
         <tr>
@@ -88,27 +88,69 @@
       </tbody>
     </table>
   </div>
+
+  <div>
+  <table id="receiptTextTable" class="table" hidden="true">
+    <thead>
+      <tr>
+        <th scope="col">No</th>
+        <th scope="col">회사</th>
+        <th scope="col">카드</th>
+        <th scope="col">세전 금액</th>
+        <th scope="col">부가세</th>
+        <th scope="col">세후 금액</th>
+        <th scope="col">충전 날짜</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for(var i = 0; i < findReceipt.length; i++){ %>
+      <tr>
+        <td><%= i+1 %></td>
+        <td><%= findReceipt[i].company_name %></td>
+        <td>
+          <%= findReceipt[i].card_name %>
+        </td>
+        <td><%= findReceipt[i].result_price %></td>
+        <td><%= findReceipt[i].result_price_levy - findReceipt[i].result_price %></td>
+        <td><%= findReceipt[i].result_price_levy %></td>
+        <td><%= findReceipt[i].createdAt %></td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
     <script>
       const user = document.getElementById("user");
       const company = document.getElementById("company");
+      const receiptText = document.getElementById("receiptText");
       const userTable = document.getElementById("userTable");
       const companyTable = document.getElementById("companyTable");
+      const receiptTextTable = document.getElementById("receiptTextTable");
+      
 
+      
       const showUserTable = () => {
        
         userTable.hidden
-          ? (userTable.hidden = false ,  companyTable.hidden = true)
+          ? (userTable.hidden = false ,  companyTable.hidden = true, receiptTextTable.hidden = true)
           : (userTable.hidden = true );
       };
 
       const showComapnyTable = () => {
 
         companyTable.hidden
-          ? (companyTable.hidden = false,  userTable.hidden = true)
+          ? (companyTable.hidden = false,  userTable.hidden = true,receiptTextTable.hidden = true)
           : (companyTable.hidden = true);
       };
+
+      const showReceiptTextTable= ()=>{
+        receiptTextTable.hidden
+          ? (receiptTextTable.hidden = false, companyTable.hidden = true,  userTable.hidden = true)
+          : (receiptTextTable.hidden = true); 
+      } 
       company.addEventListener("click", showComapnyTable);
       user.addEventListener("click", showUserTable);
+      receiptText.addEventListener("click", showReceiptTextTable);
     </script>
   </body>
 </html>
