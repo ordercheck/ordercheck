@@ -17,12 +17,12 @@ module.exports = {
       orderCheckClientContact: customer_phone,
       applyDate: submission_date,
       formType: form_type,
-      token,
+      jwtToken,
       strPpAppliIdx,
     } = req.body;
     console.log(req.body);
     try {
-      const check = jwt.verify(token, process.env.PAIRPACE_JWT_SECRET);
+      const check = jwt.verify(jwtToken, process.env.PAIRPACE_JWT_SECRET);
       console.log(check);
       if (check) {
         await db.pairPace.create({
