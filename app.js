@@ -211,6 +211,7 @@ class AppServer extends http.Server {
     // 에러처리
     this.app.use((err, req, res, next) => {
       console.error(err.stack);
+      db.err.create({ err: err.stack });
       return res.send({ success: 500, message: err.message });
     });
   }

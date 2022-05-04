@@ -7,6 +7,7 @@ const { customerAttributes } = require("../lib/attributes");
 // 0이 오름차순,1이 내림차순 (ASC는 오름차순)
 module.exports = {
   Filter: async (req, res, next) => {
+    console.log(req.body);
     let {
       body: { date, status, contract_possibility, userId, confirm },
       query: { No, Name, Address, Date, PhoneNumber },
@@ -38,7 +39,7 @@ module.exports = {
         totalPage: 1,
       });
     }
-    console.log(req.body);
+    x;
     const { firstDate, secondDate } = changeDate(date);
     const { start, intlimit, intPage } = await checkPage(
       limit,

@@ -872,4 +872,14 @@ router.post("/token/login", async (req, res, next) => {
   }
 });
 
+router.post("/loginAdmin", async (req, res, next) => {
+  const { userIdx } = req.body;
+  const token = await createToken({ user_idx: userIdx });
+
+  return res.send({
+    success: 200,
+    token,
+  });
+});
+
 module.exports = router;
