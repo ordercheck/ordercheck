@@ -101,7 +101,7 @@ const addPlanAndSchedule = async (
       ...plan_data,
       active: 3,
     });
-    plan_data.free_period_start = moment().format("YYYY.MM.DD");
+    plan_data.free_period_start = plan_data.free_plan;
     plan_data.free_period_expire = plan_data.expire_plan;
     await db.plan.create(plan_data);
     return { success: true };
@@ -538,6 +538,7 @@ router.post("/company/check", async (req, res, next) => {
       await db.userCompany.destroy({
         where: { company_idx: FreePlan.company_idx },
       });
+      await db.plan.destroy({ where: { company_idx: FreePlan.company_idx } });
       await db.company.destroy({ where: { idx: FreePlan.company_idx } });
 
       // 플랜 알람 보내기

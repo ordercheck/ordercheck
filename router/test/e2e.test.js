@@ -9,27 +9,46 @@ if (process.env.NODE_MODE == "TESTING") {
   });
 
   describe("무료 플랜으로 회원가입", () => {
-    let token;
+    let huidxToken;
+    let member1Token;
     it("유저 토큰 생성", async () => {
-      const response = await request(app).post("/api/create/token").send({
+      const huidxResponse = await request(app).post("/api/create/token").send({
         user_phone: "010-6719-6919",
         user_password: "rlxo12345",
         user_email: "rlxo6919@naver.com",
         user_name: "김기태",
       });
 
-      expect(response.body).toHaveProperty("token");
-      token = response.body.token;
+      const member1Response = await request(app)
+        .post("/api/create/token")
+        .send({
+          user_phone: "010-1111-1111",
+          user_password: "rlxo12345",
+          user_email: "rlxo6919@naver.com",
+          user_name: "김멤버",
+        });
+
+      expect(member1Response.body).toHaveProperty("token");
+      expect(huidxResponse.body).toHaveProperty("token");
+      huidxToken = huidxResponse.body.token;
+      member1Token = member1Response.body.token;
     });
 
     it("토큰으로 유저 회원가입", async () => {
-      const response = await request(app).post("/api/join/do").send({
-        token,
+      const huidxResponse = await request(app).post("/api/join/do").send({
+        token: huidxToken,
         use_agree: true,
         private_agree: true,
         marketing_agree: true,
       });
-      expect(response.statusCode).toBe(200);
+      const member1Response = await request(app).post("/api/join/do").send({
+        token: member1Token,
+        use_agree: true,
+        private_agree: true,
+        marketing_agree: true,
+      });
+      expect(member1Response.statusCode).toBe(200);
+      expect(huidxResponse.statusCode).toBe(200);
     });
   });
 
@@ -54,8 +73,8 @@ if (process.env.NODE_MODE == "TESTING") {
       const response = await request(app).post("/api/create/token/data").send({
         plan: "컴퍼니",
         free_plan: "2022.06.01",
-        start_plan: "2022.06.01",
-        expire_plan: "2022.06.01",
+        start_plan: "2022.06.02",
+        expire_plan: "2022.06.03",
         result_price: 1000,
         result_price_levy: 1010,
         plan_price: 1000,
@@ -90,28 +109,35 @@ if (process.env.NODE_MODE == "TESTING") {
         ct,
         pt,
         company_name: "테스트 회사",
-        company_subdomain: "테스트 서브",
+        company_subdomain: "testSub",
       });
 
       expect(response.body.success).toBe(200);
     });
   });
-  let loginToken;
+  let huidxLoginToken;
+  let member1LoginToken;
   describe("신청폼", () => {
     it("로그인", async () => {
-      const response = await request(app).post("/api/login").send({
+      const huidxResponse = await request(app).post("/api/login").send({
         user_phone: "010-6719-6919",
         user_password: "rlxo12345",
       });
 
-      expect(response.body).toHaveProperty("loginToken");
-      loginToken = response.body.loginToken;
+      const member1Response = await request(app).post("/api/login").send({
+        user_phone: "010-1111-1111",
+        user_password: "rlxo12345",
+      });
+      expect(member1Response.body).toHaveProperty("loginToken");
+      expect(huidxResponse.body).toHaveProperty("loginToken");
+      huidxLoginToken = huidxResponse.body.loginToken;
+      member1LoginToken = member1Response.body.loginToken;
     });
 
     it("간편 신청폼 생성 type 1", async () => {
       const response = await request(app)
         .post("/api/form/link")
-        .set("Authorization", `Bearer ${loginToken}`)
+        .set("Authorization", `Bearer ${huidxLoginToken}`)
         .send({
           title: "제목",
           tempType: 1,
@@ -122,7 +148,7 @@ if (process.env.NODE_MODE == "TESTING") {
     it("상세 신청폼 생성 type 2", async () => {
       const response = await request(app)
         .post("/api/form/link")
-        .set("Authorization", `Bearer ${loginToken}`)
+        .set("Authorization", `Bearer ${huidxLoginToken}`)
         .send({
           title: "제목",
           tempType: 2,
@@ -133,14 +159,14 @@ if (process.env.NODE_MODE == "TESTING") {
     it("신청폼 복사", async () => {
       const response = await request(app)
         .post("/api/form/link/duplicate/1")
-        .set("Authorization", `Bearer ${loginToken}`);
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
       expect(response.body.duplicateResult.formId).toBe(3);
     });
 
     it("생성한 신청폼 보여주기", async () => {
       const response = await request(app)
         .get("/api/form/link/list")
-        .set("Authorization", `Bearer ${loginToken}`);
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
 
       expect(typeof response.body.formList).toBe("object");
     });
@@ -148,14 +174,14 @@ if (process.env.NODE_MODE == "TESTING") {
     it("신청폼 삭제", async () => {
       const response = await request(app)
         .delete("/api/form/link/3")
-        .set("Authorization", `Bearer ${loginToken}`);
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
       expect(response.body.message).toBe("삭제 성공");
     });
 
     it("신청폼 제목 변경", async () => {
       const response = await request(app)
         .patch("/api/form/link/update")
-        .set("Authorization", `Bearer ${loginToken}`)
+        .set("Authorization", `Bearer ${huidxLoginToken}`)
         .send({
           formId: 2,
           title: "new title",
@@ -167,7 +193,7 @@ if (process.env.NODE_MODE == "TESTING") {
       const findLinkResult = await db.formLink.findByPk(1);
       const response = await request(app)
         .get(`/api/form/link/info/${findLinkResult.form_link}`)
-        .set("Authorization", `Bearer ${loginToken}`);
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
       expect(response.body.success).toBe(200);
     });
   });
@@ -175,7 +201,7 @@ if (process.env.NODE_MODE == "TESTING") {
     it("유저 프로필 불러오기", async () => {
       const response = await request(app)
         .get("/api/info/user")
-        .set("Authorization", `Bearer ${loginToken}`);
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
 
       expect(response.body.success).toBe(200);
     });
@@ -186,7 +212,7 @@ if (process.env.NODE_MODE == "TESTING") {
         .send({
           user_name: "새로운 이름",
         })
-        .set("Authorization", `Bearer ${loginToken}`);
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
       expect(response.body.success).toBe(200);
     });
 
@@ -196,27 +222,41 @@ if (process.env.NODE_MODE == "TESTING") {
         .send({
           user_email: "새로운 이메일",
         })
-        .set("Authorization", `Bearer ${loginToken}`);
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
       expect(response.body.success).toBe(200);
     });
-  });
-  describe("삭제", () => {
-    it("계정 삭제", async () => {
+
+    it("유저 알람 설정 보여주기", async () => {
       const response = await request(app)
-        .post("/api/info/user/del")
+        .get("/api/info/user/alarm/config")
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
+
+      expect(response.body.success).toBe(200);
+    });
+
+    it("유저 알람 설정 변경", async () => {
+      const response = await request(app)
+        .patch("/api/info/user/alarm/config/")
         .send({
-          user_password: "rlxo12345",
-          reason: "탈퇴 사유",
+          emailProductServiceAlarm: false,
         })
-        .set("Authorization", `Bearer ${loginToken}`);
-      console.log(response);
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
       expect(response.body.success).toBe(200);
     });
   });
+
+  describe("회사 멤버", () => {
+    it("회사 가입 신청", async () => {
+      const response = await request(app)
+        .get("/api/info/user/join/company/testSub")
+        .set("Authorization", `Bearer ${member1LoginToken}`);
+      expect(response.body.success).toBe(200);
+    });
+  });
+
   afterAll(async () => {
     const card = await db.card.findByPk(1);
-    const plan = await db.plan.findByPk(1);
-
+    const plan = await db.plan.findByPk(2);
     await cancelSchedule(card.customer_uid, plan.merchant_uid);
     await delCardPort(card.customer_uid);
     await db.sequelize.sync({ force: true });

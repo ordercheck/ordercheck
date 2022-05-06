@@ -4,6 +4,6 @@ const router = express.Router();
 const { loginCheck } = require("../../middleware/auth");
 
 const { changeReload } = require("../../controller/tutorial");
-router.patch("/reload", loginCheck, changeReload);
+router.post("/reload", loginCheck, changeReload);
 
 module.exports = router;

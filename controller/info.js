@@ -41,7 +41,7 @@ module.exports = {
       let userProfile = await db.sequelize
         .query(
           `SELECT user.idx, personal_code, user_phone, userCompany.company_idx, user_profile,
-          tutorialForm, tutorialHome, tutorialFile, tutorialCustomer, tutorialCompanyInfo, tutorialAuth, tutorialSettingForm
+           tutorialForm, tutorialHome, tutorialFile, tutorialCustomer, tutorialCompanyInfo, tutorialAuth, tutorialSettingForm
               user_email, user_name, plan, calculateReload, config_idx,
               plan.whiteLabelChecked,plan.chatChecked, plan.analysticChecked,
               sms.text_cost,
@@ -59,6 +59,9 @@ module.exports = {
         )
         .spread((r) => {
           return makeSpreadArray(r);
+        })
+        .catch((err) => {
+          next(err);
         });
 
       const findFilesResult = await db.files.findAll({
