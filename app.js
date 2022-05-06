@@ -217,20 +217,21 @@ class AppServer extends http.Server {
   }
   dbConnection() {
     console.log("Eviroment ::: " + process.env.NODE_ENV);
+
     db.sequelize
-      .authenticate()
+      .sync({
+        force: false,
+      })
       .then(() => {
         console.log(
           "development: Connection has been established successfully."
         );
-        return db.sequelize.sync({
-          force: false,
-        });
       })
       .then(() => {
         console.log("DB Sync complete.");
       })
       .catch((err) => {
+        console.log("db에러");
         console.error("Unable to connect to the database:", err);
       });
   }
@@ -255,8 +256,7 @@ class AppServer extends http.Server {
 }
 
 if (process.env.NODE_MODE == "TESTING") {
-  console.log("hihi");
-  const server = new AppServer({});
+  const server = new AppServer({ port: 80 });
   server.start();
   module.exports = server;
 } else {

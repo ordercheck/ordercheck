@@ -34,5 +34,9 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.BOOLEAN,
     },
+    deleted: {
+      allowNull: true,
+      type: DataTypes.DATE(),
+    },
   });
 };

@@ -97,7 +97,7 @@ module.exports = {
   checkCustomer: async (req, res, next) => {
     const { customer_phoneNumber } = req.body;
     const checkCustomer = await db.customerAccount.findOne({
-      where: { customer_phoneNumber },
+      where: { customer_phoneNumber, deleted: null },
     });
 
     if (!checkCustomer) {
@@ -378,5 +378,17 @@ module.exports = {
     } catch (err) {
       next(err);
     }
+  },
+  delCustomer: async (req, res, next) => {
+    const { customer_account_idx } = req;
+    await db.customerAccount.update(
+      { deleted: moment() },
+      {
+        where: {
+          idx: customer_account_idx,
+        },
+      }
+    );
+    return res.send({ success: 200 });
   },
 };

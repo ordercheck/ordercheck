@@ -6,6 +6,7 @@ var Sequelize = require("sequelize");
 var sequelize;
 
 var env = process.env.NODE_ENV || "development";
+
 sequelize = new Sequelize(
   db_config.database,
   db_config.user,

@@ -12,6 +12,7 @@ const {
   getDetailCalculate,
   getCustomerProfile,
   changeCustomerName,
+  delCustomer,
 } = require("../../controller/mypage");
 const { customerLoginCheck } = require("../../middleware/auth");
 
@@ -55,5 +56,6 @@ router.get(
 
 router.get("/customer/profile", customerLoginCheck, getCustomerProfile);
 router.post("/customer", customerLoginCheck, changeCustomerName);
+router.delete("/customer", customerLoginCheck, delCustomer);
 
 module.exports = router;

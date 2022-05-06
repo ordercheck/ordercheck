@@ -3,6 +3,7 @@ const db = require("../../model/db");
 const app = require("../../app");
 
 describe("POST api/create/token", () => {
+  beforeAll(async () => await db.sequelize.sync());
   it("유저 토큰 생성", async () => {
     request(app)
       .post("/api/create/token")

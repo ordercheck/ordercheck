@@ -202,7 +202,7 @@
  *       - bearerAuth: []
  *      tags:
  *       - myPage
- *      summary: myPage 유저 정보 가져오기
+ *      summary: myPage 유저 이름 변경
  *      requestBody:
  *       content:
  *         application/json:
@@ -214,6 +214,18 @@
  *             example:
  *               customer_name: "이름"
  *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ * /api/mypage/customer/:
+ *   delete:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       -  myPage
+ *     summary:  myPage 유저 삭제
+ *     responses:
  *       '200':
  *         description: 성공
  *       '401':
