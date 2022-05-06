@@ -396,12 +396,12 @@ module.exports = {
       } else {
         newCalculate = true;
       }
-
+      userProfile.dataValues.newConsulting = newConsulting;
+      userProfile.dataValues.newCalculate = newCalculate;
+      console.log(userProfile);
       return res.send({
         success: 200,
         userProfile,
-        newConsulting,
-        newCalculate,
       });
     } catch (err) {
       next(err);
