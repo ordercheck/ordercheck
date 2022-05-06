@@ -40,12 +40,13 @@ module.exports = {
     try {
       let userProfile = await db.sequelize
         .query(
-          `SELECT user.idx, personal_code, user_phone, userCompany.company_idx, user_profile, 
+          `SELECT user.idx, personal_code, user_phone, userCompany.company_idx, user_profile,
+               tutorialReload,
               user_email, user_name, plan, calculateReload, config_idx,
               plan.whiteLabelChecked,plan.chatChecked, plan.analysticChecked,
               sms.text_cost,
               huidx,
-              card.active AS cardActive,
+              card.active AS cardActive,  
               companyexist,
               date_format(user.createdAt, '%Y.%m.%d') as createdAt
               FROM user 
