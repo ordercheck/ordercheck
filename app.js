@@ -81,7 +81,7 @@ const storeRouter = require("./router/api/store");
 const socketRouter = require("./router/api/socket");
 const s3ControllRouter = require("./router/api/s3");
 const pairpaceRouter = require("./router/api/pairpace");
-
+const tutorialRouter = require("./router/api/tutorial");
 const db = require("./model/db");
 
 class AppServer extends http.Server {
@@ -186,9 +186,12 @@ class AppServer extends http.Server {
   router() {
     // this.app.use(limiter);
     this.app.use(morgan("tiny"));
+
     this.app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
     this.app.use("/", ordercheckRouter);
+
     this.app.use("/api", apiRouter);
+    this.app.use("/api/tutorial", tutorialRouter);
     this.app.use("/api/consulting", consultingRouter);
     this.app.use("/api/form/link", formLinkRouter);
     this.app.use("/api/config", configRouter);

@@ -133,6 +133,12 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
     },
 
+    tutorialReload: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
+    },
+
     deleted: {
       allowNull: true,
       type: DataTypes.DATE(),
