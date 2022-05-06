@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes) {
   //테이블을 정의
-  return sequelize.define('store', {
+  return sequelize.define("store", {
     idx: {
       autoIncrement: true,
       primaryKey: true,
@@ -9,6 +9,11 @@ module.exports = function (sequelize, DataTypes) {
     bread: {
       allowNull: false,
       type: DataTypes.STRING,
+    },
+
+    link: {
+      allowNull: true,
+      type: DataTypes.STRING(100),
     },
   });
 };

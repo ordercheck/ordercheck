@@ -398,7 +398,7 @@ module.exports = {
       }
       userProfile.dataValues.newConsulting = newConsulting;
       userProfile.dataValues.newCalculate = newCalculate;
-      console.log(userProfile);
+
       return res.send({
         success: 200,
         userProfile,
