@@ -179,6 +179,26 @@ if (process.env.NODE_MODE == "TESTING") {
 
       expect(response.body.success).toBe(200);
     });
+
+    it("유저 이름 변경", async () => {
+      const response = await request(app)
+        .patch("/api/info/user/")
+        .send({
+          user_name: "새로운 이름",
+        })
+        .set("Authorization", `Bearer ${loginToken}`);
+      expect(response.body.success).toBe(200);
+    });
+
+    it("유저 이메일 변경", async () => {
+      const response = await request(app)
+        .patch("/api/info/user/")
+        .send({
+          user_email: "새로운 이메일",
+        })
+        .set("Authorization", `Bearer ${loginToken}`);
+      expect(response.body.success).toBe(200);
+    });
   });
 
   afterAll(async () => {
