@@ -171,7 +171,7 @@ if (process.env.NODE_MODE == "TESTING") {
       expect(response.body.success).toBe(200);
     });
   });
-  describe("userProfile", () => {
+  describe("유저", () => {
     it("유저 프로필 불러오기", async () => {
       const response = await request(app)
         .get("/api/info/user")
