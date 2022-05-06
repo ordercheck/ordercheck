@@ -1,12 +1,22 @@
 /**
  * @swagger
  * /api/tutorial/reload:
- *   patch:
+ *   post:
  *      security:
  *       - bearerAuth: []
  *      tags:
  *       - tutorial
  *      summary: tutorial 다시보지않기
+ *      requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *                reloadType:
+ *                 type: string
+ *             example:
+ *                reloadType: "tutorialCompanyInfo"
  *      responses:
  *       '200':
  *         description: 성공

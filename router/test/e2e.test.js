@@ -200,7 +200,19 @@ if (process.env.NODE_MODE == "TESTING") {
       expect(response.body.success).toBe(200);
     });
   });
-
+  describe("삭제", () => {
+    it("계정 삭제", async () => {
+      const response = await request(app)
+        .post("/api/info/user/del")
+        .send({
+          user_password: "rlxo12345",
+          reason: "탈퇴 사유",
+        })
+        .set("Authorization", `Bearer ${loginToken}`);
+      console.log(response);
+      expect(response.body.success).toBe(200);
+    });
+  });
   afterAll(async () => {
     const card = await db.card.findByPk(1);
     const plan = await db.plan.findByPk(1);

@@ -7,12 +7,12 @@ require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
 module.exports = {
   changeReload: async (req, res, next) => {
-    const { user_idx } = req;
+    const {
+      user_idx,
+      body: { reloadType },
+    } = req;
 
-    await db.user.update(
-      { tutorialReload: true },
-      { where: { idx: user_idx } }
-    );
+    await db.user.update({ [reloadType]: true }, { where: { idx: user_idx } });
 
     return res.send({ success: 200 });
   },
