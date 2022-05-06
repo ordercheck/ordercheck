@@ -68,7 +68,6 @@ module.exports = function (sequelize, DataTypes) {
     },
     hope_Date: {
       allowNull: true,
-
       type: DataTypes.STRING(100),
     },
     predicted_living: {
@@ -148,7 +147,6 @@ module.exports = function (sequelize, DataTypes) {
     },
     kitchen_option: {
       allowNull: true,
-
       type: DataTypes.STRING(100),
     },
 
@@ -215,6 +213,12 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       defaultValue: false,
       type: DataTypes.BOOLEAN,
+    },
+
+    choice_etc: {
+      allowNull: true,
+      defaultValue: "",
+      type: DataTypes.STRING(15),
     },
   });
 };

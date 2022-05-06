@@ -179,6 +179,7 @@ router.post("/login", async (req, res, next) => {
     ],
     attributes: ["company_idx"],
   });
+
   const loginToken = await createToken({ user_idx: check.idx });
   if (!company_subdomain) {
     res.send({
@@ -534,6 +535,9 @@ router.post("/company/check", async (req, res, next) => {
     if (addPlanResult.success) {
       res.send({ success: 200, message: "회사 등록 완료" });
 
+      await db.userCompany.destroy({
+        where: { company_idx: FreePlan.company_idx },
+      });
       await db.company.destroy({ where: { idx: FreePlan.company_idx } });
 
       // 플랜 알람 보내기

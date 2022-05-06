@@ -13,6 +13,8 @@
  *             properties:
  *                choice:
  *                 type: string
+ *                choice_etc:
+ *                 type: string
  *                address:
  *                 type: string
  *                detail_address:
@@ -37,6 +39,7 @@
  *                  type: string
  *             example:
  *                choice: "창호"
+ *                choice_etc: "기타"
  *                address: "경기도 광명"
  *                detail_address: "일직동"
  *                building_type: "아파트"
