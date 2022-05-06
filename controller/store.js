@@ -14,8 +14,7 @@ module.exports = {
       await client.connect();
 
       const storedBread = await client.get(`bread${user_idx}`);
-      console.log(storedBread);
-      console.log(body.bread);
+      console.log("브레드 요청");
       if (storedBread !== body.bread) {
         body.user_idx = user_idx;
         await db.store.create(body);
