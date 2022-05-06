@@ -254,10 +254,18 @@ class AppServer extends http.Server {
   }
 }
 
-const createServer = (config = {}) => {
-  const server = new AppServer(config);
-  return server.start();
-};
+if (process.env.NODE_MODE == "TESTING") {
+  console.log("hihi");
+  const server = new AppServer({});
+  server.start();
+  module.exports = server;
+} else {
+  const createServer = (config = {}) => {
+    const server = new AppServer(config);
+    return server.start();
+  };
 
-exports.createServer = createServer;
+  exports.createServer = createServer;
+}
+
 // exports.sessionCheck = sessionCheck

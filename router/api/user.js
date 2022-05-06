@@ -596,6 +596,7 @@ router.post("/password/reset", async (req, res) => {
 });
 // 회원 정보로 token 만들기
 router.post("/create/token", async (req, res) => {
+  console.log("hihihi");
   const { user_phone, user_email, user_password, user_name } = req.body;
   try {
     let token = await createToken({

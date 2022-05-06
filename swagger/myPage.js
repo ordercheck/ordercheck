@@ -196,4 +196,22 @@
  *         description: 성공
  *       '401':
  *         description: 실패
+ * /api/mypage/customer/{customer_name}:
+ *   patch:
+ *      security:
+ *       - bearerAuth: []
+ *      tags:
+ *       - myPage
+ *      summary: myPage 유저 정보 가져오기
+ *      parameters:
+ *         - in: path
+ *           name: customer_name
+ *           schema:
+ *             type: string
+ *           example: 이름
+ *      responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
  */

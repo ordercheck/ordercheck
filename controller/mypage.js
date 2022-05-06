@@ -356,6 +356,27 @@ module.exports = {
         customer_account_idx
       );
       return res.send({ success: 200, userProfile });
-    } catch (err) {}
+    } catch (err) {
+      next(err);
+    }
+  },
+  changeCustomerName: async (req, res, next) => {
+    const {
+      customer_account_idx,
+      params: { customer_name },
+    } = req;
+    try {
+      await db.customerAccount.update(
+        { customer_name },
+        {
+          where: {
+            idx: customer_account_idx,
+          },
+        }
+      );
+      return res.send({ success: 200 });
+    } catch (err) {
+      next(err);
+    }
   },
 };
