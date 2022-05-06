@@ -54,10 +54,6 @@ router.get(
 );
 
 router.get("/customer/profile", customerLoginCheck, getCustomerProfile);
-router.patch(
-  "/customer/:customer_name",
-  customerLoginCheck,
-  changeCustomerName
-);
+router.post("/customer", customerLoginCheck, changeCustomerName);
 
 module.exports = router;

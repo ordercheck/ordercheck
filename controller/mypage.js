@@ -363,7 +363,7 @@ module.exports = {
   changeCustomerName: async (req, res, next) => {
     const {
       customer_account_idx,
-      params: { customer_name },
+      body: { customer_name },
     } = req;
     try {
       await db.customerAccount.update(

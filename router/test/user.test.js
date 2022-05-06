@@ -4,7 +4,6 @@ const app = require("../../app");
 
 describe("POST api/create/token", () => {
   it("유저 토큰 생성", async () => {
-    console.log("hihihihi");
     request(app)
       .post("/api/create/token")
       .send({
