@@ -65,7 +65,7 @@ module.exports = {
       company_name, formTitle, customerConfirm, company.deleted
       FROM customer 
       LEFT JOIN company ON customer.company_idx = company.idx
-      LEFT JOIN consulting ON consulting.customer_idx = customer.idx
+      INNER JOIN consulting ON consulting.customer_idx = customer.idx
       WHERE searchingPhoneNumber = "${customer_phoneNumber}"
       ORDER BY ${sortList}
       `
@@ -79,6 +79,7 @@ module.exports = {
 
     const updateArr = [];
     findResult.forEach((data) => {
+      console.log(data);
       if (data.customerConfirm == 0) {
         updateArr.push(data.consulting_idx);
       }
@@ -350,12 +351,58 @@ module.exports = {
     }
   },
   getCustomerProfile: async (req, res, next) => {
-    const { customer_account_idx } = req;
+    const { customer_account_idx, customer_phoneNumber } = req;
     try {
       const userProfile = await db.customerAccount.findByPk(
         customer_account_idx
       );
-      return res.send({ success: 200, userProfile });
+
+      let consultingConfirm = await db.sequelize
+        .query(
+          `
+      SELECT customerConfirm
+      FROM customer 
+      INNER JOIN consulting ON consulting.customer_idx = customer.idx AND customerConfirm = false
+      WHERE searchingPhoneNumber = "${customer_phoneNumber}"
+      `
+        )
+        .spread((r) => {
+          return makeSpreadArray(r);
+        });
+
+      let calculateConfirm = await db.sequelize
+        .query(
+          `
+      SELECT customerConfirm
+      FROM customer 
+      INNER JOIN calculate ON customer.idx = calculate.customer_idx AND customerConfirm = false
+      WHERE searchingPhoneNumber = "${customer_phoneNumber}"
+      `
+        )
+        .spread((r) => {
+          return makeSpreadArray(r);
+        });
+
+      let newConsulting;
+      let newCalculate;
+      if (consultingConfirm.length == 0) {
+        newConsulting = false;
+      } else {
+        newConsulting = true;
+      }
+
+      if (calculateConfirm.length == 0) {
+        newCalculate = false;
+      } else {
+        newCalculate = true;
+      }
+
+      return res.send({
+        success: 200,
+        userProfile,
+        newConsulting,
+        newCalculate,
+      });
     } catch (err) {
       next(err);
     }

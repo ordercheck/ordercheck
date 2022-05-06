@@ -258,6 +258,14 @@ class AppServer extends http.Server {
 if (process.env.NODE_MODE == "TESTING") {
   const server = new AppServer({ port: 80 });
   server.start();
+  const io = require("socket.io")(server, {
+    perMessageDeflate: false,
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"],
+    },
+  });
+  server.app.set("io", io);
   module.exports = server;
 } else {
   const createServer = (config = {}) => {

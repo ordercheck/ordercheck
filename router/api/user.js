@@ -387,7 +387,9 @@ router.post("/join/do", async (req, res, next) => {
     user_data.use_agree = use_agree;
     user_data.private_agree = private_agree;
     user_data.marketing_agree = marketing_agree;
-    user_data.regist_region = lookup(ip).city;
+    process.env.NODE_MODE == "TESTING"
+      ? null
+      : (user_data.regist_region = lookup(ip).city);
 
     if (user_data) {
       const { createUserResult, success, message } = await joinFunction(
@@ -596,7 +598,6 @@ router.post("/password/reset", async (req, res) => {
 });
 // 회원 정보로 token 만들기
 router.post("/create/token", async (req, res) => {
-  console.log("hihihi");
   const { user_phone, user_email, user_password, user_name } = req.body;
   try {
     let token = await createToken({
