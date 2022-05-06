@@ -13,7 +13,7 @@ module.exports = function (sequelize, DataTypes) {
 
     link: {
       allowNull: true,
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING,
     },
   });
 };
