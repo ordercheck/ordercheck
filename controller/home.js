@@ -53,7 +53,7 @@ module.exports = {
 
       const bread = await db.store.findAll({
         where: { user_idx },
-        attributes: ["bread", "createdAt", ["idx", "breadId"]],
+        attributes: ["bread", "link", "createdAt", ["idx", "breadId"]],
         order: [["createdAt", "DESC"]],
       });
 
