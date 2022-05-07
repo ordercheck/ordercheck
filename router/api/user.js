@@ -539,6 +539,8 @@ router.post("/company/check", async (req, res, next) => {
         where: { company_idx: FreePlan.company_idx },
       });
       await db.plan.destroy({ where: { company_idx: FreePlan.company_idx } });
+      await db.sms.destroy({ where: { company_idx: FreePlan.company_idx } });
+      await db.config.destroy({ where: { company_idx: FreePlan.company_idx } });
       await db.company.destroy({ where: { idx: FreePlan.company_idx } });
 
       // 플랜 알람 보내기

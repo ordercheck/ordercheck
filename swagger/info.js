@@ -603,7 +603,7 @@
  *               members:
  *                 type: array
  *             example:
- *               members: [1,2,3,4]
+ *               members: [소유주,1,2,3,4]
  *      responses:
  *       '200':
  *         description: 성공

@@ -117,84 +117,24 @@ if (process.env.NODE_MODE == "TESTING") {
   });
   let huidxLoginToken;
   let member1LoginToken;
-  describe("신청폼", () => {
-    it("로그인", async () => {
+  describe("로그인", () => {
+    it("소유주 로그인", async () => {
       const huidxResponse = await request(app).post("/api/login").send({
         user_phone: "010-6719-6919",
         user_password: "rlxo12345",
       });
 
+      expect(huidxResponse.body).toHaveProperty("loginToken");
+      huidxLoginToken = huidxResponse.body.loginToken;
+    });
+
+    it("팀원1 로그인", async () => {
       const member1Response = await request(app).post("/api/login").send({
         user_phone: "010-1111-1111",
         user_password: "rlxo12345",
       });
       expect(member1Response.body).toHaveProperty("loginToken");
-      expect(huidxResponse.body).toHaveProperty("loginToken");
-      huidxLoginToken = huidxResponse.body.loginToken;
       member1LoginToken = member1Response.body.loginToken;
-    });
-
-    it("간편 신청폼 생성 type 1", async () => {
-      const response = await request(app)
-        .post("/api/form/link")
-        .set("Authorization", `Bearer ${huidxLoginToken}`)
-        .send({
-          title: "제목",
-          tempType: 1,
-        });
-      expect(response.body.formId).toBe(1);
-    });
-
-    it("상세 신청폼 생성 type 2", async () => {
-      const response = await request(app)
-        .post("/api/form/link")
-        .set("Authorization", `Bearer ${huidxLoginToken}`)
-        .send({
-          title: "제목",
-          tempType: 2,
-        });
-      expect(response.body.formId).toBe(2);
-    });
-
-    it("신청폼 복사", async () => {
-      const response = await request(app)
-        .post("/api/form/link/duplicate/1")
-        .set("Authorization", `Bearer ${huidxLoginToken}`);
-      expect(response.body.duplicateResult.formId).toBe(3);
-    });
-
-    it("생성한 신청폼 보여주기", async () => {
-      const response = await request(app)
-        .get("/api/form/link/list")
-        .set("Authorization", `Bearer ${huidxLoginToken}`);
-
-      expect(typeof response.body.formList).toBe("object");
-    });
-
-    it("신청폼 삭제", async () => {
-      const response = await request(app)
-        .delete("/api/form/link/3")
-        .set("Authorization", `Bearer ${huidxLoginToken}`);
-      expect(response.body.message).toBe("삭제 성공");
-    });
-
-    it("신청폼 제목 변경", async () => {
-      const response = await request(app)
-        .patch("/api/form/link/update")
-        .set("Authorization", `Bearer ${huidxLoginToken}`)
-        .send({
-          formId: 2,
-          title: "new title",
-        });
-      expect(response.body.formDetail.title).toBe("new title");
-    });
-
-    it("신청폼 form_link로 detail 보기", async () => {
-      const findLinkResult = await db.formLink.findByPk(1);
-      const response = await request(app)
-        .get(`/api/form/link/info/${findLinkResult.form_link}`)
-        .set("Authorization", `Bearer ${huidxLoginToken}`);
-      expect(response.body.success).toBe(200);
     });
   });
   describe("유저", () => {
@@ -245,11 +185,264 @@ if (process.env.NODE_MODE == "TESTING") {
     });
   });
 
-  describe("회사 멤버", () => {
+  describe("회사 가입", () => {
+    it("회사 가입 대기자에 아무도 없을 때", async () => {
+      const response = await request(app)
+        .get("/api/invite/standby")
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
+      expect(response.body.standbyUser.length).toBe(0);
+    });
+
     it("회사 가입 신청", async () => {
       const response = await request(app)
         .get("/api/info/user/join/company/testSub")
         .set("Authorization", `Bearer ${member1LoginToken}`);
+      expect(response.body.success).toBe(200);
+    });
+
+    it("회사 가입 대기자 있을 때", async () => {
+      const response = await request(app)
+        .get("/api/invite/standby")
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
+      expect(response.body.standbyUser.length).toBe(1);
+    });
+
+    it("회사 가입 대기자 거절", async () => {
+      const response = await request(app)
+        .get("/api/invite/refuse/4")
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
+      expect(response.body.success).toBe(200);
+    });
+
+    it("회사 가입 거절 후 대기자에 아무도 없을 때", async () => {
+      const response = await request(app)
+        .get("/api/invite/standby")
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
+      expect(response.body.standbyUser.length).toBe(0);
+    });
+
+    it("회사 가입 거절 후 해당 회사에 다시 신청 했을 때", async () => {
+      const response = await request(app)
+        .post("/api/invite/rejoin")
+        .send({
+          company_subdomain: "testSub",
+        })
+        .set("Authorization", `Bearer ${member1LoginToken}`);
+      expect(response.body.success).toBe(200);
+    });
+    it("회사 가입 신청 후 같은 회사에 또 가입 신청 했을 때", async () => {
+      const response = await request(app)
+        .get("/api/info/user/join/company/testSub")
+        .set("Authorization", `Bearer ${member1LoginToken}`);
+      expect(response.body.success).toBe(400);
+    });
+    it("회사 가입 거절", async () => {
+      const response = await request(app)
+        .get("/api/invite/refuse/4")
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
+      expect(response.body.success).toBe(200);
+    });
+
+    it("회사 가입 거절 후 회사 설정에서 회사 가입 신청 했을 때", async () => {
+      const response = await request(app)
+        .get("/api/info/user/join/company/testSub")
+        .set("Authorization", `Bearer ${member1LoginToken}`);
+      expect(response.body.success).toBe(200);
+    });
+
+    it("회사 가입 신청 후 취소 했을 때", async () => {
+      const response = await request(app)
+        .post("/api/invite/join/cancel")
+        .send({
+          company_subdomain: "testSub",
+        })
+        .set("Authorization", `Bearer ${member1LoginToken}`);
+      expect(response.body.success).toBe(200);
+    });
+
+    it("초대 링크 로그인으로 가입 신청 했을 때", async () => {
+      const response = await request(app).post("/api/login").send({
+        user_phone: "010-1111-1111",
+        user_password: "rlxo12345",
+        company_subdomain: "testSub",
+      });
+      expect(response.body.status).toBe("standBy");
+    });
+
+    it("회사 가입 신청 후 같은 회사에 또 가입 신청 했을 때", async () => {
+      const response = await request(app)
+        .get("/api/info/user/join/company/testSub")
+        .set("Authorization", `Bearer ${member1LoginToken}`);
+      expect(response.body.success).toBe(400);
+    });
+
+    it("회사 가입 거절", async () => {
+      const response = await request(app)
+        .get("/api/invite/refuse/6")
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
+      expect(response.body.success).toBe(200);
+    });
+
+    it("가입 거절 당하고 다시 회사 링크로 로그인 할 때", async () => {
+      const response = await request(app).post("/api/login").send({
+        user_phone: "010-1111-1111",
+        user_password: "rlxo12345",
+        company_subdomain: "testSub",
+      });
+      expect(response.body.status).toBe("refused");
+    });
+
+    it("가입 거절 당하고 설정에서 가입 신청 할 때", async () => {
+      const response = await request(app)
+        .get("/api/info/user/join/company/testSub")
+        .set("Authorization", `Bearer ${member1LoginToken}`);
+      expect(response.body.success).toBe(200);
+    });
+
+    it("가입 허가", async () => {
+      const response = await request(app)
+        .get("/api/invite/join/do/7")
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
+      expect(response.body.success).toBe(200);
+    });
+
+    it("가입 허가 받고 다시 회사 링크로 로그인 할 때", async () => {
+      const response = await request(app).post("/api/login").send({
+        user_phone: "010-1111-1111",
+        user_password: "rlxo12345",
+        company_subdomain: "testSub",
+      });
+      expect(response.body.status).toBe("access");
+    });
+  });
+  describe("신청폼", () => {
+    it("간편 신청폼 생성 type 1", async () => {
+      const response = await request(app)
+        .post("/api/form/link")
+        .set("Authorization", `Bearer ${huidxLoginToken}`)
+        .send({
+          title: "제목",
+          tempType: 1,
+        });
+      expect(response.body.formId).toBe(1);
+    });
+
+    it("상세 신청폼 생성 type 2", async () => {
+      const response = await request(app)
+        .post("/api/form/link")
+        .set("Authorization", `Bearer ${huidxLoginToken}`)
+        .send({
+          title: "제목",
+          tempType: 2,
+        });
+      expect(response.body.formId).toBe(2);
+    });
+    it("열람 권한 없는 신청폼 못봄", async () => {
+      const response = await request(app)
+        .get("/api/form/link/list")
+        .set("Authorization", `Bearer ${member1LoginToken}`);
+      expect(response.body.formList.length).toBe(0);
+    });
+
+    it("열람 권한 있는 신청폼 볼 수 있음", async () => {
+      const response = await request(app)
+        .get("/api/form/link/list")
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
+      expect(response.body.formList.length).toBe(2);
+    });
+
+    it("열람 가능 멤버 추가", async () => {
+      const response = await request(app)
+        .patch("/api/config/company/form/set/member/1")
+        .send({
+          members: [1, 2],
+        })
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
+      expect(response.body.success).toBe(200);
+    });
+
+    it("열람 가능 멤버로 추가된 뒤 해당 폼 볼수 있음", async () => {
+      const response = await request(app)
+        .get("/api/form/link/list")
+        .set("Authorization", `Bearer ${member1LoginToken}`);
+      expect(response.body.formList.length).toBe(1);
+    });
+
+    it("멤버 열람 권한 있는 신청폼 복사", async () => {
+      const response = await request(app)
+        .post("/api/form/link/duplicate/1")
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
+      expect(response.body.duplicateResult.formId).toBe(3);
+    });
+
+    it("멤버 열람 권한 없는 신청폼 복사", async () => {
+      const response = await request(app)
+        .post("/api/form/link/duplicate/2")
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
+      expect(response.body.duplicateResult.formId).toBe(4);
+    });
+
+    it("열람 가능 신청폼 복사한 것만 볼 수 있음", async () => {
+      const response = await request(app)
+        .get("/api/form/link/list")
+        .set("Authorization", `Bearer ${member1LoginToken}`);
+      expect(response.body.formList.length).toBe(2);
+    });
+
+    it("신청폼 삭제", async () => {
+      const response = await request(app)
+        .delete("/api/form/link/3")
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
+      expect(response.body.message).toBe("삭제 성공");
+    });
+
+    it("열람 가능 신청폼 삭제되면 해당 신청폼 못 봄", async () => {
+      const response = await request(app)
+        .get("/api/form/link/list")
+        .set("Authorization", `Bearer ${member1LoginToken}`);
+      expect(response.body.formList.length).toBe(1);
+    });
+
+    it("열람 가능 멤버 해제", async () => {
+      const response = await request(app)
+        .patch("/api/config/company/form/set/member/1")
+        .send({
+          members: [1],
+        })
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
+      expect(response.body.success).toBe(200);
+    });
+
+    it("열람 가능 신청폼 권한 없으면 못봄", async () => {
+      const response = await request(app)
+        .get("/api/form/link/list")
+        .set("Authorization", `Bearer ${member1LoginToken}`);
+      expect(response.body.formList.length).toBe(0);
+    });
+
+    it("소유주는 신청폼을 다 볼 수 있음", async () => {
+      const response = await request(app)
+        .get("/api/form/link/list")
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
+      expect(response.body.formList.length).toBe(3);
+    });
+
+    it("신청폼 제목 변경", async () => {
+      const response = await request(app)
+        .patch("/api/form/link/update")
+        .set("Authorization", `Bearer ${huidxLoginToken}`)
+        .send({
+          formId: 2,
+          title: "new title",
+        });
+      expect(response.body.formDetail.title).toBe("new title");
+    });
+
+    it("신청폼 form_link로 detail 보기", async () => {
+      const findLinkResult = await db.formLink.findByPk(1);
+      const response = await request(app)
+        .get(`/api/form/link/info/${findLinkResult.form_link}`)
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
       expect(response.body.success).toBe(200);
     });
   });

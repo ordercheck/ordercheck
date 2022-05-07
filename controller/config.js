@@ -1088,6 +1088,47 @@ module.exports = {
         attributes: ["template_name"],
       });
 
+      // 검색용 usre_name 변경, config 변경
+      db.userCompany.update(
+        { searchingName: user_name, config_idx: templateId },
+        { where: { idx: memberId } }
+      );
+
+      // user찾기
+      const findUserResult = await db.userCompany.findByPk(memberId);
+      // user 정보 변경
+      db.user.update(
+        { user_name, user_email },
+        { where: { idx: findUserResult.user_idx } }
+      );
+
+      // formLink create_people 변경
+      // user 정보 변경
+      db.formLink.update(
+        { create_people: user_name },
+        { where: { company_idx, create_people: findUserResult.searchingName } }
+      );
+
+      // 파일 보관함 정보 변경
+      db.folders.update(
+        { upload_people: user_name },
+        { where: { company_idx, upload_people: findUserResult.searchingName } }
+      );
+
+      db.files.update(
+        { upload_people: user_name },
+        { where: { company_idx, upload_people: findUserResult.searchingName } }
+      );
+
+      // formOpen 정보 변경
+      db.formOpen.update(
+        { user_name },
+        { where: { user_idx: findUserResult.user_idx } }
+      );
+
+      const findResult = await findMember({
+        idx: memberId,
+      });
       if (findTemplate.template_name == "소유주") {
         const io = req.app.get("io");
 
@@ -1208,32 +1249,6 @@ module.exports = {
           );
         }
       }
-      // 검색용 usre_name 변경, config 변경
-      db.userCompany.update(
-        { searchingName: user_name, config_idx: templateId },
-        { where: { idx: memberId } }
-      );
-
-      // user찾기
-      const findUserResult = await db.userCompany.findByPk(memberId, {
-        attributes: ["user_idx"],
-      });
-      // user 정보 변경
-      db.user.update(
-        { user_name, user_email },
-        { where: { idx: findUserResult.user_idx } }
-      );
-
-      // formOpen 정보 변경
-      db.formOpen.update(
-        { user_name },
-        { where: { user_idx: findUserResult.user_idx } }
-      );
-
-      const findResult = await findMember({
-        idx: memberId,
-      });
-
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
