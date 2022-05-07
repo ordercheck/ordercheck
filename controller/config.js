@@ -1095,7 +1095,15 @@ module.exports = {
       );
 
       // user찾기
-      const findUserResult = await db.userCompany.findByPk(memberId);
+      const findUserResult = await db.userCompany.findByPk(memberId, {
+        include: [
+          {
+            model: db.config,
+          },
+        ],
+      });
+
+      console.log(findUserResult);
       // user 정보 변경
       db.user.update(
         { user_name, user_email },
