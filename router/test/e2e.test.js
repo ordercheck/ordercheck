@@ -447,6 +447,16 @@ if (process.env.NODE_MODE == "TESTING") {
     });
   });
 
+  describe("설정", () => {
+    it("멤버 이름 바꾸기", async () => {
+      const findLinkResult = await db.formLink.findByPk(1);
+      const response = await request(app)
+        .get(`/api/form/link/info/${findLinkResult.form_link}`)
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
+      expect(response.body.success).toBe(200);
+    });
+  });
+
   afterAll(async () => {
     const card = await db.card.findByPk(1);
     const plan = await db.plan.findByPk(2);
