@@ -301,6 +301,7 @@ module.exports = {
 
       let No = 1;
       findResult.map((data) => {
+        console.log(data.update_date);
         console.log(data["user.user_name"]);
         data.No = No;
         No++;
