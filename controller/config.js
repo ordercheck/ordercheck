@@ -301,8 +301,10 @@ module.exports = {
 
       let No = 1;
       findResult.map((data) => {
-        console.log(data.updated_date);
-        console.log(data["user.user_name"]);
+        if (data.updated_date && data["user.user_name"]) {
+          data.update_people = `${data.updated_date} ${data["user.user_name"]}`;
+        }
+
         data.No = No;
         No++;
       });
