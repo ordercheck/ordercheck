@@ -100,6 +100,8 @@
         <th scope="col">부가세</th>
         <th scope="col">세후 금액</th>
         <th scope="col">충전 날짜</th>
+        <th scope="col">이전 금액</th>
+        <th scope="col">충전 후 금액</th>
       </tr>
     </thead>
     <tbody>
@@ -114,6 +116,8 @@
         <td><%= findReceipt[i].result_price_levy - findReceipt[i].result_price %></td>
         <td><%= findReceipt[i].result_price_levy %></td>
         <td><%= findReceipt[i].createdAt %></td>
+        <td><%= findReceipt[i].before_text_price %></td>
+        <td><%= findReceipt[i].after_text_price %></td>
       </tr>
       <% } %>
     </tbody>

@@ -245,6 +245,7 @@ router.get("/information", async (req, res, next) => {
 
   let findReceipt = await db.receipt.findAll({
     where: { receipt_kind: "자동 문자 충전" },
+    order: [["createdAt", "DESC"]],
   });
 
   res.render("ordercheck/auth/information", {
