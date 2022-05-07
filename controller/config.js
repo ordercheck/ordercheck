@@ -556,6 +556,7 @@ module.exports = {
         }
       );
       res.send({ success: 400, message: "문자 충전 실패" });
+
       const receiptId = generateRandomCode();
 
       await db.receipt.create({
@@ -598,7 +599,9 @@ module.exports = {
       );
       return;
     }
-
+    const beforeCost = findSmsResult.text_cost;
+    const plusCost = text_cost;
+    const addCost = beforeCost + plusCost;
     await db.sms.update(
       {
         text_cost: addCost,
@@ -613,9 +616,6 @@ module.exports = {
     res.send({ success: 200, message: "충전 완료" });
 
     const receiptId = generateRandomCode();
-    const beforeCost = findSmsResult.text_cost;
-    const plusCost = text_cost;
-    const addCost = beforeCost + plusCost;
 
     await db.receipt.create({
       company_idx,
