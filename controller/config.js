@@ -301,7 +301,7 @@ module.exports = {
 
       let No = 1;
       findResult.map((data) => {
-        console.log(findResult);
+        console.log(findResult["user.user_name"]);
         data.No = No;
         No++;
       });
