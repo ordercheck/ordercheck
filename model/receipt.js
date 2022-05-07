@@ -54,6 +54,14 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.INTEGER,
     },
+    before_text_price: {
+      allowNull: true,
+      type: DataTypes.INTEGER,
+    },
+    after_text_price: {
+      allowNull: true,
+      type: DataTypes.INTEGER,
+    },
 
     whiteLabel_price: {
       allowNull: true,
