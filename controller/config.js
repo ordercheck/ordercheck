@@ -1103,7 +1103,6 @@ module.exports = {
         ],
       });
 
-      console.log(findUserResult.config.template_name);
       // user 정보 변경
       db.user.update(
         { user_name, user_email },
@@ -1137,7 +1136,10 @@ module.exports = {
       const findResult = await findMember({
         idx: memberId,
       });
-      if (findTemplate.template_name == "소유주") {
+      if (
+        (findTemplate.template_name == "소유주",
+        findUserResult.config.template_name !== "소유주")
+      ) {
         const io = req.app.get("io");
 
         // 새로운 소유주 정보
