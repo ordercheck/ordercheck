@@ -1103,7 +1103,7 @@ module.exports = {
         ],
       });
 
-      console.log(findUserResult);
+      console.log(findUserResult.config.template_name);
       // user 정보 변경
       db.user.update(
         { user_name, user_email },
