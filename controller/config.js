@@ -616,8 +616,7 @@ module.exports = {
     res.send({ success: 200, message: "충전 완료" });
 
     const receiptId = generateRandomCode();
-    console.log("beforeCost", beforeCost);
-    console.log("addCost", addCost);
+
     await db.receipt.create({
       company_idx,
       card_name: findCardResult.card_name,

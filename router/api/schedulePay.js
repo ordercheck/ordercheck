@@ -16,7 +16,7 @@ router.post("/", async (req, res, next) => {
   try {
     const { imp_uid, merchant_uid, status } = req.body;
     const getResult = await getPayment(imp_uid);
-    console.log(getResult);
+
     if (
       getResult.amount == 1000 ||
       getResult.name == "플랜 즉시 결제" ||
