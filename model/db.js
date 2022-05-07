@@ -252,6 +252,15 @@ db.userCompany.belongsTo(db.config, {
   foreignKey: "config_idx",
 });
 
+// config와 userCompany
+db.user.hasMany(db.config, {
+  foreignKey: "update_user_idx",
+});
+
+db.config.belongsTo(db.user, {
+  foreignKey: "update_user_idx",
+});
+
 db.company.hasMany(db.userCompany, {
   foreignKey: "company_idx",
 });

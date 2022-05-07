@@ -301,6 +301,7 @@ module.exports = {
 
       let No = 1;
       findResult.map((data) => {
+        console.log(findResult);
         data.No = No;
         No++;
       });
@@ -334,15 +335,10 @@ module.exports = {
     } = req;
     const template = new Template({});
     try {
-      const findUserResult = await db.user.findByPk(user_idx, {
-        attributes: ["user_name"],
-      });
+      const updated_date = moment().format("YYYY.MM.DD HH:mm");
 
-      const updatedDate = moment().format("YYYY.MM.DD HH:mm");
-
-      const update_people = `${updatedDate} ${findUserResult.user_name}`;
-
-      body.update_people = update_people;
+      body.update_user_idx = user_idx;
+      body.updated_date = updated_date;
       body.company_idx = company_idx;
 
       await template.updateConfig(body, { idx: templateId });

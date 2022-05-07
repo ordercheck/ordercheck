@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes) {
   //테이블을 정의
-  return sequelize.define('config', {
+  return sequelize.define("config", {
     idx: {
       autoIncrement: true,
       primaryKey: true,
@@ -8,7 +8,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     template_name: {
       allowNull: true,
-      defaultValue: '팀원',
+      defaultValue: "팀원",
       type: DataTypes.STRING(100),
     },
 
@@ -213,10 +213,10 @@ module.exports = function (sequelize, DataTypes) {
 
     create_people: {
       allowNull: true,
-      defaultValue: '오더체크',
+      defaultValue: "오더체크",
       type: DataTypes.STRING(100),
     },
-    update_people: { allowNull: true, type: DataTypes.STRING(100) },
+    updated_date: { allowNull: true, type: DataTypes.STRING(100) },
 
     duplicateCount: {
       defaultValue: 1,
