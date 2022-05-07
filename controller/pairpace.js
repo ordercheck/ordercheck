@@ -6,21 +6,21 @@ moment.tz.setDefault("Asia/Seoul");
 module.exports = {
   storePairpaceInfo: async (req, res, next) => {
     const {
-      senderIdx: sender_idx,
-      strUserIdx: customer_idx,
-      zipCode: post_address,
-      firstAddr: address,
-      secondAddr: jibun_address,
-      extraAddr: detail_address,
-      company: company_name,
+      sender_idx,
+      user_idx: customer_idx,
+      post_number: post_address,
+      first_address: address,
+      second_address: jibun_address,
+      detail_address,
+      company_name,
       orderCheckClient: customer_name,
-      orderCheckClientContact: customer_phone,
-      applyDate: submission_date,
-      formType: form_type,
+      phone_number: customer_phone,
+      applied_date: submission_date,
+      apply_type: form_type,
       jwtToken,
-      strPpAppliIdx,
+      pp_appli_idx: strPpAppliIdx,
     } = req.body;
-    console.log(req.body);
+
     const io = req.app.get("io");
 
     try {
