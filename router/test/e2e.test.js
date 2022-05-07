@@ -361,6 +361,14 @@ if (process.env.NODE_MODE == "TESTING") {
       expect(response.body.success).toBe(200);
     });
 
+    it("열람 가능 멤버 추가", async () => {
+      const response = await request(app)
+        .get("/api/config/company/form/open/member/1")
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
+
+      expect(response.body.findResult.selectMemberList.length).toBe(2);
+    });
+
     it("열람 가능 멤버로 추가된 뒤 해당 폼 볼수 있음", async () => {
       const response = await request(app)
         .get("/api/form/link/list")
@@ -447,21 +455,38 @@ if (process.env.NODE_MODE == "TESTING") {
     });
   });
 
-  // describe("설정", () => {
-  //   it("멤버 이름 바꾸기", async () => {
-  //     const findLinkResult = await db.formLink.findByPk(1);
-  //     const response = await request(app)
-  //       .get(`/api/form/link/info/${findLinkResult.form_link}`)
-  //       .set("Authorization", `Bearer ${huidxLoginToken}`);
-  //     expect(response.body.success).toBe(200);
-  //   });
-  // });
+  describe("설정", () => {
+    it("새로운 템플릿 만들기", async () => {
+      const response = await request(app)
+        .post(`/api/config/company/template/`)
+        .send({
+          title: "새로운 템플릿 제목",
+        })
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
+      expect(response.body.success).toBe(200);
+    });
+
+    it("멤버 이름 바꾸기", async () => {
+      const response = await request(app)
+        .patch(`/api/config/company/member/7`)
+        .send({
+          user_name: "새로운 멤버1 이름",
+          user_email: "새로운 멤버1 이메일",
+          templateId: 7,
+        })
+        .set("Authorization", `Bearer ${huidxLoginToken}`);
+
+      expect(response.body.findResult.user_name).toBe("새로운 멤버1 이름");
+      expect(response.body.findResult.user_email).toBe("새로운 멤버1 이메일");
+      expect(response.body.findResult.memberId).toBe(7);
+    });
+  });
 
   afterAll(async () => {
     const card = await db.card.findByPk(1);
     const plan = await db.plan.findByPk(2);
     await cancelSchedule(card.customer_uid, plan.merchant_uid);
     await delCardPort(card.customer_uid);
-    // await db.sequelize.sync({ force: true });
+    await db.sequelize.sync({ force: true });
   });
 }

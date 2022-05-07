@@ -460,7 +460,8 @@ module.exports = {
     }
   },
   changeSms: async (req, res, next) => {
-    const { user_idx, token, body, company_idx } = req;
+    const { token, body, company_idx } = req;
+
     try {
       await db.sms.update(body, {
         where: {
@@ -505,6 +506,7 @@ module.exports = {
       company_idx,
       body: { text_cost },
     } = req;
+
     const findHuidx = await db.user.findByPk(user_idx, {
       attributes: ["user_email", "user_phone"],
     });
@@ -597,10 +599,6 @@ module.exports = {
       return;
     }
 
-    const beforeCost = findSmsResult.text_cost;
-    const plusCost = text_cost;
-    const addCost = beforeCost + plusCost;
-
     await db.sms.update(
       {
         text_cost: addCost,
@@ -615,6 +613,9 @@ module.exports = {
     res.send({ success: 200, message: "충전 완료" });
 
     const receiptId = generateRandomCode();
+    const beforeCost = findSmsResult.text_cost;
+    const plusCost = text_cost;
+    const addCost = beforeCost + plusCost;
 
     await db.receipt.create({
       company_idx,
@@ -628,6 +629,8 @@ module.exports = {
       company_name: findCompany.company_name,
       receipt_kind: "자동 문자 충전",
       card_number: findCardResult.card_number,
+      before_text_price: beforeCost,
+      after_text_price: addCost,
     });
 
     // sendTextPayEmail(
@@ -1103,7 +1106,7 @@ module.exports = {
       });
 
       // user 정보 변경
-      db.user.update(
+      await db.user.update(
         { user_name, user_email },
         { where: { idx: findUserResult.user_idx } }
       );
@@ -1132,7 +1135,7 @@ module.exports = {
       );
 
       // 템플릿 변경
-      db.config.update(
+      await db.config.update(
         { create_people: user_name },
         { where: { company_idx, create_people: findUserResult.searchingName } }
       );
