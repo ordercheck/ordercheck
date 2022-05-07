@@ -1137,10 +1137,6 @@ module.exports = {
         { create_people: user_name },
         { where: { company_idx, create_people: findUserResult.searchingName } }
       );
-      db.files.update(
-        { update_people: user_name },
-        { where: { company_idx, update_people: findUserResult.searchingName } }
-      );
 
       const findResult = await findMember({
         idx: memberId,

@@ -168,7 +168,11 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
-
+    tutorialPayment: {
+      allowNull: false,
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
+    },
     deleted: {
       allowNull: true,
       type: DataTypes.DATE(),
