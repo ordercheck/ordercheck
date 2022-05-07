@@ -1115,6 +1115,11 @@ module.exports = {
         { create_people: user_name },
         { where: { company_idx, create_people: findUserResult.searchingName } }
       );
+      // formOpen 정보 변경
+      db.formOpen.update(
+        { user_name },
+        { where: { user_idx: findUserResult.user_idx } }
+      );
 
       // 파일 보관함 정보 변경
       db.folders.update(
@@ -1127,10 +1132,14 @@ module.exports = {
         { where: { company_idx, upload_people: findUserResult.searchingName } }
       );
 
-      // formOpen 정보 변경
-      db.formOpen.update(
-        { user_name },
-        { where: { user_idx: findUserResult.user_idx } }
+      // 템플릿 변경
+      db.config.update(
+        { create_people: user_name },
+        { where: { company_idx, create_people: findUserResult.searchingName } }
+      );
+      db.files.update(
+        { update_people: user_name },
+        { where: { company_idx, update_people: findUserResult.searchingName } }
       );
 
       const findResult = await findMember({
