@@ -309,7 +309,7 @@ module.exports = {
       if (!findResult) {
         return res.send({ success: 400, message: "해당 견적서가 없습니다." });
       }
-
+      console.log(findResult);
       if (findResult.customer.searchingPhoneNumber != customer_phoneNumber) {
         return res.send({ success: 400, message: "권한 없음." });
       }
