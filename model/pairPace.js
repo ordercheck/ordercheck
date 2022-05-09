@@ -17,6 +17,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     pp_appli_idx: {
       allowNull: true,
+      unique: true,
       type: DataTypes.STRING(100),
     },
     first_address: {

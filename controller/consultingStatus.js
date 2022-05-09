@@ -25,7 +25,7 @@ const {
   TeamkakaoPushNewForm,
   customerkakaoPushNewCal,
   checkKakaoPushResult,
-  failSmsPay,
+  noMoneySMS,
   customerkakaoPushNewForm,
 } = require("../lib/kakaoPush");
 
@@ -81,9 +81,13 @@ module.exports = {
           res.send({ success: 200 });
 
           // 총 문자 비용 계산
-          // const findCompany = await db.company.findByPk(bodyData.company_idx, {
-          //   attributes: ["huidx"],
-          // });
+          const findCompany = await db.company.findByPk(bodyData.company_idx, {
+            include: [
+              {
+                model: db.user,
+              },
+            ],
+          });
           // const findSms = await db.sms.findOne({
           //   where: { user_idx: findCompany.huidx },
           // });
@@ -99,7 +103,9 @@ module.exports = {
 
           const { kakaoPushResult, message } = await customerkakaoPushNewForm(
             customer_phoneNumber,
-            bodyData.company_name,
+            bodyData.company_name == ""
+              ? findCompany.user.user_name
+              : bodyData.company_name,
             bodyData.customer_name,
             bodyData.formTitle
           );
@@ -746,13 +752,13 @@ module.exports = {
 
       alarm.sendMultiAlarm(insertData, sendMember, io);
 
-      const findHuidx = await db.user.findByPk(huidx, {
-        attributes: ["user_email", "user_phone"],
-      });
+      const findHuidx = await db.user.findByPk(huidx);
       // noCostText(companyFindResult.company_name, 123, findHuidx.user_email);
 
-      failSmsPay(
-        companyFindResult.company_name,
+      noMoneySMS(
+        companyFindResult.company_name == ""
+          ? findHuidx.user_name
+          : companyFindResult.company_name,
         findHuidx.user_phone.replace(
           /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
           ""
@@ -780,7 +786,9 @@ module.exports = {
       );
     const { kakaoPushResult, message } = await customerkakaoPushNewCal(
       customer_phoneNumber,
-      companyFindResult.company_name,
+      companyFindResult.company_name == ""
+        ? findHuidx.user_name
+        : companyFindResult.company_name,
       customerFindResult.customer_name,
       calculateNumber,
       calculate_idx

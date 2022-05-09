@@ -507,9 +507,7 @@ module.exports = {
       body: { text_cost },
     } = req;
 
-    const findHuidx = await db.user.findByPk(user_idx, {
-      attributes: ["user_email", "user_phone"],
-    });
+    const findHuidx = await db.user.findByPk(user_idx);
     const findCardResult = await db.card.findOne({
       where: { user_idx, main: true },
       attributes: [
@@ -591,7 +589,9 @@ module.exports = {
       // sendFailCostEmail(findCompany.company_name, 123, findHuidx.user_email);
 
       failSmsPay(
-        findCompany.company_name,
+        findCompany.company_name == ""
+          ? findHuidx.user_name
+          : findCompany.company_name,
         findHuidx.user_phone.replace(
           /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
           ""
