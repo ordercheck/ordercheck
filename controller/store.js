@@ -17,6 +17,7 @@ module.exports = {
 
       if (storedBread !== body.bread) {
         body.user_idx = user_idx;
+        console.log(body);
         await db.store.create(body);
         client.del(`bread${user_idx}`);
         client.set(`bread${user_idx}`, `${body.bread}`);
