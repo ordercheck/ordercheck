@@ -5,6 +5,7 @@ moment.tz.setDefault("Asia/Seoul");
 const { createToken } = require("../lib/jwtfunctions");
 const { showMyPageDetailConsultingAttributes } = require("../lib/attributes");
 const { makeSpreadArray } = require("../lib/functions");
+const { Op } = require("sequelize");
 module.exports = {
   joinDoCustomer: async (req, res, next) => {
     const { body } = req;
