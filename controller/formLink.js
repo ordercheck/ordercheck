@@ -501,7 +501,7 @@ module.exports = {
       params: { form_link },
       formClose,
     } = req;
-
+    console.log(formClose);
     try {
       const findResult = await db.formLink.findOne({
         where: { form_link },
