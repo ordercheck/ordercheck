@@ -20,7 +20,7 @@ module.exports = {
       jwtToken,
       pp_appli_idx: strPpAppliIdx,
     } = req.body;
-    console.log(req.body);
+
     const io = req.app.get("io");
 
     try {
