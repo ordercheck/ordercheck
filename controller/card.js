@@ -69,7 +69,7 @@ module.exports = {
     const findPlanResult = await db.plan.findOne({
       where: { company_idx, active: 3 },
     });
-    if (!findPlanResult.enrollment) {
+    if (!findPlanResult) {
       return;
     } else if (findPlanResult.enrollment == false) {
       const findUserResult = await db.user.findByPk(user_idx);
