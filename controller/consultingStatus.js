@@ -64,13 +64,13 @@ module.exports = {
     try {
       // url을 string으로 연결
       const { body, files } = req;
-      console.log(body);
+
       const createConsultingAndIncrement = async (bodyData) => {
         try {
           await db.consulting.create(bodyData, {
             transaction: t,
           });
-
+          console.log(bodyData);
           await t.commit();
 
           db.company.increment(
