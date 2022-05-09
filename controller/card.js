@@ -69,7 +69,9 @@ module.exports = {
     const findPlanResult = await db.plan.findOne({
       where: { company_idx, active: 3 },
     });
-    if (findPlanResult.enrollment == false) {
+    if (!findPlanResult.enrollment) {
+      return;
+    } else if (findPlanResult.enrollment == false) {
       const findUserResult = await db.user.findByPk(user_idx);
 
       const startDate = findPlanResult.start_plan.replace(/\./g, "-");
