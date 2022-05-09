@@ -166,7 +166,7 @@ module.exports = {
         data = completeConsultingObject[data].count;
         return data;
       });
-
+      console.log(bread);
       return res.send({
         success: 200,
         customerCount,

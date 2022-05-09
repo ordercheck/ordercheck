@@ -891,4 +891,38 @@ router.post("/loginAdmin", async (req, res, next) => {
   });
 });
 
+// router.get("/input", async (req, res, next) => {
+//   nameNumber = 0;
+//   lastphoneNumber = 1243;
+//   for (let i = 0; i <= 1000; i++) {
+//     console.log(i);
+//     const ob = {
+//       address: "서울 성동구 서울숲길 17",
+//       detail_address: "1234",
+//       jibun_address: "서울 성동구 성수동1가 685-191",
+//       post_address: "11200",
+//       room_size: "1,243",
+//       room_size_kind: "0",
+//       customer_name: `test${nameNumber}`,
+//       customer_phoneNumber: `010-1234-${lastphoneNumber}`,
+//       company_idx: 7,
+//     };
+//     const searchingPhoneNumber = ob.customer_phoneNumber.replace(
+//       /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\ '\"\\(\=]/gi,
+//       ""
+//     );
+//     const searchingAddress = `${ob.address.replace(
+//       / /g,
+//       ""
+//     )}${ob.detail_address.replace(/ /g, "")}`;
+//     ob.searchingPhoneNumber = searchingPhoneNumber;
+//     ob.searchingAddress = searchingAddress;
+
+//     await db.customer.create(ob);
+//     nameNumber += 1;
+//     lastphoneNumber += 1;
+//   }
+//   return res.send({ success: 200 });
+// });
+
 module.exports = router;
