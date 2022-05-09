@@ -114,8 +114,10 @@ module.exports = {
     const findResult = await db.consulting.findByPk(consulting_idx, {
       attributes: showMyPageDetailConsultingAttributes,
     });
+
     findResult.floor_plan = JSON.parse(findResult.floor_plan);
     findResult.hope_concept = JSON.parse(findResult.hope_concept);
+
     return res.send({ success: 200, findResult });
   },
   getCalculateList: async (req, res, next) => {
@@ -295,11 +297,19 @@ module.exports = {
           {
             model: db.company,
           },
+          {
+            model: db.customer,
+          },
         ],
       });
       if (!findResult) {
         return res.send({ success: 400, message: "해당 견적서가 없습니다." });
       }
+      console.log(findResult.customer.searchingPhoneNumber);
+      if (findResult.customer.searchingPhoneNumber != customer_phoneNumber) {
+        return res.send({ success: 400, message: "권한 없음." });
+      }
+
       let calculateList = await db.sequelize
         .query(
           `

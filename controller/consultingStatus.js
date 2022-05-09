@@ -771,10 +771,6 @@ module.exports = {
 
     const [calculateNumber] = calculateFindResult.calculateNumber.split("차");
 
-    const fileUrl = !calculateFindResult.file_url
-      ? `orderchecktest.s3-website.ap-northeast-2.amazonaws.com/signin`
-      : calculateFindResult.file_url.split("//")[1];
-
     const sharedDate = moment().format("YYYY.MM.DD");
 
     const customer_phoneNumber =
