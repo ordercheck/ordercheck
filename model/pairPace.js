@@ -41,7 +41,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(100),
     },
 
-    customer_name: {
+    sender_name: {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
