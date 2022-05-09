@@ -292,20 +292,23 @@ module.exports = {
     } = req;
 
     try {
-      const findResult = await db.calculate.findByPk(calculate_idx, {
-        include: [
-          {
-            model: db.company,
-          },
-          {
-            model: db.customer,
-          },
-        ],
-      });
+      const findResult = await db.calculate.findOne(
+        { where: { idx: calculate_idx, sharedDate: { [Op.ne]: "" } } },
+        {
+          include: [
+            {
+              model: db.company,
+            },
+            {
+              model: db.customer,
+            },
+          ],
+        }
+      );
       if (!findResult) {
         return res.send({ success: 400, message: "해당 견적서가 없습니다." });
       }
-      console.log(findResult.customer.searchingPhoneNumber);
+
       if (findResult.customer.searchingPhoneNumber != customer_phoneNumber) {
         return res.send({ success: 400, message: "권한 없음." });
       }
