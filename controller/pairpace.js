@@ -14,15 +14,15 @@ module.exports = {
 
       await db.pairPace.create(body);
 
-      io.to(+sender_idx).emit("closePairpace", {
+      io.to(+body.sender_idx).emit("closePairpace", {
         isclosed: true,
-        sender_idx,
+        sender_idx: body.sender_idx,
       });
       return res.send({ success: 200 });
     } catch (err) {
-      io.to(+sender_idx).emit("closePairpace", {
+      io.to(+body.sender_idx).emit("closePairpace", {
         isclosed: true,
-        sender_idx,
+        sender_idx: body.sender_idx,
       });
       return res.send({ success: 500 });
     }
