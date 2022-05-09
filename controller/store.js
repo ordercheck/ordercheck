@@ -19,8 +19,8 @@ module.exports = {
         body.user_idx = user_idx;
 
         await db.store.create(body);
-        client.del(`bread${user_idx}`);
-        client.set(`bread${user_idx}`, `${body.bread}`);
+        await client.del(`bread${user_idx}`);
+        await client.set(`bread${user_idx}`, `${body.bread}`);
       }
       await client.quit();
       return res.send({ success: 200 });

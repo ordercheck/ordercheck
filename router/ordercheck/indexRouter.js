@@ -245,6 +245,16 @@ router.get("/information", async (req, res, next) => {
 
   let findReceipt = await db.receipt.findAll({
     where: { receipt_kind: "자동 문자 충전" },
+    // include: [
+    //   {
+    //     model: db.company,
+    //     where: {
+    //       user_idx,
+    //       active: true,
+    //       standBy: false,
+    //     },
+    //   },
+    // ],
     order: [["createdAt", "DESC"]],
   });
 
