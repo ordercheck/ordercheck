@@ -783,7 +783,7 @@ module.exports = {
       companyFindResult.company_name,
       customerFindResult.customer_name,
       calculateNumber,
-      fileUrl
+      calculate_idx
     );
 
     // 알림톡 보낸 결과 조회
