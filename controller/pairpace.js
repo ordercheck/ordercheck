@@ -24,7 +24,7 @@ module.exports = {
     const io = req.app.get("io");
 
     try {
-      jwt.verify(jwtToken, process.env.PAIRPACE_JWT_SECRET);
+      jwt.verify(jwtToken, process.env.PAIRPACㅇE_JWT_SECRET);
 
       await db.pairPace.create({
         sender_idx,
