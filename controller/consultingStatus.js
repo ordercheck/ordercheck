@@ -70,7 +70,7 @@ module.exports = {
           await db.consulting.create(bodyData, {
             transaction: t,
           });
-          console.log(bodyData);
+
           await t.commit();
 
           db.company.increment(
@@ -194,7 +194,7 @@ module.exports = {
 
             const { kakaoPushResult, message } = await TeamkakaoPushNewForm(
               user_phone,
-              bodyData.title,
+              bodyData.formTitle,
               bodyData.customer_name,
               bodyData.customer_phoneNumber
             );
