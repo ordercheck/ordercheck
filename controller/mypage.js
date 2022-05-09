@@ -172,7 +172,7 @@ module.exports = {
   
     company.deleted
     FROM customer 
-    INNER JOIN calculate ON customer.idx = calculate.customer_idx
+    INNER JOIN calculate ON customer.idx = calculate.customer_idx AND calculate.sharedDate != ''
     LEFT JOIN company ON calculate.company_idx = company.idx
     WHERE searchingPhoneNumber = "${customer_phoneNumber}"
     ORDER BY ${sortList}
@@ -336,7 +336,7 @@ module.exports = {
           FROM customer 
           INNER JOIN calculate ON customer.idx = calculate.customer_idx  AND calculate.company_idx = ${
             findResult.company_idx
-          } 
+          } AND calculate.sharedDate != ''
           WHERE searchingPhoneNumber = "${customer_phoneNumber}"
           ORDER BY calculate.createdAt DESC
   `
@@ -375,7 +375,7 @@ module.exports = {
           `
       SELECT customerConfirm
       FROM customer 
-      INNER JOIN calculate ON customer.idx = calculate.customer_idx AND customerConfirm = false
+      INNER JOIN calculate ON customer.idx = calculate.customer_idx AND customerConfirm = false AND calculate.sharedDate != ''
       WHERE searchingPhoneNumber = "${customer_phoneNumber}"
       `
         )

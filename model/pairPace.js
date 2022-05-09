@@ -11,15 +11,15 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
-    customer_idx: {
+    user_idx: {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
-    strPpAppliIdx: {
+    pp_appli_idx: {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
-    address: {
+    first_address: {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
@@ -27,16 +27,16 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
-    post_address: {
+    post_number: {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
 
-    jibun_address: {
+    second_address: {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
-    form_type: {
+    apply_type: {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
@@ -50,14 +50,19 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
-    customer_phone: {
+    phone_number: {
       allowNull: true,
       type: DataTypes.STRING(100),
     },
 
-    submission_date: {
+    applied_date: {
       allowNull: true,
       type: DataTypes.STRING(100),
+    },
+
+    ordercheck_error_idx: {
+      allowNull: true,
+      type: DataTypes.INTEGER,
     },
   });
 };
