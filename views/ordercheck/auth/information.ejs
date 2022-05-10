@@ -95,6 +95,7 @@
       <tr>
         <th scope="col">No</th>
         <th scope="col">회사</th>
+        <th scope="col">소유주</th>
         <th scope="col">카드</th>
         <th scope="col">세전 금액</th>
         <th scope="col">부가세</th>
@@ -109,6 +110,7 @@
       <tr>
         <td><%= i+1 %></td>
         <td><%= findReceipt[i].company_name %></td>
+        <td><%= findReceipt[i].company.user.user_name %></td>
         <td>
           <%= findReceipt[i].card_name %>
         </td>
