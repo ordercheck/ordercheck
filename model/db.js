@@ -69,6 +69,7 @@ db.formOpen = sequelize.import(__dirname + "/formOpenMember.js");
 db.calculate = sequelize.import(__dirname + "/calculate.js");
 db.store = sequelize.import(__dirname + "/store.js");
 db.customer = sequelize.import(__dirname + "/customer.js");
+db.planInfo = sequelize.import(__dirname + "/planInfo.js");
 db.err = sequelize.import(__dirname + "/err.js");
 // usre와 store
 db.user.hasMany(db.store, { foreignKey: "user_idx" });

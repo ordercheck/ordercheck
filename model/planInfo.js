@@ -11,53 +11,79 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(15),
     },
 
-    plan_price: {
+    monthPrice: {
+      allowNull: false,
+      type: DataTypes.INTEGER,
+    },
+    yearPrice: {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
 
-    whiteLabel_price: {
+    monthWhiteLabelPrice: {
+      allowNull: false,
+      type: DataTypes.INTEGER,
+    },
+    yearWhiteLabelPrice: {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
 
-    analystic_price: {
+    monthAnalyticsPrice: {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
-
-    chat_price: {
+    yearAnalyticsPrice: {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
-
-    plan_price_levy: {
+    monthChatPrice: {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
-    whiteLabel_price_levy: {
+    yearChatPrice: {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
-    analystic_price_levy: {
+    isCreateCompany: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+    },
+    isManageMember: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+    },
+    isInviteMember: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+    },
+    isFileStorage: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+    },
+    isAutoChargeMessage: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+    },
+    maxConsultingForm: {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
-    chat_price_levy: {
+    maxConsultingForm: {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
-    form_link_count: {
+    maxAddCustomer: {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
-    customer_count: {
+    maxFormCount: {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
-    fileStore: {
+    maxFileStorageSize: {
       allowNull: false,
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
     },
   });
 };

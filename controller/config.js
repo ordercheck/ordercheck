@@ -121,7 +121,20 @@ module.exports = {
       companyProfile[0].planDetail = planDetail;
       companyProfile[0].nextPlan = nextPlan;
 
-      return res.send({ success: 200, companyProfile: companyProfile[0] });
+      // 플랜 권한 정보
+      let companyAuth = await db.sequelize
+        .query(
+          `SELECT * FROM planInfo WHERE plan = '${companyProfile[0].plan}'`
+        )
+        .spread((r) => {
+          return makeSpreadArray(r);
+        });
+
+      return res.send({
+        success: 200,
+        companyProfile: companyProfile[0],
+        companyAuth,
+      });
     } catch (err) {
       next(err);
     }

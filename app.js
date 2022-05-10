@@ -78,7 +78,7 @@ const fileRouter = require("./router/api/fileStore");
 const checkRouter = require("./router/api/check");
 const homeRouter = require("./router/api/home");
 const storeRouter = require("./router/api/store");
-const socketRouter = require("./router/api/socket");
+const planInfoRouter = require("./router/api/planInfoRouter");
 const s3ControllRouter = require("./router/api/s3");
 const pairpaceRouter = require("./router/api/pairpace");
 const tutorialRouter = require("./router/api/tutorial");
@@ -208,7 +208,7 @@ class AppServer extends http.Server {
     this.app.use("/api/invite", inviteRouter);
     this.app.use("/api/card", cardRouter);
     this.app.use("/api/file/store", fileRouter);
-    this.app.use("/api/socket", socketRouter);
+    this.app.use("/api/planInfo", planInfoRouter);
     this.app.use("/api/pairpace", pairpaceRouter);
 
     // 에러처리
