@@ -129,7 +129,6 @@ module.exports = {
       return res.send({
         success: 200,
         companyProfile: companyProfile[0],
-        companyAuth,
       });
     } catch (err) {
       next(err);
