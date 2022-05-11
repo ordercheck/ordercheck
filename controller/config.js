@@ -118,17 +118,13 @@ module.exports = {
         };
       }
 
+      const companyAuth = await db.planInfo.findOne({
+        where: { plan: companyProfile[0].plan },
+      });
+
       companyProfile[0].planDetail = planDetail;
       companyProfile[0].nextPlan = nextPlan;
-
-      // 플랜 권한 정보
-      let companyAuth = await db.sequelize
-        .query(
-          `SELECT * FROM planInfo WHERE plan = '${companyProfile[0].plan}'`
-        )
-        .spread((r) => {
-          return makeSpreadArray(r);
-        });
+      companyProfile[0].companyAuth = companyAuth;
 
       return res.send({
         success: 200,
