@@ -63,4 +63,8 @@ module.exports = {
       subdomain: findCompanyResult.company.company_subdomain,
     });
   },
+  getPlanInfo: async (req, res, next) => {
+    const plans = await db.planInfo.findAll();
+    return res.send({ success: 200, plans });
+  },
 };

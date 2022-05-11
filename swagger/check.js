@@ -30,5 +30,14 @@
  *         description: 성공
  *       '401':
  *         description: 실패
-
-*/
+ * /api/check/plan:
+ *   get:
+ *     tags:
+ *       - check
+ *     summary: planInfo 불러오기
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *       '401':
+ *         description: 실패
+ */

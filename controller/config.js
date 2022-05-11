@@ -1434,6 +1434,24 @@ module.exports = {
     return res.send({ success: 200 });
   },
 
+  changePlanAdmin: async (req, res, next) => {
+    const { planIdx, toChangePlan } = req.body;
+    const [nextPlan, planType] = toChangePlan.split(":");
+
+    const findPlanResult = await db.plan.findByPk(planIdx, {
+      include: [
+        {
+          model: db.company,
+        },
+      ],
+    });
+
+    // 플랜 무료체험으로 가입할 때
+    if (!findPlanResult.company.used_free_period && findPlanResult.plan) {
+    }
+
+    return res.send({ success: 200 });
+  },
   changePlan: async (req, res, next) => {
     let {
       body: { ct, pt },

@@ -71,6 +71,7 @@
           <th scope="col">회사</th>
           <th scope="col">멤버</th>
           <th scope="col">플랜</th>
+          <th scope="col">플랜 변경</th>
         </tr>
       </thead>
       <tbody>
@@ -83,6 +84,18 @@
             <%= findCompany[i].userCompanies[j].searchingName %>, <% } %>
           </td>
           <td><%= findCompany[i].plans[0].plan %></td>
+          <td>
+            <select name="plans" onchange="changePlan(this)" id=<%= findCompany[i].plans[0].idx %>>
+              <option value="프리" >프리</option>
+              <option value="스타터:month" >스타터 : month</option>
+              <option value="스타터:year" >스타터 : year</option>
+              <option value="프로:month" >프로 : month</option>
+              <option value="프로:year" >프로 : year</option>
+              <option value="팀:month" >팀 : month</option>
+              <option value="팀:year" >팀 : year</option>
+              <option value="컴퍼니:month" >컴퍼니 : month</option>
+              <option value="컴퍼니:year" >컴퍼니 : year</option>
+            </select></td>
         </tr>
         <% } %>
       </tbody>
@@ -132,7 +145,24 @@
       const userTable = document.getElementById("userTable");
       const companyTable = document.getElementById("companyTable");
       const receiptTextTable = document.getElementById("receiptTextTable");
-      
+ 
+      const changePlan = (toPlan)=>{
+
+        fetch("/api/config/company/plan/admin", {
+  method: "PATCH",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    planIdx: toPlan.id,
+    toChangePlan: toPlan.value,
+ 
+  }),
+})
+  .then((response) => response.json())
+  .then((data) => console.log(data))
+ 
+      }
 
       
       const showUserTable = () => {
@@ -157,6 +187,7 @@
       company.addEventListener("click", showComapnyTable);
       user.addEventListener("click", showUserTable);
       receiptText.addEventListener("click", showReceiptTextTable);
+      
     </script>
   </body>
 </html>
