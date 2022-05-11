@@ -32,6 +32,7 @@ const {
 
 const { Alarm } = require("../lib/classes/AlarmClass");
 const { plan } = require("../model/db");
+const { EventBridge } = require("aws-sdk");
 
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
@@ -1449,30 +1450,75 @@ module.exports = {
   },
   changePlan: async (req, res, next) => {
     let {
-      body: { ct, pt },
+      body: {
+        ct,
+        planIdx,
+        payType,
+        whiteLabelChecked,
+        chatChecked,
+        analysticChecked,
+      },
       user_idx,
       company_idx,
     } = req;
 
+    const toChangePlan = await db.planInfo.findByPk(planIdx);
+
+    const plan_data = {
+      plan: toChangePlan.plan,
+      pay_type: payType,
+      plan_price:
+        payType == "month" ? toChangePlan.monthPrice : toChangePlan.yearPrice,
+      chat_price:
+        payType == "month"
+          ? toChangePlan.monthChatPrice
+          : toChangePlan.yearChatPrice,
+      analystic_price:
+        payType == "month"
+          ? toChangePlan.monthAnalyticsPrice
+          : toChangePlan.yearAnalyticsPrice,
+      whiteLabel_price:
+        payType == "month"
+          ? toChangePlan.monthWhiteLabelPrice
+          : toChangePlan.yearWhiteLabelPrice,
+      whiteLabelChecked,
+      chatChecked,
+      analysticChecked,
+      result_price:
+        payType == "month"
+          ? toChangePlan.monthResultPrice
+          : toChangePlan.yearResultPrice,
+      company_idx,
+    };
+
+    plan_data.result_price_levy =
+      plan_data.result_price * 0.1 + plan_data.result_price;
+
+    // 트랜잭션 시작
     const t = await db.sequelize.transaction();
 
+    // 카드 토큰 체크
     let card_data = await verify_data(ct);
-    const plan_data = await verify_data(pt);
 
-    db.company.update(
-      { used_free_period: true },
-      { where: { idx: company_idx }, transaction: t }
-    );
+    // 무료체험 사용여부 체크
+    const findCompany = await db.company.findByPk(company_idx);
+    const usedFreePlan = !findCompany.used_free_period ? false : true;
+    // 무조건 가입하는 거니까 무료체험 사용여부 변경
+    // db.company.update(
+    //   { used_free_period: true },
+    //   { where: { idx: company_idx }, transaction: t }
+    // );
     try {
       // 유저정보 찾기
       const user_data = await db.user.findByPk(user_idx);
 
       if (!card_data) {
-        // 이미 메인 카드가 있을 때
+        // 이미 메인 카드가 있을 때 메인카드로 결제
         card_data = await db.card.findOne({
           where: { user_idx, main: true, active: true },
         });
       } else {
+        // 메인카드가 없으면 카드 등록하고 결제
         card_data.user_idx = user_idx;
         card_data = await db.card.create(card_data, {
           transaction: t,
@@ -1487,9 +1533,10 @@ module.exports = {
       const scheduledPlan = await db.plan.findOne({
         where: { company_idx, active: 3 },
       });
-
+      // 현재 무료체험중인지 체크
+      const usingFree = !nowPlan.free_plan ? false : true;
       let nextExpireDate;
-      if (plan_data.pay_type == "month") {
+      if (payType == "month") {
         if (scheduledPlan) {
           const startPlan = scheduledPlan.start_plan.replace(/\./gi, "-");
           nextExpireDate = moment(startPlan)
@@ -1512,17 +1559,18 @@ module.exports = {
       if (nowPlan.plan == "프리") {
         console.log("프리 플랜에서 요금제 가입 할 때");
         // 무료체험 기간일 때
-        if (!plan_data.start_plan) {
+        if (usingFree) {
           await db.plan.destroy({
             where: { idx: scheduledPlan.idx },
             transaction: t,
           });
           plan_data.start_plan = scheduledPlan.start_plan;
-          plan_data.expire_plan = scheduledPlan.expire_plan;
+          plan_data.expire_plan = nextExpireDate;
           plan_data.pay_hour = scheduledPlan.pay_hour;
           plan_data.free_plan = scheduledPlan.free_plan;
-          plan_data.company_idx = company_idx;
+
           plan_data.merchant_uid = nextMerchant_uid;
+          plan_data.plan = toChangePlan.plan;
 
           await db.plan.create(
             {
@@ -1569,109 +1617,154 @@ module.exports = {
             where: { idx: nowPlan.idx },
             transaction: t,
           });
-          const nowStartPlan = plan_data.start_plan;
-          const nowExpirePlan = plan_data.expire_plan;
-          // 시간을 unix형태로 변경(실제)
-          const Hour = moment().format("HH");
+          // 무료체험으로 가입할 때
+          if (!usedFreePlan) {
+            let nowStartPlan;
+            let nowExpirePlan;
 
-          plan_data.merchant_uid = nextMerchant_uid;
-          plan_data.company_idx = company_idx;
-          plan_data.pay_hour = Hour;
-          // 결제 예약 플랜 생성
-          let nextStartDate;
-          if (plan_data.pay_type == "month") {
-            nextStartDate = moment(plan_data.expire_plan.replace(/\./g, "-"))
-              .add("1", "days")
-              .format("YYYY.MM.DD");
-            nextExpireDate = moment(nextStartDate.replace(/\./g, "-"))
-              .add("1", "M")
-              .subtract("1", "days")
-              .format("YYYY.MM.DD");
-          } else {
-            nextStartDate = moment(plan_data.expire_plan.replace(/\./g, "-"))
-              .add("1", "days")
-              .format("YYYY.MM.DD");
-            nextExpireDate = moment(nextStartDate.replace(/\./g, "-"))
-              .add("1", "Y")
-              .subtract("1", "days")
-              .format("YYYY.MM.DD");
-          }
-          // 무료플랜이 아닐 때
-          if (!plan_data.free_plan) {
-            plan_data.start_plan = nextStartDate;
-            plan_data.expire_plan = nextExpireDate;
-          }
-
-          await db.plan.create(
-            {
-              ...plan_data,
-              active: 3,
-            },
-            {
-              transaction: t,
+            if (payType == "month") {
+              nowStartPlan = moment().add("77", "days").format("YYYY.MM.DD");
+              nowExpirePlan = moment()
+                .add("77", "days")
+                .add("1", "M")
+                .subtract("1", "days")
+                .format("YYYY.MM.DD");
+            } else {
+              nowStartPlan = moment().add("77", "days").format("YYYY.MM.DD");
+              nowExpirePlan = moment()
+                .add("77", "days")
+                .add("1", "Y")
+                .subtract("1", "days")
+                .format("YYYY.MM.DD");
             }
-          );
-          const startFreeDate = moment().format("YYYY.MM.DD");
-          plan_data.free_period_start = startFreeDate;
-          plan_data.free_period_expire = nowExpirePlan;
-          plan_data.start_plan = nowStartPlan;
-          plan_data.expire_plan = nowExpirePlan;
+            const Hour = moment().format("HH");
 
-          // 무료플랜이 아닐 때
-          if (!plan_data.free_plan) {
-            plan_data.merchant_uid = generateRandomCode();
-          }
-          // 현재 플랜 생성
-          await db.plan.create(plan_data, {
-            transaction: t,
-          });
+            plan_data.free_plan = moment().format("YYYY.MM.DD");
+            plan_data.start_plan = nowStartPlan;
+            plan_data.expire_plan = nowExpirePlan;
+            plan_data.result_price_levy =
+              plan_data.result_price * 0.1 + plan_data.result_price;
+            plan_data.merchant_uid = nextMerchant_uid;
+            plan_data.pay_hour = Hour;
 
-          // 회사 초기화 날짜 수정
-          await db.company.update(
-            { resetDate: moment().add("1", "M") },
-            { where: { idx: company_idx }, transaction: t }
-          );
+            await db.plan.create(plan_data, {
+              transaction: t,
+            });
+            await db.plan.create(
+              {
+                ...plan_data,
+                active: 3,
+              },
+              {
+                transaction: t,
+              }
+            );
 
-          let scheduleUnixTime;
-          if (plan_data.free_plan) {
-            scheduleUnixTime = moment(
+            const scheduleUnixTime = moment(
               `${nowStartPlan.replace(/\./g, "-")} ${Hour}:00`
             ).unix();
+
+            // 다음 카드 결제 신청
+            await schedulePay(
+              scheduleUnixTime,
+              card_data.customer_uid,
+              plan_data.result_price_levy,
+              user_data.user_name,
+              user_data.user_phone,
+              user_data.user_email,
+              nextMerchant_uid
+            );
           } else {
-            // 변경한 플랜 바로 결제
+            let nowStartPlan;
+            let nowExpirePlan;
+            const nowMerchentUid = nextMerchant_uid;
+            const nextMerchentUid = generateRandomCode();
+            if (payType == "month") {
+              nowStartPlan = moment().format("YYYY.MM.DD");
+              nowExpirePlan = moment()
+                .add("1", "M")
+                .subtract("1", "days")
+                .format("YYYY.MM.DD");
+            } else {
+              nowStartPlan = moment().format("YYYY.MM.DD");
+              nowExpirePlan = moment()
+                .add("1", "Y")
+                .subtract("1", "days")
+                .format("YYYY.MM.DD");
+            }
+            const Hour = moment().format("HH");
+
+            plan_data.start_plan = nowStartPlan;
+            plan_data.expire_plan = nowExpirePlan;
+
+            plan_data.merchant_uid = nowMerchentUid;
+            plan_data.pay_hour = Hour;
+
+            await db.plan.create(plan_data, {
+              transaction: t,
+            });
+
+            if (payType == "month") {
+              nowStartPlan = moment(nowExpirePlan.replace(/\./gi, "-"))
+                .add("1", "days")
+                .format("YYYY.MM.DD");
+              nowExpirePlan = moment(nowStartPlan.replace(/\./gi, "-"))
+                .add("1", "M")
+                .subtract("1", "days")
+                .format("YYYY.MM.DD");
+            } else {
+              nowStartPlan = moment(nowExpirePlan.replace(/\./gi, "-"))
+                .add("1", "days")
+                .format("YYYY.MM.DD");
+              nowExpirePlan = moment(nowStartPlan.replace(/\./gi, "-"))
+                .add("1", "Y")
+                .subtract("1", "days")
+                .format("YYYY.MM.DD");
+            }
+            plan_data.start_plan = nowStartPlan;
+            plan_data.expire_plan = nowExpirePlan;
+            plan_data.merchant_uid = nextMerchentUid;
+            await db.plan.create(
+              {
+                ...plan_data,
+                active: 3,
+              },
+              {
+                transaction: t,
+              }
+            );
+
             const { success } = await payNow(
               card_data.customer_uid,
               plan_data.result_price_levy,
-              plan_data.merchant_uid,
+              nowMerchentUid,
               "플랜 즉시 결제"
             );
-
             if (!success) {
               await t.rollback();
-              return res.send({ success: 400, message: "결제 실패" });
+              return res.send({ success: 400, message: "잔액 부족." });
             }
 
-            scheduleUnixTime = moment(
-              `${nextStartDate.replace(/\./g, "-")} ${Hour}:00`
+            const scheduleUnixTime = moment(
+              `${nowStartPlan.replace(/\./g, "-")} ${Hour}:00`
             ).unix();
-          }
 
-          // 다음 카드 결제 신청
-          await schedulePay(
-            scheduleUnixTime,
-            card_data.customer_uid,
-            plan_data.result_price_levy,
-            user_data.user_name,
-            user_data.user_phone,
-            user_data.user_email,
-            nextMerchant_uid
-          );
+            await schedulePay(
+              scheduleUnixTime,
+              card_data.customer_uid,
+              plan_data.result_price_levy,
+              user_data.user_name,
+              user_data.user_phone,
+              user_data.user_email,
+              nextMerchentUid
+            );
+          }
         }
       } else {
         // 프리로 다운그레이드 할 때
         if (plan_data.plan == "프리") {
           // 현재 플랜이 무료체험 기간일 때
-          if (scheduledPlan.free_plan) {
+          if (usingFree) {
             console.log("유료에서 프리로 다운그레이드인데 무료체험기간");
             plan_data.company_idx = company_idx;
             plan_data.free_plan = nowPlan.free_plan;
@@ -1760,7 +1853,7 @@ module.exports = {
           );
 
           // 현재 플랜이 무료체험 기간일 때
-          if (scheduledPlan.free_plan) {
+          if (usingFree) {
             console.log("유료에서 유료로 바꾸는데 무료체험 기간일 때");
 
             const startFreeDate = moment().format("YYYY.MM.DD");

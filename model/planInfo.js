@@ -85,5 +85,13 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false,
       type: DataTypes.BIGINT,
     },
+    monthResultPrice: {
+      allowNull: false,
+      type: DataTypes.BIGINT,
+    },
+    yearResultPrice: {
+      allowNull: false,
+      type: DataTypes.BIGINT,
+    },
   });
 };

@@ -757,19 +757,26 @@
  *           schema:
  *             type: object
  *             properties:
- *               card_data:
+ *               ct:
  *                type: string
- *               plan_data:
+ *               planIdx:
+ *                type: integer
+ *               payType:
  *                type: string
- *               company_name:
- *                type: string
- *               company_subdomain:
- *                type: string
+ *               whiteLabelChecked:
+ *                type: boolean
+ *               chatChecked:
+ *                type: boolean
+ *               analysticChecked:
+ *                type: boolean
+ *
  *             example:
- *               card_data: "cardData"
- *               plan_data: "planData"
- *               company_name: "회사 이름"
- *               company_subdomain: "회사 서브 도메인"
+ *               ct: "cardData"
+ *               planIdx: 1
+ *               payType: "month"
+ *               whiteLabelChecked: false
+ *               chatChecked: false
+ *               analysticChecked: false
  *      responses:
  *       '200':
  *         description: 성공

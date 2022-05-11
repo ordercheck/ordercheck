@@ -20,6 +20,8 @@ module.exports = {
       maxAddCustomer: 10,
       maxFormCount: 1,
       maxFileStorageSize: 0,
+      monthResultPrice: 0,
+      yearResultPrice: 0,
     });
 
     await db.planInfo.create({
@@ -41,6 +43,8 @@ module.exports = {
       maxAddCustomer: 45,
       maxFormCount: 99999,
       maxFileStorageSize: 536870912000,
+      monthResultPrice: 43000,
+      yearResultPrice: 38000 * 12,
     });
     await db.planInfo.create({
       plan: "프로",
@@ -61,6 +65,8 @@ module.exports = {
       maxAddCustomer: 113,
       maxFormCount: 99999,
       maxFileStorageSize: 1099511627776,
+      monthResultPrice: 75800,
+      yearResultPrice: 68000 * 12,
     });
 
     await db.planInfo.create({
@@ -82,6 +88,8 @@ module.exports = {
       maxAddCustomer: 225,
       maxFormCount: 99999,
       maxFileStorageSize: 1649267441664,
+      monthResultPrice: 125300,
+      yearResultPrice: 112000 * 12,
     });
     await db.planInfo.create({
       plan: "컴퍼니",
@@ -102,6 +110,8 @@ module.exports = {
       maxAddCustomer: 450,
       maxFormCount: 99999,
       maxFileStorageSize: 2199023255552,
+      monthResultPrice: 227200,
+      yearResultPrice: 204000 * 12,
     });
   },
 };
