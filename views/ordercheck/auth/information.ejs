@@ -83,18 +83,18 @@
             <% for(var j = 0; j< findCompany[i].userCompanies.length; j++){ %>
             <%= findCompany[i].userCompanies[j].searchingName %>, <% } %>
           </td>
-          <td><%= findCompany[i].plans[0].plan %></td>
+          <td id=nowPlan<%= i %>  ><%= findCompany[i].plans[0].plan %> : <%= findCompany[i].plans[0].pay_type %></td>
           <td>
-            <select name="plans" onchange="changePlan(this)" id=<%= findCompany[i].plans[0].idx %>>
-              <option value="프리" >프리</option>
-              <option value="스타터:month" >스타터 : month</option>
-              <option value="스타터:year" >스타터 : year</option>
-              <option value="프로:month" >프로 : month</option>
-              <option value="프로:year" >프로 : year</option>
-              <option value="팀:month" >팀 : month</option>
-              <option value="팀:year" >팀 : year</option>
-              <option value="컴퍼니:month" >컴퍼니 : month</option>
-              <option value="컴퍼니:year" >컴퍼니 : year</option>
+            <select name="plans"  onchange="changePlan(this)" id=<%= findCompany[i].plans[0].idx %>>
+                <option value="프리" >프리</option>
+                <option value="스타터:month" >스타터 : month</option>
+                <option value="스타터:year" >스타터 : year</option>
+                <option value="프로:month"  >프로 : month</option>
+                <option value="프로:year" >프로 : year</option>
+                <option value="팀:month" >팀 : month</option>
+                <option value="팀:year" >팀 : year</option>
+                <option value="컴퍼니:month" >컴퍼니 : month</option>
+                <option value="컴퍼니:year" >컴퍼니 : year</option>
             </select></td>
         </tr>
         <% } %>
@@ -145,23 +145,38 @@
       const userTable = document.getElementById("userTable");
       const companyTable = document.getElementById("companyTable");
       const receiptTextTable = document.getElementById("receiptTextTable");
- 
-      const changePlan = (toPlan)=>{
+      const selectedTag = document.getElementsByName("plans");
 
-        fetch("/api/config/company/plan/admin", {
-  method: "PATCH",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    planIdx: toPlan.id,
-    toChangePlan: toPlan.value,
+  let nowPlanIdx = 0
+  selectedTag.forEach(data=>{
+    data.childNodes.forEach((childData)=>{
+      const nowPlan = document.getElementById(`nowPlan${nowPlanIdx}`);
+      if(childData.innerHTML == nowPlan.innerHTML){
+        childData.selected = true
+      }
+    })
+    nowPlanIdx += 1
+   
+  })
+      const changePlan = (toPlan)=>{
+        confirm('옵션 바뀜')
+//         fetch("/api/admin/company/plan", {
+//   method: "PATCH",
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+//   body: JSON.stringify({
+//     planIdx: toPlan.id,
+//     plan: toPlan.value,
+//     whiteLabelChecked : false,
+//     chatChecked: false,
+//     analysticChecked: false,
  
-  }),
-})
-  .then((response) => response.json())
-  .then((data) => console.log(data))
- 
+//   }),
+// })
+//   .then((response) => response.json())
+//   .then((data) => {data.success == 400 || data.success == 500  ? alert('카드가 등록되어있지 않습니다. 플랜 변경 실패.') : alert('플랜 변경 완료.')})
+
       }
 
       

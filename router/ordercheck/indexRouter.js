@@ -228,7 +228,7 @@ router.get("/information", async (req, res, next) => {
   findAllUser = JSON.parse(JSON.stringify(findAllUser));
 
   let findCompany = await db.company.findAll({
-    where: { company_name: { [Op.ne]: "" }, deleted: null },
+    where: { deleted: null },
     include: [
       {
         model: db.userCompany,

@@ -109,5 +109,4 @@ router.get("/company/chat/template", loginCheck, showChatTemplate);
 router.patch("/whiteLabel/:check", loginCheck, changeWhiteLabel);
 router.post("/company/exist", loginCheck, createCompany);
 router.patch("/company/plan", loginCheck, changePlan);
-router.patch("/company/plan/admin", changePlanAdmin);
 module.exports = router;

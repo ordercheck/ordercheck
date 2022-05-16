@@ -93,11 +93,11 @@ if (process.env.NODE_MODE == "TESTING") {
 
     it("카드 등록 및 토큰 만들기", async () => {
       const response = await request(app).post("/api/create/token/data").send({
-        card_number: "6573114500510154",
-        expiry: "2024-12",
-        pwd_2digit: "33",
-        birth: "961005",
-        card_email: "rlxo6919@naver.com",
+        card_number,
+        expiry,
+        pwd_2digit,
+        birth,
+        card_email,
       });
       expect(response.body).toHaveProperty("token");
       ct = response.body.token;

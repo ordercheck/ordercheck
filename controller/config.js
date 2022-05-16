@@ -1430,24 +1430,6 @@ module.exports = {
     return res.send({ success: 200 });
   },
 
-  changePlanAdmin: async (req, res, next) => {
-    const { planIdx, toChangePlan } = req.body;
-    const [nextPlan, planType] = toChangePlan.split(":");
-
-    const findPlanResult = await db.plan.findByPk(planIdx, {
-      include: [
-        {
-          model: db.company,
-        },
-      ],
-    });
-
-    // 플랜 무료체험으로 가입할 때
-    if (!findPlanResult.company.used_free_period && findPlanResult.plan) {
-    }
-
-    return res.send({ success: 200 });
-  },
   changePlan: async (req, res, next) => {
     let {
       body: {
@@ -1504,10 +1486,10 @@ module.exports = {
     const findCompany = await db.company.findByPk(company_idx);
     const usedFreePlan = !findCompany.used_free_period ? false : true;
     // 무조건 가입하는 거니까 무료체험 사용여부 변경
-    // db.company.update(
-    //   { used_free_period: true },
-    //   { where: { idx: company_idx }, transaction: t }
-    // );
+    db.company.update(
+      { used_free_period: true },
+      { where: { idx: company_idx }, transaction: t }
+    );
     try {
       // 유저정보 찾기
       const user_data = await db.user.findByPk(user_idx);
