@@ -102,7 +102,6 @@ module.exports = {
       });
 
       if (!card_data) {
-        console.log("이거냐");
         return res.send({
           success: 400,
           message: "카드 등록이 되어있지 않습니다.",
@@ -169,7 +168,14 @@ module.exports = {
           const startFreeDate = moment().format("YYYY.MM.DD");
 
           await db.plan.update(
-            { active: 0, free_period_expire: startFreeDate },
+            {
+              active: 0,
+              whiteLabel_price: 0,
+              chat_price: 0,
+              analystic_price: 0,
+              pay_type: null,
+              free_period_expire: startFreeDate,
+            },
             { where: { idx: nowPlan.idx }, transaction: t }
           );
           plan_data.free_period_start = startFreeDate;
@@ -308,6 +314,13 @@ module.exports = {
             plan_data.start_plan = nowStartPlan;
             plan_data.expire_plan = nowExpirePlan;
             plan_data.merchant_uid = nextMerchentUid;
+            if (scheduledPlan) {
+              await db.plan.destroy({
+                where: { idx: scheduledPlan.idx },
+                transaction: t,
+              });
+            }
+
             await db.plan.create(
               {
                 ...plan_data,
@@ -361,7 +374,14 @@ module.exports = {
             plan_data.free_period_start = startFreeDate;
             plan_data.free_period_expire = nextExpireDate;
             await db.plan.update(
-              { active: 0, free_period_expire: startFreeDate },
+              {
+                active: 0,
+                whiteLabel_price: 0,
+                chat_price: 0,
+                analystic_price: 0,
+                pay_type: null,
+                free_period_expire: startFreeDate,
+              },
               {
                 where: { idx: nowPlan.idx },
                 transaction: t,
@@ -446,7 +466,14 @@ module.exports = {
 
             plan_data.free_plan = nowPlan.free_plan;
             await db.plan.update(
-              { active: 0, free_period_expire: startFreeDate },
+              {
+                active: 0,
+                whiteLabel_price: 0,
+                chat_price: 0,
+                analystic_price: 0,
+                pay_type: null,
+                free_period_expire: startFreeDate,
+              },
               {
                 where: { idx: nowPlan.idx },
                 transaction: t,
@@ -491,5 +518,41 @@ module.exports = {
     }
 
     return res.send({ success: 200 });
+  },
+  chargeFreeSms: async (req, res, next) => {
+    const { company_idx, price } = req.body;
+
+    const findCompany = await db.sms.findOne({ where: { company_idx } });
+    const beforePrice = findCompany.text_cost;
+    const addCost = price + beforePrice;
+    const receiptId = generateRandomCode();
+    const t = await db.sequelize.transaction();
+    try {
+      await db.sms.update(
+        { text_cost: addCost },
+        { where: { company_idx }, transaction: t }
+      );
+
+      await db.receipt.create(
+        {
+          company_idx,
+          message_price: price,
+          result_price: 0,
+          result_price_levy: 0,
+          receipt_category: 3,
+          receiptId,
+          company_name: findCompany.company_name,
+          receipt_kind: "이벤트 문자 충전",
+          before_text_price: beforePrice,
+          after_text_price: addCost,
+        },
+        { transaction: t }
+      );
+      await t.commit();
+      res.send({ success: 200 });
+    } catch (err) {
+      await t.rollback();
+      next(err);
+    }
   },
 };

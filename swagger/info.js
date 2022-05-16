@@ -545,7 +545,7 @@
  *       - bearerAuth: []
  *      tags:
  *       -  config
- *      summary: 영수증 리스트 보여주기 (전체 :0, 구독:1, 자동 문자 충전:2)
+ *      summary: 영수증 리스트 보여주기 (전체 :0, 구독:1, 자동 문자 충전:2 이벤트:3)
  *      parameters:
  *         - in: path
  *           name: category

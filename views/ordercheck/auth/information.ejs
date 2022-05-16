@@ -73,6 +73,7 @@
           <th scope="col">현재 플랜</th>
           <th scope="col">다음 예정 플랜</th>
           <th scope="col">플랜 변경</th>
+          <th scope="col">문자 무료 충전</th>
         </tr>
       </thead>
       <tbody>
@@ -109,7 +110,14 @@
                 <option value="팀:year" >팀 : year</option>
                 <option value="컴퍼니:month" >컴퍼니 : month</option>
                 <option value="컴퍼니:year" >컴퍼니 : year</option>
-            </select></td>
+            </select>
+          </td>
+          <td>  
+      <div>  
+        <input type="number" id=charge<%= findCompany[i].idx %> placeholder="금액">  
+        <button onclick="chargingText(`<%= findCompany[i].idx %>`)">충전</button>
+      </div>
+            </td>
         </tr>
         <% } %>
       </tbody>
@@ -130,6 +138,7 @@
         <th scope="col">충전 날짜</th>
         <th scope="col">이전 금액</th>
         <th scope="col">충전 후 금액</th>
+
       </tr>
     </thead>
     <tbody>
@@ -147,6 +156,7 @@
         <td><%= findReceipt[i].createdAt %></td>
         <td><%= findReceipt[i].before_text_price %></td>
         <td><%= findReceipt[i].after_text_price %></td>
+ 
       </tr>
       <% } %>
     </tbody>
@@ -160,7 +170,7 @@
       const companyTable = document.getElementById("companyTable");
       const receiptTextTable = document.getElementById("receiptTextTable");
       const selectedTag = document.getElementsByName("plans");
-
+  
   let nextPlanIdx = 0
   selectedTag.forEach(data=>{
     data.childNodes.forEach((childData)=>{
@@ -212,10 +222,31 @@
           ? (receiptTextTable.hidden = false, companyTable.hidden = true,  userTable.hidden = true)
           : (receiptTextTable.hidden = true); 
       } 
+      const chargingText = (data)=>{
+     
+  const chargeInput = document.getElementById(`charge${data}`)
+  if(chargeInput.value == ''){
+    alert('금액을 입력해 주세요.')
+  }    
+
+  fetch("/api/admin/charge/free/sms", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+    company_idx: +data,
+    price: +chargeInput.value
+  }),
+})
+  .then((response) => response.json())
+  .then((data) => {data.success == 200 ? alert('문자충전 완료.') : alert('문자충전 실패.')})
+
+      }
       company.addEventListener("click", showComapnyTable);
       user.addEventListener("click", showUserTable);
       receiptText.addEventListener("click", showReceiptTextTable);
-      
+
     </script>
   </body>
 </html>

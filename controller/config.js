@@ -877,19 +877,22 @@ module.exports = {
         raw: true,
       });
 
-      // 플랜 영수증일 때
-      findResult.tax_price =
-        findResult.result_price_levy - findResult.result_price;
+      if (findResult.receipt_category !== 3) {
+        // 플랜 영수증일 때
+        findResult.tax_price =
+          findResult.result_price_levy - findResult.result_price;
 
-      findResult.createdAt = findResult.createdAt
-        .split(" ")[0]
-        .replace(/-/g, ".");
+        findResult.createdAt = findResult.createdAt
+          .split(" ")[0]
+          .replace(/-/g, ".");
 
-      const first = findResult.card_number.substring(0, 4);
-      const last = findResult.card_number.substring(12, 16);
+        const first = findResult.card_number.substring(0, 4);
+        const last = findResult.card_number.substring(12, 16);
 
-      findResult.card_number = `${first} **** **** ${last}`;
+        findResult.card_number = `${first} **** **** ${last}`;
 
+        return res.send({ success: 200, findResult });
+      }
       return res.send({ success: 200, findResult });
     } catch (err) {
       next(err);
@@ -1567,7 +1570,14 @@ module.exports = {
           const startFreeDate = moment().format("YYYY.MM.DD");
 
           await db.plan.update(
-            { active: 0, free_period_expire: startFreeDate },
+            {
+              active: 0,
+              whiteLabel_price: 0,
+              chat_price: 0,
+              analystic_price: 0,
+              pay_type: null,
+              free_period_expire: startFreeDate,
+            },
             { where: { idx: nowPlan.idx }, transaction: t }
           );
           plan_data.free_period_start = startFreeDate;
@@ -1766,7 +1776,14 @@ module.exports = {
             plan_data.free_period_start = startFreeDate;
             plan_data.free_period_expire = nextExpireDate;
             await db.plan.update(
-              { active: 0, free_period_expire: startFreeDate },
+              {
+                active: 0,
+                whiteLabel_price: 0,
+                chat_price: 0,
+                analystic_price: 0,
+                pay_type: null,
+                free_period_expire: startFreeDate,
+              },
               {
                 where: { idx: nowPlan.idx },
                 transaction: t,
@@ -1851,7 +1868,14 @@ module.exports = {
 
             plan_data.free_plan = nowPlan.free_plan;
             await db.plan.update(
-              { active: 0, free_period_expire: startFreeDate },
+              {
+                active: 0,
+                whiteLabel_price: 0,
+                chat_price: 0,
+                analystic_price: 0,
+                pay_type: null,
+                free_period_expire: startFreeDate,
+              },
               {
                 where: { idx: nowPlan.idx },
                 transaction: t,

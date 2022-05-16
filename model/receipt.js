@@ -8,12 +8,12 @@ module.exports = function (sequelize, DataTypes) {
     },
 
     company_name: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.STRING(100),
     },
 
     card_name: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.STRING(100),
     },
 
