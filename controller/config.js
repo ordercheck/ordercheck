@@ -1706,6 +1706,13 @@ module.exports = {
             plan_data.start_plan = nowStartPlan;
             plan_data.expire_plan = nowExpirePlan;
             plan_data.merchant_uid = nextMerchentUid;
+            if (scheduledPlan) {
+              await db.plan.destroy({
+                where: { idx: scheduledPlan.idx },
+                transaction: t,
+              });
+            }
+
             await db.plan.create(
               {
                 ...plan_data,
