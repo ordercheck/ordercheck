@@ -70,7 +70,8 @@
           <th scope="col">No</th>
           <th scope="col">회사</th>
           <th scope="col">멤버</th>
-          <th scope="col">플랜</th>
+          <th scope="col">현재 플랜</th>
+          <th scope="col">다음 예정 플랜</th>
           <th scope="col">플랜 변경</th>
         </tr>
       </thead>
@@ -83,7 +84,20 @@
             <% for(var j = 0; j< findCompany[i].userCompanies.length; j++){ %>
             <%= findCompany[i].userCompanies[j].searchingName %>, <% } %>
           </td>
-          <td id=nowPlan<%= i %>  ><%= findCompany[i].plans[0].plan %> : <%= findCompany[i].plans[0].pay_type %></td>
+          <td id=nowPlan<%= i %>>
+            <% for(var v = 0; v< findCompany[i].plans.length; v++){ %>
+              <% if(findCompany[i].plans[v].active == 1){%>
+                <%= findCompany[i].plans[v].plan %> : <%= findCompany[i].plans[v].pay_type %>
+                <% } %>
+              <% } %> 
+          </td>
+          <td id=nextPlan<%= i %>> 
+            <% for(var d = 0; d< findCompany[i].plans.length; d++){ %>
+              <% if(findCompany[i].plans[d].active == 3){%>
+                <%= findCompany[i].plans[d].plan %> : <%= findCompany[i].plans[d].pay_type %>
+                <% } %>
+              <% } %>
+          </td>
           <td>
             <select name="plans"  onchange="changePlan(this)" id=<%= findCompany[i].plans[0].idx %>>
                 <option value="프리" >프리</option>
@@ -147,41 +161,40 @@
       const receiptTextTable = document.getElementById("receiptTextTable");
       const selectedTag = document.getElementsByName("plans");
 
-  let nowPlanIdx = 0
+  let nextPlanIdx = 0
   selectedTag.forEach(data=>{
     data.childNodes.forEach((childData)=>{
-      const nowPlan = document.getElementById(`nowPlan${nowPlanIdx}`);
-      if(childData.innerHTML == nowPlan.innerHTML){
+      const nextPlan = document.getElementById(`nextPlan${nextPlanIdx}`);
+      if(childData.innerHTML == nextPlan.innerHTML.trim()){
         childData.selected = true
       }
     })
-    nowPlanIdx += 1
-   
+    nextPlanIdx += 1
   })
       const changePlan = (toPlan)=>{
-        confirm('옵션 바뀜')
-//         fetch("/api/admin/company/plan", {
-//   method: "PATCH",
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-//   body: JSON.stringify({
-//     planIdx: toPlan.id,
-//     plan: toPlan.value,
-//     whiteLabelChecked : false,
-//     chatChecked: false,
-//     analysticChecked: false,
+       const changeResult = confirm('플랜을 변경하겠습니까?')
+       if(changeResult){
+        fetch("/api/admin/company/plan", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      planIdx: toPlan.id,
+      plan: toPlan.value,
+      whiteLabelChecked : false,
+      chatChecked: false,
+      analysticChecked: false,
  
-//   }),
-// })
-//   .then((response) => response.json())
-//   .then((data) => {data.success == 400 || data.success == 500  ? alert('카드가 등록되어있지 않습니다. 플랜 변경 실패.') : alert('플랜 변경 완료.')})
-
+  }),
+})
+  .then((response) => response.json())
+  .then((data) => {data.success == 400 || data.success == 500  ? alert('카드가 등록되어있지 않습니다. 플랜 변경 실패.') : alert('플랜 변경 완료.')})
+       }
       }
 
       
       const showUserTable = () => {
-       
         userTable.hidden
           ? (userTable.hidden = false ,  companyTable.hidden = true, receiptTextTable.hidden = true)
           : (userTable.hidden = true );

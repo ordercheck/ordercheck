@@ -236,7 +236,7 @@ router.get("/information", async (req, res, next) => {
       },
       {
         model: db.plan,
-        where: { active: 1 },
+        where: { [Op.or]: [{ active: 1 }, { active: 3 }] },
       },
     ],
   });

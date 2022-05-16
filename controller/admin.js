@@ -88,16 +88,15 @@ module.exports = {
     const findCompany = await db.company.findByPk(company_idx);
     const usedFreePlan = !findCompany.used_free_period ? false : true;
     // 무조건 가입하는 거니까 무료체험 사용여부 변경
-    // db.company.update(
-    //   { used_free_period: true },
-    //   { where: { idx: company_idx }, transaction: t }
-    // );
+    db.company.update(
+      { used_free_period: true },
+      { where: { idx: company_idx }, transaction: t }
+    );
     try {
       // 유저정보 찾기
       const user_data = await db.user.findByPk(user_idx);
 
       // 카드 등록되어 있는지 체크
-
       const card_data = await db.card.findOne({
         where: { user_idx, main: true, active: true },
       });
