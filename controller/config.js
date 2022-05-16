@@ -1445,7 +1445,7 @@ module.exports = {
     } = req;
 
     const toChangePlan = await db.planInfo.findByPk(planIdx);
-    console.log(body);
+    console.log(req.body);
     const plan_data = {
       plan: toChangePlan.plan,
       pay_type: payType,
