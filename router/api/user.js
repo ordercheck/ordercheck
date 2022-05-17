@@ -502,7 +502,6 @@ router.post("/company/check", async (req, res, next) => {
       payType == "month"
         ? toChangePlan.monthResultPrice
         : toChangePlan.yearResultPrice,
-    company_idx,
   };
   let nowStartPlan;
   let nowExpirePlan;
@@ -875,7 +874,6 @@ router.post("/company/check/later", async (req, res, next) => {
       payType == "month"
         ? toChangePlan.monthResultPrice
         : toChangePlan.yearResultPrice,
-    company_idx,
   };
   let nowStartPlan;
   let nowExpirePlan;
