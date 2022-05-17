@@ -523,7 +523,14 @@ module.exports = {
   chargeFreeSms: async (req, res, next) => {
     const { company_idx, price } = req.body;
 
-    const findCompany = await db.sms.findOne({ where: { company_idx } });
+    const findCompany = await db.sms.findOne({
+      where: { company_idx },
+      include: [
+        {
+          model: db.company,
+        },
+      ],
+    });
     const beforePrice = findCompany.text_cost;
     const addCost = price + beforePrice;
     const receiptId = generateRandomCode();
@@ -536,6 +543,7 @@ module.exports = {
 
       await db.receipt.create(
         {
+          company_name: findCompany.company.company_name,
           company_idx,
           message_price: price,
           result_price: 0,
