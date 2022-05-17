@@ -466,8 +466,17 @@ router.post("/join/do", async (req, res, next) => {
 
 //회사 등록 라우터
 router.post("/company/check", async (req, res, next) => {
-  const { ut, ct, planIdx, payType, company_name, company_subdomain } =
-    req.body;
+  const {
+    ut,
+    ct,
+    planIdx,
+    payType,
+    company_name,
+    company_subdomain,
+    whiteLabelChecked,
+    chatChecked,
+    analysticChecked,
+  } = req.body;
   const toChangePlan = await db.planInfo.findByPk(planIdx);
   const plan_data = {
     plan: toChangePlan.plan,
@@ -831,7 +840,15 @@ router.post("/check/password", async (req, res) => {
 });
 
 router.post("/company/check/later", async (req, res, next) => {
-  const { ut, ct, planIdx, payType } = req.body;
+  const {
+    ut,
+    ct,
+    planIdx,
+    payType,
+    whiteLabelChecked,
+    chatChecked,
+    analysticChecked,
+  } = req.body;
 
   const toChangePlan = await db.planInfo.findByPk(planIdx);
   const plan_data = {
