@@ -58,7 +58,6 @@ module.exports = {
       chatChecked,
       analysticChecked
     );
-
     plan_data.company_idx = company_idx;
     // 트랜잭션 시작
     const t = await db.sequelize.transaction();

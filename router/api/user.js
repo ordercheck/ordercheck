@@ -486,6 +486,26 @@ router.post("/company/check", async (req, res, next) => {
     chatChecked,
     analysticChecked
   );
+  let nowStartPlan;
+  let nowExpirePlan;
+  if (payType == "month") {
+    nowStartPlan = moment().add("77", "days").format("YYYY.MM.DD");
+    nowExpirePlan = moment()
+      .add("77", "days")
+      .add("1", "M")
+      .subtract("1", "days")
+      .format("YYYY.MM.DD");
+  } else {
+    nowStartPlan = moment().add("77", "days").format("YYYY.MM.DD");
+    nowExpirePlan = moment()
+      .add("77", "days")
+      .add("1", "Y")
+      .subtract("1", "days")
+      .format("YYYY.MM.DD");
+  }
+
+  plan_data.start_plan = nowStartPlan;
+  plan_data.expire_plan = nowExpirePlan;
   plan_data.free_plan = moment().format("YYYY.MM.DD");
   let user_data = await verify_data(ut);
   let card_data = await verify_data(ct);
@@ -817,6 +837,26 @@ router.post("/company/check/later", async (req, res, next) => {
     chatChecked,
     analysticChecked
   );
+  let nowStartPlan;
+  let nowExpirePlan;
+  if (payType == "month") {
+    nowStartPlan = moment().add("77", "days").format("YYYY.MM.DD");
+    nowExpirePlan = moment()
+      .add("77", "days")
+      .add("1", "M")
+      .subtract("1", "days")
+      .format("YYYY.MM.DD");
+  } else {
+    nowStartPlan = moment().add("77", "days").format("YYYY.MM.DD");
+    nowExpirePlan = moment()
+      .add("77", "days")
+      .add("1", "Y")
+      .subtract("1", "days")
+      .format("YYYY.MM.DD");
+  }
+
+  plan_data.start_plan = nowStartPlan;
+  plan_data.expire_plan = nowExpirePlan;
   plan_data.free_plan = moment().format("YYYY.MM.DD");
   let user_data = await verify_data(ut);
   let card_data = await verify_data(ct);
