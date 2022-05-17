@@ -915,12 +915,12 @@ router.post("/company/check/later", async (req, res, next) => {
     });
 
     await db.userCompany.destroy({
-      where: { company_idx: FreePlan.company_idx },
+      where: { company_idx: FreePlan.idx },
     });
-    await db.plan.destroy({ where: { company_idx: FreePlan.company_idx } });
-    await db.sms.destroy({ where: { company_idx: FreePlan.company_idx } });
-    await db.config.destroy({ where: { company_idx: FreePlan.company_idx } });
-    await db.company.destroy({ where: { idx: FreePlan.company_idx } });
+    await db.plan.destroy({ where: { company_idx: FreePlan.idx } });
+    await db.sms.destroy({ where: { company_idx: FreePlan.idx } });
+    await db.config.destroy({ where: { company_idx: FreePlan.idx } });
+    await db.company.destroy({ where: { idx: FreePlan.idx } });
 
     // 랜덤 회사 만들기
     const randomCompany = await createRandomCompany(findUser.idx);
