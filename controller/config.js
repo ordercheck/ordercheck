@@ -1559,10 +1559,6 @@ module.exports = {
           await db.plan.update(
             {
               active: 0,
-              whiteLabel_price: 0,
-              chat_price: 0,
-              analystic_price: 0,
-              pay_type: null,
               free_period_expire: startFreeDate,
             },
             { where: { idx: nowPlan.idx }, transaction: t }
@@ -1838,10 +1834,6 @@ module.exports = {
             await db.plan.update(
               {
                 active: 0,
-                whiteLabel_price: 0,
-                chat_price: 0,
-                analystic_price: 0,
-                pay_type: null,
                 free_period_expire: startFreeDate,
               },
               {
