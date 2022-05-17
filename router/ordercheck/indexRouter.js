@@ -224,6 +224,7 @@ router.get("/information", async (req, res, next) => {
         require: false,
       },
     ],
+    order: [["last_login", "DESC"]],
   });
   findAllUser = JSON.parse(JSON.stringify(findAllUser));
 
@@ -239,12 +240,13 @@ router.get("/information", async (req, res, next) => {
         where: { [Op.or]: [{ active: 1 }, { active: 3 }] },
       },
     ],
+    order: [["createdAt", "DESC"]],
   });
 
   findCompany = JSON.parse(JSON.stringify(findCompany));
 
   let findReceipt = await db.receipt.findAll({
-    where: { receipt_kind: "자동 문자 충전" },
+    where: { receipt_category: 2 },
     include: [
       {
         model: db.company,

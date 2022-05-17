@@ -102,6 +102,7 @@ module.exports = {
       });
 
       if (!card_data) {
+        await t.rollback();
         return res.send({
           success: 400,
           message: "카드 등록이 되어있지 않습니다.",

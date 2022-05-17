@@ -88,14 +88,22 @@
           <td id=nowPlan<%= i %>>
             <% for(var v = 0; v< findCompany[i].plans.length; v++){ %>
               <% if(findCompany[i].plans[v].active == 1){%>
-                <%= findCompany[i].plans[v].plan %> : <%= findCompany[i].plans[v].pay_type %>
+                <% if (findCompany[i].plans[v].plan == '프리') { %>
+                  <%= findCompany[i].plans[v].plan %>
+                  <%} else { %>
+                    <%= findCompany[i].plans[v].plan %> : <%= findCompany[i].plans[v].pay_type %>
+                  <% } %>
                 <% } %>
               <% } %> 
           </td>
           <td id=nextPlan<%= i %>> 
             <% for(var d = 0; d< findCompany[i].plans.length; d++){ %>
               <% if(findCompany[i].plans[d].active == 3){%>
-                <%= findCompany[i].plans[d].plan %> : <%= findCompany[i].plans[d].pay_type %>
+                <% if (findCompany[i].plans[d].plan == '프리') { %>
+                  <%= findCompany[i].plans[d].plan %>
+                  <%} else { %>
+                  <%= findCompany[i].plans[d].plan %> : <%= findCompany[i].plans[d].pay_type %>
+                  <% } %>
                 <% } %>
               <% } %>
           </td>
@@ -227,8 +235,10 @@
   const chargeInput = document.getElementById(`charge${data}`)
   if(chargeInput.value == ''){
     alert('금액을 입력해 주세요.')
+    return
   }    
-
+ const confirmResult = confirm('충전 하시겠습니까?')
+ if(confirmResult){
   fetch("/api/admin/charge/free/sms", {
     method: "POST",
     headers: {
@@ -241,7 +251,8 @@
 })
   .then((response) => response.json())
   .then((data) => {data.success == 200 ? alert('문자충전 완료.') : alert('문자충전 실패.')})
-
+ }
+ 
       }
       company.addEventListener("click", showComapnyTable);
       user.addEventListener("click", showUserTable);
