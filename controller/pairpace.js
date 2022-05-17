@@ -10,7 +10,7 @@ module.exports = {
     const io = req.app.get("io");
 
     try {
-      jwt.verify(jwtToken, process.env.PAIRPACE_JWT_SECRET);
+      jwt.verify(body.jwtToken, process.env.PAIRPACE_JWT_SECRET);
 
       await db.pairPace.create(body);
 

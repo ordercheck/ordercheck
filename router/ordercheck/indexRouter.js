@@ -232,6 +232,9 @@ router.get("/information", async (req, res, next) => {
     where: { deleted: null },
     include: [
       {
+        model: db.user,
+      },
+      {
         model: db.userCompany,
         where: { active: true, standBy: false },
       },
@@ -245,7 +248,7 @@ router.get("/information", async (req, res, next) => {
 
   findCompany = JSON.parse(JSON.stringify(findCompany));
 
-  let findReceipt = await db.receipt.findAll({
+  const findReceipt = await db.receipt.findAll({
     where: { receipt_category: 2 },
     include: [
       {
@@ -260,10 +263,27 @@ router.get("/information", async (req, res, next) => {
     order: [["createdAt", "DESC"]],
   });
 
+  let findEventText = await db.receipt.findAll({
+    where: { receipt_category: 3 },
+    include: [
+      {
+        model: db.company,
+        include: [
+          {
+            model: db.user,
+          },
+        ],
+      },
+    ],
+    order: [["createdAt", "DESC"]],
+  });
+  findEventText = JSON.parse(JSON.stringify(findEventText));
+
   res.render("ordercheck/auth/information", {
     findAllUser,
     findCompany,
     findReceipt,
+    findEventText,
   });
 });
 

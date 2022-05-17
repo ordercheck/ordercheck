@@ -33,6 +33,7 @@
     <button id="user" type="button" class="btn btn-primary">유저</button>
     <button id="company" type="button" class="btn btn-primary">회사</button>
     <button id="receiptText" type="button" class="btn btn-primary">문자 충전 내역</button>
+    <button id="eventText" type="button" class="btn btn-primary">이벤트 문자 충전 내역</button>
   </div>
     <div style="padding:100px 200px">
     <table id="userTable" class="table" hidden="true">
@@ -69,6 +70,7 @@
         <tr>
           <th scope="col">No</th>
           <th scope="col">회사</th>
+          <th scope="col">소유주</th>
           <th scope="col">멤버</th>
           <th scope="col">현재 플랜</th>
           <th scope="col">다음 예정 플랜</th>
@@ -81,6 +83,7 @@
         <tr>
           <td><%= i+1 %></td>
           <td><%= findCompany[i].company_name %></td>
+          <td><%= findCompany[i].user.user_name %></td>
           <td>
             <% for(var j = 0; j< findCompany[i].userCompanies.length; j++){ %>
             <%= findCompany[i].userCompanies[j].searchingName %>, <% } %>
@@ -170,13 +173,44 @@
     </tbody>
   </table>
 </div>
+<table id="eventTextTable" class="table" hidden="true">
+  <thead>
+    <tr>
+      <th scope="col">No</th>
+      <th scope="col">회사</th>
+      <th scope="col">소유주</th>
+      <th scope="col">이벤트 충전 날짜</th>
+      <th scope="col">이전 금액</th>
+      <th scope="col">이벤트 금액</th>
+      <th scope="col">충전 후 금액</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for(var i = 0; i < findEventText.length; i++){ %>
+    <tr>
+      <td><%= i+1 %></td>
+      <td><%= findEventText[i].company_name %></td>
+      <td><%= findEventText[i].company.user.user_name %></td>
+      <td><%= findEventText[i].createdAt %></td>
+      <td><%= findEventText[i].before_text_price %></td>
+      <td><%= findEventText[i].message_price %></td>
+      <td><%= findEventText[i].after_text_price %></td>
+    </tr>
+    <% } %>
+  </tbody>
+</table>
+
+
+</div>
     <script>
       const user = document.getElementById("user");
       const company = document.getElementById("company");
       const receiptText = document.getElementById("receiptText");
+      const eventText = document.getElementById("eventText");
       const userTable = document.getElementById("userTable");
       const companyTable = document.getElementById("companyTable");
       const receiptTextTable = document.getElementById("receiptTextTable");
+      const eventTextTable = document.getElementById('eventTextTable')
       const selectedTag = document.getElementsByName("plans");
   
   let nextPlanIdx = 0
@@ -214,20 +248,26 @@
       
       const showUserTable = () => {
         userTable.hidden
-          ? (userTable.hidden = false ,  companyTable.hidden = true, receiptTextTable.hidden = true)
+          ? (userTable.hidden = false , eventTextTable.hidden = true , companyTable.hidden = true, receiptTextTable.hidden = true)
           : (userTable.hidden = true );
+      };
+
+      const showEventTextTable = ()=>{
+        eventTextTable.hidden
+          ? (eventTextTable.hidden = false ,  companyTable.hidden = true, receiptTextTable.hidden = true, userTable.hidden = true)
+          : (eventTextTable.hidden = true );
       };
 
       const showComapnyTable = () => {
 
         companyTable.hidden
-          ? (companyTable.hidden = false,  userTable.hidden = true,receiptTextTable.hidden = true)
+          ? (companyTable.hidden = false, eventTextTable.hidden = true , userTable.hidden = true,receiptTextTable.hidden = true)
           : (companyTable.hidden = true);
       };
 
       const showReceiptTextTable= ()=>{
         receiptTextTable.hidden
-          ? (receiptTextTable.hidden = false, companyTable.hidden = true,  userTable.hidden = true)
+          ? (receiptTextTable.hidden = false,eventTextTable.hidden = true , companyTable.hidden = true,  userTable.hidden = true)
           : (receiptTextTable.hidden = true); 
       } 
       const chargingText = (data)=>{
@@ -257,7 +297,7 @@
       company.addEventListener("click", showComapnyTable);
       user.addEventListener("click", showUserTable);
       receiptText.addEventListener("click", showReceiptTextTable);
-
+      eventText.addEventListener('click',showEventTextTable)
     </script>
   </body>
 </html>
