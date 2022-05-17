@@ -5,6 +5,7 @@ moment.tz.setDefault("Asia/Seoul");
 const { Op } = require("sequelize");
 const { generateRandomCode } = require("../lib/functions");
 const { payNow, cancelSchedule, schedulePay } = require("../lib/payFunction");
+const { createPlanData } = require("../lib/apiFunctions");
 module.exports = {
   getInfo: async (req, res, next) => {
     const now = moment();
@@ -50,37 +51,15 @@ module.exports = {
     });
     const company_idx = totalInfo.company_idx;
     const user_idx = totalInfo.company.huidx;
-
-    const plan_data = {
-      plan: toChangePlan.plan,
-      pay_type: payType,
-      plan_price:
-        payType == "month" ? toChangePlan.monthPrice : toChangePlan.yearPrice,
-      chat_price:
-        payType == "month"
-          ? toChangePlan.monthChatPrice
-          : toChangePlan.yearChatPrice,
-      analystic_price:
-        payType == "month"
-          ? toChangePlan.monthAnalyticsPrice
-          : toChangePlan.yearAnalyticsPrice,
-      whiteLabel_price:
-        payType == "month"
-          ? toChangePlan.monthWhiteLabelPrice
-          : toChangePlan.yearWhiteLabelPrice,
+    const plan_data = await createPlanData(
+      toChangePlan,
+      payType,
       whiteLabelChecked,
       chatChecked,
-      analysticChecked,
-      result_price:
-        payType == "month"
-          ? toChangePlan.monthResultPrice
-          : toChangePlan.yearResultPrice,
-      company_idx,
-    };
+      analysticChecked
+    );
 
-    plan_data.result_price_levy =
-      plan_data.result_price * 0.1 + plan_data.result_price;
-
+    plan_data.company_idx = company_idx;
     // 트랜잭션 시작
     const t = await db.sequelize.transaction();
 

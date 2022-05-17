@@ -6,7 +6,7 @@ moment.tz.setDefault("Asia/Seoul");
 module.exports = {
   storePairpaceInfo: async (req, res, next) => {
     const { body } = req;
-
+    console.log(body);
     const io = req.app.get("io");
 
     try {
