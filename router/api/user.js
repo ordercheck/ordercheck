@@ -910,7 +910,17 @@ router.post("/company/check/later", async (req, res, next) => {
       attributes: ["idx", "user_name"],
     });
 
-    await db.company.destroy({ where: { huidx: findUser.idx } });
+    const FreePlan = await db.company.findOne({
+      where: { huidx: findUser.idx },
+    });
+
+    await db.userCompany.destroy({
+      where: { company_idx: FreePlan.company_idx },
+    });
+    await db.plan.destroy({ where: { company_idx: FreePlan.company_idx } });
+    await db.sms.destroy({ where: { company_idx: FreePlan.company_idx } });
+    await db.config.destroy({ where: { company_idx: FreePlan.company_idx } });
+    await db.company.destroy({ where: { idx: FreePlan.company_idx } });
 
     // 랜덤 회사 만들기
     const randomCompany = await createRandomCompany(findUser.idx);
