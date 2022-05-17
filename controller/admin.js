@@ -550,7 +550,6 @@ module.exports = {
           result_price_levy: 0,
           receipt_category: 3,
           receiptId,
-          company_name: findCompany.company_name,
           receipt_kind: "이벤트 문자 충전",
           before_text_price: beforePrice,
           after_text_price: addCost,
