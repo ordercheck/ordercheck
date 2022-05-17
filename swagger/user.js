@@ -96,16 +96,28 @@
  *                type: string
  *               ct:
  *                type: string
- *               pt:
- *                type: string
  *               company_name:
  *                type: string
  *               company_subdomain:
  *                type: string
+ *               planIdx:
+ *                type: integer
+ *               whiteLabelChecked:
+ *                type: boolean
+ *               chatChecked:
+ *                type: boolean
+ *               analysticChecked:
+ *                type: boolean
+ *               payType:
+ *                type: string
  *             example:
+ *               planIdx: 1
+ *               whiteLabelChecked: true
+ *               chatChecked: true
+ *               analysticChecked: true
+ *               payType: "month"
  *               ut: "userToken"
  *               ct: "cardToken"
- *               pt: "planToken"
  *               company_name: "회사 이름"
  *               company_subdomain: "회사 서브 도메인"
  *     responses:
