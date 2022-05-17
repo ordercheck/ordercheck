@@ -27,6 +27,7 @@ const {
   includeUserToCompany,
   createFreePlan,
   createPlanData,
+  setPlanDate,
 } = require("../../lib/apiFunctions");
 const jwt = require("jsonwebtoken");
 const fileUpload = require("../../lib/aws/fileupload.js");
@@ -486,23 +487,10 @@ router.post("/company/check", async (req, res, next) => {
     chatChecked,
     analysticChecked
   );
-  let nowStartPlan;
-  let nowExpirePlan;
-  if (payType == "month") {
-    nowStartPlan = moment().add("77", "days").format("YYYY.MM.DD");
-    nowExpirePlan = moment()
-      .add("77", "days")
-      .add("1", "M")
-      .subtract("1", "days")
-      .format("YYYY.MM.DD");
-  } else {
-    nowStartPlan = moment().add("77", "days").format("YYYY.MM.DD");
-    nowExpirePlan = moment()
-      .add("77", "days")
-      .add("1", "Y")
-      .subtract("1", "days")
-      .format("YYYY.MM.DD");
-  }
+  const { nowStartPlan, nowExpirePlan } = await setPlanDate(payType);
+
+  plan_data.start_plan = nowStartPlan;
+  plan_data.expire_plan = nowExpirePlan;
 
   plan_data.start_plan = nowStartPlan;
   plan_data.expire_plan = nowExpirePlan;
@@ -837,23 +825,8 @@ router.post("/company/check/later", async (req, res, next) => {
     chatChecked,
     analysticChecked
   );
-  let nowStartPlan;
-  let nowExpirePlan;
-  if (payType == "month") {
-    nowStartPlan = moment().add("77", "days").format("YYYY.MM.DD");
-    nowExpirePlan = moment()
-      .add("77", "days")
-      .add("1", "M")
-      .subtract("1", "days")
-      .format("YYYY.MM.DD");
-  } else {
-    nowStartPlan = moment().add("77", "days").format("YYYY.MM.DD");
-    nowExpirePlan = moment()
-      .add("77", "days")
-      .add("1", "Y")
-      .subtract("1", "days")
-      .format("YYYY.MM.DD");
-  }
+
+  const { nowStartPlan, nowExpirePlan } = await setPlanDate(payType);
 
   plan_data.start_plan = nowStartPlan;
   plan_data.expire_plan = nowExpirePlan;

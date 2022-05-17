@@ -5,7 +5,7 @@ moment.tz.setDefault("Asia/Seoul");
 const { Op } = require("sequelize");
 const { generateRandomCode } = require("../lib/functions");
 const { payNow, cancelSchedule, schedulePay } = require("../lib/payFunction");
-const { createPlanData } = require("../lib/apiFunctions");
+const { createPlanData, setPlanDate } = require("../lib/apiFunctions");
 module.exports = {
   getInfo: async (req, res, next) => {
     const now = moment();
@@ -188,24 +188,8 @@ module.exports = {
           });
           // 무료체험으로 가입할 때
           if (!usedFreePlan) {
-            let nowStartPlan;
-            let nowExpirePlan;
+            const { nowStartPlan, nowExpirePlan } = await setPlanDate(payType);
 
-            if (payType == "month") {
-              nowStartPlan = moment().add("77", "days").format("YYYY.MM.DD");
-              nowExpirePlan = moment()
-                .add("77", "days")
-                .add("1", "M")
-                .subtract("1", "days")
-                .format("YYYY.MM.DD");
-            } else {
-              nowStartPlan = moment().add("77", "days").format("YYYY.MM.DD");
-              nowExpirePlan = moment()
-                .add("77", "days")
-                .add("1", "Y")
-                .subtract("1", "days")
-                .format("YYYY.MM.DD");
-            }
             const Hour = moment().format("HH");
 
             plan_data.free_plan = moment().format("YYYY.MM.DD");

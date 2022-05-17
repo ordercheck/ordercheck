@@ -1,7 +1,11 @@
 const db = require("../model/db");
 const { makeSpreadArray } = require("../lib/functions");
 const _f = require("../lib/functions");
-const { findMember } = require("../lib/apiFunctions");
+const {
+  findMember,
+  createPlanData,
+  setPlanDate,
+} = require("../lib/apiFunctions");
 const { generateRandomCode } = require("../lib/functions");
 const { Op } = require("sequelize");
 const { Company } = require("../lib/classes/CompanyClass");
@@ -1449,33 +1453,16 @@ module.exports = {
 
     const toChangePlan = await db.planInfo.findByPk(planIdx);
     console.log(req.body);
-    const plan_data = {
-      plan: toChangePlan.plan,
-      pay_type: payType,
-      plan_price:
-        payType == "month" ? toChangePlan.monthPrice : toChangePlan.yearPrice,
-      chat_price:
-        payType == "month"
-          ? toChangePlan.monthChatPrice
-          : toChangePlan.yearChatPrice,
-      analystic_price:
-        payType == "month"
-          ? toChangePlan.monthAnalyticsPrice
-          : toChangePlan.yearAnalyticsPrice,
-      whiteLabel_price:
-        payType == "month"
-          ? toChangePlan.monthWhiteLabelPrice
-          : toChangePlan.yearWhiteLabelPrice,
+
+    const plan_data = await createPlanData(
+      toChangePlan,
+      payType,
       whiteLabelChecked,
       chatChecked,
-      analysticChecked,
-      result_price:
-        payType == "month"
-          ? toChangePlan.monthResultPrice
-          : toChangePlan.yearResultPrice,
-      company_idx,
-    };
+      analysticChecked
+    );
 
+    plan_data.company_idx = company_idx;
     plan_data.result_price_levy =
       plan_data.result_price * 0.1 + plan_data.result_price;
 
@@ -1611,24 +1598,7 @@ module.exports = {
           });
           // 무료체험으로 가입할 때
           if (!usedFreePlan) {
-            let nowStartPlan;
-            let nowExpirePlan;
-
-            if (payType == "month") {
-              nowStartPlan = moment().add("77", "days").format("YYYY.MM.DD");
-              nowExpirePlan = moment()
-                .add("77", "days")
-                .add("1", "M")
-                .subtract("1", "days")
-                .format("YYYY.MM.DD");
-            } else {
-              nowStartPlan = moment().add("77", "days").format("YYYY.MM.DD");
-              nowExpirePlan = moment()
-                .add("77", "days")
-                .add("1", "Y")
-                .subtract("1", "days")
-                .format("YYYY.MM.DD");
-            }
+            const { nowStartPlan, nowExpirePlan } = await setPlanDate(payType);
 
             plan_data.free_plan = moment().format("YYYY.MM.DD");
             plan_data.start_plan = nowStartPlan;
