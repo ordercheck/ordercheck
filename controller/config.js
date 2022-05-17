@@ -1629,7 +1629,6 @@ module.exports = {
                 .subtract("1", "days")
                 .format("YYYY.MM.DD");
             }
-            const Hour = moment().format("HH");
 
             plan_data.free_plan = moment().format("YYYY.MM.DD");
             plan_data.start_plan = nowStartPlan;
@@ -1637,7 +1636,6 @@ module.exports = {
             plan_data.result_price_levy =
               plan_data.result_price * 0.1 + plan_data.result_price;
             plan_data.merchant_uid = nextMerchant_uid;
-            plan_data.pay_hour = Hour;
 
             await db.plan.create(plan_data, {
               transaction: t,

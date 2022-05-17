@@ -466,9 +466,57 @@ router.post("/join/do", async (req, res, next) => {
 
 //회사 등록 라우터
 router.post("/company/check", async (req, res, next) => {
-  const { ut, ct, pt, company_name, company_subdomain } = req.body;
+  const { ut, ct, planIdx, payType, company_name, company_subdomain } =
+    req.body;
+  const toChangePlan = await db.planInfo.findByPk(planIdx);
+  const plan_data = {
+    plan: toChangePlan.plan,
+    pay_type: payType,
+    plan_price:
+      payType == "month" ? toChangePlan.monthPrice : toChangePlan.yearPrice,
+    chat_price:
+      payType == "month"
+        ? toChangePlan.monthChatPrice
+        : toChangePlan.yearChatPrice,
+    analystic_price:
+      payType == "month"
+        ? toChangePlan.monthAnalyticsPrice
+        : toChangePlan.yearAnalyticsPrice,
+    whiteLabel_price:
+      payType == "month"
+        ? toChangePlan.monthWhiteLabelPrice
+        : toChangePlan.yearWhiteLabelPrice,
+    whiteLabelChecked,
+    chatChecked,
+    analysticChecked,
+    result_price:
+      payType == "month"
+        ? toChangePlan.monthResultPrice
+        : toChangePlan.yearResultPrice,
+    company_idx,
+  };
+  if (payType == "month") {
+    nowStartPlan = moment().add("77", "days").format("YYYY.MM.DD");
+    nowExpirePlan = moment()
+      .add("77", "days")
+      .add("1", "M")
+      .subtract("1", "days")
+      .format("YYYY.MM.DD");
+  } else {
+    nowStartPlan = moment().add("77", "days").format("YYYY.MM.DD");
+    nowExpirePlan = moment()
+      .add("77", "days")
+      .add("1", "Y")
+      .subtract("1", "days")
+      .format("YYYY.MM.DD");
+  }
+
+  plan_data.start_plan = nowStartPlan;
+  plan_data.expire_plan = nowExpirePlan;
+  plan_data.result_price_levy =
+    plan_data.result_price * 0.1 + plan_data.result_price;
+  plan_data.pay_hour = Hour;
   let user_data = await verify_data(ut);
-  let plan_data = await verify_data(pt);
   let card_data = await verify_data(ct);
   try {
     // 도메인 체크
