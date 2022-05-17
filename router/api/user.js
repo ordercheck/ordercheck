@@ -495,6 +495,8 @@ router.post("/company/check", async (req, res, next) => {
         : toChangePlan.yearResultPrice,
     company_idx,
   };
+  let nowStartPlan;
+  let nowExpirePlan;
   if (payType == "month") {
     nowStartPlan = moment().add("77", "days").format("YYYY.MM.DD");
     nowExpirePlan = moment()
@@ -858,6 +860,8 @@ router.post("/company/check/later", async (req, res, next) => {
         : toChangePlan.yearResultPrice,
     company_idx,
   };
+  let nowStartPlan;
+  let nowExpirePlan;
   if (payType == "month") {
     nowStartPlan = moment().add("77", "days").format("YYYY.MM.DD");
     nowExpirePlan = moment()
