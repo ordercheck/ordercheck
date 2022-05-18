@@ -1620,7 +1620,7 @@ module.exports = {
                 transaction: t,
               }
             );
-
+            const Hour = moment().format("HH");
             const scheduleUnixTime = moment(
               `${nowStartPlan.replace(/\./g, "-")} ${Hour}:00`
             ).unix();
