@@ -1599,6 +1599,7 @@ module.exports = {
           });
           // 무료체험으로 가입할 때
           if (!usedFreePlan) {
+            console.log("가입하는데 무료체험으로 가입할 때");
             const { nowStartPlan, nowExpirePlan } = await setPlanDate(payType);
             const Hour = moment().format("HH");
             plan_data.pay_hour = Hour;
