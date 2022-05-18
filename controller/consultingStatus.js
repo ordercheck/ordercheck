@@ -506,8 +506,11 @@ module.exports = {
       if (!success) {
         next(err);
       }
-      console.log("이까지 옴");
-      db.company.increment({ customer_count: 1 }, { where: { idx: user_idx } });
+
+      db.company.increment(
+        { customer_count: 1 },
+        { where: { idx: company_idx } }
+      );
       await t.commit();
 
       return res.send({ success: 200 });
