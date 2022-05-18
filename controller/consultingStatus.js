@@ -506,6 +506,7 @@ module.exports = {
       if (!success) {
         next(err);
       }
+      console.log("이까지 옴");
       db.company.increment({ customer_count: 1 }, { where: { idx: user_idx } });
       await t.commit();
 
