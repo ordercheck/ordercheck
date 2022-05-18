@@ -184,6 +184,7 @@ module.exports = {
           });
           // 무료체험으로 가입할 때
           if (!usedFreePlan) {
+            console.log("가입하는데 무료체험으로 가입할 때");
             const { nowStartPlan, nowExpirePlan } = await setPlanDate(payType);
             const Hour = moment().format("HH");
             plan_data.pay_hour = Hour;
@@ -193,7 +194,8 @@ module.exports = {
             plan_data.result_price_levy =
               plan_data.result_price * 0.1 + plan_data.result_price;
             plan_data.merchant_uid = nextMerchant_uid;
-
+            plan_data.free_period_start = plan_data.free_plan;
+            plan_data.free_period_expire = plan_data.expire_plan;
             await db.plan.create(plan_data, {
               transaction: t,
             });
