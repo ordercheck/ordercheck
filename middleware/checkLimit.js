@@ -11,13 +11,10 @@ const {
 
 const { fileStoreLimitKakaoPush } = require("../lib/kakaoPush");
 // 고객 체크
-const checkCustomerCount = async (company_idx, data) => {
-  const findCompanyData = await db.company.findByPk(company_idx, {
-    attributes: data,
-  });
+const checkCustomerCount = async (company_idx) => {
+  const findCompanyData = await db.company.findByPk(company_idx);
   const findPlanResult = await db.plan.findOne({
     where: { company_idx, active: 1 },
-    attributes: ["plan"],
   });
 
   return {
@@ -26,11 +23,10 @@ const checkCustomerCount = async (company_idx, data) => {
   };
 };
 
-const check = async (reqData, data) => {
+const check = async (reqData) => {
   try {
     const findCompanyByLink = await db.formLink.findOne({
       where: { form_link: reqData },
-      attributes: ["company_idx"],
     });
     if (!findCompanyByLink) {
       return {
@@ -40,8 +36,7 @@ const check = async (reqData, data) => {
     }
 
     const { findCompanyData, findPlanResult } = await checkCustomerCount(
-      findCompanyByLink.company_idx,
-      data
+      findCompanyByLink.company_idx
     );
     return {
       success: true,
@@ -63,8 +58,7 @@ module.exports = {
     } = req;
 
     const { success, findCompanyData, findPlanResult, message } = await check(
-      form_link,
-      ["form_link_count"]
+      form_link
     );
 
     if (!success) {
@@ -73,7 +67,9 @@ module.exports = {
 
     if (
       findCompanyData.form_link_count >=
-      limitPlan[findPlanResult.plan].form_link_count
+        limitPlan[findPlanResult.plan].form_link_count ||
+      findCompanyData.customer_count >=
+        limitPlan[findPlanResult.plan].customer_count
     ) {
       req.formClose = true;
       return next();
@@ -83,8 +79,7 @@ module.exports = {
   },
   checkCustomerLimit: async (req, res, next) => {
     const { findCompanyData, findPlanResult } = await checkCustomerCount(
-      req.company_idx,
-      ["customer_count"]
+      req.company_idx
     );
 
     if (
@@ -105,8 +100,7 @@ module.exports = {
     } = req;
 
     const { success, findCompanyData, findPlanResult, message } = await check(
-      form_link,
-      ["form_link_count", "huidx"]
+      form_link
     );
 
     if (!success) {
