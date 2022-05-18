@@ -1600,7 +1600,8 @@ module.exports = {
           // 무료체험으로 가입할 때
           if (!usedFreePlan) {
             const { nowStartPlan, nowExpirePlan } = await setPlanDate(payType);
-
+            const Hour = moment().format("HH");
+            plan_data.pay_hour = Hour;
             plan_data.free_plan = moment().format("YYYY.MM.DD");
             plan_data.start_plan = nowStartPlan;
             plan_data.expire_plan = nowExpirePlan;
@@ -1620,7 +1621,7 @@ module.exports = {
                 transaction: t,
               }
             );
-            const Hour = moment().format("HH");
+
             const scheduleUnixTime = moment(
               `${nowStartPlan.replace(/\./g, "-")} ${Hour}:00`
             ).unix();
