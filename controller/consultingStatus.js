@@ -741,7 +741,9 @@ module.exports = {
     const companyFindResult = await db.company.findByPk(company_idx, {
       attributes: ["company_name", "company_subdomain"],
     });
+
     // 알림톡 보내기 전 알림톡 비용 체크
+    const findHuidx = await db.user.findByPk(huidx);
     if (text_cost < 10) {
       res.send({ success: 400, message: "알림톡 비용 부족" });
 
@@ -756,7 +758,6 @@ module.exports = {
 
       alarm.sendMultiAlarm(insertData, sendMember, io);
 
-      const findHuidx = await db.user.findByPk(huidx);
       // noCostText(companyFindResult.company_name, 123, findHuidx.user_email);
 
       noMoneySMS(
