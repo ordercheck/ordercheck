@@ -32,7 +32,6 @@ router.post("/", async (req, res, next) => {
 
       const checkPlan = await db.plan.findOne({
         where: { merchant_uid, active: 3 },
-        attributes: ["pay_type", "expire_plan"],
         raw: true,
       });
 
@@ -53,6 +52,7 @@ router.post("/", async (req, res, next) => {
           );
         });
       }
+      console.log("재결제 등록 시작");
 
       const expireDate = checkPlan.expire_plan.replace(/\./gi, "-");
       const hour = moment().format("HH");
@@ -66,7 +66,7 @@ router.post("/", async (req, res, next) => {
       const newMerchant_uid = generateRandomCode();
 
       const now = new Date();
-      let changeToTime = new Date(now.setSeconds(now.getSeconds() + 30));
+      let changeToTime = new Date(now.setSeconds(now.getSeconds() + 10));
       startDateUnix = changeToTime.getTime() / 1000;
 
       // 기존의 expireDate를 이용하여 다음 스케쥴 등록
