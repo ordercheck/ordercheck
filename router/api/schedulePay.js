@@ -1,7 +1,7 @@
 const express = require("express");
 const { generateRandomCode } = require("../../lib/functions");
 const router = express.Router();
-
+const { createFreePlan } = require("../../lib/apiFunctions");
 const { schedulePay, getPayment } = require("../../lib/payFunction");
 const { Alarm } = require("../../lib/classes/AlarmClass");
 
@@ -61,13 +61,13 @@ router.post("/", async (req, res, next) => {
         .add("1", "day")
         .format(`YYYY-MM-DD ${hour}:00`);
 
-      // const startDateUnix = moment(startDate).unix();
+      const startDateUnix = moment(startDate).unix();
 
       const newMerchant_uid = generateRandomCode();
 
-      const now = new Date();
-      let changeToTime = new Date(now.setSeconds(now.getSeconds() + 10));
-      startDateUnix = changeToTime.getTime() / 1000;
+      // const now = new Date();
+      // let changeToTime = new Date(now.setSeconds(now.getSeconds() + 10));
+      // startDateUnix = changeToTime.getTime() / 1000;
 
       // 기존의 expireDate를 이용하여 다음 스케쥴 등록
       await schedulePay(
@@ -313,7 +313,16 @@ router.post("/", async (req, res, next) => {
       const findPlanCompany = await db.plan.findOne({
         where: { merchant_uid, active: 3 },
       });
-
+      // 4번 싪패 했는지 체크
+      if (findPlanCompany.failed_count == 4) {
+        const nowPlan = await db.plan.findOne({
+          where: { active: 1, company_idx: findPlanCompany.company_idx },
+        });
+        // 현재 플랜 active 0으로 변경
+        await db.plan.update({ active: 0 }, { where: { idx: nowPlan.idx } });
+        await createFreePlan(nowPlan.company_idx);
+        return;
+      }
       const findCompany = await db.company.findByPk(
         findPlanCompany.company_idx
       );
@@ -379,6 +388,7 @@ router.post("/", async (req, res, next) => {
       const io = req.app.get("io");
       const sendAlarm = new Alarm(createResult);
       io.to(findCompany.huidx).emit("addAlarm", sendAlarm.alarmData.dataValues);
+      return;
     }
   } catch (err) {
     next(err);
