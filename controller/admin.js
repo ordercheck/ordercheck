@@ -517,4 +517,13 @@ module.exports = {
       next(err);
     }
   },
+  changePlanInfo: async (req, res, next) => {
+    try {
+      const { body } = req;
+      await db.planInfo.update(body, { where: { idx: body.planIdx } });
+      return res.send({ success: 200 });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

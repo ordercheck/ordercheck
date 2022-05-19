@@ -80,7 +80,7 @@ router.post("/", async (req, res, next) => {
         newMerchant_uid
       );
 
-      // free_plan 이용중인지 체크
+      // 무료체험 이용중인지 체크
       const findActivePlanResult = await db.plan.findOne({
         where: { merchant_uid, active: 1 },
         attributes: {

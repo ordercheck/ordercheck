@@ -36,7 +36,7 @@
     <button id="eventText" type="button" class="btn btn-primary">이벤트 문자 충전 내역</button>
   </div>
     <div style="padding:100px 200px">
-    <table id="userTable" class="table" hidden="true">
+    <table id="userTable" class="table">
       <thead>
         <tr>
           <th scope="col">No</th>
@@ -214,11 +214,13 @@
       const selectedTag = document.getElementsByName("plans");
   
   let nextPlanIdx = 0
+  let nextPlan
   selectedTag.forEach(data=>{
     data.childNodes.forEach((childData)=>{
-      const nextPlan = document.getElementById(`nextPlan${nextPlanIdx}`);
+       nextPlan = document.getElementById(`nextPlan${nextPlanIdx}`);
       if(childData.innerHTML == nextPlan.innerHTML.trim()){
         childData.selected = true
+        return
       }
     })
     nextPlanIdx += 1
@@ -241,7 +243,15 @@
   }),
 })
   .then((response) => response.json())
-  .then((data) => {data.success == 400 || data.success == 500  ? alert('카드가 등록되어있지 않습니다. 플랜 변경 실패.') : alert('플랜 변경 완료.')})
+  .then((data) => {
+    
+    if( data.success == 400 || data.success == 500){
+      alert('카드가 등록되어있지 않습니다. 플랜 변경 실패.')
+    }else{
+nextPlan.innerHTML = toPlan.value
+      alert("플랜 변경 완료.")
+    }
+  })
        }
       }
 
@@ -292,7 +302,6 @@
   .then((response) => response.json())
   .then((data) => {data.success == 200 ? alert('문자충전 완료.') : alert('문자충전 실패.')})
  }
- 
       }
       company.addEventListener("click", showComapnyTable);
       user.addEventListener("click", showUserTable);
