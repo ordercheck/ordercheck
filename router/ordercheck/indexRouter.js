@@ -279,11 +279,14 @@ router.get("/information", async (req, res, next) => {
   });
   findEventText = JSON.parse(JSON.stringify(findEventText));
 
+  const planInfo = await db.planInfo.findAll();
+
   res.render("ordercheck/auth/information", {
     findAllUser,
     findCompany,
     findReceipt,
     findEventText,
+    planInfo,
   });
 });
 

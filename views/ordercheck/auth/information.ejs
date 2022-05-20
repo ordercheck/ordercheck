@@ -34,8 +34,9 @@
     <button id="company" type="button" class="btn btn-primary">회사</button>
     <button id="receiptText" type="button" class="btn btn-primary">문자 충전 내역</button>
     <button id="eventText" type="button" class="btn btn-primary">이벤트 문자 충전 내역</button>
+    <button id="changePlan" type="button" class="btn btn-primary">플랜 정보 변경</button>
   </div>
-    <div style="padding:100px 200px">
+    <div style="padding:80px 80px">
     <table id="userTable" class="table">
       <thead>
         <tr>
@@ -173,35 +174,107 @@
     </tbody>
   </table>
 </div>
-<table id="eventTextTable" class="table" hidden="true">
-  <thead>
-    <tr>
-      <th scope="col">No</th>
-      <th scope="col">회사</th>
-      <th scope="col">소유주</th>
-      <th scope="col">이벤트 충전 날짜</th>
-      <th scope="col">이전 금액</th>
-      <th scope="col">이벤트 금액</th>
-      <th scope="col">충전 후 금액</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% for(var i = 0; i < findEventText.length; i++){ %>
-    <tr>
-      <td><%= i+1 %></td>
-      <td><%= findEventText[i].company_name %></td>
-      <td><%= findEventText[i].company.user.user_name %></td>
-      <td><%= findEventText[i].createdAt %></td>
-      <td><%= findEventText[i].before_text_price %></td>
-      <td><%= findEventText[i].message_price %></td>
-      <td><%= findEventText[i].after_text_price %></td>
-    </tr>
-    <% } %>
-  </tbody>
-</table>
+<div>
+  <table id="eventTextTable" class="table" hidden="true">
+    <thead>
+      <tr>
+        <th scope="col">No</th>
+        <th scope="col">회사</th>
+        <th scope="col">소유주</th>
+        <th scope="col">이벤트 충전 날짜</th>
+        <th scope="col">이전 금액</th>
+        <th scope="col">이벤트 금액</th>
+        <th scope="col">충전 후 금액</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for(var i = 0; i < findEventText.length; i++){ %>
+      <tr>
+        <td><%= i+1 %></td>
+        <td><%= findEventText[i].company_name %></td>
+        <td><%= findEventText[i].company.user.user_name %></td>
+        <td><%= findEventText[i].createdAt %></td>
+        <td><%= findEventText[i].before_text_price %></td>
+        <td><%= findEventText[i].message_price %></td>
+        <td><%= findEventText[i].after_text_price %></td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+  </div>
+  <div>
+    <table id="changePlanInfoTable" class="table" hidden="true">
+      <thead>
+        <tr>
+          <th scope="col">No</th>
+          <th scope="col">플랜</th>
+          <th scope="col">월 요금</th>
+          <th scope="col">월 화이트 라벨링 요금</th>
+          <th scope="col">월 통계 분석 요금</th>
+          <th scope="col">월 채팅 요금</th>
+          <th scope="col">연 요금</th>
+          <th scope="col">연 화이트 라벨링 요금</th>
+          <th scope="col">연 통계 분석 요금</th>
+          <th scope="col">연 채팅 요금</th>
+          <th scope="col">상담 신청 건수</th>
+          <th scope="col">고객 등록 명수</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(var i = 0; i < planInfo.length; i++){ %>
+        <tr>
 
+          <td id="idx<%= i %>" ><%= planInfo[i].idx %></td>
+          <td><%= planInfo[i].plan %></td>
+          <td> 
+            <input id="monthPrice<%= i %>" type="number" style="width: 100px;" value="<%= planInfo[i].monthPrice %>">
+          </td>
+          <td>
+            <input id="monthWhite<%= i %>" type="number" style="width: 100px;" value="<%= planInfo[i].monthWhiteLabelPrice %>">
+           </td>
+          <td>
+            <input id="monthAnalytics<%= i %>" type="number" style="width: 100px;" value="<%= planInfo[i].monthAnalyticsPrice %>">
+            </td>
+          <td>   
+            <input id="monthChat<%= i %>" type="number" style="width: 100px;" value="<%= planInfo[i].monthChatPrice %>">
+           </td>
 
+           <td> 
+            <input id="yearPrice<%= i %>" type="number" style="width: 100px;" value="<%= planInfo[i].yearPrice %>">
+          </td>
+          <td>
+            <input id="yearWhite<%= i %>" type="number" style="width: 100px;" value="<%= planInfo[i].yearWhiteLabelPrice %>">
+           </td>
+          <td>
+            <input id="yearAnalytics<%= i %>" type="number" style="width: 100px;" value="<%= planInfo[i].yearAnalyticsPrice %>">
+            </td>
+          <td>   
+            <input id="yearChat<%= i %>" type="number" style="width: 100px;" value="<%= planInfo[i].yearChatPrice %>">
+           </td>
+
+          <td>
+            <input id="maxConsultingForm<%= i %>" type="number"  style="width: 80px;" value="<%= planInfo[i].maxConsultingForm %>">
+          </td>
+          <td>
+            <input id="maxCustomer<%= i %>" type="number" style="width: 80px;" value="<%= planInfo[i].maxAddCustomer %>">
+           </td>
+           <td>
+           <button onclick="submitPlans(`<%= i %>`)" id="planSubmit<%= i %>" type="submit">변경</button>
+           </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+    </div>
 </div>
+
+  
+
+
+
+
+
     <script>
       const user = document.getElementById("user");
       const company = document.getElementById("company");
@@ -211,8 +284,12 @@
       const companyTable = document.getElementById("companyTable");
       const receiptTextTable = document.getElementById("receiptTextTable");
       const eventTextTable = document.getElementById('eventTextTable')
+      const changePlanInfoTable =  document.getElementById('changePlanInfoTable')
       const selectedTag = document.getElementsByName("plans");
+      const changePlanButton = document.getElementById("changePlan");
+      const planSubmit = document.getElementById("planSubmit");
   
+    
   let planIdx = 0
   let nextPlan
   let nowPlan
@@ -258,38 +335,44 @@
       else{
         nextPlan.innerHTML = toPlan.value
       }
-  
       alert("플랜 변경 완료.")
     }
   })
        }
       }
 
+   
+
       
       const showUserTable = () => {
         userTable.hidden
-          ? (userTable.hidden = false , eventTextTable.hidden = true , companyTable.hidden = true, receiptTextTable.hidden = true)
+          ? (userTable.hidden = false , eventTextTable.hidden = true , companyTable.hidden = true, receiptTextTable.hidden = true, changePlanInfoTable.hidden = true)
           : (userTable.hidden = true );
       };
 
       const showEventTextTable = ()=>{
         eventTextTable.hidden
-          ? (eventTextTable.hidden = false ,  companyTable.hidden = true, receiptTextTable.hidden = true, userTable.hidden = true)
+          ? (eventTextTable.hidden = false ,  companyTable.hidden = true, receiptTextTable.hidden = true, userTable.hidden = true, changePlanInfoTable.hidden = true)
           : (eventTextTable.hidden = true );
       };
 
       const showComapnyTable = () => {
-
         companyTable.hidden
-          ? (companyTable.hidden = false, eventTextTable.hidden = true , userTable.hidden = true,receiptTextTable.hidden = true)
+          ? (companyTable.hidden = false, eventTextTable.hidden = true , userTable.hidden = true,receiptTextTable.hidden = true, changePlanInfoTable.hidden = true)
           : (companyTable.hidden = true);
       };
 
       const showReceiptTextTable= ()=>{
         receiptTextTable.hidden
-          ? (receiptTextTable.hidden = false,eventTextTable.hidden = true , companyTable.hidden = true,  userTable.hidden = true)
+          ? (receiptTextTable.hidden = false,eventTextTable.hidden = true , companyTable.hidden = true,  userTable.hidden = true, changePlanInfoTable.hidden = true)
           : (receiptTextTable.hidden = true); 
       } 
+
+      const showChangePlanTable = () =>{
+        changePlanInfoTable.hidden
+          ? (changePlanInfoTable.hidden = false,  userTable.hidden = true , eventTextTable.hidden = true , companyTable.hidden = true, receiptTextTable.hidden = true)
+          : (changePlanInfoTable.hidden = true );
+      }
       const chargingText = (data)=>{
      
   const chargeInput = document.getElementById(`charge${data}`)
@@ -313,10 +396,63 @@
   .then((data) => {data.success == 200 ? alert('문자충전 완료.') : alert('문자충전 실패.')})
  }
       }
+
+
+      const submitPlans = (i)=>{
+    const idx = document.getElementById(`idx${i}`)
+    const monthPrice = document.getElementById(`monthPrice${i}`)
+    const monthWhiteLabelPrice = document.getElementById(`monthWhite${i}`)
+    const monthAnalyticsPrice = document.getElementById(`monthAnalytics${i}`)
+    const monthChatPrice = document.getElementById(`monthChat${i}`)
+    const yearPrice = document.getElementById(`yearPrice${i}`)
+    const yearWhiteLabelPrice = document.getElementById(`yearWhite${i}`)
+    const yearAnalyticsPrice = document.getElementById(`yearAnalytics${i}`)
+    const yearChatPrice = document.getElementById(`yearChat${i}`)
+    const maxConsultingForm = document.getElementById(`maxConsultingForm${i}`)
+    const maxAddCustomer = document.getElementById(`maxCustomer${i}`)
+const changedPlanData = {
+  planIdx: idx.innerHTML,
+ monthPrice:  monthPrice.value,
+ monthWhiteLabelPrice:  monthWhiteLabelPrice.value,
+ monthAnalyticsPrice:  monthAnalyticsPrice.value,
+ monthChatPrice:  monthChatPrice.value,
+ yearPrice:  yearPrice.value,
+ yearWhiteLabelPrice:  yearWhiteLabelPrice.value,
+ yearAnalyticsPrice:  yearAnalyticsPrice.value,
+ yearChatPrice:  yearChatPrice.value,
+ maxConsultingForm:  maxConsultingForm.value,
+ maxAddCustomer:  maxAddCustomer.value,
+}
+    fetch("/api/admin/plan/info", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(changedPlanData),
+})
+  .then((response) => response.json())
+  .then((data) => {data.success == 200 ? alert('플랜 정보 변경 완료.') : alert('플랜 정보 변경 실패')})
+
+
+
+
+
+
+
+
+
+
+
+
+      }
+
+
       company.addEventListener("click", showComapnyTable);
       user.addEventListener("click", showUserTable);
       receiptText.addEventListener("click", showReceiptTextTable);
       eventText.addEventListener('click',showEventTextTable)
+      changePlanButton.addEventListener('click', showChangePlanTable)
+    
     </script>
   </body>
 </html>
