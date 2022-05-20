@@ -466,7 +466,7 @@ module.exports = {
         }
       }
       await t.commit();
-      return res.send({ success: 200 });
+      return res.send({ success: 200, usingFree });
     } catch (err) {
       await t.rollback();
       next(err);

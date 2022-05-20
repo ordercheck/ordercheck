@@ -16,4 +16,5 @@ router.patch("/company/plan", changePlan);
 router.post("/charge/free/sms", chargeFreeSms);
 
 router.patch("/plan/info", changePlanInfo);
+
 module.exports = router;

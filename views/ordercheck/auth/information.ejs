@@ -213,18 +213,21 @@
       const eventTextTable = document.getElementById('eventTextTable')
       const selectedTag = document.getElementsByName("plans");
   
-  let nextPlanIdx = 0
+  let planIdx = 0
   let nextPlan
+  let nowPlan
   selectedTag.forEach(data=>{
     data.childNodes.forEach((childData)=>{
-       nextPlan = document.getElementById(`nextPlan${nextPlanIdx}`);
+       nextPlan = document.getElementById(`nextPlan${planIdx}`);
+       nowPlan = document.getElementById(`nowPlan${planIdx}`);
       if(childData.innerHTML == nextPlan.innerHTML.trim()){
         childData.selected = true
         return
       }
     })
-    nextPlanIdx += 1
+    planIdx ++
   })
+
       const changePlan = (toPlan)=>{
        const changeResult = confirm('플랜을 변경하겠습니까?')
        if(changeResult){
@@ -248,7 +251,14 @@
     if( data.success == 400 || data.success == 500){
       alert('카드가 등록되어있지 않습니다. 플랜 변경 실패.')
     }else{
-nextPlan.innerHTML = toPlan.value
+      if(data.usingFree){
+        nowPlan.innerHTML = toPlan.value
+        nextPlan.innerHTML = toPlan.value
+      }
+      else{
+        nextPlan.innerHTML = toPlan.value
+      }
+  
       alert("플랜 변경 완료.")
     }
   })
