@@ -38,6 +38,7 @@ module.exports = {
       req.body;
     const [nextPlan, payType] = plan.split(":");
 
+    console.log(req.body);
     const toChangePlan = await db.planInfo.findOne({
       where: { plan: nextPlan },
     });
