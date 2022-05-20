@@ -29,7 +29,6 @@ router.post("/", async (req, res, next) => {
     // 다음 결제 예약
     if (status == "paid") {
       const alarm = new Alarm({});
-
       const checkPlan = await db.plan.findOne({
         where: { merchant_uid, active: 3 },
         raw: true,
@@ -69,6 +68,7 @@ router.post("/", async (req, res, next) => {
       // let changeToTime = new Date(now.setSeconds(now.getSeconds() + 10));
       // startDateUnix = changeToTime.getTime() / 1000;
 
+      console.log(getResult);
       // 기존의 expireDate를 이용하여 다음 스케쥴 등록
       await schedulePay(
         startDateUnix,
