@@ -247,7 +247,7 @@ router.get("/information", async (req, res, next) => {
   });
 
   findCompany = JSON.parse(JSON.stringify(findCompany));
-
+  console.log(findCompany[0].plans);
   const findReceipt = await db.receipt.findAll({
     where: { receipt_category: 2 },
     include: [

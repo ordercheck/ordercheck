@@ -30,14 +30,14 @@
   <body>
 
     <div style="margin: 20px;">
-    <button id="user" type="button" class="btn btn-primary">유저</button>
     <button id="company" type="button" class="btn btn-primary">회사</button>
+    <button id="user" type="button" class="btn btn-primary">유저</button>
     <button id="receiptText" type="button" class="btn btn-primary">문자 충전 내역</button>
     <button id="eventText" type="button" class="btn btn-primary">이벤트 문자 충전 내역</button>
     <button id="changePlan" type="button" class="btn btn-primary">플랜 정보 변경</button>
   </div>
     <div style="padding:80px 80px">
-    <table id="userTable" class="table">
+    <table id="userTable" class="table"  hidden="true">
       <thead>
         <tr>
           <th scope="col">No</th>
@@ -66,7 +66,7 @@
     </div>
     </table>
     <div>
-    <table id="companyTable" class="table" hidden="true">
+    <table id="companyTable" class="table">
       <thead>
         <tr>
           <th scope="col">No</th>
@@ -112,7 +112,14 @@
               <% } %>
           </td>
           <td>
-            <select name="plans"  onchange="changePlan(this)" id=<%= findCompany[i].plans[0].idx %>>
+            <select name="plans"  onchange="changePlan(this)" id=
+            <% if (findCompany[i].plans[0].active == 1) { %>
+              <%= findCompany[i].plans[0].idx %>
+          <% } %>
+          <% if (findCompany[i].plans[0].active == 3) { %>
+            <%= findCompany[i].plans[1].idx %>
+        <% } %>    
+            >
                 <option value="프리" >프리</option>
                 <option value="스타터:month" >스타터 : month</option>
                 <option value="스타터:year" >스타터 : year</option>
@@ -224,7 +231,6 @@
       <tbody>
         <% for(var i = 0; i < planInfo.length; i++){ %>
         <tr>
-
           <td id="idx<%= i %>" ><%= planInfo[i].idx %></td>
           <td><%= planInfo[i].plan %></td>
           <td> 
@@ -306,6 +312,7 @@
   })
 
       const changePlan = (toPlan)=>{
+        console.log(toPlan.id);
        const changeResult = confirm('플랜을 변경하겠습니까?')
        if(changeResult){
         fetch("/api/admin/company/plan", {
@@ -313,6 +320,7 @@
     headers: {
       "Content-Type": "application/json",
     },
+
     body: JSON.stringify({
       planIdx: toPlan.id,
       plan: toPlan.value,
@@ -336,6 +344,7 @@
         nextPlan.innerHTML = toPlan.value
       }
       alert("플랜 변경 완료.")
+     location.reload()
     }
   })
        }
@@ -433,20 +442,7 @@ const changedPlanData = {
   .then((response) => response.json())
   .then((data) => {data.success == 200 ? alert('플랜 정보 변경 완료.') : alert('플랜 정보 변경 실패')})
 
-
-
-
-
-
-
-
-
-
-
-
       }
-
-
       company.addEventListener("click", showComapnyTable);
       user.addEventListener("click", showUserTable);
       receiptText.addEventListener("click", showReceiptTextTable);
