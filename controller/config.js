@@ -773,10 +773,9 @@ module.exports = {
 
     try {
       // 메인으로 설정되어있는 카드 false로 변경
-      const findMainCardResult = await db.card.findOne(
-        { where: { user_idx, main: true } },
-        { attributes: ["idx", "customer_uid"] }
-      );
+      const findMainCardResult = await db.card.findOne({
+        where: { user_idx, main: true },
+      });
 
       // 이미 main으로 설정된 카드가 있을 때
       if (findMainCardResult) {

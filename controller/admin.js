@@ -519,7 +519,79 @@ module.exports = {
   changePlanInfo: async (req, res, next) => {
     try {
       const { body } = req;
+      const findResult = await db.planInfo.findByPk(body.planIdx);
+      let findData = await db.plan.findAll({
+        where: { plan: findResult.plan, active: 3 },
+        include: [
+          {
+            model: db.company,
+            include: [
+              {
+                model: db.user,
+                include: [
+                  {
+                    model: db.card,
+                    where: { main: true },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+
+      findData = JSON.parse(JSON.stringify(findData));
+
       await db.planInfo.update(body, { where: { idx: body.planIdx } });
+      const findPlanInfo = await db.planInfo.findByPk(body.planIdx);
+      findData.forEach(async (data) => {
+        const updateData = {
+          plan_price:
+            data.pay_type == "month"
+              ? findPlanInfo.monthPrice
+              : findPlanInfo.yearPrice,
+          chat_price:
+            data.pay_type == "month"
+              ? findPlanInfo.monthChatPrice
+              : findPlanInfo.yearChatPrice,
+          analystic_price:
+            data.pay_type == "month"
+              ? findPlanInfo.monthAnalyticsPrice
+              : findPlanInfo.yearAnalyticsPrice,
+          whiteLabel_price:
+            data.pay_type == "month"
+              ? findPlanInfo.monthWhiteLabelPrice
+              : findPlanInfo.yearWhiteLabelPrice,
+        };
+        (updateData.result_price = updateData.plan_price),
+          (updateData.result_price_levy =
+            updateData.result_price * 0.1 + updateData.result_price);
+        await db.plan.update(updateData, { where: { idx: data.idx } });
+        if (data.company.user) {
+          await cancelSchedule(
+            data.company.user.cards[0].customer_uid,
+            data.merchant_uid
+          );
+          const Hour = moment().format("HH");
+
+          const startDate = data.start_plan.replace(/\./g, "-");
+
+          const changeToUnix = moment(`${startDate} ${Hour}:00`).unix();
+
+          const nextMerchant_uid = generateRandomCode();
+
+          schedulePay(
+            changeToUnix,
+            data.company.user.cards[0].customer_uid,
+            updateData.result_price_levy,
+            data.company.user.user_name,
+            data.company.user.user_phone,
+            data.company.user.user_email,
+            nextMerchant_uid
+          );
+        }
+      });
+
       return res.send({ success: 200 });
     } catch (err) {
       next(err);
