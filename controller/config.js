@@ -126,11 +126,11 @@ module.exports = {
       const companyAuth = await db.planInfo.findOne({
         where: { plan: companyProfile[0].plan },
       });
-      console.log(companyAuth.maxAddCustomer);
-      console.log(companyProfile[0].customer_count);
+
       console.log(
         companyAuth.maxAddCustomer - companyProfile[0].customer_count
       );
+
       companyAuth.dataValues.restCustomers =
         companyAuth.maxAddCustomer - companyProfile[0].customer_count;
       companyProfile[0].planDetail = planDetail;
